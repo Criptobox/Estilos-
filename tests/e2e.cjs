@@ -53,16 +53,55 @@ function readZip(buf) {
     await page.goto(BASE + (url || "index.html")); await page.waitForTimeout(350);
     return { ctx, page };
   }
+  /* Ajustes está en la cabecera de Inicio (la barra inferior ya no lo lleva). */
+  const openSettings = async page => { await page.evaluate(() => go({ view: "home" })); await page.waitForTimeout(250); await page.click(".top [data-act=menu]"); await page.waitForTimeout(250); };
   const goBuilder = async page => { await page.click("#nav [data-v=builder]"); await page.waitForTimeout(350); };
   const setProject = (page, ids, edit) => page.evaluate(([ids, edit]) => {
     builder.selected = ids.slice(); builder.layers = ids.map(id => cleanLayer(id, (edit && edit[id]) || {})); builder.activeLayer = 0; saveBuilder(); go({ view: "builder" });
   }, [ids, edit || null]);
 
+
+  /* ───────── 0 · navegación y pantallas del nuevo aspecto ───────── */
+  current = "navegación"; console.log("\n" + current);
+  {
+    const { ctx, page } = await open();
+    const nav = () => page.evaluate(() => [...document.querySelectorAll("#nav .ni")].map(b => ({ t: b.textContent.trim(), cur: b.getAttribute("aria-current") })));
+    eq((await nav()).map(x => x.t), ["Inicio", "Biblioteca", "Creador", "Plantillas", "Colecciones"], "la barra inferior tiene 5 elementos con etiqueta");
+    eq((await nav()).filter(x => x.cur).map(x => x.t), ["Inicio"], "el activo (Inicio) se marca con aria-current");
+    ok(await page.isVisible(".tiles .tile") && /\d+ estilos con vista previa real/.test(await page.textContent(".hero p")), "Inicio: título, buscador y accesos rápidos con cifras reales");
+    await page.click("#nav [data-v=library]"); await page.waitForTimeout(300);
+    const total = await page.evaluate(() => db().length), cats = await page.$$eval(".catk", l => l.length);
+    ok(cats >= 19 && new RegExp(total + " estilos").test(await page.textContent(".top .sub")), "Biblioteca: cuadrícula de categorías (" + cats + ") y total real (" + total + ")");
+    await page.click('[data-act=libgroup][data-g=Fundamentos]'); await page.waitForTimeout(250);
+    const fund = await page.$$eval(".catk b", l => l.map(x => x.textContent));
+    ok(fund.includes("Paletas") && fund.includes("Tipografía") && !fund.includes("Tarjetas"), "el filtro «Fundamentos» muestra paletas y tipografía, no tarjetas");
+    await page.click('[data-act=libgroup][data-g=Componentes]'); await page.waitForTimeout(250);
+    const comp = await page.$$eval(".catk b", l => l.map(x => x.textContent));
+    ok(comp.includes("Tarjetas") && !comp.includes("Paletas"), "el filtro «Componentes» muestra tarjetas, no paletas");
+    await page.click('.catk[data-t=Tarjetas]'); await page.waitForTimeout(500);
+    eq(await page.evaluate(() => [S.view, S.tab]), ["explore", "Tarjetas"], "tocar una categoría abre su lista");
+    ok(await page.evaluate(() => document.querySelector('#nav .nia').textContent.trim() === "Biblioteca"), "…y Biblioteca sigue activa en la barra");
+    await page.click('.chip[data-t=Todo]'); await page.waitForTimeout(500);
+    eq(await page.textContent("#count"), total + " estilos", "el chip «Todo» lista todos los estilos");
+    await page.click("#nav [data-act=tab][data-t=Plantillas]"); await page.waitForTimeout(500);
+    ok(await page.evaluate(() => S.tab === "Plantillas" && document.querySelector('#nav .nia').textContent.trim() === "Plantillas"), "«Plantillas» de la barra abre esa categoría y se marca activa");
+    await page.click("#nav [data-v=favs]"); await page.waitForTimeout(300);
+    ok(/Colecciones/.test(await page.textContent("h1.big")), "«Colecciones» muestra los guardados");
+    // recientes: abrir un detalle lo añade a Inicio
+    await page.evaluate(() => go({ view: "detail", id: "tar-2", detailTab: "info" })); await page.waitForTimeout(300);
+    await page.evaluate(() => go({ view: "home" })); await page.waitForTimeout(300);
+    ok(/Recientes/.test(await page.textContent(".secRow h2")) && (await page.$$eval('.rail .mini', l => l.map(x => x.dataset.id))).includes("tar-2"), "Inicio muestra «Recientes» con el último estilo abierto");
+    await ctx.close();
+  }
+
   /* ───────── 1 · arranque, búsqueda y tema ───────── */
   current = "arranque"; console.log("\n" + current);
   {
-    const { ctx, page } = await open({ colorScheme: "dark" });
-    eq(await page.evaluate(() => document.documentElement.dataset.theme), "dark", "sigue al sistema en oscuro (modo Automático)");
+    const d = await open({ colorScheme: "light" });
+    eq(await d.page.evaluate(() => document.documentElement.dataset.theme), "dark", "por defecto la app usa el aspecto oscuro, aunque el sistema sea claro");
+    await d.ctx.close();
+    const { ctx, page } = await open({ colorScheme: "dark", init: () => { try { if (window.top === window && !sessionStorage.getItem("t")) { sessionStorage.setItem("t", "1"); localStorage.setItem("estilos-theme", "auto"); } } catch (e) { /* iframes aislados */ } } });
+    eq(await page.evaluate(() => document.documentElement.dataset.theme), "dark", "en modo Automático sigue al sistema (oscuro)");
     await page.click("[data-act=themecycle]"); await page.waitForTimeout(100);
     eq(await page.evaluate(() => localStorage.getItem("estilos-theme")), "light", "el botón de tema cambia y se guarda");
     await page.click("[data-act=gosearch]"); await page.fill("#q", "tipografia"); await page.waitForTimeout(300);
@@ -279,8 +318,8 @@ function readZip(buf) {
     await page.locator(".builder-picker-card:visible").first().tap(); await page.waitForTimeout(250);
     eq(await page.evaluate(() => builder.selected.length), 1, "en el móvil se añade un componente tocando la tarjeta");
     await page.fill('[data-layer-field="label"]', "Hola");
-    await page.tap("#nav [data-v=explore]"); await page.waitForTimeout(300);
-    eq(await page.evaluate(() => S.view), "explore", "al primer toque en la barra principal se sale del constructor (barras apiladas)");
+    await page.tap("#nav [data-v=library]"); await page.waitForTimeout(300);
+    eq(await page.evaluate(() => S.view), "library", "al primer toque en la barra principal se sale del constructor (barras apiladas)");
     await ctx.close();
   }
 
@@ -323,7 +362,7 @@ function readZip(buf) {
     const init = () => { window.showSaveFilePicker = async () => (await navigator.storage.getDirectory()).getFileHandle("copia-prueba.json", { create: true }); };
     const { ctx, page } = await open({ init });
     const read = () => page.evaluate(async () => { try { const f = await (await (await navigator.storage.getDirectory()).getFileHandle("copia-prueba.json")).getFile(); return await f.text(); } catch (e) { return ""; } });
-    await page.click("#nav [data-act=menu]"); await page.waitForTimeout(200);
+    await openSettings(page);
     ok(await page.isVisible("[data-act=abchoose]"), "Ajustes ofrece «Elegir archivo…»");
     await page.click("[data-act=abchoose]"); await page.waitForTimeout(900);
     eq(await page.evaluate(() => AutoBackup.active && AutoBackup.state.perm), "granted", "tras elegir el archivo la copia queda activa");
@@ -335,12 +374,12 @@ function readZip(buf) {
     ok((await read()).includes('"tar-1"'), "un cambio en el constructor se vuelca solo al archivo (sin pulsar nada)");
     /* No se prueba «recordar el archivo tras recargar»: leer de IndexedDB un manejador de OPFS cierra el Chromium de pruebas
        (falla sin código de la app de por medio); en Chrome real los manejadores de showSaveFilePicker sí se guardan así. */
-    await page.click("#nav [data-act=menu]"); await page.waitForTimeout(200);
+    await openSettings(page);
     await page.click("[data-act=abstop]"); await page.waitForTimeout(300);
     eq(await page.evaluate(() => AutoBackup.active), false, "«Desactivar» olvida el archivo");
     await ctx.close();
     const u = await open({ init: () => { delete window.showSaveFilePicker; } });
-    await u.page.click("#nav [data-act=menu]"); await u.page.waitForTimeout(200);
+    await openSettings(u.page);
     ok(/no permite guardar automáticamente/.test(await u.page.textContent("#sheetCard")) && !(await u.page.isVisible("[data-act=abchoose]")), "sin la API del navegador se explica y no se ofrece el botón");
     await u.ctx.close();
   }

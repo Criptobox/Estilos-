@@ -1,6 +1,14 @@
-# Estilos 11.1.0
+# Estilos 12.0.0
 
 Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponible como PWA y envoltorio Android.
+
+## Nuevo aspecto (12.0)
+- Violeta → azul sobre azul noche, con cristal y brillo; **oscuro por defecto** y un claro a juego (Ajustes → Tema; Automático sigue al sistema).
+- Barra inferior de 5 elementos con etiqueta: **Inicio, Biblioteca, Creador, Plantillas, Colecciones**. Ajustes pasa a la cabecera de Inicio.
+- **Inicio**: título, buscador, accesos rápidos con cifras reales y «Recientes» (los últimos estilos abiertos).
+- **Biblioteca**: cuadrícula de categorías con filtros Todo / Fundamentos / Componentes; cada categoría abre su lista, con un chip «Todo».
+- **Colecciones**: los estilos guardados.
+- Fase 1 de 3: el Creador móvil (lienzo con hojas desde abajo) y las pantallas restantes siguen en las fases 2 y 3.
 
 ## Biblioteca
 - 107 diseños base en 15 categorías con componentes.
@@ -45,8 +53,8 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 
 
 ## Versiones
-- Web/PWA: `11.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 29`, `versionName 11.1`.
+- Web/PWA: `12.0.0` (GitHub Actions añade el número de compilación).
+- Android: `versionCode 30`, `versionName 12.0`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -77,6 +85,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **12.0**: nuevo aspecto (fase 1): sistema visual oscuro/claro, barra de 5 elementos, Inicio, Biblioteca por categorías y Colecciones. Ver `docs/CHANGELOG-12.0.md`.
 - **11.1**: exportación con Tailwind, copia automática en un archivo, compartir por enlace, reordenar capas con el dedo, calidad de imagen y publicación condicionada a las pruebas. Ver `docs/CHANGELOG-11.1.md`.
 - **11.0**: copia de seguridad completa (con el constructor), imágenes en IndexedDB, historial persistente, tamaños de pantalla, exportación ZIP con React y modo oscuro, ediciones robustas, paleta → constructor, panel de capas accesible y pruebas automáticas. Ver `docs/CHANGELOG-11.0.md`.
 - **10.9 + PWA**: modo oscuro (también en el constructor), editor en vivo, código para Tailwind/Compose/SwiftUI/Flutter, capturas propias y paleta, copia en archivo, búsqueda sin acentos, carga diferida, caché primero, WebP y foco accesible. En el constructor: textos junto a iconos editables y deshacer fiable en modo Texto. Ver `docs/CHANGELOG-10.9.md`.

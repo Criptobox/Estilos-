@@ -73,19 +73,27 @@ function allTabs() {
 }
 
 /* ───────── Tema de la app (auto / claro / oscuro) ───────── */
+/* Biblioteca: cada categoría con su degradado, y su grupo (Fundamentos o Componentes). */
+const TAB_GRAD = { Chat: "#3B82F6,#6366F1", Tarjetas: "#8B5CF6,#EC4899", Listas: "#06B6D4,#3B82F6", Avatares: "#F97316,#F43F5E", Plantillas: "#2563EB,#22D3EE", Barras: "#A855F7,#6366F1", Botones: "#3B82F6,#6366F1", Formularios: "#14B8A6,#38BDF8", Entradas: "#06B6D4,#3B82F6", Hojas: "#8B5CF6,#6366F1", Avisos: "#F59E0B,#F43F5E", Datos: "#10B981,#06B6D4", Paletas: "#F59E0B,#EC4899", "Tipografía": "#6366F1,#38BDF8", Encabezados: "#A855F7,#EC4899", Animaciones: "#D946EF,#8B5CF6", Fondos: "#0EA5E9,#6366F1", Widgets: "#22C55E,#14B8A6", Iconos: "#14B8A6,#38BDF8", Referencias: "#EC4899,#F97316" };
+const FUNDAMENTOS = ["Paletas", "Tipografía", "Fondos", "Iconos", "Animaciones", "Referencias"];
+const LIB_GROUPS = ["Todo", "Fundamentos", "Componentes"];
+const RECENT_KEY = "estilos-recent";
+function tabGrad(t, i) { const g = TAB_GRAD[t] || ["#8B5CF6,#4F8DFF", "#6366F1,#38BDF8", "#D946EF,#8B5CF6"][(i || 0) % 3]; return "linear-gradient(135deg," + g + ")"; }
+function recentIds() { const r = readJSON(RECENT_KEY, []); return Array.isArray(r) ? r.map(safeId).filter(Boolean) : []; }
+function trackRecent(id) { id = safeId(id); if (!id) return; const r = recentIds().filter(x => x !== id); r.unshift(id); try { localStorage.setItem(RECENT_KEY, JSON.stringify(r.slice(0, 8))); } catch (e) { /* ignorar */ } }
 const THEMES = ["auto", "light", "dark"];
 const THEME_LABEL = { auto: "Automático", light: "Claro", dark: "Oscuro" };
 const THEME_ICON = { auto: "auto", light: "sun", dark: "moon" };
 const darkMQ = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
-let theme = (function () { try { const t = localStorage.getItem(KEY_THEME); return THEMES.includes(t) ? t : "auto"; } catch (e) { return "auto"; } })();
+let theme = (function () { try { const t = localStorage.getItem(KEY_THEME); return THEMES.includes(t) ? t : "dark"; } catch (e) { return "dark"; } })();
 function isDark() { return theme === "dark" || (theme === "auto" && !!(darkMQ && darkMQ.matches)); }
 function applyTheme() {
   const d = isDark();
   document.documentElement.setAttribute("data-theme", d ? "dark" : "light");
-  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = d ? "#0a141b" : "#c9e0ef";
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = d ? "#0A0B1E" : "#E9E4FF";
 }
 function setTheme(t) {
-  theme = THEMES.includes(t) ? t : "auto";
+  theme = THEMES.includes(t) ? t : "dark";
   try { localStorage.setItem(KEY_THEME, theme); } catch (e) { /* sin almacenamiento: dura la sesión */ }
   applyTheme();
 }
@@ -104,7 +112,7 @@ function applyDim() { document.documentElement.toggleAttribute("data-dim", dimPr
 applyDim();
 
 /* ───────── Estado y navegación ───────── */
-let S = { view: "home", tab: "Tarjetas", id: null, q: "", detailTab: "info", stage: "auto", stack: "html" };
+let S = { view: "home", tab: "Tarjetas", id: null, q: "", detailTab: "info", stage: "auto", stack: "html", group: "Todo" };
 const BUILDER_FONTS = ["Inter", "Plus Jakarta Sans", "Georgia"];
 /* Calidad con la que se guardan las imágenes que el usuario reemplaza (px máximos, calidad WebP/JPEG y topes en caracteres de la data URL). */
 const IMAGE_QUALITY = {
@@ -246,6 +254,7 @@ let userRefs = [];     /* capturas propias: { id, label, date, blob, url } */
 let pendingConfirm = null;
 
 function go(patch, opt) {
+  if (patch && patch.view === "detail" && patch.id) trackRecent(patch.id);
   S = Object.assign({}, S, patch);
   try { (opt && opt.replace) ? history.replaceState(S, "") : history.pushState(S, ""); } catch (e) { /* file:// restringido */ }
   render(opt && opt.keep);
@@ -415,7 +424,8 @@ function live(e) {
 
 /* ───────── Vistas ───────── */
 function chipsHTML() {
-  return '<div class="chips" role="tablist">' + allTabs().map(t => {
+  const all = '<button class="chip' + ("Todo" === S.tab && !S.q ? " on" : "") + '" role="tab" data-act="tab" data-t="Todo">Todo<small>' + db().length + '</small></button>';
+  return '<div class="chips" role="tablist">' + all + allTabs().map(t => {
     const n = t === "Referencias" ? refCount() : db().filter(e => e.tab === t).length;
     return '<button class="chip' + (t === S.tab && !S.q ? " on" : "") + '" role="tab" data-act="tab" data-t="' + esc(t) + '">' + esc(t) + '<small>' + n + '</small></button>';
   }).join("") + '</div>';
@@ -434,27 +444,41 @@ function miniHTML(e) {
 }
 
 function renderHome() {
-  const list = db(), day = Math.floor(Date.now() / 864e5), f = list.length ? list[day % list.length] : null;
-  const fresh = SEED.slice(75).filter((x, i) => i % 3 === 0).map(x => getEntry(x.id)).filter(Boolean);
-  const cats = allTabs().map(t => {
+  const list = db(), day = Math.floor(Date.now() / 864e5);
+  const tpl = list.filter(e => e.tab === "Plantillas").length;
+  const rec = recentIds().map(getEntry).filter(Boolean).slice(0, 6);
+  const picks = rec.length ? rec : [0, 7, 15, 23].map(k => list[(day + k) % list.length]).filter(Boolean);
+  const tile = (act, extra, icon, grad, title, sub) => '<button class="tile" data-act="' + act + '"' + extra + '><span class="tileIc" style="background:' + grad + '">' + ic(icon, 23) + '</span><span class="tileTx"><b>' + title + '</b><small>' + sub + '</small></span></button>';
+  return '<div class="wrap home">'
+    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 24) + '</span><div><b>Estilos</b><div class="sub">Biblioteca de diseño UI</div></div></div><div class="tbtns"><button class="ib" data-act="themecycle" aria-label="Tema: ' + THEME_LABEL[theme] + ' (cambiar)" title="Tema: ' + THEME_LABEL[theme] + '">' + ic(THEME_ICON[theme], 20) + '</button><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div></div>'
+    + '<div class="hero"><h1 class="big">Diseña, crea y reutiliza sin límites</h1><p>' + list.length + ' estilos con vista previa real, paleta y código listo para copiar. Funciona sin internet.</p></div>'
+    + '<button class="search" data-act="gosearch" aria-label="Buscar estilos">' + ic("search", 19) + '<span>Buscar componentes, estilos…</span></button>'
+    + '<div class="tiles">'
+    + tile("nav", ' data-v="library"', "layers", "linear-gradient(135deg,#6D5CFF,#38BDF8)", "Biblioteca", list.length + " estilos")
+    + tile("nav", ' data-v="builder"', "edit", "linear-gradient(135deg,#C026D3,#8B5CF6)", "Creador", "Hasta 8 pantallas")
+    + tile("tab", ' data-t="Plantillas"', "grid", "linear-gradient(135deg,#2563EB,#06B6D4)", "Plantillas", tpl + " plantillas")
+    + tile("nav", ' data-v="favs"', "heart", "linear-gradient(135deg,#F97316,#EC4899)", "Colecciones", favs.length + (favs.length === 1 ? " guardado" : " guardados"))
+    + '</div>'
+    + '<div class="secRow"><h2 class="sec">' + (rec.length ? "Recientes" : "Para empezar") + '</h2><button class="link" data-act="nav" data-v="library">Ver todo</button></div>'
+    + '<div class="rail">' + picks.map(miniHTML).join("") + '</div>'
+    + '<button class="cta ghost" data-act="surprise">' + ic("spark", 18) + ' Sorpréndeme</button></div>';
+}
+function renderLibrary() {
+  const tabs = allTabs().filter(t => S.group === "Todo" || (S.group === "Fundamentos") === FUNDAMENTOS.includes(t));
+  const cards = tabs.map((t, i) => {
     const n = t === "Referencias" ? refCount() : db().filter(e => e.tab === t).length;
-    return '<button class="cat" data-act="tab" data-t="' + esc(t) + '"><span>' + ic(TAB_ICON[t] || "grid", 18) + '</span><b>' + esc(t) + '</b><small>' + n + (t === "Referencias" ? " capturas" : " estilos") + '</small></button>';
+    return '<button class="catk" data-act="tab" data-t="' + esc(t) + '"><span class="tileIc sm" style="background:' + tabGrad(t, i) + '">' + ic(TAB_ICON[t] || "grid", 21) + '</span><span class="tileTx"><b>' + esc(t) + '</b><small>' + n + (t === "Referencias" ? " capturas" : " estilos") + '</small></span></button>';
   }).join("");
-  return '<div class="wrap">'
-    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 22) + '</span><div><b>Estilos</b><div class="sub">Biblioteca de diseño UI</div></div></div><div class="tbtns"><button class="ib" data-act="themecycle" aria-label="Tema: ' + THEME_LABEL[theme] + ' (cambiar)" title="Tema: ' + THEME_LABEL[theme] + '">' + ic(THEME_ICON[theme], 20) + '</button><button class="ib" data-act="menu" aria-label="Menú">' + ic("sliders", 20) + '</button></div></div>'
-    + '<div class="hero"><h1 class="big">Diseños listos para copiar</h1><p>' + list.length + ' estilos con vista previa real, paleta de colores y código HTML/CSS. Sin internet.</p></div>'
-    + '<button class="search" data-act="gosearch" aria-label="Buscar estilos">' + ic("search", 18) + '<span>Buscar en todos los estilos…</span></button>'
-    + (f ? '<div><div class="featTag">' + ic("spark", 14) + 'Destacado de hoy</div></div><article class="feat" data-act="open" data-id="' + esc(f.id) + '" tabindex="0" role="button" aria-label="' + esc(f.name) + '"><div class="' + stageCls(f) + '">' + pv(f) + '</div><div class="cardInfo"><div class="cardName">' + esc(f.name) + '</div><div class="sub">' + esc(f.tab) + ' · ' + esc(f.ref) + '</div></div></article>' : '')
-    + '<h2 class="sec">Categorías</h2><div class="cats">' + cats + '</div>'
-    + (fresh.length ? '<h2 class="sec">Novedades</h2><div class="rail">' + fresh.map(miniHTML).join("") + '</div>' : '')
-    + '<button class="cta" data-act="surprise">' + ic("spark", 18) + ' Sorpréndeme</button></div>';
+  return '<div class="wrap"><div class="top"><div><h1 class="big">Biblioteca</h1><div class="sub">' + db().length + ' estilos · ' + allTabs().length + ' categorías</div></div><div class="tbtns"><button class="ib" data-act="gosearch" aria-label="Buscar">' + ic("search", 20) + '</button><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div></div>'
+    + '<div class="chips" role="tablist">' + LIB_GROUPS.map(g => '<button class="chip' + (S.group === g ? " on" : "") + '" role="tab" aria-selected="' + (S.group === g) + '" data-act="libgroup" data-g="' + g + '">' + g + '</button>').join("") + '</div>'
+    + '<div class="catGrid">' + cards + '</div></div>';
 }
 
 /* Sin acentos ni mayúsculas: «tipografia» encuentra «Tipografía». Varias palabras = todas deben aparecer. */
 function fold(x) { return String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
 function listFor() {
   const words = fold(S.q).split(/\s+/).filter(Boolean);
-  if (!words.length) return db().filter(e => e.tab === S.tab);
+  if (!words.length) return S.tab === "Todo" ? db() : db().filter(e => e.tab === S.tab);
   return db().filter(e => { const h = fold(e.name + " " + e.desc + " " + e.ref + " " + e.tab + " " + e.tip); return words.every(w => h.includes(w)); });
 }
 function refCount() { return REFS.length + userRefs.length; }
@@ -472,7 +496,7 @@ function renderExplore() {
   const isRefs = S.tab === "Referencias" && !S.q;
   const n = isRefs ? refCount() : listFor().length;
   return '<div class="wrap">'
-    + '<div class="top"><div><h1 class="big">' + esc(S.q ? "Búsqueda" : S.tab) + '</h1><div class="sub" id="count">' + (isRefs ? n + " capturas de referencia" : n + (S.q ? " resultados en todas las categorías" : " estilos")) + '</div></div>' + (isRefs ? '<button class="cta addBtn" data-act="addref">' + ic("upload", 16, 2.4) + ' Añadir captura</button>' : '<button class="cta addBtn" data-act="add">' + ic("plus", 16, 2.6) + ' Añadir</button>') + '</div>'
+    + '<div class="top"><div><h1 class="big">' + esc(S.q ? "Búsqueda" : S.tab === "Todo" ? "Todos los estilos" : S.tab) + '</h1><div class="sub" id="count">' + (isRefs ? n + " capturas de referencia" : n + (S.q ? " resultados en todas las categorías" : " estilos")) + '</div></div>' + (isRefs ? '<button class="cta addBtn" data-act="addref">' + ic("upload", 16, 2.4) + ' Añadir captura</button>' : '<button class="cta addBtn" data-act="add">' + ic("plus", 16, 2.6) + ' Añadir</button>') + '</div>'
     + '<label class="search">' + ic("search", 18) + '<input id="q" data-input="q" type="search" placeholder="Buscar estilo…" aria-label="Buscar estilo" value="' + esc(S.q) + '"></label>'
     + chipsHTML() + '<div id="list">' + listHTML() + '</div></div>';
 }
@@ -552,7 +576,7 @@ function saveBuilder(){syncActiveScreen();try{localStorage.setItem('estilos-buil
 
 function renderFavs() {
   const l = favs.map(getEntry).filter(Boolean);
-  return '<div class="wrap"><div><h1 class="big">Guardados</h1><div class="sub">' + l.length + ' estilos marcados</div></div>'
+  return '<div class="wrap"><div><h1 class="big">Colecciones</h1><div class="sub">' + l.length + (l.length === 1 ? ' estilo guardado' : ' estilos guardados') + '</div></div><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div>'
     + (l.length ? '<div class="grid">' + l.map(e => cardHTML(e, true)).join("") + '</div>' : '<div class="empty"><b>Aún no guardaste estilos</b><span>Toca el corazón en cualquier tarjeta.</span></div>') + '</div>';
 }
 
@@ -659,14 +683,18 @@ function moreSheet(id) {
 }
 
 function navHTML() {
-  const item = (v, icon, label) => '<button class="ni' + (S.view === v ? " nia" : "") + '" data-act="nav" data-v="' + v + '" aria-label="' + label + '"' + (S.view === v ? ' aria-current="page"' : "") + '>' + icon + (S.view === v ? '<span>' + label + '</span>' : "") + '</button>';
-  return item("home", ic("home", 22), "Inicio") + item("explore", ic("grid", 22), "Explorar") + item("builder", ic("plus", 22), "Crear") + item("favs", ic("bookmark", 22), "Guardados") + '<button class="ni" data-act="menu" aria-label="Ajustes">' + ic("sliders", 22) + '</button>';
+  const inLib = S.view === "library" || (S.view === "explore" && S.tab !== "Plantillas") || S.view === "detail";
+  const inTpl = S.view === "explore" && S.tab === "Plantillas" && !S.q;
+  const on = { home: S.view === "home", library: inLib && !inTpl, builder: S.view === "builder", tpl: inTpl, favs: S.view === "favs" };
+  const item = (key, attrs, icon, label) => '<button class="ni' + (on[key] ? " nia" : "") + '" data-act="' + attrs + '" aria-label="' + label + '"' + (on[key] ? ' aria-current="page"' : "") + '>' + ic(icon, 22) + '<span>' + label + '</span></button>';
+  return item("home", 'nav" data-v="home', "home", "Inicio") + item("library", 'nav" data-v="library', "grid", "Biblioteca") + item("builder", 'nav" data-v="builder', "edit", "Creador")
+    + item("tpl", 'tab" data-t="Plantillas', "layers", "Plantillas") + item("favs", 'nav" data-v="favs', "heart", "Colecciones");
 }
 
 function render(keepScroll) {
   const v = document.getElementById("view"), top = v.scrollTop;
   if (pvIO) pvIO.disconnect();
-  v.innerHTML = S.view === "home" ? renderHome() : S.view === "explore" ? renderExplore() : S.view === "favs" ? renderFavs() : S.view === "builder" ? renderBuilder() : renderDetail();
+  v.innerHTML = S.view === "home" ? renderHome() : S.view === "library" ? renderLibrary() : S.view === "explore" ? renderExplore() : S.view === "favs" ? renderFavs() : S.view === "builder" ? renderBuilder() : renderDetail();
   hydrate(v);
   const nav = document.getElementById("nav"), act = document.getElementById("actbar");
   if (S.view === "detail") {
@@ -685,7 +713,7 @@ function renderList() {
   if (pvIO) pvIO.disconnect();
   el.innerHTML = listHTML(); hydrate(el);
   const c = document.getElementById("count"); if (c) c.textContent = (S.q ? listFor().length + " resultados en todas las categorías" : listFor().length + " estilos");
-  const h = document.querySelector("h1.big"); if (h) h.textContent = S.q ? "Búsqueda" : S.tab;
+  const h = document.querySelector("h1.big"); if (h) h.textContent = S.q ? "Búsqueda" : S.tab === "Todo" ? "Todos los estilos" : S.tab;
   document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", !S.q && x.dataset.t === S.tab));
 }
 
@@ -943,8 +971,9 @@ const ACT = {
   open: d => { draft = null; go({ view: "detail", id: d.id, detailTab: "info", stage: "auto" }); },
   back: () => goBack(),
   nav: d => go({ view: d.v, q: d.v === "explore" ? S.q : "" }),
+  libgroup: d => go({ group: d.g }, { replace: true, keep: true }),
   tab: d => go({ view: "explore", tab: d.t, q: "" }),
-  gosearch: () => { go({ view: "explore", q: "" }); const q = document.getElementById("q"); if (q) q.focus(); },
+  gosearch: () => { go({ view: "explore", q: "", tab: "Todo" }); const q = document.getElementById("q"); if (q) q.focus(); },
   fav: d => toggleFav(d.id),
   color: d => copyText(d.c, "Copiado: " + d.c),
   pal: d => { const e = getEntry(d.id); if (e) copyText(palText(e, d.f), "Paleta copiada (" + d.f.toUpperCase() + ")"); },
