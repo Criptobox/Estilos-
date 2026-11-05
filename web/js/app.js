@@ -857,12 +857,15 @@ document.addEventListener("change", ev => {
     return;
   }
   if(t.dataset && t.dataset.themeSelect!==undefined){if(t.value)ACT.buildertheme({theme:t.value});return;}
-  if(t.dataset && t.dataset.layerField!==undefined){const i=Number(t.dataset.index);if(builder.layers[i]){const k=t.dataset.layerField;builder.layers[i][k]=t.type==="checkbox"?t.checked:(t.type==="range"?Number(t.value):t.value);saveBuilder();render(true);}return;}
+  /* Texto y deslizadores ya se aplican en vivo con «input». Volver a dibujar aquí (el
+     «change» llega al perder el foco) se comía el toque en la barra inferior. */
+  const liveField = t.tagName === "TEXTAREA" || /^(text|search|range|number)$/.test(t.type);
+  if(t.dataset && t.dataset.layerField!==undefined){const i=Number(t.dataset.index);if(builder.layers[i]){const k=t.dataset.layerField;builder.layers[i][k]=t.type==="checkbox"?t.checked:(t.type==="range"?Number(t.value):t.value);saveBuilder();if(!liveField)render(true);}return;}
   if (t.dataset && t.dataset.builderSelect) {
     if (t.value) { if (builder.selected.length < 12) { builder.selected.push(t.value); builder.layers.push({uid:"layer-"+Math.random().toString(36).slice(2,9),label:"",bg:"#FFFFFF",color:"#263247",radius:16,padding:12}); builder.activeLayer=builder.selected.length-1; } else toast("Máximo doce componentes"); saveBuilder(); render(true); }
     return;
   }
-  if (t.dataset && t.dataset.builder) { builder[t.dataset.builder] = t.type === "range" ? Number(t.value) : t.value; saveBuilder(); render(true); return; }
+  if (t.dataset && t.dataset.builder) { builder[t.dataset.builder] = t.type === "range" ? Number(t.value) : t.value; saveBuilder(); if (!liveField) render(true); return; }
   if (t.dataset && t.dataset.input === "tabsel") {
     document.getElementById("f-newtab").style.display = t.value === "__new" ? "block" : "none";
     document.getElementById("f-v").innerHTML = variantOptions(t.value, "");
