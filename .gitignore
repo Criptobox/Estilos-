@@ -1,0 +1,19 @@
+# Android / Gradle
+.gradle/
+build/
+local.properties
+*.apk
+*.aab
+.idea/
+*.iml
+captures/
+
+# Signing: NEVER commit keys
+*.jks
+*.keystore
+keystore.properties
+
+# Node (if tooling is added)
+node_modules/
+
+.DS_Store
