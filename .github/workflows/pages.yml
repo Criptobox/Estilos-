@@ -1,15 +1,33 @@
 name: Publicar PWA
-on: { push: { branches: [main] }, workflow_dispatch: {} }
-permissions: { contents: read, pages: write, id-token: write }
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: "Publicar sin ejecutar las pruebas (solo para emergencias)"
+        type: boolean
+        default: false
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 jobs:
+  # La PWA solo se publica si pasan las pruebas de extremo a extremo (ver tests.yml).
+  tests:
+    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_tests) }}
+    uses: ./.github/workflows/tests.yml
   deploy:
+    needs: tests
+    # «skipped» cubre la publicación manual con skip_tests; si las pruebas fallan o se cancelan, no se publica.
+    if: ${{ !cancelled() && (needs.tests.result == 'success' || needs.tests.result == 'skipped') }}
     runs-on: ubuntu-latest
     environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
     steps:
       - uses: actions/checkout@v4
-      - name: Sellar versión (11.0.<n.º de build>)
+      - name: Sellar versión (11.1.<n.º de build>)
         run: |
-          V="11.0.${{ github.run_number }}"
+          V="11.1.${{ github.run_number }}"
           sed -i "s/const BUILD = \"[^\"]*\"/const BUILD = \"$V\"/" web/sw.js
           sed -i "s/const APP_VERSION = \"[^\"]*\"/const APP_VERSION = \"$V\"/" web/js/util.js
           grep -n "$V" web/sw.js web/js/util.js

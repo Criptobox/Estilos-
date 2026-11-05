@@ -560,3 +560,13 @@ label.l{font-size:12px;font-weight:700;color:var(--mut)}
 /* 11.0 · exportar */
 .builder-export-box{display:grid;gap:10px}
 .builder-export-box h3{margin:0}
+
+/* 11.1 · reordenar capas con el asa (dedo o ratón) */
+.builder-layer-row{grid-template-columns:26px 54px minmax(0,1fr) auto}
+.builder-layer-grip{width:26px;height:44px;display:grid;place-items:center;padding:0;border:0;border-radius:8px;background:transparent;color:var(--muted,#8790a2);cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.builder-wrap .builder-layer-grip{touch-action:none}   /* más específico que «.builder-wrap button{touch-action:manipulation}» */
+.builder-layer-grip:hover{background:var(--pick,#f0efff);color:var(--pick-ink,#3730a3)}
+.builder-layer-grip:active{cursor:grabbing}
+.builder-layer-row.moving{position:relative;z-index:8;opacity:.97;transition:none;box-shadow:0 12px 28px rgba(20,25,45,.28);background:var(--surface,#fff)}
+.builder-layer-row.moving .builder-layer-grip{background:var(--pick,#f0efff);color:var(--pick-ink,#3730a3)}
+@media(max-width:759px){.builder-layer-row{grid-template-columns:26px 58px minmax(0,1fr)}.builder-layer-grip{height:52px;width:28px}}

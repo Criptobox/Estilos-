@@ -44,7 +44,8 @@ function readZip(buf) {
   const browser = await chromium.launch();
   const errors = [];
   async function open(opts, url) {
-    const ctx = await browser.newContext(Object.assign({ viewport: { width: 1200, height: 900 }, acceptDownloads: true }, opts || {}));
+    const ctx = await browser.newContext(Object.assign({ viewport: { width: 1200, height: 900 }, acceptDownloads: true }, Object.assign({}, opts, { init: undefined })));
+    if (opts && opts.init) await ctx.addInitScript(opts.init);
     const page = await ctx.newPage();
     page.on("pageerror", e => errors.push(current + ": " + e.message));
     page.on("console", m => { if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(current + ": " + m.text()); });
@@ -290,6 +291,153 @@ function readZip(buf) {
     await page.waitForFunction(() => navigator.serviceWorker && navigator.serviceWorker.controller, null, { timeout: 8000 }).catch(() => {});
     await page.waitForTimeout(1500); await ctx.setOffline(true); await page.reload(); await page.waitForTimeout(500);
     ok(await page.isVisible(".hero"), "la app abre sin conexión");
+    await ctx.close();
+  }
+
+
+  /* ───────── 13 · exportar con Tailwind ───────── */
+  current = "tailwind"; console.log("\n" + current);
+  {
+    const { ctx, page } = await open();
+    await setProject(page, ["tar-1"], { "tar-1": { bg: "#112233", radius: 20, offsetX: 8, animation: "rise", variant: "glass" } }); await page.waitForTimeout(300);
+    await page.evaluate(() => { builder.exportDark = true; saveBuilder(); });
+    const [dl] = await Promise.all([page.waitForEvent("download"), page.evaluate(() => exportBuilderZip())]);
+    const zip = readZip(fs.readFileSync(await dl.path()));
+    for (const n of ["tailwind/package.json", "tailwind/vite.config.js", "tailwind/index.html", "tailwind/src/main.jsx", "tailwind/src/App.jsx", "tailwind/src/index.css"]) ok(zip && !!zip[n], "ZIP contiene " + n);
+    if (zip) {
+      const app = zip["tailwind/src/App.jsx"].data.toString("utf8");
+      ok(app.includes("bg-[#112233]") && app.includes("rounded-[20px]") && app.includes("translate-x-[8px]") && app.includes("animate-[estilosRise_700ms_ease_both]"), "App.jsx usa utilidades de Tailwind con los valores del bloque");
+      ok(app.includes("dark:bg-[#0f1117]"), "con el interruptor, la página incluye variantes dark:");
+      const m = app.match(/const SCREENS = ([\s\S]*?);\n\nexport default/); let sc = null; try { sc = JSON.parse(m[1]); } catch (e) { /* ignorar */ }
+      ok(sc && /\bglass\b/.test(sc[0].blocks[0].cls), "el bloque conserva su variante (glass)");
+      ok(zip["tailwind/src/index.css"].data.toString("utf8").startsWith('@import "tailwindcss";'), "index.css importa Tailwind v4");
+      const pk = JSON.parse(zip["tailwind/package.json"].data.toString("utf8")); ok(pk.devDependencies.tailwindcss && pk.devDependencies["@tailwindcss/vite"], "package.json de Tailwind válido");
+      ok(Object.values(zip).every(f => f.crcOk), "los CRC siguen siendo válidos");
+    }
+    await ctx.close();
+  }
+
+  /* ───────── 14 · copia automática en un archivo ───────── */
+  current = "copia automática"; console.log("\n" + current);
+  {
+    const init = () => { window.showSaveFilePicker = async () => (await navigator.storage.getDirectory()).getFileHandle("copia-prueba.json", { create: true }); };
+    const { ctx, page } = await open({ init });
+    const read = () => page.evaluate(async () => { try { const f = await (await (await navigator.storage.getDirectory()).getFileHandle("copia-prueba.json")).getFile(); return await f.text(); } catch (e) { return ""; } });
+    await page.click("#nav [data-act=menu]"); await page.waitForTimeout(200);
+    ok(await page.isVisible("[data-act=abchoose]"), "Ajustes ofrece «Elegir archivo…»");
+    await page.click("[data-act=abchoose]"); await page.waitForTimeout(900);
+    eq(await page.evaluate(() => AutoBackup.active && AutoBackup.state.perm), "granted", "tras elegir el archivo la copia queda activa");
+    let o = null; try { o = JSON.parse(await read()); } catch (e) { /* ignorar */ }
+    ok(o && o.format === 2 && o.app === "estilos", "se escribe una primera copia completa en el archivo");
+    await page.keyboard.press("Escape");
+    await setProject(page, ["tar-1"]);
+    for (let k = 0; k < 25 && !(await read()).includes('"tar-1"'); k++) await page.waitForTimeout(400);   /* la copia espera unos 4 s tras el último cambio */
+    ok((await read()).includes('"tar-1"'), "un cambio en el constructor se vuelca solo al archivo (sin pulsar nada)");
+    /* No se prueba «recordar el archivo tras recargar»: leer de IndexedDB un manejador de OPFS cierra el Chromium de pruebas
+       (falla sin código de la app de por medio); en Chrome real los manejadores de showSaveFilePicker sí se guardan así. */
+    await page.click("#nav [data-act=menu]"); await page.waitForTimeout(200);
+    await page.click("[data-act=abstop]"); await page.waitForTimeout(300);
+    eq(await page.evaluate(() => AutoBackup.active), false, "«Desactivar» olvida el archivo");
+    await ctx.close();
+    const u = await open({ init: () => { delete window.showSaveFilePicker; } });
+    await u.page.click("#nav [data-act=menu]"); await u.page.waitForTimeout(200);
+    ok(/no permite guardar automáticamente/.test(await u.page.textContent("#sheetCard")) && !(await u.page.isVisible("[data-act=abchoose]")), "sin la API del navegador se explica y no se ofrece el botón");
+    await u.ctx.close();
+  }
+
+  /* ───────── 15 · compartir por enlace ───────── */
+  current = "enlace"; console.log("\n" + current);
+  {
+    const a = await open();
+    await setProject(a.page, ["tar-1", "chat-1"], { "tar-1": { label: "Mi tarjeta", bg: "#223344" } });
+    await a.page.evaluate(() => { builder.palette = "#AA3355"; builder.device = "l"; saveBuilder(); });
+    const url = await a.page.evaluate(() => builderShareLink());
+    ok(/#p1=[A-Za-z0-9_-]+$/.test(url) && url.length < 4000, "el enlace va comprimido y es corto (" + url.length + " caracteres)");
+    await a.ctx.close();
+    const b = await open({}, url.slice(BASE.length));
+    ok(/Abrir proyecto compartido/.test(await b.page.textContent("#sheetCard")), "al abrir el enlace se pide confirmación");
+    eq(await b.page.evaluate(() => location.hash), "", "el fragmento se limpia de la dirección");
+    eq(await b.page.evaluate(() => builder.screens[0].selected.length), 0, "hasta confirmar, el proyecto actual no cambia");
+    await b.page.click("[data-act=confirm]"); await b.page.waitForTimeout(400);
+    const got = await b.page.evaluate(() => ({ view: S.view, n: builder.screens[0].selected.length, label: builder.screens[0].layers[0].label, bg: builder.screens[0].layers[0].bg, pal: builder.palette, dev: builder.device }));
+    eq(got, { view: "builder", n: 2, label: "Mi tarjeta", bg: "#223344", pal: "#AA3355", dev: "l" }, "confirmar abre el proyecto en el constructor con todos sus ajustes");
+    await b.page.evaluate(() => builderUndo()); await b.page.waitForTimeout(200);
+    eq(await b.page.evaluate(() => builder.screens[0].selected.length), 0, "abrir un proyecto compartido se puede deshacer");
+    await b.ctx.close();
+    const c = await open({}, "index.html#p1=AAAAAAAA");
+    ok(/no es válido/.test(await c.page.evaluate(() => (document.getElementById("toast") || {}).textContent || "")), "un enlace dañado muestra un aviso y no rompe la app");
+    await c.ctx.close();
+    const d = await open();
+    await setProject(d.page, ["tar-1"]);
+    await d.page.evaluate(() => { builder.layers[0].mediaEdits = { "a:nth-of-type(1)": "data:image/png;base64,AAAA" }; builder.layers[0].editMeta = { "m:a:nth-of-type(1)": { t: "svg", b: "" } }; saveBuilder(); });
+    const sd = await d.page.evaluate(() => JSON.stringify(builderShareData()));
+    ok(!/data:image/.test(sd) && !/"m:/.test(sd), "las imágenes reemplazadas no viajan en el enlace");
+    await d.ctx.close();
+  }
+
+  /* ───────── 16 · reordenar capas arrastrando el asa ───────── */
+  current = "reordenar"; console.log("\n" + current);
+  {
+    const order = page => page.evaluate(() => builder.selected.join(","));
+    const box = (page, i) => page.evaluate(i => { const r = document.querySelector('[data-layer-grip="' + i + '"]').getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; }, i);
+    const m = await open();
+    await m.page.addStyleTag({ content: "*{scroll-behavior:auto!important}" });
+    await setProject(m.page, ["tar-1", "chat-1", "tar-2"]); await m.page.waitForTimeout(300);
+    await m.page.evaluate(() => document.getElementById("builder-layers-panel").scrollIntoView({ block: "start" })); await m.page.waitForTimeout(300);
+    ok(await m.page.evaluate(() => [...document.querySelectorAll("[data-layer-grip]")].every(b => b.getAttribute("aria-label"))), "cada capa tiene un asa de arrastre con nombre accesible");
+    let a = await box(m.page, 0), z = await box(m.page, 2);
+    await m.page.mouse.move(a.x, a.y); await m.page.mouse.down(); await m.page.mouse.move(z.x, z.y + 6, { steps: 8 }); await m.page.mouse.up(); await m.page.waitForTimeout(250);
+    eq(await order(m.page), "chat-1,tar-2,tar-1", "arrastrar el asa con el ratón mueve la capa");
+    await m.page.evaluate(() => builderUndo()); await m.page.waitForTimeout(200);
+    eq(await order(m.page), "tar-1,chat-1,tar-2", "…y se puede deshacer");
+    await m.page.evaluate(() => { builder.layers[0].locked = true; saveBuilder(); render(true); }); await m.page.waitForTimeout(250);
+    await m.page.evaluate(() => document.getElementById("builder-layers-panel").scrollIntoView({ block: "start" })); await m.page.waitForTimeout(250);
+    a = await box(m.page, 0); z = await box(m.page, 2);
+    await m.page.mouse.move(a.x, a.y); await m.page.mouse.down(); await m.page.mouse.move(z.x, z.y + 6, { steps: 8 }); await m.page.mouse.up(); await m.page.waitForTimeout(250);
+    eq(await order(m.page), "tar-1,chat-1,tar-2", "una capa bloqueada no se arrastra");
+    await m.ctx.close();
+
+    const t = await open({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+    await t.page.addStyleTag({ content: "*{scroll-behavior:auto!important}" });   /* el desplazamiento suave deja las posiciones inestables durante la prueba */
+    await setProject(t.page, ["tar-1", "chat-1", "tar-2"]); await t.page.waitForTimeout(400);
+    await t.page.evaluate(() => { document.getElementById("builder-layers-panel").scrollIntoView({ block: "start" }); }); await t.page.waitForTimeout(400);
+    const cdp = await t.ctx.newCDPSession(t.page);
+    const tp = (type, p) => cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x: p.x, y: p.y, id: 1 }] });
+    a = await box(t.page, 0); z = await box(t.page, 2);
+    await tp("touchStart", a);
+    for (let k = 1; k <= 10; k++) await tp("touchMove", { x: a.x, y: a.y + (z.y + 6 - a.y) * k / 10 });
+    await tp("touchEnd", z); await t.page.waitForTimeout(300);
+    eq(await order(t.page), "chat-1,tar-2,tar-1", "arrastrar el asa con el dedo (táctil) mueve la capa");
+    await t.ctx.close();
+  }
+
+  /* ───────── 17 · calidad de las imágenes ───────── */
+  current = "calidad"; console.log("\n" + current);
+  {
+    const { ctx, page } = await open();
+    await setProject(page, ["tar-1"]); await page.waitForTimeout(300);
+    const png = await page.evaluate(async () => {
+      const c = document.createElement("canvas"); c.width = 1400; c.height = 1400; const g = c.getContext("2d");
+      for (let i = 0; i < 600; i++) { g.fillStyle = "hsl(" + (i * 37 % 360) + "," + (40 + i % 50) + "%," + (30 + i % 40) + "%)"; g.beginPath(); g.arc((i * 97) % 1400, (i * 53) % 1400, 20 + (i * 13) % 160, 0, 7); g.fill(); }
+      const b = await new Promise(r => c.toBlob(r, "image/png")); const u = new Uint8Array(await b.arrayBuffer()); let s = ""; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s);
+    });
+    const big = Buffer.from(png, "base64"); ok(big.length < 6 * 1024 * 1024, "imagen de prueba válida (" + Math.round(big.length / 1024) + " KB)");
+    const size = async q => {
+      await page.evaluate(() => { builder.layers[0].mediaEdits = {}; builder.layers[0].editMeta = {}; saveBuilder(); render(true); }); await page.waitForTimeout(300);   /* vuelve a mostrar el icono SVG original */
+      await page.selectOption("#imgq", q); await page.waitForTimeout(250);
+      await page.locator("[data-act=buildermediamode]:visible").first().click(); await page.waitForTimeout(150);
+      const [fc] = await Promise.all([page.waitForEvent("filechooser", { timeout: 3000 }).catch(() => null), page.evaluate(() => document.querySelector(".builder-block .pv").shadowRoot.querySelector("svg path").dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true })))]);
+      if (fc) await fc.setFiles({ name: "grande.png", mimeType: "image/png", buffer: big });
+      await page.waitForTimeout(1500);
+      const r = await page.evaluate(() => { const v = Object.values(builder.layers[0].mediaEdits || {})[0]; if (!v) return null; return new Promise(res => { const i = new Image(); i.onload = () => res({ len: v.length, w: i.naturalWidth }); i.onerror = () => res(null); i.src = v; }); });
+      const tog = page.locator("[data-act=buildermediamode]:visible").first(); if (/Terminar/.test(await tog.textContent())) await tog.click();
+      return r;
+    };
+    const lo = await size("low"), hi = await size("high");
+    ok(lo && hi, "se pueden reemplazar imágenes con calidad Baja y Alta");
+    if (lo && hi) { ok(lo.w <= 640 && hi.w > 1000, "la calidad limita el tamaño: Baja " + lo.w + " px, Alta " + hi.w + " px"); ok(lo.len < hi.len * 0.6, "Baja pesa mucho menos que Alta (" + Math.round(lo.len * .75 / 1024) + " KB frente a " + Math.round(hi.len * .75 / 1024) + " KB)"); }
+    eq(await page.evaluate(() => builder.imageQuality), "high", "la calidad elegida se guarda con el proyecto");
+    ok(/imagen/.test(await page.textContent("#imgq ~ .sub")), "el panel muestra cuántas imágenes y cuánto pesan");
     await ctx.close();
   }
 

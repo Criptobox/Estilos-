@@ -1,10 +1,14 @@
 name: Pruebas
 on:
-  push: { branches: [main] }
   pull_request:
   workflow_dispatch:
-permissions: { contents: read }
-concurrency: { group: "pruebas-${{ github.ref }}", cancel-in-progress: true }
+  # Lo llama pages.yml antes de publicar (así en main las pruebas corren una sola vez).
+  workflow_call:
+permissions:
+  contents: read
+concurrency:
+  group: pruebas-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   e2e:
     runs-on: ubuntu-latest
@@ -12,7 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 22 }
+        with:
+          node-version: 22
       - name: Sintaxis de los JavaScript
         run: for f in web/js/*.js web/sw.js; do node --check "$f" || exit 1; done
       - name: Instalar Playwright y Chromium

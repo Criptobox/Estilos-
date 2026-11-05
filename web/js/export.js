@@ -77,12 +77,75 @@ function builderExportScreens(mediaFn) {
       let code = builderEditedMediaCode(e, l);
       if (mediaFn) code = code.replace(DATA_IMG_G, mediaFn);
       return {
-        id: "blk-" + si + "-" + i, cls: "component " + (l.variant || "default"), style: builderBlockStyle(l),
+        id: "blk-" + si + "-" + i, cls: "component " + (l.variant || "default"), tw: builderBlockTW(l), style: builderBlockStyle(l),
         tab: e.tab, n: i + 1, label: l.label || e.name, desc: e.desc,
         srcdoc: '<!doctype html><meta charset=utf-8><meta name=viewport content=width=device-width,initial-scale=1><style>body{margin:0;padding:8px;font-family:system-ui,sans-serif;overflow:hidden}*{box-sizing:border-box}</style>' + code
       };
     }).filter(Boolean)
   }));
+}
+
+/* Clases de Tailwind de un bloque. Los valores del usuario (colores, radios…) van como valores
+   arbitrarios «[...]»; Tailwind solo genera las clases que aparecen completas en el código fuente,
+   por eso cada una se escribe entera y nunca se compone a trozos. */
+function builderBlockTW(l) {
+  const clamp = (v, lo, hi, d) => Math.max(lo, Math.min(hi, Number(v) || d));
+  const c = [];
+  c.push(l.hidden ? "hidden" : "block");
+  c.push("bg-[" + safeColor(l.bg || "#FFFFFF") + "]", "text-[color:" + safeColor(l.color || "#263247") + "]");
+  c.push("rounded-[" + clamp(l.radius, 6, 32, 16) + "px]", "p-[" + clamp(l.padding, 4, 32, 12) + "px]");
+  c.push("text-[length:" + (Number(l.fontSize) || 14) + "px]", "font-[" + (Number(l.weight) || 600) + "]");
+  c.push("text-" + (["left", "center", "right"].includes(l.align) ? l.align : "left"));
+  c.push("border-[" + clamp(l.borderWidth, 0, 5, 0) + "px]", "border-" + (["solid", "dashed", "dotted"].includes(l.borderStyle) ? l.borderStyle : "solid"), "border-[color:" + safeColor(l.borderColor || "#E8EAF0") + "]");
+  const sh = builderElevation(l);
+  c.push(sh === "none" ? "shadow-none" : "shadow-[" + sh.replace(/ /g, "_") + "]");
+  c.push("w-[" + (Number(l.width) || 100) + "%]");
+  const ox = Number(l.offsetX) || 0, oy = Number(l.offsetY) || 0;
+  if (ox) c.push("translate-x-[" + ox + "px]");
+  if (oy) c.push("translate-y-[" + oy + "px]");
+  const ms = Math.max(300, Math.min(3000, Number(l.duration) || 700));
+  const anim = { fade: "animate-[estilosFade_" + ms + "ms_ease_both]", rise: "animate-[estilosRise_" + ms + "ms_ease_both]", zoom: "animate-[estilosZoom_" + ms + "ms_ease_both]", float: "animate-[estilosFloat_" + ms + "ms_ease-in-out_infinite]", pulse: "animate-[estilosPulse_" + ms + "ms_ease-in-out_infinite]" }[l.animation];
+  if (anim) c.push(anim, "motion-reduce:animate-none");
+  return c.join(" ");
+}
+
+/* Proyecto React + Tailwind v4 (Vite). La página usa utilidades; el CSS propio solo trae
+   las animaciones y las variantes Glass/Soft/Outline/Bold, que Tailwind no tiene. */
+function builderTailwindFiles(screens) {
+  const accent = safeColor(builder.palette), bg = safeColor(builder.bg), r = Math.max(8, Math.min(32, Number(builder.radius) || 20));
+  const W = Math.max(460, deviceOf(builder).w), dk = !!builder.exportDark;
+  const fam = builder.font === "Georgia" ? "font-[family-name:Georgia,serif]" : "font-[family-name:Inter,system-ui,sans-serif]";
+  const data = screens.map(sc => ({
+    id: sc.id, title: sc.title, subtitle: sc.subtitle,
+    blocks: sc.blocks.map(b => ({ id: b.id, cls: b.cls + " " + b.tw, tab: b.tab, n: b.n, label: b.label, desc: b.desc, srcdoc: b.srcdoc }))
+  }));
+  const navOff = "border-[#e4e7ef] bg-white text-[#596276]" + (dk ? " dark:border-[#2a2f3d] dark:bg-[#1b1e29] dark:text-[#b8bfd0]" : "");
+  const app = 'import { useState } from "react";\n\n/* Datos del proyecto exportado desde Estilos. Cada bloque se muestra aislado en un iframe. */\nconst SCREENS = ' + JSON.stringify(data, null, 2) + ';\n\n'
+    + 'export default function App() {\n  const [i, setI] = useState(0);\n  const s = SCREENS[i];\n  return (\n'
+    + '    <div className="min-h-screen p-[18px] ' + fam + ' bg-[' + bg + '] text-[#182033]' + (dk ? ' dark:bg-[#0f1117] dark:text-[#e7eaf2]' : '') + '">\n'
+    + '      <nav className="mx-auto mb-3 flex max-w-[' + W + 'px] gap-1.5 overflow-auto" aria-label="Pantallas">\n        {SCREENS.map((x, k) => (\n          <button\n            key={x.id}\n            onClick={() => setI(k)}\n            aria-current={k === i ? "page" : undefined}\n'
+    + '            className={"cursor-pointer whitespace-nowrap rounded-full border px-[13px] py-[9px] " + (k === i ? "border-[' + accent + '] bg-[' + accent + '] text-white" : "' + navOff + '")}\n          >\n            {x.title}\n          </button>\n        ))}\n      </nav>\n'
+    + '      <main className="mx-auto max-w-[' + W + 'px] rounded-[' + r + 'px] bg-white p-6 shadow-[0_20px_60px_#1d2b4a18]' + (dk ? ' dark:bg-[#171a23] dark:shadow-none' : '') + '">\n'
+    + '        <div className="grid size-[42px] place-items-center rounded-[14px] bg-[' + accent + '] text-[22px] text-white">✦</div>\n'
+    + '        <small className="mt-2 block tracking-[1px] text-[#7c8497]' + (dk ? ' dark:text-[#9aa2b5]' : '') + '">DISEÑADO CON ESTILOS</small>\n'
+    + '        <h1 className="mb-2 mt-5 text-[32px] font-bold leading-[1.05]">{s.title}</h1>\n'
+    + '        <p className="leading-normal text-[#737b8d]' + (dk ? ' dark:text-[#aab1c2]' : '') + '">{s.subtitle}</p>\n'
+    + '        <button className="my-[18px] cursor-pointer rounded-[' + r + 'px] border-0 bg-[' + accent + '] px-[18px] py-[14px] font-bold text-white">Descubrir más ↗</button>\n'
+    + '        {s.blocks.map((b) => (\n          <section key={b.id} className={"mt-[18px] overflow-hidden " + b.cls}>\n'
+    + '            <div className="flex justify-between text-[10px] uppercase tracking-[.08em] text-[#8991a2]' + (dk ? ' dark:text-[#8d95a8]' : '') + '">\n              <span>{b.tab}</span>\n              <small className="tracking-[1px]">Bloque {b.n}</small>\n            </div>\n'
+    + '            <h2 className="my-2 text-base font-bold">{b.label}</h2>\n            <p className="text-[13px] leading-normal">{b.desc}</p>\n'
+    + '            <iframe loading="lazy" title={b.label} sandbox="allow-same-origin" srcDoc={b.srcdoc} className="mt-3 block h-[230px] w-full rounded-xl border-0 bg-[#f7f8fb]" />\n          </section>\n        ))}\n      </main>\n    </div>\n  );\n}\n';
+  const css = '@import "tailwindcss";\n\n/* Animaciones y variantes de los bloques (Tailwind no las incluye). */\n'
+    + '@keyframes estilosFade{from{opacity:0}to{opacity:1}}\n@keyframes estilosRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}\n@keyframes estilosZoom{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}\n@keyframes estilosFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}\n@keyframes estilosPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}\n'
+    + '.component.glass{background:#ffffff88!important;backdrop-filter:blur(12px);border-color:#ffffffaa!important}\n.component.soft{background:linear-gradient(145deg,#fff,#f0f1f8)!important;box-shadow:8px 8px 18px #202a4014!important}\n.component.outline{background:transparent!important;border-width:1px!important;border-color:currentColor!important;box-shadow:none!important}\n.component.bold{background:linear-gradient(135deg,#635bff18,#26b9d418)!important;border-width:2px!important}\n';
+  return [
+    { name: "package.json", data: JSON.stringify({ name: "proyecto-estilos-tailwind", private: true, version: "1.0.0", type: "module", scripts: { dev: "vite", build: "vite build", preview: "vite preview" }, dependencies: { react: "^18.3.1", "react-dom": "^18.3.1" }, devDependencies: { "@tailwindcss/vite": "^4.0.0", "@vitejs/plugin-react": "^4.3.1", tailwindcss: "^4.0.0", vite: "^5.4.0" } }, null, 2) + "\n" },
+    { name: "vite.config.js", data: 'import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react";\nimport tailwindcss from "@tailwindcss/vite";\n\nexport default defineConfig({ plugins: [react(), tailwindcss()], base: "./" });\n' },
+    { name: "index.html", data: '<!doctype html>\n<html lang="es">\n  <head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width,initial-scale=1" />\n' + (dk ? '    <meta name="color-scheme" content="light dark" />\n' : '') + '    <title>' + esc(builder.title) + '</title>\n  </head>\n  <body>\n    <div id="root"></div>\n    <script type="module" src="/src/main.jsx"></script>\n  </body>\n</html>\n' },
+    { name: "src/main.jsx", data: 'import { StrictMode } from "react";\nimport { createRoot } from "react-dom/client";\nimport App from "./App.jsx";\nimport "./index.css";\n\ncreateRoot(document.getElementById("root")).render(\n  <StrictMode>\n    <App />\n  </StrictMode>\n);\n' },
+    { name: "src/App.jsx", data: app },
+    { name: "src/index.css", data: css }
+  ];
 }
 
 function builderExportCSS(mode, blocksCss) {
@@ -157,13 +220,16 @@ async function exportBuilderZip() {
       return name;
     };
     const html = builderExportHTML(mediaFn);
-    const react = builderReactFiles(builderExportScreens(mediaFn));
+    const screens = builderExportScreens(mediaFn);
+    const react = builderReactFiles(screens);
     const files = [{ name: "index.html", data: html }]
       .concat(assetFiles)
       .concat(react.map(f => ({ name: "react/" + f.name, data: f.data })))
       .concat(assetFiles.map(f => ({ name: "react/public/" + f.name, data: f.data })))
-      .concat([{ name: "LEEME.txt", data: "Proyecto exportado desde Estilos\n\n- index.html + assets/: versión lista para abrir o publicar (HTML estático).\n- react/: el mismo proyecto como app React con Vite.\n    cd react\n    npm install\n    npm run dev      (desarrollo)\n    npm run build    (genera dist/ para publicar)\n\nLas imágenes que reemplazaste van como archivos en assets/ (y react/public/assets/).\n" }]);
+      .concat(builderTailwindFiles(screens).map(f => ({ name: "tailwind/" + f.name, data: f.data })))
+      .concat(assetFiles.map(f => ({ name: "tailwind/public/" + f.name, data: f.data })))
+      .concat([{ name: "LEEME.txt", data: "Proyecto exportado desde Estilos\n\n- index.html + assets/: versión lista para abrir o publicar (HTML estático).\n- react/: el mismo proyecto como app React con Vite y CSS.\n- tailwind/: el mismo proyecto como app React con Vite y Tailwind CSS v4 (utilidades en el código).\n    cd react   (o cd tailwind)\n    npm install\n    npm run dev      (desarrollo)\n    npm run build    (genera dist/ para publicar)\n\nLas imágenes que reemplazaste van como archivos en assets/ (y en public/assets/ de cada proyecto).\n" }]);
     downloadBlob(zipBuild(files), "proyecto-estilos.zip", 6000);
-    toast("ZIP exportado: HTML + React" + (assetFiles.length ? " + " + assetFiles.length + (assetFiles.length > 1 ? " imágenes" : " imagen") : ""));
+    toast("ZIP exportado: HTML + React + Tailwind" + (assetFiles.length ? " + " + assetFiles.length + (assetFiles.length > 1 ? " imágenes" : " imagen") : ""));
   } catch (e) { toast("No se pudo crear el ZIP"); }
 }

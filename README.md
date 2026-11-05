@@ -1,4 +1,4 @@
-# Estilos 11.0.0
+# Estilos 11.1.0
 
 Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponible como PWA y envoltorio Android.
 
@@ -16,7 +16,10 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 - Temas predefinidos: Violeta Studio, Midnight, Ivory y Mint.
 - Guardado de temas personalizados en el dispositivo.
 - Tamaño de la maqueta: móvil pequeño, móvil, móvil grande o tablet.
-- Exportar: HTML autocontenido con navegación entre pantallas, o **ZIP** con ese HTML, un **proyecto React (Vite)** y las imágenes como archivos. Opción de modo oscuro automático en la página exportada.
+- Exportar: HTML autocontenido con navegación entre pantallas, o **ZIP** con ese HTML, un proyecto **React + CSS** y un proyecto **React + Tailwind v4** (Vite), con las imágenes como archivos. Opción de modo oscuro automático en la página exportada.
+- **Compartir con un enlace**: el proyecto va comprimido en el `#` de la dirección (no pasa por ningún servidor); quien lo abre confirma y puede deshacerlo. Las imágenes no viajan en el enlace.
+- **Reordenar capas arrastrando el asa** (⠿) con el dedo o el ratón; también se puede arrastrar a una carpeta.
+- **Calidad de las imágenes** que reemplazas: Baja (640 px), Media (1000 px) o Alta (1600 px).
 - Las imágenes que reemplazas se guardan en IndexedDB (no en `localStorage`, que se llena con pocas fotos).
 - El historial de deshacer/rehacer sobrevive a las recargas (misma pestaña).
 - Las ediciones de texto e imagen guardan, además de la ruta, la etiqueta y el texto original; si un diseño cambia, la edición solo se aplica si el nodo sigue siendo el mismo.
@@ -27,6 +30,7 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 - **Editor en vivo** (pestaña *Editor* del detalle): colores, radio y modo con vista previa al instante; *Aplicar a este estilo* o *Guardar variante*.
 - **Código para más plataformas**: HTML/CSS (componente completo) y tokens del tema para Tailwind (v3 y v4), Jetpack Compose, SwiftUI y Flutter.
 - **Capturas propias** en *Referencias* (se guardan en este dispositivo con IndexedDB) y **sacar la paleta** de cualquier captura → crear un estilo con ella.
+- **Copia automática en un archivo** (Chrome y Edge de escritorio): eliges un archivo una vez y la app lo actualiza sola con cada cambio; tras reiniciar el navegador pide reactivarla con un toque.
 - **Copia de seguridad en archivo**: descargar, compartir (menú del sistema) e importar `.json`. Incluye tus estilos, el proyecto del constructor con sus imágenes, tus temas y tus capturas propias.
 - Búsqueda sin acentos y con varias palabras; vistas previas que se dibujan al acercarse a la pantalla.
 - Service worker «caché primero»: abre al instante sin conexión o con mala red.
@@ -41,8 +45,8 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 
 
 ## Versiones
-- Web/PWA: `11.0.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 28`, `versionName 11.0`.
+- Web/PWA: `11.1.0` (GitHub Actions añade el número de compilación).
+- Android: `versionCode 29`, `versionName 11.1`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -60,7 +64,7 @@ npm install
 npx playwright install chromium
 npm test
 ```
-El workflow `tests.yml` las ejecuta en cada push a `main` y en cada pull request.
+Las ejecuta el workflow `tests.yml` en cada pull request, y `pages.yml` las ejecuta antes de publicar: **si fallan, la PWA no se publica** (una publicación manual puede saltárselas con `skip_tests`).
 
 ## Compilar APK
 Requiere JDK 17, Android SDK 34 y Gradle 8.9.
@@ -73,6 +77,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **11.1**: exportación con Tailwind, copia automática en un archivo, compartir por enlace, reordenar capas con el dedo, calidad de imagen y publicación condicionada a las pruebas. Ver `docs/CHANGELOG-11.1.md`.
 - **11.0**: copia de seguridad completa (con el constructor), imágenes en IndexedDB, historial persistente, tamaños de pantalla, exportación ZIP con React y modo oscuro, ediciones robustas, paleta → constructor, panel de capas accesible y pruebas automáticas. Ver `docs/CHANGELOG-11.0.md`.
 - **10.9 + PWA**: modo oscuro (también en el constructor), editor en vivo, código para Tailwind/Compose/SwiftUI/Flutter, capturas propias y paleta, copia en archivo, búsqueda sin acentos, carga diferida, caché primero, WebP y foco accesible. En el constructor: textos junto a iconos editables y deshacer fiable en modo Texto. Ver `docs/CHANGELOG-10.9.md`.
 - **10.9**: Auditoría y correcciones de integración. Ver `docs/CHANGELOG-10.9.md`.

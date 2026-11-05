@@ -12,7 +12,7 @@ const TAB_FAMILY = { Chat: "chat", Tarjetas: "card", Listas: "list", Avatares: "
 
 function readJSON(k, fb) { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : fb; } catch (e) { return fb; } }
 function writeJSON(k, v) {
-  try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+  try { localStorage.setItem(k, JSON.stringify(v)); AutoBackup.touch(); return true; }
   catch (e) { toast("No se pudo guardar: almacenamiento lleno"); return false; }
 }
 
@@ -106,6 +106,12 @@ applyDim();
 /* ───────── Estado y navegación ───────── */
 let S = { view: "home", tab: "Tarjetas", id: null, q: "", detailTab: "info", stage: "auto", stack: "html" };
 const BUILDER_FONTS = ["Inter", "Plus Jakarta Sans", "Georgia"];
+/* Calidad con la que se guardan las imágenes que el usuario reemplaza (px máximos, calidad WebP/JPEG y topes en caracteres de la data URL). */
+const IMAGE_QUALITY = {
+  high: { n: "Alta", max: 1600, q: .86, jq: .8, soft: 1600000, hard: 2200000 },
+  mid: { n: "Media", max: 1000, q: .78, jq: .68, soft: 850000, hard: 1000000 },
+  low: { n: "Baja", max: 640, q: .6, jq: .5, soft: 300000, hard: 400000 }
+};
 let builder = sanitizeBuilder(readJSON("estilos-builder-v1", null));
 let builderCollapsedGroups = new Set();
 let builderHistory=[],builderFuture=[],builderHistoryBusy=false,builderHistoryLast="",builderHistoryNeedsCheckpoint=false;
@@ -214,7 +220,7 @@ function sanitizeBuilder(raw) {
   const out = {
     title: String(b.title || "Mi nueva interfaz").slice(0, 60), subtitle: String(b.subtitle || "Una experiencia diseñada a tu manera").slice(0, 100),
     palette: safeColor(b.palette || "#635BFF"), bg: safeColor(b.bg || "#F5F6FA"), font: BUILDER_FONTS.includes(b.font) ? b.font : "Inter",
-    radius: Math.max(8, Math.min(32, Number(b.radius) || 20)), device: DEVICES[b.device] ? b.device : "m", exportDark: !!b.exportDark,
+    radius: Math.max(8, Math.min(32, Number(b.radius) || 20)), device: DEVICES[b.device] ? b.device : "m", exportDark: !!b.exportDark, imageQuality: IMAGE_QUALITY[b.imageQuality] ? b.imageQuality : "mid",
     selected: [], layers: [], activeLayer: 0
   };
   out.screens = Array.isArray(b.screens) && b.screens.length ? b.screens.slice(0, 8).map(cleanScreen)
@@ -504,7 +510,7 @@ function renderBuilder() {
   const layerGroups=[...new Set(builder.layers.map(x=>String(x.group||"").trim()).filter(Boolean))];
   const layerRowHtml=(entry,index)=>{
     const layer=builder.layers[index]||{},name=layer.label||entry.name;
-    return '<div class="builder-layer-row'+(index===builder.activeLayer?' active':'')+(layer.hidden?' is-hidden':'')+(layer.locked?' is-locked':'')+'" draggable="true" data-layer-index="'+index+'"><button type="button" class="builder-layer-thumb" data-act="builderselect" data-index="'+index+'" aria-label="Seleccionar '+esc(name)+'">'+pv(entry)+'</button><button type="button" class="builder-layer-name" data-act="builderselect" data-index="'+index+'"><b>'+esc(name)+'</b><small>'+esc(entry.tab)+' · Capa '+(index+1)+'</small></button><div class="builder-layer-tools">'+
+    return '<div class="builder-layer-row'+(index===builder.activeLayer?' active':'')+(layer.hidden?' is-hidden':'')+(layer.locked?' is-locked':'')+'" draggable="true" data-layer-index="'+index+'"><button type="button" class="builder-layer-grip" data-layer-grip="'+index+'" aria-label="Reordenar «'+esc(name)+'»: arrastra el asa o usa las flechas" title="Arrastrar para reordenar">'+ic('grip',16)+'</button><button type="button" class="builder-layer-thumb" data-act="builderselect" data-index="'+index+'" aria-label="Seleccionar '+esc(name)+'">'+pv(entry)+'</button><button type="button" class="builder-layer-name" data-act="builderselect" data-index="'+index+'"><b>'+esc(name)+'</b><small>'+esc(entry.tab)+' · Capa '+(index+1)+'</small></button><div class="builder-layer-tools">'+
       '<button type="button" data-act="builderlayerhide" data-index="'+index+'" aria-label="Ocultar «'+esc(name)+'»" aria-pressed="'+(!!layer.hidden)+'" title="'+(layer.hidden?'Mostrar':'Ocultar')+'">'+ic(layer.hidden?'eyeOff':'eye',16)+'</button>'+
       '<button type="button" data-act="builderlayerlock" data-index="'+index+'" aria-label="Bloquear «'+esc(name)+'»" aria-pressed="'+(!!layer.locked)+'" title="'+(layer.locked?'Desbloquear':'Bloquear')+'">'+ic(layer.locked?'lock':'unlock',16)+'</button>'+
       '<button type="button" data-act="buildermove" data-index="'+index+'" data-dir="-1" aria-label="Subir «'+esc(name)+'»" title="Subir" '+(index===0?'disabled':'')+'>'+ic('arrowUp',16)+'</button>'+
@@ -531,10 +537,18 @@ function renderBuilder() {
   '<nav class="builder-mobile-nav" aria-label="Navegación del constructor"><button type="button" data-act="buildermobilejump" data-target="builder-preview-panel">▣<span>Vista</span></button><button type="button" data-act="buildermobilejump" data-target="builder-controls-panel">⚙<span>Editar</span></button><button type="button" data-act="buildermobilejump" data-target="builder-library-panel">✦<span>Biblioteca</span></button><button type="button" data-act="buildermobilejump" data-target="builder-layers-panel">▤<span>Capas</span></button><button type="button" data-act="buildertextmode">Aa<span>Texto</span></button><button type="button" data-act="buildermediamode">▧<span>Imagen</span></button></nav>' +
   '<div class="builder-layout"><div class="builder-controls" id="builder-controls-panel"><section class="panel"><h3>Identidad de pantalla</h3><label class="l">Nombre de esta pantalla</label><input class="fld" data-builder="title" value="' + esc(builder.title) + '" maxlength="60"><label class="l">Descripción</label><input class="fld" data-builder="subtitle" value="' + esc(builder.subtitle) + '" maxlength="100"><div class="two"><div><label class="l">Color principal</label><input class="fld color-field" type="color" data-builder="palette" value="' + esc(builder.palette) + '"></div><div><label class="l">Fondo</label><input class="fld color-field" type="color" data-builder="bg" value="' + esc(builder.bg) + '"></div></div><div class="two"><div><label class="l">Tipografía</label><select class="fld" data-builder="font"><option' + (builder.font==='Inter'?' selected':'') + '>Inter</option><option' + (builder.font==='Plus Jakarta Sans'?' selected':'') + '>Plus Jakarta Sans</option><option' + (builder.font==='Georgia'?' selected':'') + '>Georgia</option></select></div><div><label class="l">Redondeo general</label><input class="fld" type="range" min="8" max="32" step="2" data-builder="radius" value="' + Number(builder.radius) + '"></div></div></section>' +
   '<section class="panel"><h3>Temas reutilizables</h3><div class="two"><select class="fld" data-theme-select><option value="">Seleccionar tema</option><option value="violet">Violeta Studio</option><option value="midnight">Midnight</option><option value="ivory">Ivory</option><option value="mint">Mint</option>' + builderThemes.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.name)+'</option>').join('') + '</select><button class="secondary" data-act="builderthemesave">Guardar tema actual</button></div><p class="sub">Guarda combinaciones de color, tipografía y redondeo para reutilizarlas en otros proyectos.</p></section>' +
-  '<section class="panel builder-library-panel" id="builder-library-panel"><h3>Biblioteca visual</h3><p class="sub">Elige por apariencia, no por nombre. Abre una categoría para ver las miniaturas reales y toca un diseño para añadirlo a la pantalla.</p><label class="builder-picker-search"><span>⌕</span><input type="search" data-builder-picker-search placeholder="Buscar por nombre o categoría…"></label><div class="builder-picker-groups">' + fields.map(([tab])=>builderVisualPicker(tab)).join('') + '</div>' + layerPanelHtml + layerEditor + '</section><section class="panel builder-export-box"><h3>Exportar proyecto</h3><button type="button" class="switchRow" role="switch" aria-checked="' + (!!builder.exportDark) + '" data-act="builderexportdark"><span>Modo oscuro automático<small>El marco de la página se oscurece si quien la abre usa modo oscuro. Los colores de tus bloques no cambian.</small></span><i class="sw2"></i></button><button class="cta" data-act="builderexport">' + ic('arrowDown',17) + ' Todas las pantallas en HTML</button><button class="cta ghost" data-act="builderexportzip">' + ic('layers',17) + ' ZIP: HTML + React + imágenes</button></section></div><div class="builder-preview'+(builderTextEditMode?' text-edit-mode':'')+(builderMediaEditMode?' media-edit-mode':'')+'" id="builder-preview-panel"><div class="preview-heading"><b>Vista previa en vivo</b><button type="button" class="builder-text-toggle" data-act="buildertextmode">'+(builderTextEditMode?'✓ Terminar texto':'Aa Editar texto')+'</button><button type="button" class="builder-text-toggle" data-act="buildermediamode">'+(builderMediaEditMode?'✓ Terminar imagen':'▧ Cambiar imagen')+'</button><span class="builder-device-pick"><select data-builder="device" aria-label="Tamaño de pantalla">'+Object.keys(DEVICES).map(k=>'<option value="'+k+'"'+(deviceOf(builder)===DEVICES[k]?' selected':'')+'>'+DEVICES[k].n+' · '+DEVICES[k].w+'×'+DEVICES[k].h+'</option>').join('')+'</select> · Pantalla '+(builder.activeScreenIndex+1)+'</span></div><input type="file" id="builder-media-file" accept="image/png,image/jpeg,image/webp" hidden>' + builderPreview() + '<p class="sub">Selecciona un bloque. Usa ⠿ para moverlo y la esquina ↘ para cambiar su tamaño. Los cambios se guardan automáticamente.</p></div></div></div>';
+  '<section class="panel builder-library-panel" id="builder-library-panel"><h3>Biblioteca visual</h3><p class="sub">Elige por apariencia, no por nombre. Abre una categoría para ver las miniaturas reales y toca un diseño para añadirlo a la pantalla.</p><label class="builder-picker-search"><span>⌕</span><input type="search" data-builder-picker-search placeholder="Buscar por nombre o categoría…"></label><div class="builder-picker-groups">' + fields.map(([tab])=>builderVisualPicker(tab)).join('') + '</div>' + layerPanelHtml + layerEditor + '</section>' + builderImagesPanelHTML() + '<section class="panel builder-export-box"><h3>Exportar y compartir</h3><button type="button" class="switchRow" role="switch" aria-checked="' + (!!builder.exportDark) + '" data-act="builderexportdark"><span>Modo oscuro automático<small>El marco de la página se oscurece si quien la abre usa modo oscuro. Los colores de tus bloques no cambian.</small></span><i class="sw2"></i></button><button class="cta" data-act="builderexport">' + ic('arrowDown',17) + ' Todas las pantallas en HTML</button><button class="cta ghost" data-act="builderexportzip">' + ic('layers',17) + ' ZIP: HTML + React + Tailwind</button><button class="cta ghost" data-act="builderlink">' + ic('share',17) + ' Copiar enlace del proyecto</button><p class="sub">El enlace no lleva las imágenes que reemplazaste; para eso usa el ZIP o la copia de seguridad.</p></section></div><div class="builder-preview'+(builderTextEditMode?' text-edit-mode':'')+(builderMediaEditMode?' media-edit-mode':'')+'" id="builder-preview-panel"><div class="preview-heading"><b>Vista previa en vivo</b><button type="button" class="builder-text-toggle" data-act="buildertextmode">'+(builderTextEditMode?'✓ Terminar texto':'Aa Editar texto')+'</button><button type="button" class="builder-text-toggle" data-act="buildermediamode">'+(builderMediaEditMode?'✓ Terminar imagen':'▧ Cambiar imagen')+'</button><span class="builder-device-pick"><select data-builder="device" aria-label="Tamaño de pantalla">'+Object.keys(DEVICES).map(k=>'<option value="'+k+'"'+(deviceOf(builder)===DEVICES[k]?' selected':'')+'>'+DEVICES[k].n+' · '+DEVICES[k].w+'×'+DEVICES[k].h+'</option>').join('')+'</select> · Pantalla '+(builder.activeScreenIndex+1)+'</span></div><input type="file" id="builder-media-file" accept="image/png,image/jpeg,image/webp" hidden>' + builderPreview() + '<p class="sub">Selecciona un bloque. Usa ⠿ para moverlo y la esquina ↘ para cambiar su tamaño. Los cambios se guardan automáticamente.</p></div></div></div>';
+}
+function builderMediaStats(){let n=0,b=0;builder.screens.forEach(sc=>sc.layers.forEach(l=>Object.values(l.mediaEdits||{}).forEach(v=>{if(isDataImg(v)){n++;b+=Math.round(v.length*.75);}})));return {n,b};}
+function builderImagesPanelHTML(){
+  syncActiveScreen();const st=builderMediaStats();
+  const size=st.b>1048576?(st.b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(st.b/1024))+' KB';
+  return '<section class="panel"><h3>Imágenes</h3><label class="l" for="imgq">Calidad al reemplazar una imagen</label><select class="fld" id="imgq" data-builder="imageQuality">'
+    +Object.keys(IMAGE_QUALITY).map(k=>'<option value="'+k+'"'+((builder.imageQuality||"mid")===k?' selected':'')+'>'+IMAGE_QUALITY[k].n+' · hasta '+IMAGE_QUALITY[k].max+' px</option>').join('')
+    +'</select><p class="sub">Se aplica a las imágenes que reemplaces a partir de ahora. '+(st.n?st.n+(st.n>1?' imágenes':' imagen')+' en el proyecto · '+size+'.':'Todavía no has reemplazado ninguna.')+'</p></section>';
 }
 function pickedBuilder(){return builder.selected.map(getEntry).filter(Boolean);}
-function saveBuilder(){syncActiveScreen();try{localStorage.setItem('estilos-builder-v1',mediaStrip(JSON.stringify(builder)));}catch(e){toast('No se pudo guardar el constructor');}}
+function saveBuilder(){syncActiveScreen();try{localStorage.setItem('estilos-builder-v1',mediaStrip(JSON.stringify(builder)));AutoBackup.touch();}catch(e){toast('No se pudo guardar el constructor');}}
 
 function renderFavs() {
   const l = favs.map(getEntry).filter(Boolean);
@@ -759,6 +773,15 @@ function deleteEntry(id) {
   closeSheet(); toast("Eliminado");
   go({ view: "explore", id: null }, { replace: true });
 }
+function autoBackupHTML() {
+  if (!AutoBackup.supported) return '<label class="l">Copia automática</label><p class="sub">Tu navegador no permite guardar automáticamente en un archivo (funciona en Chrome y Edge de escritorio). Usa «Descargar» cuando quieras.</p>';
+  const s = AutoBackup.state;
+  let body;
+  if (!AutoBackup.active) body = '<p class="sub">Elige un archivo una vez y la app lo irá actualizando sola cada vez que cambies algo.</p><button class="cta ghost" data-act="abchoose">' + ic("arrowDown", 16) + ' Elegir archivo…</button>';
+  else if (s.perm !== "granted") body = '<p class="sub">En pausa: el navegador pide permiso otra vez para escribir en <b>' + esc(s.name) + '</b>.</p><div class="two"><button class="cta" data-act="abreconnect">Reactivar</button><button class="cta ghost" data-act="abstop">Quitar</button></div>';
+  else body = '<p class="sub">Activa en <b>' + esc(s.name) + '</b> · ' + (s.last ? "última copia a las " + new Date(s.last).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "aún sin copiar") + (s.error ? "<br>Error: " + esc(s.error) : "") + '</p><div class="two"><button class="cta ghost" data-act="abnow">Guardar ahora</button><button class="cta ghost" data-act="abstop">Desactivar</button></div>';
+  return '<label class="l">Copia automática en un archivo</label>' + body;
+}
 function openMenu() {
   let bak = false; try { bak = !!localStorage.getItem(KEY_BAK); } catch (e) { /* ignorar */ }
   const canShare = !!navigator.share;
@@ -770,6 +793,7 @@ function openMenu() {
     + (canShare ? '<button class="cta ghost" data-act="sharefile">' + ic("share", 16) + ' Compartir</button>' : '<button class="cta ghost" data-act="impfile">' + ic("upload", 16) + ' Importar</button>') + '</div>'
     + (canShare ? '<button class="cta ghost" data-act="impfile">' + ic("upload", 16) + ' Importar desde archivo</button>' : '')
     + '<span class="sub">Incluye tus estilos, ediciones y borrados, el proyecto del constructor con sus imágenes, tus temas y tus capturas propias.</span></div>'
+    + autoBackupHTML()
     + '<details class="adv"><summary>Exportar o importar como texto</summary>'
     + '<textarea class="fld" id="ioText" rows="6" placeholder="Exporta para ver o pega un JSON para importar"></textarea>'
     + '<div class="btns"><button class="cta ghost" data-act="export">Mostrar mis cambios</button><div class="two"><button class="cta ghost" data-act="copyio">Copiar</button><button class="cta ghost" data-act="import">Importar</button></div>'
@@ -877,8 +901,10 @@ function paletteFromLB() {
   }).catch(() => toast("No se pudo leer la imagen"));
 }
 /* ───────── Capturas propias ───────── */
+let refsLoadedOnce = false;
 function loadUserRefs() {
   return RefStore.all().then(list => {
+    if (refsLoadedOnce) AutoBackup.touch(); refsLoadedOnce = true;
     userRefs.forEach(r => URL.revokeObjectURL(r.url));
     userRefs = list.map(r => Object.assign({}, r, { url: URL.createObjectURL(r.blob) }));
     if (S.view === "home" || (S.view === "explore" && S.tab === "Referencias")) render(true);
@@ -1009,6 +1035,17 @@ const ACT = {
   builderduplicate: d => { const i=Number(d.index); if(builder.selected.length>=12){toast('Máximo doce capas');return;} if(Number.isInteger(i)&&i>=0&&i<builder.selected.length){builder.selected.splice(i+1,0,builder.selected[i]);const copy=JSON.parse(JSON.stringify(builder.layers[i]||{}));copy.uid="layer-"+Math.random().toString(36).slice(2,9);copy.locked=false;builder.layers.splice(i+1,0,copy);builder.activeLayer=i+1;saveBuilder();render(true);toast('Componente duplicado');} },
   builderexport: () => exportBuilder(),
   builderexportzip: () => exportBuilderZip(),
+  abchoose: async () => { try { const ok = await AutoBackup.choose(); toast(ok ? "Copia automática activada" : "Activada, pero aún no se pudo escribir"); } catch (e) { if (!(e && e.name === "AbortError")) toast("No se pudo elegir el archivo"); } openMenu(); },
+  abreconnect: async () => { const ok = await AutoBackup.reconnect(); toast(ok ? "Copia automática reactivada" : "No se concedió el permiso"); openMenu(); },
+  abnow: async () => { const ok = await AutoBackup.write(); toast(ok ? "Copia guardada" : "No se pudo guardar"); openMenu(); },
+  abstop: async () => { await AutoBackup.stop(); toast("Copia automática desactivada"); openMenu(); },
+  builderlink: async () => {
+    try {
+      const url = await builderShareLink(), msg = url.length > 8000 ? "Enlace copiado (largo: " + url.length + " caracteres; algunos chats lo cortan, mejor el ZIP)" : "Enlace copiado";
+      if (navigator.share) { try { await navigator.share({ title: builder.title || "Proyecto de Estilos", url }); } catch (e) { if (e && e.name === "AbortError") return; copyText(url, msg); } }
+      else copyText(url, msg);
+    } catch (e) { toast("No se pudo crear el enlace"); }
+  },
   builderexportdark: () => { builder.exportDark = !builder.exportDark; saveBuilder(); const b = document.querySelector('[data-act="builderexportdark"]'); if (b) b.setAttribute("aria-checked", !!builder.exportDark); },
   closesheet: () => closeSheet(),
   lb: d => { const r = REFS[+d.i]; if (r) openLB({ src: r.img, label: r.label }); },
@@ -1047,12 +1084,13 @@ document.addEventListener("change",ev=>{
   const url=URL.createObjectURL(file),img=new Image();
   img.onload=()=>{
     try{
-      const scale=Math.min(1,1000/Math.max(img.naturalWidth,img.naturalHeight));
+      const Q=IMAGE_QUALITY[builder.imageQuality]||IMAGE_QUALITY.mid;
+      const scale=Math.min(1,Q.max/Math.max(img.naturalWidth,img.naturalHeight));
       const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
       const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,canvas.width,canvas.height);
-      let data=canvas.toDataURL("image/webp",.78);
-      if(data.length>850000)data=canvas.toDataURL("image/jpeg",.68);
-      if(data.length>1000000){toast("La imagen sigue siendo demasiado pesada");return;}
+      let data=canvas.toDataURL("image/webp",Q.q);
+      if(data.length>Q.soft)data=canvas.toDataURL("image/jpeg",Q.jq);
+      if(data.length>Q.hard){toast("La imagen sigue siendo demasiado pesada: prueba con calidad Baja");return;}
       const layer=builder.layers[pending.index];if(!layer)return;
       layer.mediaEdits=layer.mediaEdits||{};layer.mediaEdits[pending.path]=data;layer.editMeta=layer.editMeta||{};layer.editMeta["m:"+pending.path]={t:pending.tag,b:""};
       builder.activeLayer=pending.index;saveBuilder();render(true);toast("Imagen reemplazada");
@@ -1206,6 +1244,53 @@ function finishBuilderPointerDrag(ev){
 }
 document.addEventListener("pointerup",finishBuilderPointerDrag);
 document.addEventListener("pointercancel",finishBuilderPointerDrag);
+/* Mueve una capa a la posición de otra y adopta su carpeta (así se puede arrastrar a una carpeta). */
+function moveLayerTo(from,target){
+  if(from===target||from<0||target<0||from>=builder.selected.length||target>=builder.selected.length)return false;
+  if((builder.layers[from]&&builder.layers[from].locked)||(builder.layers[target]&&builder.layers[target].locked)){toast("Desbloquea la capa para cambiar su orden");return false;}
+  const grp=String((builder.layers[target]||{}).group||"");
+  const moved=builder.selected.splice(from,1)[0];builder.selected.splice(target,0,moved);
+  const ml=builder.layers.splice(from,1)[0];builder.layers.splice(target,0,ml);ml.group=grp;
+  builder.activeLayer=target;saveBuilder();render(true);return true;
+}
+/* Reordenar arrastrando el asa con el dedo o el ratón: el arrastre HTML5 de las filas no funciona con el tacto. */
+let layerDrag=null;
+function layerDragCleanup(){
+  const d=layerDrag;if(!d)return;layerDrag=null;
+  clearInterval(d.scroll);d.row.classList.remove("moving");d.row.style.transform="";d.row.draggable=true;
+  document.querySelectorAll(".builder-drop-active").forEach(x=>x.classList.remove("builder-drop-active"));
+}
+document.addEventListener("pointerdown",ev=>{
+  const g=ev.target.closest&&ev.target.closest("[data-layer-grip]");if(!g||(ev.pointerType==="mouse"&&ev.button!==0))return;
+  const row=g.closest("[data-layer-index]");if(!row)return;
+  const from=Number(row.dataset.layerIndex);
+  if(builder.layers[from]&&builder.layers[from].locked){toast("Desbloquea la capa para cambiar su orden");return;}
+  ev.preventDefault();row.draggable=false;
+  try{g.setPointerCapture(ev.pointerId);}catch(_){}
+  layerDrag={from,target:from,row,id:ev.pointerId,y:ev.clientY,moved:false,vy:0,scroll:0};
+  row.classList.add("moving");
+});
+document.addEventListener("pointermove",ev=>{
+  const d=layerDrag;if(!d||ev.pointerId!==d.id)return;
+  const dy=ev.clientY-d.y;if(Math.abs(dy)>4)d.moved=true;if(!d.moved)return;
+  d.row.style.transform="translateY("+dy+"px)";
+  const hit=document.elementsFromPoint(ev.clientX,ev.clientY).map(e=>e.closest&&e.closest("[data-layer-index]")).find(r=>r&&r!==d.row);
+  document.querySelectorAll(".builder-drop-active").forEach(x=>x.classList.remove("builder-drop-active"));
+  if(hit){hit.classList.add("builder-drop-active");d.target=Number(hit.dataset.layerIndex);}else d.target=d.from;
+  /* desplazamiento automático al acercarse al borde de la pantalla */
+  d.vy=ev.clientY<70?-12:(ev.clientY>innerHeight-140?12:0);
+  if(d.vy&&!d.scroll)d.scroll=setInterval(()=>{const v=document.getElementById("view");if(layerDrag&&layerDrag.vy&&v)v.scrollTop+=layerDrag.vy;},16);
+  if(!d.vy&&d.scroll){clearInterval(d.scroll);d.scroll=0;}
+});
+function layerDragEnd(ev,cancel){
+  const d=layerDrag;if(!d||ev.pointerId!==d.id)return;
+  const from=d.from,target=d.target,moved=d.moved;layerDragCleanup();
+  if(cancel||!moved||target===from)return;
+  builderHistorySnapshot();
+  if(moveLayerTo(from,target))toast("Capa movida");
+}
+document.addEventListener("pointerup",ev=>layerDragEnd(ev,false));
+document.addEventListener("pointercancel",ev=>layerDragEnd(ev,true));
 document.addEventListener("dragstart", ev => {
   const draggingLayer=ev.target.closest&&ev.target.closest("[data-layer-index]");if(draggingLayer)builderHistorySnapshot();
   const card=ev.target.closest&&ev.target.closest("[data-picker-id]");
@@ -1253,14 +1338,9 @@ document.addEventListener("drop",ev=>{
   }
   if(layer&&builderDragIndex!==null){
     ev.preventDefault();
-    const target=Number(layer.dataset.layerIndex),from=builderDragIndex;
-    if((builder.layers[from]&&builder.layers[from].locked)||(builder.layers[target]&&builder.layers[target].locked)){builderDragIndex=null;toast("Desbloquea la capa para cambiar su orden");return;}
-    if(from!==target&&from>=0&&target>=0&&from<builder.selected.length&&target<builder.selected.length){
-      const moved=builder.selected.splice(from,1)[0];builder.selected.splice(target,0,moved);
-      const movedLayer=builder.layers.splice(from,1)[0];builder.layers.splice(target,0,movedLayer);
-      builder.activeLayer=target;saveBuilder();render(true);toast("Orden de capas actualizado");
-    }
-    builderDragIndex=null;return;
+    const target=Number(layer.dataset.layerIndex),from=builderDragIndex;builderDragIndex=null;
+    if(moveLayerTo(from,target))toast("Orden de capas actualizado");
+    return;
   }
   if(canvas&&builderDragIndex!==null){ev.preventDefault();builderDragIndex=null;}
 });
@@ -1290,10 +1370,24 @@ document.addEventListener("change", ev => {
   }
 });
 
+/* Abrir un proyecto compartido por enlace (#p1=…): se pide confirmación y se puede deshacer. */
+async function handleSharedHash() {
+  const h = location.hash; if (!/^#p[01]=/.test(h)) return;
+  let r = null; try { r = await builderFromShareHash(h); } catch (e) { r = null; }
+  try { history.replaceState(S, "", location.pathname + location.search); } catch (e) { /* ignorar */ }
+  if (!r) { toast("El enlace del proyecto no es válido"); return; }
+  const n = r.project.screens.length;
+  askConfirm("Abrir proyecto compartido", n + (n > 1 ? " pantallas" : " pantalla") + " · " + r.blocks + (r.blocks === 1 ? " componente" : " componentes") + ". Sustituye tu proyecto actual del constructor (podrás deshacerlo allí). Las imágenes no viajan en el enlace." + (r.dropped ? " " + r.dropped + (r.dropped === 1 ? " componente no existe" : " componentes no existen") + " en este dispositivo y se omite." : ""), "Abrir proyecto",
+    () => { closeSheet(); builderHistorySnapshot(); builder = r.project; loadActiveScreen(); saveBuilder(); go({ view: "builder" }); toast("Proyecto abierto"); });
+}
+
 /* ───────── Arranque ───────── */
 try { history.replaceState(S, ""); } catch (e) { /* ignorar */ }
 render();
 loadUserRefs();
+AutoBackup.load().then(() => { if (AutoBackup.active && AutoBackup.state.perm !== "granted") setTimeout(() => toast("Copia automática en pausa: reactívala en Ajustes"), 900); });
+handleSharedHash();
+addEventListener("hashchange", handleSharedHash);
 mediaLoadAll().then(() => {
   const raw = (() => { try { return localStorage.getItem("estilos-builder-v1") || ""; } catch (e) { return ""; } })();
   /* Migración: los proyectos antiguos llevaban las imágenes dentro de localStorage. */
