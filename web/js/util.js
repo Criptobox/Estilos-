@@ -1,5 +1,5 @@
 /* Utilidades compartidas: escape, color, contraste. Sin dependencias. */
-const APP_VERSION = "4.0.0"; /* CI lo reemplaza por 4.0.<n.º de build> en cada despliegue */
+const APP_VERSION = "6.0.0"; /* CI lo reemplaza por 6.0.<n.º de build> en cada despliegue */
 
 function esc(s) {
   return String(s == null ? "" : s)

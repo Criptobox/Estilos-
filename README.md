@@ -1,4 +1,4 @@
-# Estilos 4.0.0
+# Estilos 6.0.0
 
 Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponible como PWA y envoltorio Android.
 
@@ -18,8 +18,8 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 - Exportación HTML autocontenida con navegación entre pantallas.
 
 ## Versiones
-- Web/PWA: `4.0.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 11`, `versionName 4.0`.
+- Web/PWA: `6.0.0` (GitHub Actions añade el número de compilación).
+- Android: `versionCode 13`, `versionName 6.0`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -39,11 +39,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 ## Estado de verificación
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
-
-## Estilos 5.0
-Incluye edición del contenido de cada componente, navegación entre pantallas, guardado local y exportación HTML o React + CSS. Consulta `docs/CHANGELOG-5.0.md`.
-
-
-## Versión 5.0
-Editor de contenido por componente, navegación entre pantallas, guardado local y exportación HTML o React + CSS. Ver `docs/CHANGELOG-5.0.md`.
-\n\n## Estilos 6.0\nBiblioteca de 15 componentes con búsqueda y categorías, cuatro plantillas completas y nuevos bloques de navegación, formularios y datos. Ver `docs/CHANGELOG-6.0.md`.\n
+## Historial
+- **6.0**: biblioteca de 15 componentes con búsqueda y categorías, cuatro plantillas completas y nuevos bloques de navegación, formularios y datos. Ver `docs/CHANGELOG-6.0.md`.
+- **5.0**: edición del contenido de cada componente, navegación entre pantallas, guardado local y exportación HTML o React + CSS. Ver `docs/CHANGELOG-5.0.md`.
+- **4.0**: constructor multipantalla. Ver `docs/CHANGELOG-4.0.md`.
