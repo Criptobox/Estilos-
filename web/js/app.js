@@ -5,7 +5,7 @@
    - Navegación con la API de historial (el botón Atrás del sistema funciona). */
 
 /* ───────── Almacenamiento ───────── */
-const KEY_USER = "estilos-user-v2", KEY_OLD = "estilos-db-v1", KEY_BAK = "estilos-db-v1-backup", KEY_FAV = "estilos-favs-v1";
+const KEY_USER = "estilos-user-v2", KEY_OLD = "estilos-db-v1", KEY_BAK = "estilos-db-v1-backup", KEY_FAV = "estilos-favs-v1", KEY_THEME = "estilos-theme", KEY_DIM = "estilos-dim";
 const BASE_TABS = ["Chat", "Tarjetas", "Listas", "Avatares", "Plantillas", "Barras", "Botones", "Formularios", "Entradas", "Hojas", "Avisos", "Datos", "Paletas", "Tipografía", "Encabezados", "Animaciones", "Fondos", "Widgets", "Iconos"];
 const TAB_ICON = { Chat: "chat", Tarjetas: "card", Listas: "menu", Avatares: "user", Plantillas: "grid", Barras: "sliders", Botones: "plus", Formularios: "edit", Entradas: "search", Hojas: "arrowUp", Avisos: "bell", Datos: "chart", Paletas: "spark", "Tipografía": "type", Encabezados: "layers", Animaciones: "spark", Fondos: "image", Widgets: "grid", Iconos: "spark", Referencias: "image" };
 const TAB_FAMILY = { Chat: "chat", Tarjetas: "card", Listas: "list", Avatares: "avatar", Plantillas: "tpl", Barras: "bar", Botones: "btn", Formularios: "form", Entradas: "input", Hojas: "sheet", Avisos: "notice", Datos: "data", Paletas: "pal", "Tipografía": "type", Encabezados: "head", Animaciones: "motion", Fondos: "background", Widgets: "widget", Iconos: "icon" };
@@ -72,8 +72,39 @@ function allTabs() {
   return t.filter(x => x === "Referencias" || db().some(e => e.tab === x));
 }
 
+/* ───────── Tema de la app (auto / claro / oscuro) ───────── */
+const THEMES = ["auto", "light", "dark"];
+const THEME_LABEL = { auto: "Automático", light: "Claro", dark: "Oscuro" };
+const THEME_ICON = { auto: "auto", light: "sun", dark: "moon" };
+const darkMQ = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
+let theme = (function () { try { const t = localStorage.getItem(KEY_THEME); return THEMES.includes(t) ? t : "auto"; } catch (e) { return "auto"; } })();
+function isDark() { return theme === "dark" || (theme === "auto" && !!(darkMQ && darkMQ.matches)); }
+function applyTheme() {
+  const d = isDark();
+  document.documentElement.setAttribute("data-theme", d ? "dark" : "light");
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = d ? "#0a141b" : "#c9e0ef";
+}
+function setTheme(t) {
+  theme = THEMES.includes(t) ? t : "auto";
+  try { localStorage.setItem(KEY_THEME, theme); } catch (e) { /* sin almacenamiento: dura la sesión */ }
+  applyTheme();
+}
+function themeSegHTML() {
+  return '<div class="seg themeSeg" role="radiogroup" aria-label="Tema">' + THEMES.map(t => '<button role="radio" aria-checked="' + (t === theme) + '" class="' + (t === theme ? "on" : "") + '" data-act="theme" data-t="' + t + '">' + ic(THEME_ICON[t], 14) + THEME_LABEL[t] + '</button>').join("") + '</div>';
+}
+if (darkMQ) {
+  const onSys = () => { if (theme === "auto") applyTheme(); };
+  darkMQ.addEventListener ? darkMQ.addEventListener("change", onSys) : darkMQ.addListener(onSys);
+}
+applyTheme();
+
+/* Atenuar las vistas previas claras de las listas en modo oscuro (el detalle se ve siempre tal cual). */
+let dimPreviews = (function () { try { return localStorage.getItem(KEY_DIM) === "1"; } catch (e) { return false; } })();
+function applyDim() { document.documentElement.toggleAttribute("data-dim", dimPreviews); }
+applyDim();
+
 /* ───────── Estado y navegación ───────── */
-let S = { view: "home", tab: "Tarjetas", id: null, q: "", detailTab: "info", stage: "auto" };
+let S = { view: "home", tab: "Tarjetas", id: null, q: "", detailTab: "info", stage: "auto", stack: "html" };
 let builder = readJSON("estilos-builder-v1", { title: "Mi nueva interfaz", subtitle: "Una experiencia diseñada a tu manera", palette: "#635BFF", bg: "#F5F6FA", font: "Inter", radius: 20, selected: [] });
 function cleanLayer(id, raw) {
   const l=raw&&typeof raw==="object"?raw:{};
@@ -107,6 +138,8 @@ function loadActiveScreen(){const sc=builder.screens[builder.activeScreenIndex];
 function syncActiveScreen(){const sc=builder.screens[builder.activeScreenIndex];if(!sc)return;sc.title=builder.title;sc.subtitle=builder.subtitle;sc.selected=builder.selected.slice();sc.layers=builder.layers.map(x=>Object.assign({},x));sc.activeLayer=builder.activeLayer;}
 loadActiveScreen();
 let builderThemes=readJSON("estilos-themes-v1",[]);if(!Array.isArray(builderThemes))builderThemes=[];
+let draft = null;      /* editor en vivo: { id, colors, radius, mode } sin guardar */
+let userRefs = [];     /* capturas propias: { id, label, date, blob, url } */
 let pendingConfirm = null;
 
 function go(patch, opt) {
@@ -156,16 +189,28 @@ function manualCopy(text) {
 function swatches(e) {
   return e.colors.map(c => '<button class="sw" data-act="color" data-c="' + esc(c) + '" aria-label="Copiar color ' + esc(c) + '"><i style="background:' + esc(c) + '"></i>' + esc(c) + '</button>').join("");
 }
-function pv(e) { return '<div class="pv" data-pv="' + esc(e.id) + '"></div>'; }
+function pv(e, extra) { return '<div class="pv" data-pv="' + esc(e.id) + '"' + (extra || "") + '></div>'; }
 function stageCls(e, mode) {
   const m = mode || "auto", dark = m === "auto" ? e.mode === "dark" : m === "dark";
   return "stage" + (dark ? " dark" : "") + (m === "white" ? " white" : "");
 }
 /* Dibuja las vistas previas (Shadow DOM, o iframe aislado si el estilo trae código propio). */
+/* Se dibujan al acercarse a la pantalla (IntersectionObserver): con 100+ estilos la
+   búsqueda y las listas no tienen que crear todos los Shadow DOM de golpe. */
+const pvIO = "IntersectionObserver" in window ? new IntersectionObserver(ents => ents.forEach(en => {
+  if (en.isIntersecting) { pvIO.unobserve(en.target); hydrateEl(en.target); }
+}), { root: document.getElementById("view"), rootMargin: "400px 0px" }) : null;
 function hydrate(root) {
   (root || document).querySelectorAll(".pv:not([data-h])").forEach(el => {
+    if (pvIO && !el.hasAttribute("data-now")) pvIO.observe(el); else hydrateEl(el);
+  });
+}
+function hydrateEl(el) {
+  {
+    if (el.hasAttribute("data-h")) return;
     el.setAttribute("data-h", "1");
-    const e = getEntry(el.dataset.pv); if (!e) return;
+    const base = getEntry(el.dataset.pv); if (!base) return;
+    const e = el.hasAttribute("data-live") ? live(base) : base;
     try {
       if (e.code && e.code.trim()) {
         const f = document.createElement("iframe");
@@ -176,13 +221,17 @@ function hydrate(root) {
         el.attachShadow({ mode: "open" }).innerHTML = designShadow(e);
       }
     } catch (err) { el.textContent = "No se pudo mostrar la vista previa"; }
-  });
+  }
+}
+/* Entrada con los cambios del editor en vivo aplicados (si los hay). */
+function live(e) {
+  return draft && e && draft.id === e.id ? Object.assign({}, e, { colors: draft.colors.slice(), radius: draft.radius, mode: draft.mode }) : e;
 }
 
 /* ───────── Vistas ───────── */
 function chipsHTML() {
   return '<div class="chips" role="tablist">' + allTabs().map(t => {
-    const n = t === "Referencias" ? REFS.length : db().filter(e => e.tab === t).length;
+    const n = t === "Referencias" ? refCount() : db().filter(e => e.tab === t).length;
     return '<button class="chip' + (t === S.tab && !S.q ? " on" : "") + '" role="tab" data-act="tab" data-t="' + esc(t) + '">' + esc(t) + '<small>' + n + '</small></button>';
   }).join("") + '</div>';
 }
@@ -203,11 +252,11 @@ function renderHome() {
   const list = db(), day = Math.floor(Date.now() / 864e5), f = list.length ? list[day % list.length] : null;
   const fresh = SEED.slice(75).filter((x, i) => i % 3 === 0).map(x => getEntry(x.id)).filter(Boolean);
   const cats = allTabs().map(t => {
-    const n = t === "Referencias" ? REFS.length : db().filter(e => e.tab === t).length;
+    const n = t === "Referencias" ? refCount() : db().filter(e => e.tab === t).length;
     return '<button class="cat" data-act="tab" data-t="' + esc(t) + '"><span>' + ic(TAB_ICON[t] || "grid", 18) + '</span><b>' + esc(t) + '</b><small>' + n + (t === "Referencias" ? " capturas" : " estilos") + '</small></button>';
   }).join("");
   return '<div class="wrap">'
-    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 22) + '</span><div><b>Estilos</b><div class="sub">Biblioteca de diseño UI</div></div></div><button class="ib" data-act="menu" aria-label="Menú">' + ic("sliders", 20) + '</button></div>'
+    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 22) + '</span><div><b>Estilos</b><div class="sub">Biblioteca de diseño UI</div></div></div><div class="tbtns"><button class="ib" data-act="themecycle" aria-label="Tema: ' + THEME_LABEL[theme] + ' (cambiar)" title="Tema: ' + THEME_LABEL[theme] + '">' + ic(THEME_ICON[theme], 20) + '</button><button class="ib" data-act="menu" aria-label="Menú">' + ic("sliders", 20) + '</button></div></div>'
     + '<div class="hero"><h1 class="big">Diseños listos para copiar</h1><p>' + list.length + ' estilos con vista previa real, paleta de colores y código HTML/CSS. Sin internet.</p></div>'
     + '<button class="search" data-act="gosearch" aria-label="Buscar estilos">' + ic("search", 18) + '<span>Buscar en todos los estilos…</span></button>'
     + (f ? '<div><div class="featTag">' + ic("spark", 14) + 'Destacado de hoy</div></div><article class="feat" data-act="open" data-id="' + esc(f.id) + '" tabindex="0" role="button" aria-label="' + esc(f.name) + '"><div class="' + stageCls(f) + '">' + pv(f) + '</div><div class="cardInfo"><div class="cardName">' + esc(f.name) + '</div><div class="sub">' + esc(f.tab) + ' · ' + esc(f.ref) + '</div></div></article>' : '')
@@ -216,14 +265,19 @@ function renderHome() {
     + '<button class="cta" data-act="surprise">' + ic("spark", 18) + ' Sorpréndeme</button></div>';
 }
 
+/* Sin acentos ni mayúsculas: «tipografia» encuentra «Tipografía». Varias palabras = todas deben aparecer. */
+function fold(x) { return String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
 function listFor() {
-  const qq = S.q.trim().toLowerCase();
-  if (!qq) return db().filter(e => e.tab === S.tab);
-  return db().filter(e => (e.name + " " + e.desc + " " + e.ref + " " + e.tab).toLowerCase().includes(qq));
+  const words = fold(S.q).split(/\s+/).filter(Boolean);
+  if (!words.length) return db().filter(e => e.tab === S.tab);
+  return db().filter(e => { const h = fold(e.name + " " + e.desc + " " + e.ref + " " + e.tab + " " + e.tip); return words.every(w => h.includes(w)); });
 }
+function refCount() { return REFS.length + userRefs.length; }
 function listHTML() {
   if (S.tab === "Referencias" && !S.q) {
-    return '<div class="refGrid">' + REFS.map((r, i) => '<button class="refItem" data-act="lb" data-i="' + i + '"><img src="' + esc(r.img) + '" alt="' + esc(r.label) + '" loading="lazy" decoding="async"><div>' + esc(r.label) + '</div></button>').join("") + '</div>';
+    return '<p class="sub">Toca una captura para ampliarla o sacar su paleta. Las tuyas se guardan solo en este dispositivo.</p><div class="refGrid">'
+      + userRefs.map(r => '<button class="refItem" data-act="lbu" data-id="' + esc(r.id) + '"><img src="' + esc(r.url) + '" alt="' + esc(r.label) + '" loading="lazy" decoding="async"><div><span class="tag">Tuya</span> ' + esc(r.label) + '</div></button>').join("")
+      + REFS.map((r, i) => '<button class="refItem" data-act="lb" data-i="' + i + '"><img src="' + esc(r.img) + '" alt="' + esc(r.label) + '" loading="lazy" decoding="async"><div>' + esc(r.label) + '</div></button>').join("") + '</div>';
   }
   const l = listFor();
   if (!l.length) return '<div class="empty"><b>No hay estilos aquí</b><span>' + (S.q ? "Prueba con otra palabra." : "Toca + Añadir para crear uno.") + '</span></div>';
@@ -231,9 +285,9 @@ function listHTML() {
 }
 function renderExplore() {
   const isRefs = S.tab === "Referencias" && !S.q;
-  const n = isRefs ? REFS.length : listFor().length;
+  const n = isRefs ? refCount() : listFor().length;
   return '<div class="wrap">'
-    + '<div class="top"><div><h1 class="big">' + esc(S.q ? "Búsqueda" : S.tab) + '</h1><div class="sub" id="count">' + (isRefs ? n + " capturas de referencia" : n + (S.q ? " resultados en todas las categorías" : " estilos")) + '</div></div>' + (isRefs ? '' : '<button class="cta" style="width:auto;padding:0 18px;height:44px;background:var(--acc);box-shadow:none" data-act="add">' + ic("plus", 16, 2.6) + ' Añadir</button>') + '</div>'
+    + '<div class="top"><div><h1 class="big">' + esc(S.q ? "Búsqueda" : S.tab) + '</h1><div class="sub" id="count">' + (isRefs ? n + " capturas de referencia" : n + (S.q ? " resultados en todas las categorías" : " estilos")) + '</div></div>' + (isRefs ? '<button class="cta addBtn" data-act="addref">' + ic("upload", 16, 2.4) + ' Añadir captura</button>' : '<button class="cta addBtn" data-act="add">' + ic("plus", 16, 2.6) + ' Añadir</button>') + '</div>'
     + '<label class="search">' + ic("search", 18) + '<input id="q" data-input="q" type="search" placeholder="Buscar estilo…" aria-label="Buscar estilo" value="' + esc(S.q) + '"></label>'
     + chipsHTML() + '<div id="list">' + listHTML() + '</div></div>';
 }
@@ -302,11 +356,32 @@ function palText(e, fmt) {
 const STAGE_LABEL = { auto: "Automático", light: "Claro", dark: "Oscuro", white: "Blanco" };
 const STAGE_NEXT = { auto: "light", light: "dark", dark: "white", white: "auto" };
 
+function hex6(c) { const [r, g, b] = rgb(c); return "#" + [r, g, b].map(v => v.toString(16).padStart(2, "0")).join(""); }
+function editorHTML(e, x) {
+  const round = String(x.radius).indexOf("%") >= 0, rv = round ? 32 : Math.min(32, parseInt(x.radius, 10) || 0);
+  const dirty = !!(draft && draft.id === e.id);
+  return '<div class="panel"><h3>Colores</h3>'
+    + x.colors.map((c, i) => '<div class="lrow"><input type="color" class="lcol" data-input="lc" data-i="' + i + '" value="' + hex6(c) + '" aria-label="Color ' + (i + 1) + '">'
+      + '<input class="fld lhex" data-input="lhex" data-i="' + i + '" value="' + esc(c) + '" maxlength="9" spellcheck="false" autocapitalize="characters" aria-label="Código hex del color ' + (i + 1) + '">'
+      + (x.colors.length > 1 ? '<button class="ib sm" data-act="ldel" data-i="' + i + '" aria-label="Quitar color ' + (i + 1) + '">' + ic("minus", 16) + '</button>' : '') + '</div>').join("")
+    + (x.colors.length < 6 ? '<button class="pillbtn" data-act="ladd">' + ic("plus", 14) + ' Añadir color</button>' : '')
+    + '<h3>Radio</h3><div class="lrow"><input type="range" class="lrange" min="0" max="32" step="1" data-input="lrad" value="' + rv + '"' + (round ? " disabled" : "") + ' aria-label="Radio en píxeles"><b id="lradv" class="lval">' + (round ? "Redondo" : rv + " px") + '</b></div>'
+    + '<button class="switchRow" role="switch" aria-checked="' + round + '" data-act="lround"><span>Forma totalmente redondeada</span><i class="sw2"></i></button>'
+    + '<h3>Modo</h3><div class="seg"><button class="' + (x.mode === "dark" ? "" : "on") + '" data-act="lmode" data-m="light">' + ic("sun", 14) + ' Claro</button><button class="' + (x.mode === "dark" ? "on" : "") + '" data-act="lmode" data-m="dark">' + ic("moon", 14) + ' Oscuro</button></div>'
+    + (e.code ? '<p class="sub">Este estilo usa código propio: el editor cambia su ficha (paleta, radio, modo), no su HTML.</p>' : '')
+    + '</div><div class="btns"><button class="cta" data-act="lapply"' + (dirty ? "" : " disabled") + '>' + ic("check", 16, 2.4) + ' Aplicar a este estilo</button>'
+    + '<div class="two"><button class="cta ghost" data-act="lsave">' + ic("layers", 16) + ' Guardar variante</button><button class="cta ghost" data-act="lreset"' + (dirty ? "" : " disabled") + '>Restablecer</button></div></div>';
+}
+function codeLabel(stack, code) {
+  const n = code.split("\n").length + " líneas";
+  return stack === "html" ? "HTML + CSS · " + n : (STACKS.find(x => x.id === stack) || {}).label + " · tokens del tema · " + n;
+}
 function renderDetail() {
-  const e = getEntry(S.id); if (!e) { S.view = "explore"; return renderExplore(); }
-  const t = tokens(e), ratio = contrast(t.a, t.on), w = wcag(ratio);
-  const fav = favs.includes(e.id), codeTab = S.detailTab === "code";
-  const code = designCode(e);
+  const base = getEntry(S.id); if (!base) { S.view = "explore"; return renderExplore(); }
+  if (draft && draft.id !== base.id) draft = null;
+  const e = live(base), t = tokens(e), ratio = contrast(t.a, t.on), w = wcag(ratio);
+  const dt = ["info", "edit", "code"].includes(S.detailTab) ? S.detailTab : "info", stack = S.stack || "html";
+  const code = stackCode(e, stack);
   const rel = db().filter(x => x.tab === e.tab && x.id !== e.id).slice(0, 8);
   const info = '<div class="panel"><h3>Paleta</h3><div class="swRow" style="margin:0">' + swatches(e) + '</div>'
     + '<div class="fmt"><span class="sub" style="align-self:center">Copiar como</span>' + ["hex", "css", "tailwind", "json"].map(f => '<button data-act="pal" data-f="' + f + '" data-id="' + esc(e.id) + '">' + (f === "hex" ? "HEX" : f === "css" ? "CSS" : f === "tailwind" ? "Tailwind" : "JSON") + '</button>').join("") + '</div></div>'
@@ -317,17 +392,60 @@ function renderDetail() {
     + '<div class="row"><span>Contraste del acento</span><b>' + ratio.toFixed(1) + ':1 <span class="badge ' + (ratio >= 4.5 ? "ok" : ratio >= 3 ? "mid" : "bad") + '">' + esc(w) + '</span></b></div>'
     + '<div class="row"><span>Consejo</span><b style="font-weight:600;max-width:62%">' + esc(e.tip) + '</b></div></div>'
     + (rel.length ? '<h2 class="sec">Más de ' + esc(e.tab) + '</h2><div class="rail">' + rel.map(miniHTML).join("") + '</div>' : '');
-  const codePanel = '<div class="codeBox"><div class="codeHead"><span>HTML + CSS · ' + code.split("\n").length + ' líneas</span><button data-act="copycode" data-id="' + esc(e.id) + '">' + ic("copy", 14) + ' Copiar</button></div><pre><code>' + esc(code) + '</code></pre></div>'
-    + '<p class="sub">Autocontenido: pégalo en tu proyecto. Los iconos van en SVG inline, sin librerías.</p>';
+  const codePanel = '<div class="fmt" role="radiogroup" aria-label="Plataforma">' + STACKS.map(x => '<button role="radio" aria-checked="' + (x.id === stack) + '" class="' + (x.id === stack ? "on" : "") + '" data-act="stack" data-s="' + x.id + '">' + x.label + '</button>').join("") + '</div>'
+    + '<div class="codeBox"><div class="codeHead"><span>' + esc(codeLabel(stack, code)) + '</span><button data-act="copycode" data-id="' + esc(e.id) + '">' + ic("copy", 14) + ' Copiar</button></div><pre><code>' + esc(code) + '</code></pre></div>'
+    + '<p class="sub">' + (stack === "html" ? "Autocontenido: pégalo en tu proyecto. Los iconos van en SVG inline, sin librerías." : "Colores por rol, paleta y radio de este estilo para usarlos en tus componentes. El componente completo está en HTML/CSS.") + '</p>';
+  const tabBtn = (id, label) => '<button class="' + (dt === id ? "on" : "") + '" role="tab" aria-selected="' + (dt === id) + '" data-act="dtab" data-d="' + id + '">' + label + '</button>';
   return '<div class="wrap detail">'
-    + '<div class="dTop"><button class="ib" data-act="back" aria-label="Volver">' + ic("back", 22, 2.4) + '</button><button class="ib" data-act="surprise" aria-label="Otro estilo al azar">' + ic("spark", 20) + '</button></div>'
-    + '<div class="' + stageCls(e, S.stage) + ' dStage">' + pv(e) + '</div>'
-    + '<div class="dStageBar"><button class="pillbtn" data-act="stage">' + ic(S.stage === "dark" ? "moon" : "sun", 14) + ' Fondo: ' + STAGE_LABEL[S.stage] + '</button></div>'
+    + '<div class="dTop"><button class="ib" data-act="back" aria-label="Volver">' + ic("back", 22, 2.4) + '</button><div class="tbtns"><button class="ib" data-act="surprise" aria-label="Otro estilo al azar">' + ic("spark", 20) + '</button><button class="ib" data-act="more" data-id="' + esc(e.id) + '" aria-label="Más opciones">' + ic("dots", 20) + '</button></div></div>'
+    + '<div class="' + stageCls(e, S.stage) + ' dStage">' + pv(e, ' data-now="1" data-live="1"') + '</div>'
+    + '<div class="dStageBar">' + (draft ? '<span class="badge mid">Sin guardar</span>' : '') + '<button class="pillbtn" data-act="stage">' + ic(S.stage === "dark" ? "moon" : "sun", 14) + ' Fondo: ' + STAGE_LABEL[S.stage] + '</button></div>'
     + '<div><div class="dName">' + esc(e.name) + '</div><div class="sub" style="margin-top:4px;font-size:13px">' + esc(e.tab) + (e.ref ? " · " + esc(e.ref) : "") + '</div></div>'
     + '<p class="dDesc">' + esc(e.desc) + '</p>'
-    + '<div class="seg" role="tablist"><button class="' + (codeTab ? "" : "on") + '" role="tab" data-act="dtab" data-d="info">Detalles</button><button class="' + (codeTab ? "on" : "") + '" role="tab" data-act="dtab" data-d="code">Código</button></div>'
-    + (codeTab ? codePanel : info)
-    + '<button class="cta danger" data-act="del" data-id="' + esc(e.id) + '">' + ic("trash", 16) + ' Eliminar este estilo</button></div>';
+    + '<div class="seg" role="tablist">' + tabBtn("info", "Detalles") + tabBtn("edit", "Editor") + tabBtn("code", "Código") + '</div>'
+    + (dt === "code" ? codePanel : dt === "edit" ? editorHTML(base, e) : info)
+    + '</div>';
+}
+/* Refresca solo la vista previa grande (el editor llama a esto en cada cambio). */
+function refreshStage() {
+  const st = document.querySelector(".dStage"), e = getEntry(S.id); if (!st || !e) return;
+  const x = live(e);
+  st.className = stageCls(x, S.stage) + " dStage";
+  st.innerHTML = pv(x, ' data-now="1" data-live="1"'); hydrate(st);
+  const ap = document.querySelector('[data-act="lapply"]'), rs = document.querySelector('[data-act="lreset"]');
+  if (ap) ap.disabled = !draft; if (rs) rs.disabled = !draft;
+  const bar = document.querySelector(".dStageBar");
+  if (bar && draft && !bar.querySelector(".badge")) bar.insertAdjacentHTML("afterbegin", '<span class="badge mid">Sin guardar</span>');
+}
+function ensureDraft() {
+  const e = getEntry(S.id); if (!e) return null;
+  if (!draft || draft.id !== e.id) draft = { id: e.id, colors: e.colors.slice(), radius: String(e.radius), mode: e.mode };
+  return draft;
+}
+function saveVariant() {
+  const b = getEntry(S.id); if (!b) return;
+  const e = live(b), n = normalize(Object.assign({}, e, { id: null, name: (b.name + " (variante)").slice(0, 80), v: variantOf(b) }));
+  if (!n) return toast("Revisa los colores");
+  user.added.push(n); if (!saveUser()) return;
+  draft = null; toast("Variante guardada en " + n.tab);
+  go({ view: "detail", id: n.id, detailTab: "info" });
+}
+function applyDraft() {
+  const b = getEntry(S.id); if (!b || !draft) return;
+  const patch = { colors: draft.colors.map(c => safeColor(c)), radius: normalize(Object.assign({}, b, { radius: draft.radius })).radius, mode: draft.mode };
+  if (SEED_IDS.has(b.id)) user.edits[b.id] = Object.assign({}, user.edits[b.id] || {}, patch);
+  else { const i = user.added.findIndex(x => x.id === b.id); if (i >= 0) user.added[i] = Object.assign({}, user.added[i], patch); }
+  if (!saveUser()) return;
+  draft = null; render(true); toast("Cambios aplicados");
+}
+function moreSheet(id) {
+  const e = getEntry(id); if (!e) return;
+  openSheet('<div class="handle"></div><h2>' + esc(e.name) + '</h2><span class="sub">' + esc(e.tab) + '</span><div class="btns">'
+    + '<button class="cta ghost" data-act="edit" data-id="' + esc(id) + '">' + ic("edit", 16) + ' Editar ficha</button>'
+    + '<button class="cta ghost" data-act="dup" data-id="' + esc(id) + '">' + ic("layers", 16) + ' Duplicar como mío</button>'
+    + '<button class="cta ghost" data-act="sharecode" data-id="' + esc(id) + '">' + ic("share", 16) + ' Compartir código</button>'
+    + '<button class="cta danger" data-act="del" data-id="' + esc(id) + '">' + ic("trash", 16) + ' Eliminar este estilo</button>'
+    + '<button class="cta ghost" data-act="closesheet">Cancelar</button></div>');
 }
 
 function navHTML() {
@@ -337,6 +455,7 @@ function navHTML() {
 
 function render(keepScroll) {
   const v = document.getElementById("view"), top = v.scrollTop;
+  if (pvIO) pvIO.disconnect();
   v.innerHTML = S.view === "home" ? renderHome() : S.view === "explore" ? renderExplore() : S.view === "favs" ? renderFavs() : S.view === "builder" ? renderBuilder() : renderDetail();
   hydrate(v);
   const nav = document.getElementById("nav"), act = document.getElementById("actbar");
@@ -345,7 +464,7 @@ function render(keepScroll) {
     nav.style.display = "none"; act.style.display = "flex";
     act.innerHTML = '<button class="main" data-act="copycode" data-id="' + esc(S.id) + '">' + ic("copy", 16) + ' Copiar código</button>'
       + '<button class="fav' + (fav ? " on" : "") + '" data-act="fav" data-id="' + esc(S.id) + '" aria-label="' + (fav ? "Quitar de guardados" : "Guardar") + '">' + (fav ? icf("bookmark", 20) : ic("bookmark", 20)) + '</button>'
-      + '<button data-act="edit" data-id="' + esc(S.id) + '" aria-label="Editar">' + ic("edit", 20) + '</button>';
+      + '<button data-act="dtab" data-d="edit" aria-label="Abrir editor">' + ic("sliders", 20) + '</button>';
   } else {
     nav.style.display = "flex"; act.style.display = "none"; nav.innerHTML = navHTML();
   }
@@ -353,6 +472,7 @@ function render(keepScroll) {
 }
 function renderList() {
   const el = document.getElementById("list"); if (!el) return;
+  if (pvIO) pvIO.disconnect();
   el.innerHTML = listHTML(); hydrate(el);
   const c = document.getElementById("count"); if (c) c.textContent = (S.q ? listFor().length + " resultados en todas las categorías" : listFor().length + " estilos");
   const h = document.querySelector("h1.big"); if (h) h.textContent = S.q ? "Búsqueda" : S.tab;
@@ -360,8 +480,30 @@ function renderList() {
 }
 
 /* ───────── Hojas (formularios, menú, confirmaciones) ───────── */
-function openSheet(html) { document.getElementById("sheetCard").innerHTML = html; document.getElementById("sheetWrap").style.display = "flex"; }
-function closeSheet() { document.getElementById("sheetWrap").style.display = "none"; pendingConfirm = null; }
+/* Foco: al abrir una hoja o el visor se guarda dónde estaba, Tab no sale del diálogo
+   y al cerrar vuelve al botón que lo abrió. */
+const focusStack = [];
+function focusables(root) {
+  return [...root.querySelectorAll('button,[href],input:not([type="hidden"]),select,textarea,[tabindex]:not([tabindex="-1"])')]
+    .filter(x => !x.disabled && !x.hidden && x.getClientRects().length);
+}
+function restoreFocus() {
+  const f = focusStack.pop();
+  if (f && document.contains(f)) try { f.focus({ preventScroll: true }); } catch (e) { /* ignorar */ }
+}
+function openSheet(html) {
+  const wrap = document.getElementById("sheetWrap"), card = document.getElementById("sheetCard");
+  if (wrap.style.display === "none") focusStack.push(document.activeElement);
+  card.innerHTML = html; card.setAttribute("tabindex", "-1"); card.scrollTop = 0;
+  const h = card.querySelector("h2"); wrap.setAttribute("aria-label", h ? h.textContent : "Diálogo");
+  wrap.style.display = "flex";
+  try { card.focus({ preventScroll: true }); } catch (e) { /* ignorar */ }
+}
+function closeSheet() {
+  const wrap = document.getElementById("sheetWrap");
+  if (wrap.style.display === "none") return;
+  wrap.style.display = "none"; pendingConfirm = null; restoreFocus();
+}
 function askConfirm(title, text, okLabel, onOk) {
   pendingConfirm = onOk;
   openSheet('<div class="handle"></div><h2>' + esc(title) + '</h2><span class="sub">' + esc(text) + '</span><div class="two"><button class="cta ghost" data-act="closesheet">Cancelar</button><button class="cta danger" data-act="confirm">' + esc(okLabel) + '</button></div>');
@@ -371,19 +513,20 @@ function variantOptions(tab, current) {
   if (!keys.length) return '<option value="">Paleta (por defecto)</option>';
   return keys.map(k => '<option value="' + esc(k) + '"' + (k === current ? " selected" : "") + '>' + esc(k.split(".")[1]) + '</option>').join("");
 }
-function openForm(id) {
-  const e = id ? getEntry(id) : null;
+function openForm(id, pre) {
+  const e = id ? getEntry(id) : (pre || null);
   S.editId = id || null;
+  if (!id && pre) S.tab = pre.tab || S.tab;
   const tabs = allTabs().filter(t => t !== "Referencias");
   const tabSel = (e ? e.tab : S.tab) || tabs[0];
-  openSheet('<div class="handle"></div><h2>' + (e ? "Editar estilo" : "Añadir estilo") + '</h2>'
+  openSheet('<div class="handle"></div><h2>' + (id ? "Editar estilo" : "Añadir estilo") + '</h2>'
     + '<label class="l">Nombre</label><input class="fld" id="f-name" maxlength="80" value="' + esc(e ? e.name : "") + '">'
     + '<label class="l">Categoría</label><select class="fld" id="f-tab" data-input="tabsel">' + tabs.map(t => '<option' + (t === tabSel ? " selected" : "") + '>' + esc(t) + '</option>').join("") + '<option value="__new">+ Nueva categoría…</option></select>'
     + '<input class="fld" id="f-newtab" style="display:none" maxlength="30" placeholder="Nombre de la categoría nueva">'
-    + '<label class="l">Diseño base (define la vista previa y el código)</label><select class="fld" id="f-v">' + variantOptions(tabSel, e ? e.v : "") + '</select>'
+    + '<label class="l">Diseño base (define la vista previa y el código)</label><select class="fld" id="f-v">' + variantOptions(tabSel, e ? e.v || "" : "") + '</select>'
     + '<label class="l">Referencia</label><input class="fld" id="f-ref" maxlength="80" value="' + esc(e ? e.ref : "") + '">'
     + '<label class="l">Descripción</label><textarea class="fld" id="f-desc" rows="2" maxlength="400">' + esc(e ? e.desc : "") + '</textarea>'
-    + '<label class="l">Colores (hex separados por coma, máx. 6)</label><input class="fld" id="f-colors" value="' + esc(e ? e.colors.join(", ") : "#2F6BFF, #FFFFFF, #14161B") + '">'
+    + '<label class="l">Colores (hex separados por coma, máx. 6)</label><input class="fld" id="f-colors" value="' + esc(e && e.colors ? e.colors.join(", ") : "#2F6BFF, #FFFFFF, #14161B") + '">'
     + '<label class="l">Radio (px o %)</label><input class="fld" id="f-radius" maxlength="4" value="' + esc(e ? e.radius : "16") + '">'
     + '<label class="l">Consejo</label><textarea class="fld" id="f-tip" rows="2" maxlength="300">' + esc(e ? e.tip : "") + '</textarea>'
     + '<label class="l">Modo</label><select class="fld" id="f-mode"><option value="light"' + (e && e.mode === "dark" ? "" : " selected") + '>Claro</option><option value="dark"' + (e && e.mode === "dark" ? " selected" : "") + '>Oscuro</option></select>'
@@ -413,20 +556,42 @@ function deleteEntry(id) {
   go({ view: "explore", id: null }, { replace: true });
 }
 function openMenu() {
-  const bak = !!localStorage.getItem(KEY_BAK);
-  openSheet('<div class="handle"></div><h2>Estilos</h2><span class="sub">v' + APP_VERSION + ' · ' + db().length + ' estilos · ' + REFS.length + ' referencias · Sin internet · Datos en tu teléfono</span>'
-    + '<label class="l">Tus cambios (JSON)</label><textarea class="fld" id="ioText" rows="6" placeholder="Exporta para ver o pega un JSON para importar"></textarea>'
-    + '<div class="btns"><button class="cta" data-act="export">Exportar mis cambios</button><div class="two"><button class="cta ghost" data-act="copyio">Copiar</button><button class="cta ghost" data-act="import">Importar</button></div>'
-    + (bak ? '<button class="cta ghost" data-act="backup">Ver respaldo de la versión 1.5</button>' : '')
-    + '<button class="cta ghost" data-act="restore">Restaurar el catálogo original</button><button class="cta ghost" data-act="closesheet">Cerrar</button></div>');
+  let bak = false; try { bak = !!localStorage.getItem(KEY_BAK); } catch (e) { /* ignorar */ }
+  const canShare = !!navigator.share;
+  openSheet('<div class="handle"></div><h2>Ajustes</h2><span class="sub">Estilos v' + APP_VERSION + ' · ' + db().length + ' estilos · ' + refCount() + ' referencias · Sin internet · Datos en tu teléfono</span>'
+    + '<label class="l">Tema</label>' + themeSegHTML()
+    + '<button class="switchRow" role="switch" aria-checked="' + dimPreviews + '" data-act="dim"><span>Atenuar vistas previas claras en modo oscuro<small>Solo en las listas; el detalle se ve siempre tal cual.</small></span><i class="sw2"></i></button>'
+    + '<label class="l">Copia de seguridad</label>'
+    + '<div class="btns"><div class="two"><button class="cta ghost" data-act="dlfile">' + ic("arrowDown", 16) + ' Descargar</button>'
+    + (canShare ? '<button class="cta ghost" data-act="sharefile">' + ic("share", 16) + ' Compartir</button>' : '<button class="cta ghost" data-act="impfile">' + ic("upload", 16) + ' Importar</button>') + '</div>'
+    + (canShare ? '<button class="cta ghost" data-act="impfile">' + ic("upload", 16) + ' Importar desde archivo</button>' : '')
+    + '<span class="sub">Incluye tus estilos, ediciones y borrados. Las capturas propias no viajan en la copia.</span></div>'
+    + '<details class="adv"><summary>Exportar o importar como texto</summary>'
+    + '<textarea class="fld" id="ioText" rows="6" placeholder="Exporta para ver o pega un JSON para importar"></textarea>'
+    + '<div class="btns"><button class="cta ghost" data-act="export">Mostrar mis cambios</button><div class="two"><button class="cta ghost" data-act="copyio">Copiar</button><button class="cta ghost" data-act="import">Importar</button></div>'
+    + (bak ? '<button class="cta ghost" data-act="backup">Ver respaldo de la versión 1.5</button>' : '') + '</div></details>'
+    + '<div class="btns"><button class="cta ghost" data-act="restore">Restaurar el catálogo original</button><button class="cta ghost" data-act="closesheet">Cerrar</button></div>');
+}
+function exportJSON() { return JSON.stringify({ app: "estilos", version: APP_VERSION, added: user.added, edits: user.edits, deleted: user.deleted }, null, 2); }
+function exportFile() { return new File([exportJSON()], "estilos-" + new Date().toISOString().slice(0, 10) + ".json", { type: "application/json" }); }
+function downloadFile() {
+  const f = exportFile(), url = URL.createObjectURL(f), a = document.createElement("a");
+  a.href = url; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000); toast("Copia descargada: " + f.name);
+}
+function shareFile() {
+  const f = exportFile();
+  const p = navigator.canShare && navigator.canShare({ files: [f] }) ? navigator.share({ files: [f], title: "Copia de Estilos" }) : navigator.share({ title: "Copia de Estilos", text: exportJSON() });
+  p.catch(err => { if (err && err.name !== "AbortError") downloadFile(); });
 }
 function doExport() {
-  document.getElementById("ioText").value = JSON.stringify({ app: "estilos", version: APP_VERSION, added: user.added, edits: user.edits, deleted: user.deleted }, null, 2);
+  document.getElementById("ioText").value = exportJSON();
   toast("Listo para copiar");
 }
-function doImport() {
+function doImport() { doImportText(document.getElementById("ioText").value); }
+function doImportText(text) {
   try {
-    const raw = JSON.parse(document.getElementById("ioText").value);
+    const raw = JSON.parse(text);
     let n = 0;
     const src = Array.isArray(raw) ? { added: raw, edits: {}, deleted: [] } : raw;
     if (!src || typeof src !== "object") throw 0;
@@ -445,12 +610,52 @@ function doImport() {
 }
 
 /* ───────── Eventos (delegación) ───────── */
-function openLB(i) {
-  const r = REFS[i]; if (!r) return;
-  document.getElementById("lbImg").src = r.img; document.getElementById("lbImg").alt = r.label;
-  document.getElementById("lbCap").textContent = r.label; document.getElementById("lightbox").style.display = "flex";
+let lbCur = null;
+function openLB(r) {
+  if (!r) return;
+  const lb = document.getElementById("lightbox");
+  if (lb.style.display === "none") focusStack.push(document.activeElement);
+  lbCur = r;
+  document.getElementById("lbImg").src = r.src; document.getElementById("lbImg").alt = r.label;
+  document.getElementById("lbCap").textContent = r.label;
+  document.getElementById("lbBar").innerHTML = '<button data-act="palette">' + ic("spark", 16) + ' Sacar paleta</button>'
+    + (r.uid ? '<button data-act="delref" data-id="' + esc(r.uid) + '" aria-label="Borrar captura">' + ic("trash", 16) + '</button>' : '')
+    + '<button data-act="closelb" aria-label="Cerrar">' + ic("close", 16) + ' Cerrar</button>';
+  lb.style.display = "flex";
+  const b = lb.querySelector('[data-act="closelb"]:not(img)'); if (b) b.focus({ preventScroll: true });
 }
-function closeLB() { document.getElementById("lightbox").style.display = "none"; }
+function closeLB() {
+  const lb = document.getElementById("lightbox"); if (lb.style.display === "none") return;
+  lb.style.display = "none"; lbCur = null; restoreFocus();
+}
+function paletteFromLB() {
+  const r = lbCur; if (!r) return;
+  loadImage(r.src).then(img => {
+    const cols = extractPalette(img, 6); if (!cols.length) return toast("No se encontraron colores");
+    openSheet('<div class="handle"></div><h2>Paleta de la captura</h2><span class="sub">' + esc(r.label) + ' · toca un color para copiarlo</span>'
+      + '<div class="palBig">' + cols.map(c => '<button data-act="color" data-c="' + c + '" style="background:' + c + ';color:' + inkOn(c) + '" aria-label="Copiar ' + c + '">' + c + '</button>').join("") + '</div>'
+      + '<div class="btns"><button class="cta" data-act="mkstyle" data-c="' + cols.join(",") + '" data-l="' + esc(r.label) + '">' + ic("plus", 16, 2.6) + ' Crear estilo con esta paleta</button>'
+      + '<div class="two"><button class="cta ghost" data-act="palcopy" data-c="' + cols.join(",") + '">Copiar HEX</button><button class="cta ghost" data-act="closesheet">Cerrar</button></div></div>');
+  }).catch(() => toast("No se pudo leer la imagen"));
+}
+/* ───────── Capturas propias ───────── */
+function loadUserRefs() {
+  return RefStore.all().then(list => {
+    userRefs.forEach(r => URL.revokeObjectURL(r.url));
+    userRefs = list.map(r => Object.assign({}, r, { url: URL.createObjectURL(r.blob) }));
+    if (S.view === "home" || (S.view === "explore" && S.tab === "Referencias")) render(true);
+  }).catch(() => { /* sin IndexedDB: solo las capturas incluidas */ });
+}
+function addRefs(files) {
+  files = [...files].filter(f => /^image\//.test(f.type)).slice(0, 20);
+  if (!files.length) return toast("Elige una imagen");
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+  toast("Guardando " + files.length + (files.length > 1 ? " capturas…" : " captura…"));
+  Promise.all(files.map((f, i) => shrinkImage(f, 1400).then(blob => RefStore.put({
+    id: "r" + Date.now().toString(36) + i, label: (f.name || "Captura").replace(/\.[^.]+$/, "").slice(0, 60) || "Captura", date: Date.now() + i, blob
+  })))).then(() => loadUserRefs()).then(() => toast(files.length > 1 ? "Capturas añadidas" : "Captura añadida"))
+    .catch(() => toast("No se pudo guardar (¿almacenamiento lleno?)"));
+}
 function toggleFav(id) {
   const i = favs.indexOf(id);
   if (i >= 0) { favs.splice(i, 1); toast("Quitado de guardados"); } else { favs.push(id); toast("Guardado"); }
@@ -461,8 +666,14 @@ function surprise() {
   go({ view: "detail", id: pool[Math.floor(Math.random() * pool.length)].id, detailTab: "info" });
 }
 
+function curCode(id) {
+  const e = getEntry(id); if (!e) return "";
+  return stackCode(live(e), S.view === "detail" && S.detailTab === "code" ? S.stack || "html" : "html");
+}
+function liveEdit(fn) { const d = ensureDraft(); if (!d) return; fn(d); render(true); }
+
 const ACT = {
-  open: d => go({ view: "detail", id: d.id, detailTab: "info", stage: "auto" }),
+  open: d => { draft = null; go({ view: "detail", id: d.id, detailTab: "info", stage: "auto" }); },
   back: () => goBack(),
   nav: d => go({ view: d.v, q: d.v === "explore" ? S.q : "" }),
   tab: d => go({ view: "explore", tab: d.t, q: "" }),
@@ -470,16 +681,50 @@ const ACT = {
   fav: d => toggleFav(d.id),
   color: d => copyText(d.c, "Copiado: " + d.c),
   pal: d => { const e = getEntry(d.id); if (e) copyText(palText(e, d.f), "Paleta copiada (" + d.f.toUpperCase() + ")"); },
-  copycode: d => { const e = getEntry(d.id); if (e) copyText(designCode(e), "Código copiado"); },
-  dtab: d => go({ detailTab: d.d }, { replace: true, keep: true }),
+  copycode: d => { const c = curCode(d.id); if (c) copyText(c, "Código copiado"); },
+  stack: d => go({ stack: d.s }, { replace: true, keep: true }),
+  more: d => moreSheet(d.id),
+  dup: d => { closeSheet(); saveVariant(); },
+  sharecode: d => {
+    const e = getEntry(d.id); if (!e) return; const text = curCode(d.id); closeSheet();
+    if (navigator.share) navigator.share({ title: e.name, text }).catch(err => { if (err && err.name !== "AbortError") copyText(text, "Código copiado"); });
+    else copyText(text, "Código copiado");
+  },
+  ladd: () => liveEdit(x => { if (x.colors.length < 6) x.colors.push(mix(x.colors[x.colors.length - 1], x.mode === "dark" ? "#000000" : "#FFFFFF", .4).toUpperCase()); }),
+  ldel: d => liveEdit(x => { if (x.colors.length > 1) x.colors.splice(+d.i, 1); }),
+  lround: () => liveEdit(x => { x.radius = String(x.radius).indexOf("%") >= 0 ? "16" : "50%"; }),
+  lmode: d => liveEdit(x => { x.mode = d.m === "dark" ? "dark" : "light"; }),
+  lreset: () => { draft = null; render(true); toast("Cambios descartados"); },
+  lsave: () => saveVariant(),
+  lapply: () => applyDraft(),
+  dim: el => {
+    dimPreviews = !dimPreviews; try { localStorage.setItem(KEY_DIM, dimPreviews ? "1" : "0"); } catch (e) { /* ignorar */ }
+    applyDim(); const b = document.querySelector('[data-act="dim"]'); if (b) b.setAttribute("aria-checked", dimPreviews);
+  },
+  dlfile: () => downloadFile(),
+  sharefile: () => shareFile(),
+  impfile: () => document.getElementById("fileJson").click(),
+  addref: () => document.getElementById("fileRef").click(),
+  lbu: d => { const r = userRefs.find(x => x.id === d.id); if (r) openLB({ src: r.url, label: r.label, uid: r.id }); },
+  palette: () => paletteFromLB(),
+  palcopy: d => copyText(d.c.split(",").join("\n"), "Paleta copiada"),
+  mkstyle: d => { closeSheet(); closeLB(); openForm(null, { tab: "Paletas", v: "pal.sample", name: ("Paleta · " + (d.l || "captura")).slice(0, 80), ref: d.l || "", colors: d.c.split(","), radius: "16", mode: "light", desc: "Paleta extraída de una captura.", tip: "" }); },
+  delref: d => askConfirm("¿Borrar esta captura?", "Se elimina de este dispositivo.", "Borrar", () => { closeSheet(); closeLB(); RefStore.del(d.id).then(loadUserRefs).then(() => toast("Captura borrada")).catch(() => toast("No se pudo borrar")); }),
+  dtab: d => { closeSheet(); go({ detailTab: d.d }, { replace: true, keep: true }); },
   stage: () => go({ stage: STAGE_NEXT[S.stage] }, { replace: true, keep: true }),
   surprise: () => surprise(),
   add: () => openForm(),
-  edit: d => openForm(d.id),
+  edit: d => { closeSheet(); openForm(d.id); },
   saveform: () => saveForm(),
   del: d => askConfirm("¿Eliminar este estilo?", "Dejará de aparecer en la biblioteca. Puedes recuperarlo con «Restaurar el catálogo original».", "Eliminar", () => deleteEntry(d.id)),
   confirm: () => { const f = pendingConfirm; pendingConfirm = null; if (f) f(); },
   menu: () => openMenu(),
+  theme: d => {
+    setTheme(d.t);
+    document.querySelectorAll(".themeSeg button").forEach(b => { const on = b.dataset.t === theme; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });
+    render(true);
+  },
+  themecycle: () => { setTheme(THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length]); render(true); toast("Tema: " + THEME_LABEL[theme] + (theme === "auto" ? " (sigue al sistema)" : "")); },
   export: () => doExport(),
   copyio: () => copyText(document.getElementById("ioText").value, "Copiado"),
   import: () => doImport(),
@@ -500,23 +745,49 @@ const ACT = {
   builderduplicate: d => { const i=Number(d.index); if(builder.selected.length>=12){toast('Máximo doce capas');return;} if(Number.isInteger(i)&&i>=0&&i<builder.selected.length){builder.selected.splice(i+1,0,builder.selected[i]);const copy=Object.assign({},builder.layers[i]||{}, {uid:"layer-"+Math.random().toString(36).slice(2,9)});builder.layers.splice(i+1,0,copy);builder.activeLayer=i+1;saveBuilder();render(true);toast('Componente duplicado');} },
   builderexport: () => exportBuilder(),
   closesheet: () => closeSheet(),
-  lb: d => openLB(+d.i),
+  lb: d => { const r = REFS[+d.i]; if (r) openLB({ src: r.img, label: r.label }); },
   closelb: () => closeLB()
 };
 document.addEventListener("click", ev => {
   const el = ev.target.closest("[data-act]");
   if (el && ACT[el.dataset.act]) { ev.stopPropagation(); ACT[el.dataset.act](el.dataset); return; }
   if (ev.target.id === "sheetWrap") closeSheet();
+  if (ev.target.id === "lightbox") closeLB();
 });
 document.addEventListener("keydown", ev => {
   if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches && ev.target.matches('article[data-act="open"]')) { ev.preventDefault(); ACT.open(ev.target.dataset); }
-  if (ev.key === "Escape") { closeSheet(); closeLB(); }
+  if (ev.key === "Escape") { if (document.getElementById("sheetWrap").style.display !== "none") closeSheet(); else closeLB(); }
+  if (ev.key === "Tab") {
+    const sw = document.getElementById("sheetWrap"), lb = document.getElementById("lightbox");
+    const box = sw.style.display !== "none" ? document.getElementById("sheetCard") : lb.style.display !== "none" ? lb : null;
+    if (!box) return;
+    const f = focusables(box); if (!f.length) { ev.preventDefault(); return; }
+    const first = f[0], last = f[f.length - 1], a = document.activeElement;
+    if (ev.shiftKey && (a === first || !box.contains(a))) { ev.preventDefault(); last.focus(); }
+    else if (!ev.shiftKey && (a === last || !box.contains(a))) { ev.preventDefault(); first.focus(); }
+  }
 });
+let qTimer = 0;
 document.addEventListener("input", ev => {
   const t = ev.target;
-  if (t.dataset && t.dataset.input === "q") { S.q = t.value; renderList(); }
+  if (!t.dataset) return;
+  if (t.dataset.input === "q") { S.q = t.value; clearTimeout(qTimer); qTimer = setTimeout(renderList, 150); return; }
   if (t.dataset && t.dataset.builder) { builder[t.dataset.builder] = t.type === "range" ? Number(t.value) : t.value; saveBuilder(); if(t.dataset.builder==="title"){const tab=document.querySelector('.screen-tab[data-index="'+builder.activeScreenIndex+'"]');if(tab&&tab.lastChild)tab.lastChild.textContent=t.value;} const old=document.querySelector(".builder-preview"); if(old){const fresh=renderBuilder();const tmp=document.createElement("div");tmp.innerHTML=fresh;const next=tmp.querySelector(".builder-preview");old.replaceWith(next);hydrate(next);} }
   if (t.dataset && t.dataset.layerField !== undefined) { const i=Number(t.dataset.index); if(!builder.layers[i]) return; const k=t.dataset.layerField; builder.layers[i][k]=(t.type==="range")?Number(t.value):t.value; saveBuilder(); const old=document.querySelector(".builder-preview"); if(old){const fresh=renderBuilder();const tmp=document.createElement("div");tmp.innerHTML=fresh;const next=tmp.querySelector(".builder-preview");old.replaceWith(next);hydrate(next);} const label=document.querySelector('.layer-select[data-index="'+i+'"] b'); if(label&&k==="label") label.textContent=t.value||((getEntry(builder.selected[i])||{}).name||"Componente"); }
+  const d = t.dataset.input === "lc" || t.dataset.input === "lhex" || t.dataset.input === "lrad" ? ensureDraft() : null;
+  if (!d) return;
+  if (t.dataset.input === "lc") {
+    const c = t.value.toUpperCase(); d.colors[+t.dataset.i] = c;
+    const h = document.querySelector('.lhex[data-i="' + t.dataset.i + '"]'); if (h) h.value = c;
+  } else if (t.dataset.input === "lhex") {
+    let v = t.value.trim(); if (v && v[0] !== "#") v = "#" + v;
+    if (!HEX_RE.test(v)) { t.setAttribute("aria-invalid", "true"); return; }
+    t.removeAttribute("aria-invalid"); d.colors[+t.dataset.i] = v.toUpperCase();
+    const c = document.querySelector('.lcol[data-i="' + t.dataset.i + '"]'); if (c) c.value = hex6(v);
+  } else {
+    d.radius = String(t.value); const o = document.getElementById("lradv"); if (o) o.textContent = t.value + " px";
+  }
+  refreshStage();
 });
 let builderDragIndex = null;
 let builderPointerDrag = null;
@@ -578,13 +849,23 @@ document.addEventListener("drop", ev => {
 
 document.addEventListener("change", ev => {
   const t = ev.target;
+  if (t.id === "fileRef") { if (t.files && t.files.length) addRefs(t.files); t.value = ""; return; }
+  if (t.id === "fileJson") {
+    const f = t.files && t.files[0]; t.value = ""; if (!f) return;
+    if (f.size > 2e6) return toast("Archivo demasiado grande");
+    f.text().then(doImportText).catch(() => toast("No se pudo leer el archivo"));
+    return;
+  }
   if(t.dataset && t.dataset.themeSelect!==undefined){if(t.value)ACT.buildertheme({theme:t.value});return;}
-  if(t.dataset && t.dataset.layerField!==undefined){const i=Number(t.dataset.index);if(builder.layers[i]){const k=t.dataset.layerField;builder.layers[i][k]=t.type==="checkbox"?t.checked:(t.type==="range"?Number(t.value):t.value);saveBuilder();render(true);}return;}
+  /* Texto y deslizadores ya se aplican en vivo con «input». Volver a dibujar aquí (el
+     «change» llega al perder el foco) se comía el toque en la barra inferior. */
+  const liveField = t.tagName === "TEXTAREA" || /^(text|search|range|number)$/.test(t.type);
+  if(t.dataset && t.dataset.layerField!==undefined){const i=Number(t.dataset.index);if(builder.layers[i]){const k=t.dataset.layerField;builder.layers[i][k]=t.type==="checkbox"?t.checked:(t.type==="range"?Number(t.value):t.value);saveBuilder();if(!liveField)render(true);}return;}
   if (t.dataset && t.dataset.builderSelect) {
     if (t.value) { if (builder.selected.length < 12) { builder.selected.push(t.value); builder.layers.push({uid:"layer-"+Math.random().toString(36).slice(2,9),label:"",bg:"#FFFFFF",color:"#263247",radius:16,padding:12}); builder.activeLayer=builder.selected.length-1; } else toast("Máximo doce componentes"); saveBuilder(); render(true); }
     return;
   }
-  if (t.dataset && t.dataset.builder) { builder[t.dataset.builder] = t.type === "range" ? Number(t.value) : t.value; saveBuilder(); render(true); return; }
+  if (t.dataset && t.dataset.builder) { builder[t.dataset.builder] = t.type === "range" ? Number(t.value) : t.value; saveBuilder(); if (!liveField) render(true); return; }
   if (t.dataset && t.dataset.input === "tabsel") {
     document.getElementById("f-newtab").style.display = t.value === "__new" ? "block" : "none";
     document.getElementById("f-v").innerHTML = variantOptions(t.value, "");
@@ -594,4 +875,5 @@ document.addEventListener("change", ev => {
 /* ───────── Arranque ───────── */
 try { history.replaceState(S, ""); } catch (e) { /* ignorar */ }
 render();
+loadUserRefs();
 if (migrated) setTimeout(() => toast("Actualizado a v" + APP_VERSION + ". Tu copia anterior está en Ajustes."), 600);
