@@ -2,4 +2,7 @@
 <resources>
     <color name="launcher_bg">#0F1115</color>
     <color name="window_bg">#0F1115</color>
+    <!-- Fondo y barras en API 29+ (DayNight): claro aquí, oscuro en values-night. -->
+    <color name="day_night_bg">#C9E0EF</color>
+    <bool name="light_bars">true</bool>
 </resources>

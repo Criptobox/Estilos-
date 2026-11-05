@@ -38,7 +38,7 @@ Ordenadas por impacto / esfuerzo:
 5. **Tus propias referencias.** Hoy las 27 capturas son fijas. Permitir añadir capturas propias (IndexedDB), con etiquetas, y **extraer la paleta de una imagen** con canvas.
 6. **Colecciones / moodboards** y búsqueda global (no solo dentro de la pestaña), con etiquetas y filtros combinados.
 7. **Compartir y respaldar**: hoja de compartir de Android y guardar el JSON como archivo (hoy solo hay un cuadro de texto). Sincronización opcional vía Gist o archivo.
-8. **Modo oscuro** de la propia app, **i18n** (es/en) y mejoras de accesibilidad (`aria-label` en chips y botones de icono, foco visible, `prefers-reduced-motion`).
+8. ~~**Modo oscuro** de la propia app~~ (hecho), **i18n** (es/en) y mejoras de accesibilidad (`aria-label` en chips y botones de icono, foco visible, `prefers-reduced-motion`).
 9. **Rendimiento**: imágenes de referencia a WebP con `loading="lazy"` (2,8 MB de JPG hoy) y renderizado por lotes si la base crece.
 
 ## 4. Orden sugerido

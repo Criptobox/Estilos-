@@ -5,7 +5,7 @@
    - Navegación con la API de historial (el botón Atrás del sistema funciona). */
 
 /* ───────── Almacenamiento ───────── */
-const KEY_USER = "estilos-user-v2", KEY_OLD = "estilos-db-v1", KEY_BAK = "estilos-db-v1-backup", KEY_FAV = "estilos-favs-v1";
+const KEY_USER = "estilos-user-v2", KEY_OLD = "estilos-db-v1", KEY_BAK = "estilos-db-v1-backup", KEY_FAV = "estilos-favs-v1", KEY_THEME = "estilos-theme";
 const BASE_TABS = ["Chat", "Tarjetas", "Listas", "Avatares", "Plantillas", "Barras", "Botones", "Formularios", "Entradas", "Hojas", "Avisos", "Datos", "Paletas", "Tipografía", "Encabezados"];
 const TAB_ICON = { Chat: "chat", Tarjetas: "card", Listas: "menu", Avatares: "user", Plantillas: "grid", Barras: "sliders", Botones: "plus", Formularios: "edit", Entradas: "search", Hojas: "arrowUp", Avisos: "bell", Datos: "chart", Paletas: "spark", "Tipografía": "type", Encabezados: "layers", Referencias: "image" };
 const TAB_FAMILY = { Chat: "chat", Tarjetas: "card", Listas: "list", Avatares: "avatar", Plantillas: "tpl", Barras: "bar", Botones: "btn", Formularios: "form", Entradas: "input", Hojas: "sheet", Avisos: "notice", Datos: "data", Paletas: "pal", "Tipografía": "type", Encabezados: "head" };
@@ -71,6 +71,32 @@ function allTabs() {
   t.push("Referencias");
   return t.filter(x => x === "Referencias" || db().some(e => e.tab === x));
 }
+
+/* ───────── Tema de la app (auto / claro / oscuro) ───────── */
+const THEMES = ["auto", "light", "dark"];
+const THEME_LABEL = { auto: "Automático", light: "Claro", dark: "Oscuro" };
+const THEME_ICON = { auto: "auto", light: "sun", dark: "moon" };
+const darkMQ = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
+let theme = (function () { try { const t = localStorage.getItem(KEY_THEME); return THEMES.includes(t) ? t : "auto"; } catch (e) { return "auto"; } })();
+function isDark() { return theme === "dark" || (theme === "auto" && !!(darkMQ && darkMQ.matches)); }
+function applyTheme() {
+  const d = isDark();
+  document.documentElement.setAttribute("data-theme", d ? "dark" : "light");
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = d ? "#0a141b" : "#c9e0ef";
+}
+function setTheme(t) {
+  theme = THEMES.includes(t) ? t : "auto";
+  try { localStorage.setItem(KEY_THEME, theme); } catch (e) { /* sin almacenamiento: dura la sesión */ }
+  applyTheme();
+}
+function themeSegHTML() {
+  return '<div class="seg themeSeg" role="radiogroup" aria-label="Tema">' + THEMES.map(t => '<button role="radio" aria-checked="' + (t === theme) + '" class="' + (t === theme ? "on" : "") + '" data-act="theme" data-t="' + t + '">' + ic(THEME_ICON[t], 14) + THEME_LABEL[t] + '</button>').join("") + '</div>';
+}
+if (darkMQ) {
+  const onSys = () => { if (theme === "auto") applyTheme(); };
+  darkMQ.addEventListener ? darkMQ.addEventListener("change", onSys) : darkMQ.addListener(onSys);
+}
+applyTheme();
 
 /* ───────── Estado y navegación ───────── */
 let S = { view: "home", tab: "Tarjetas", id: null, q: "", detailTab: "info", stage: "auto" };
@@ -174,7 +200,7 @@ function renderHome() {
     return '<button class="cat" data-act="tab" data-t="' + esc(t) + '"><span>' + ic(TAB_ICON[t] || "grid", 18) + '</span><b>' + esc(t) + '</b><small>' + n + (t === "Referencias" ? " capturas" : " estilos") + '</small></button>';
   }).join("");
   return '<div class="wrap">'
-    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 22) + '</span><div><b>Estilos</b><div class="sub">Biblioteca de diseño UI</div></div></div><button class="ib" data-act="menu" aria-label="Menú">' + ic("sliders", 20) + '</button></div>'
+    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 22) + '</span><div><b>Estilos</b><div class="sub">Biblioteca de diseño UI</div></div></div><div class="tbtns"><button class="ib" data-act="themecycle" aria-label="Tema: ' + THEME_LABEL[theme] + ' (cambiar)" title="Tema: ' + THEME_LABEL[theme] + '">' + ic(THEME_ICON[theme], 20) + '</button><button class="ib" data-act="menu" aria-label="Menú">' + ic("sliders", 20) + '</button></div></div>'
     + '<div class="hero"><h1 class="big">Diseños listos para copiar</h1><p>' + list.length + ' estilos con vista previa real, paleta de colores y código HTML/CSS. Sin internet.</p></div>'
     + '<button class="search" data-act="gosearch" aria-label="Buscar estilos">' + ic("search", 18) + '<span>Buscar en todos los estilos…</span></button>'
     + (f ? '<div><div class="featTag">' + ic("spark", 14) + 'Destacado de hoy</div></div><article class="feat" data-act="open" data-id="' + esc(f.id) + '" tabindex="0" role="button" aria-label="' + esc(f.name) + '"><div class="' + stageCls(f) + '">' + pv(f) + '</div><div class="cardInfo"><div class="cardName">' + esc(f.name) + '</div><div class="sub">' + esc(f.tab) + ' · ' + esc(f.ref) + '</div></div></article>' : '')
@@ -334,6 +360,7 @@ function deleteEntry(id) {
 function openMenu() {
   const bak = !!localStorage.getItem(KEY_BAK);
   openSheet('<div class="handle"></div><h2>Estilos</h2><span class="sub">v' + APP_VERSION + ' · ' + db().length + ' estilos · ' + REFS.length + ' referencias · Sin internet · Datos en tu teléfono</span>'
+    + '<label class="l">Tema</label>' + themeSegHTML()
     + '<label class="l">Tus cambios (JSON)</label><textarea class="fld" id="ioText" rows="6" placeholder="Exporta para ver o pega un JSON para importar"></textarea>'
     + '<div class="btns"><button class="cta" data-act="export">Exportar mis cambios</button><div class="two"><button class="cta ghost" data-act="copyio">Copiar</button><button class="cta ghost" data-act="import">Importar</button></div>'
     + (bak ? '<button class="cta ghost" data-act="backup">Ver respaldo de la versión 1.5</button>' : '')
@@ -399,6 +426,12 @@ const ACT = {
   del: d => askConfirm("¿Eliminar este estilo?", "Dejará de aparecer en la biblioteca. Puedes recuperarlo con «Restaurar el catálogo original».", "Eliminar", () => deleteEntry(d.id)),
   confirm: () => { const f = pendingConfirm; pendingConfirm = null; if (f) f(); },
   menu: () => openMenu(),
+  theme: d => {
+    setTheme(d.t);
+    document.querySelectorAll(".themeSeg button").forEach(b => { const on = b.dataset.t === theme; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });
+    render(true);
+  },
+  themecycle: () => { setTheme(THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length]); render(true); toast("Tema: " + THEME_LABEL[theme] + (theme === "auto" ? " (sigue al sistema)" : "")); },
   export: () => doExport(),
   copyio: () => copyText(document.getElementById("ioText").value, "Copiado"),
   import: () => doImport(),

@@ -4,6 +4,11 @@ Biblioteca de referencia de componentes UI para consultar sin internet: **107 es
 
 > Versión actual: **1.6** (`versionCode 7`, paquete `com.estilos.app`, minSdk 26, targetSdk 34).
 
+## Modo oscuro
+- Tema **Automático / Claro / Oscuro**: botón en la cabecera de Inicio (alterna) y selector en Ajustes. Se guarda en `localStorage` (`estilos-theme`) y se aplica antes de pintar (sin destello).
+- Toda la interfaz usa variables CSS (`:root` y `:root[data-theme="dark"]` en `css/styles.css`); las vistas previas mantienen su propio escenario claro/oscuro.
+- Android 10+ (API 29): tema `DayNight` en `res/values-v29`, así el modo Automático y las barras del sistema siguen al teléfono. En Android 8–9 el modo Automático usa claro; elige Oscuro a mano.
+
 ## Novedades 1.6
 - 32 estilos nuevos (listas, hojas, datos, formularios, avisos, reseña, entrada de evento, reproductor, perfil, chat IA…).
 - Los 75 estilos originales se rehicieron: iconos SVG en vez de glifos, vista previa y código idénticos, escenario claro/oscuro/blanco.

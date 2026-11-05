@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- API 29+: tema DayNight. El WebView informa prefers-color-scheme según este tema
+         (targetSdk 33+), así el modo "Automático" de la web sigue al sistema. -->
+    <style name="Theme.Estilos" parent="android:Theme.DeviceDefault.DayNight">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/day_night_bg</item>
+        <item name="android:statusBarColor">@color/day_night_bg</item>
+        <item name="android:navigationBarColor">@color/day_night_bg</item>
+        <item name="android:windowLightStatusBar">@bool/light_bars</item>
+        <item name="android:windowLightNavigationBar">@bool/light_bars</item>
+    </style>
+</resources>
