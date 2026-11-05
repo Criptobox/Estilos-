@@ -27,7 +27,8 @@ function tokens(e) {
 const TAB_DEFAULT = {
   Chat: "chat.clean", Tarjetas: "card.product", Avatares: "avatar.photo", Plantillas: "tpl.store",
   Barras: "bar.plain", Botones: "btn.primary", Paletas: "pal.sample", Tipografía: "type.accent",
-  Entradas: "input.search", Encabezados: "head.title"
+  Entradas: "input.search", Encabezados: "head.title", Listas: "list.settings", Formularios: "form.field",
+  Hojas: "sheet.bottom", Avisos: "notice.toast", Datos: "data.stat"
 };
 
 function variantOf(e) {
