@@ -504,6 +504,9 @@ function readZip(buf) {
     ok(await page.$$eval(".bmCtx button", l => l.every(b => b.getAttribute("aria-label"))), "…con nombres accesibles");
 
     await page.tap(".bmTools [data-s=estilos]"); await page.waitForTimeout(350);
+    ok(await page.evaluate(() => builder.layers[0].bare === true && getComputedStyle(document.querySelector(".builder-block")).paddingTop === "0px"), "los elementos nuevos se ven sin tarjeta (tal cual son)");
+    await page.tap(".bmChip[data-field=bare][data-value=false]"); await page.waitForTimeout(300);
+    eq(await page.evaluate(() => builder.layers[0].bare), false, "Estilos: «Con tarjeta» activa fondo, borde y redondeo");
     await page.fill("input[data-layer-field=radius]", "28"); await page.waitForTimeout(250);
     eq(await page.evaluate(() => builder.layers[0].radius), 28, "Estilos: el deslizador de redondeo cambia la capa");
     eq(await page.$eval(".builder-block", e => getComputedStyle(e).borderTopLeftRadius), "28px", "…y el bloque del lienzo, en vivo");
@@ -598,6 +601,32 @@ function readZip(buf) {
     ok(await page.isVisible("[data-act=install]"), "con el aviso nativo del navegador, Ajustes muestra «Instalar la app»");
     await page.click("[data-act=install]"); await page.waitForTimeout(200);
     ok(await page.evaluate(() => window.__prompted === true), "…y al pulsarlo lanza el aviso de instalación");
+    await ctx.close();
+  }
+
+  /* ───────── 20 · la pantalla es una página completa ───────── */
+  current = "página completa"; console.log("\n" + current);
+  {
+    const { ctx, page } = await open({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+    await goBuilder(page);
+    eq(await page.evaluate(() => [builder.hero, builder.nav, builder.selected.length]), [false, false, 0], "un proyecto nuevo empieza vacío: sin cabecera ni barra de ejemplo");
+    ok(await page.isVisible(".builder-empty"), "…y la pantalla explica cómo empezar");
+    ok(!(await page.$(".builder-hero")) && !(await page.$(".builder-bottom")), "…sin cabecera ni barra inferior de ejemplo");
+    await page.evaluate(() => { builder.selected = ["tar-1", "bar-4", "tar-2"]; builder.layers = builder.selected.map(newLayer); builder.activeLayer = 0; saveBuilder(); go({ view: "builder" }); });
+    await page.waitForTimeout(500);
+    eq(await page.evaluate(() => builder.layers.map(l => l.slot)), ["body", "bottom", "body"], "las barras se colocan abajo y el resto en el contenido");
+    ok(await page.evaluate(() => { const b = document.querySelector(".builder-slot-bottom .builder-block"), m = document.querySelector(".builder-main"); return !!b && b.getBoundingClientRect().top > m.querySelector(".builder-block").getBoundingClientRect().top; }), "la barra queda anclada debajo del contenido");
+    await page.evaluate(() => { builder.activeLayer = 2; saveBuilder(); render(true); }); await page.waitForTimeout(300);
+    await page.evaluate(() => { builder.layers[2].slot = "top"; saveBuilder(); render(true); }); await page.waitForTimeout(300);
+    ok(await page.evaluate(() => { const t = document.querySelector(".builder-main > .builder-block"); return !!t && t.dataset.index === "2"; }), "un elemento con posición «Arriba» va antes que el contenido");
+    await page.evaluate(() => { builder.hero = true; saveBuilder(); render(true); }); await page.waitForTimeout(250);
+    ok(await page.isVisible(".builder-hero"), "se puede volver a activar la cabecera de ejemplo");
+    const html = await page.evaluate(() => builderExportHTML());
+    ok(html.includes("Descubrir más") && html.includes("class=\"component bare\""), "la exportación HTML respeta cabecera y elementos sin tarjeta");
+    await page.evaluate(() => { builder.hero = false; saveBuilder(); });
+    const html2 = await page.evaluate(() => builderExportHTML());
+    ok(!html2.includes("Descubrir más ↗</button>") || !html2.includes('<div class="mark">'), "sin cabecera, la exportación no la incluye");
+    ok(html2.indexOf("page-0") > 0 && /bare[\s\S]*bare[\s\S]*bare/.test(html2), "…y exporta los tres elementos");
     await ctx.close();
   }
 

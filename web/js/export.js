@@ -60,28 +60,28 @@ function downloadBlob(blob, name, delay) {
 /* ───────── Modelo común (HTML y React) ───────── */
 const DATA_IMG_G = /data:image\/[a-z0-9.+-]+;base64,[A-Za-z0-9+/=]+/g;
 function builderBlockStyle(l) {
-  return 'display:' + (l.hidden ? 'none' : 'block') + ';background:' + safeColor(l.bg || '#FFFFFF') + ';color:' + safeColor(l.color || '#263247')
-    + ';border-radius:' + Math.max(6, Math.min(32, Number(l.radius) || 16)) + 'px;padding:' + Math.max(4, Math.min(32, Number(l.padding) || 12))
-    + 'px;font-size:' + (l.fontSize || 14) + 'px;font-weight:' + (l.weight || 600) + ';text-align:' + (l.align || 'left')
-    + ';border:' + (l.borderWidth || 0) + 'px ' + (l.borderStyle || 'solid') + ' ' + safeColor(l.borderColor || '#E8EAF0')
-    + ';box-shadow:' + builderElevation(l) + ';width:' + (l.width || 100) + '%;translate:' + (Number(l.offsetX) || 0) + 'px ' + (Number(l.offsetY) || 0) + 'px;'
+  const card = l.bare ? '' : ';background:' + safeColor(l.bg || '#FFFFFF') + ';border-radius:' + Math.max(6, Math.min(32, Number(l.radius) || 16)) + 'px;padding:' + Math.max(4, Math.min(32, Number(l.padding) || 12))
+    + 'px;border:' + (l.borderWidth || 0) + 'px ' + (l.borderStyle || 'solid') + ' ' + safeColor(l.borderColor || '#E8EAF0') + ';box-shadow:' + builderElevation(l);
+  return 'display:' + (l.hidden ? 'none' : 'block') + ';color:' + safeColor(l.color || '#263247') + card
+    + ';font-size:' + (l.fontSize || 14) + 'px;font-weight:' + (l.weight || 600) + ';text-align:' + (l.align || 'left')
+    + ';width:' + (l.width || 100) + '%;translate:' + (Number(l.offsetX) || 0) + 'px ' + (Number(l.offsetY) || 0) + 'px;'
     + builderMotionStyle(l);
 }
 function builderExportScreens(mediaFn) {
   syncActiveScreen();
   return builder.screens.map((sc, si) => ({
-    id: "page-" + si, title: sc.title || ("Pantalla " + (si + 1)), subtitle: sc.subtitle || "",
+    id: "page-" + si, title: sc.title || ("Pantalla " + (si + 1)), subtitle: sc.subtitle || "", hero: sc.hero !== false,
     blocks: sc.selected.map((id, i) => {
       const e = getEntry(id); if (!e) return null;
       const l = sc.layers[i] || {};
       let code = builderEditedMediaCode(e, l);
       if (mediaFn) code = code.replace(DATA_IMG_G, mediaFn);
       return {
-        id: "blk-" + si + "-" + i, cls: "component " + (l.variant || "default"), tw: builderBlockTW(l), style: builderBlockStyle(l),
+        id: "blk-" + si + "-" + i, bare: !!l.bare, rank: { top: 0, bottom: 2 }[l.slot] ?? 1, cls: "component " + (l.bare ? "bare" : (l.variant || "default")), tw: builderBlockTW(l), style: builderBlockStyle(l),
         tab: e.tab, n: i + 1, label: l.label || e.name, desc: e.desc,
         srcdoc: '<!doctype html><meta charset=utf-8><meta name=viewport content=width=device-width,initial-scale=1><style>body{margin:0;padding:8px;font-family:system-ui,sans-serif;overflow:hidden}*{box-sizing:border-box}</style>' + code
       };
-    }).filter(Boolean)
+    }).filter(Boolean).sort((a, b) => a.rank - b.rank || a.n - b.n)
   }));
 }
 
@@ -92,13 +92,16 @@ function builderBlockTW(l) {
   const clamp = (v, lo, hi, d) => Math.max(lo, Math.min(hi, Number(v) || d));
   const c = [];
   c.push(l.hidden ? "hidden" : "block");
-  c.push("bg-[" + safeColor(l.bg || "#FFFFFF") + "]", "text-[color:" + safeColor(l.color || "#263247") + "]");
-  c.push("rounded-[" + clamp(l.radius, 6, 32, 16) + "px]", "p-[" + clamp(l.padding, 4, 32, 12) + "px]");
+  if (!l.bare) c.push("bg-[" + safeColor(l.bg || "#FFFFFF") + "]");
+  c.push("text-[color:" + safeColor(l.color || "#263247") + "]");
+  if (!l.bare) c.push("rounded-[" + clamp(l.radius, 6, 32, 16) + "px]", "p-[" + clamp(l.padding, 4, 32, 12) + "px]");
   c.push("text-[length:" + (Number(l.fontSize) || 14) + "px]", "font-[" + (Number(l.weight) || 600) + "]");
   c.push("text-" + (["left", "center", "right"].includes(l.align) ? l.align : "left"));
-  c.push("border-[" + clamp(l.borderWidth, 0, 5, 0) + "px]", "border-" + (["solid", "dashed", "dotted"].includes(l.borderStyle) ? l.borderStyle : "solid"), "border-[color:" + safeColor(l.borderColor || "#E8EAF0") + "]");
-  const sh = builderElevation(l);
-  c.push(sh === "none" ? "shadow-none" : "shadow-[" + sh.replace(/ /g, "_") + "]");
+  if (!l.bare) {
+    c.push("border-[" + clamp(l.borderWidth, 0, 5, 0) + "px]", "border-" + (["solid", "dashed", "dotted"].includes(l.borderStyle) ? l.borderStyle : "solid"), "border-[color:" + safeColor(l.borderColor || "#E8EAF0") + "]");
+    const sh = builderElevation(l);
+    c.push(sh === "none" ? "shadow-none" : "shadow-[" + sh.replace(/ /g, "_") + "]");
+  }
   c.push("w-[" + (Number(l.width) || 100) + "%]");
   const ox = Number(l.offsetX) || 0, oy = Number(l.offsetY) || 0;
   if (ox) c.push("translate-x-[" + ox + "px]");
@@ -116,8 +119,8 @@ function builderTailwindFiles(screens) {
   const W = Math.max(460, deviceOf(builder).w), dk = !!builder.exportDark;
   const fam = builder.font === "Georgia" ? "font-[family-name:Georgia,serif]" : "font-[family-name:Inter,system-ui,sans-serif]";
   const data = screens.map(sc => ({
-    id: sc.id, title: sc.title, subtitle: sc.subtitle,
-    blocks: sc.blocks.map(b => ({ id: b.id, cls: b.cls + " " + b.tw, tab: b.tab, n: b.n, label: b.label, desc: b.desc, srcdoc: b.srcdoc }))
+    id: sc.id, title: sc.title, subtitle: sc.subtitle, hero: sc.hero,
+    blocks: sc.blocks.map(b => ({ id: b.id, bare: b.bare, cls: b.cls + " " + b.tw, tab: b.tab, n: b.n, label: b.label, desc: b.desc, srcdoc: b.srcdoc }))
   }));
   const navOff = "border-[#e4e7ef] bg-white text-[#596276]" + (dk ? " dark:border-[#2a2f3d] dark:bg-[#1b1e29] dark:text-[#b8bfd0]" : "");
   const app = 'import { useState } from "react";\n\n/* Datos del proyecto exportado desde Estilos. Cada bloque se muestra aislado en un iframe. */\nconst SCREENS = ' + JSON.stringify(data, null, 2) + ';\n\n'
@@ -126,15 +129,15 @@ function builderTailwindFiles(screens) {
     + '      <nav className="mx-auto mb-3 flex max-w-[' + W + 'px] gap-1.5 overflow-auto" aria-label="Pantallas">\n        {SCREENS.map((x, k) => (\n          <button\n            key={x.id}\n            onClick={() => setI(k)}\n            aria-current={k === i ? "page" : undefined}\n'
     + '            className={"cursor-pointer whitespace-nowrap rounded-full border px-[13px] py-[9px] " + (k === i ? "border-[' + accent + '] bg-[' + accent + '] text-white" : "' + navOff + '")}\n          >\n            {x.title}\n          </button>\n        ))}\n      </nav>\n'
     + '      <main className="mx-auto max-w-[' + W + 'px] rounded-[' + r + 'px] bg-white p-6 shadow-[0_20px_60px_#1d2b4a18]' + (dk ? ' dark:bg-[#171a23] dark:shadow-none' : '') + '">\n'
-    + '        <div className="grid size-[42px] place-items-center rounded-[14px] bg-[' + accent + '] text-[22px] text-white">✦</div>\n'
+    + '        {s.hero && (\n          <>\n        <div className="grid size-[42px] place-items-center rounded-[14px] bg-[' + accent + '] text-[22px] text-white">✦</div>\n'
     + '        <small className="mt-2 block tracking-[1px] text-[#7c8497]' + (dk ? ' dark:text-[#9aa2b5]' : '') + '">DISEÑADO CON ESTILOS</small>\n'
     + '        <h1 className="mb-2 mt-5 text-[32px] font-bold leading-[1.05]">{s.title}</h1>\n'
     + '        <p className="leading-normal text-[#737b8d]' + (dk ? ' dark:text-[#aab1c2]' : '') + '">{s.subtitle}</p>\n'
-    + '        <button className="my-[18px] cursor-pointer rounded-[' + r + 'px] border-0 bg-[' + accent + '] px-[18px] py-[14px] font-bold text-white">Descubrir más ↗</button>\n'
+    + '        <button className="my-[18px] cursor-pointer rounded-[' + r + 'px] border-0 bg-[' + accent + '] px-[18px] py-[14px] font-bold text-white">Descubrir más ↗</button>\n          </>\n        )}\n'
     + '        {s.blocks.map((b) => (\n          <section key={b.id} className={"mt-[18px] overflow-hidden " + b.cls}>\n'
-    + '            <div className="flex justify-between text-[10px] uppercase tracking-[.08em] text-[#8991a2]' + (dk ? ' dark:text-[#8d95a8]' : '') + '">\n              <span>{b.tab}</span>\n              <small className="tracking-[1px]">Bloque {b.n}</small>\n            </div>\n'
-    + '            <h2 className="my-2 text-base font-bold">{b.label}</h2>\n            <p className="text-[13px] leading-normal">{b.desc}</p>\n'
-    + '            <iframe loading="lazy" title={b.label} sandbox="allow-same-origin" srcDoc={b.srcdoc} className="mt-3 block h-[230px] w-full rounded-xl border-0 bg-[#f7f8fb]" />\n          </section>\n        ))}\n      </main>\n    </div>\n  );\n}\n';
+    + '            {!b.bare && (\n            <>\n            <div className="flex justify-between text-[10px] uppercase tracking-[.08em] text-[#8991a2]' + (dk ? ' dark:text-[#8d95a8]' : '') + '">\n              <span>{b.tab}</span>\n              <small className="tracking-[1px]">Bloque {b.n}</small>\n            </div>\n'
+    + '            <h2 className="my-2 text-base font-bold">{b.label}</h2>\n            <p className="text-[13px] leading-normal">{b.desc}</p>\n            </>\n            )}\n'
+    + '            <iframe loading="lazy" title={b.label} sandbox="allow-same-origin" srcDoc={b.srcdoc} onLoad={(e) => { try { e.target.style.height = e.target.contentDocument.documentElement.scrollHeight + "px"; } catch {} }} className="mt-3 block h-[230px] w-full rounded-xl border-0 bg-[#f7f8fb]" />\n          </section>\n        ))}\n      </main>\n    </div>\n  );\n}\n';
   const css = '@import "tailwindcss";\n\n/* Animaciones y variantes de los bloques (Tailwind no las incluye). */\n'
     + '@keyframes estilosFade{from{opacity:0}to{opacity:1}}\n@keyframes estilosRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}\n@keyframes estilosZoom{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}\n@keyframes estilosFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}\n@keyframes estilosPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}\n'
     + '.component.glass{background:#ffffff88!important;backdrop-filter:blur(12px);border-color:#ffffffaa!important}\n.component.soft{background:linear-gradient(145deg,#fff,#f0f1f8)!important;box-shadow:8px 8px 18px #202a4014!important}\n.component.outline{background:transparent!important;border-width:1px!important;border-color:currentColor!important;box-shadow:none!important}\n.component.bold{background:linear-gradient(135deg,#635bff18,#26b9d418)!important;border-width:2px!important}\n';
@@ -163,6 +166,7 @@ function builderExportCSS(mode, blocksCss) {
     + ".component{margin-top:18px;border:1px solid #e8eaf0;overflow:hidden}.component h2{font-size:16px;margin:8px 0}.component p{font-size:13px}"
     + ".component-meta{display:flex;justify-content:space-between;font-size:10px;color:#8991a2;text-transform:uppercase;letter-spacing:.08em}"
     + ".component iframe{display:block;width:100%;height:230px;border:0;border-radius:12px;background:#f7f8fb;margin-top:12px}"
+    + ".component.bare{border:0;margin-top:10px;overflow:visible}.component.bare iframe{margin-top:0;background:transparent;border-radius:0;height:90px}"
     + ".component.glass{background:#ffffff88!important;backdrop-filter:blur(12px);border-color:#ffffffaa!important}"
     + ".component.soft{background:linear-gradient(145deg,#fff,#f0f1f8)!important;box-shadow:8px 8px 18px #202a4014!important}"
     + ".component.outline{background:transparent!important;border-width:1px!important;border-color:currentColor!important;box-shadow:none!important}"
@@ -176,12 +180,12 @@ function builderExportCSS(mode, blocksCss) {
 /* ───────── HTML único ───────── */
 function builderExportHTML(mediaFn) {
   const screens = builderExportScreens(mediaFn);
-  const pages = screens.map((sc, si) => '<main class="app page ' + (si === 0 ? 'active' : '') + '" id="' + sc.id + '"><div class="mark">✦</div><small>DISEÑADO CON ESTILOS</small><h1>' + esc(sc.title) + '</h1><p>' + esc(sc.subtitle) + '</p><button class="primary">Descubrir más ↗</button>'
-    + sc.blocks.map(b => '<section class="' + b.cls + '" style="' + b.style + '"><div class="component-meta"><span>' + esc(b.tab) + '</span><small>Bloque ' + b.n + '</small></div><h2>' + esc(b.label) + '</h2><p>' + esc(b.desc) + '</p><iframe loading="lazy" title="' + esc(b.label) + '" sandbox="allow-same-origin" srcdoc="' + esc(b.srcdoc) + '"></iframe></section>').join('')
+  const pages = screens.map((sc, si) => '<main class="app page ' + (si === 0 ? 'active' : '') + '" id="' + sc.id + '">' + (sc.hero ? '<div class="mark">✦</div><small>DISEÑADO CON ESTILOS</small><h1>' + esc(sc.title) + '</h1><p>' + esc(sc.subtitle) + '</p><button class="primary">Descubrir más ↗</button>' : '')
+    + sc.blocks.map(b => '<section class="' + b.cls + '" style="' + b.style + '">' + (b.bare ? '' : '<div class="component-meta"><span>' + esc(b.tab) + '</span><small>Bloque ' + b.n + '</small></div><h2>' + esc(b.label) + '</h2><p>' + esc(b.desc) + '</p>') + '<iframe loading="lazy" title="' + esc(b.label) + '" sandbox="allow-same-origin" srcdoc="' + esc(b.srcdoc) + '"></iframe></section>').join('')
     + '</main>').join('');
   const nav = screens.map(sc => '<a href="#' + sc.id + '">' + esc(sc.title) + '</a>').join('');
   return '<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
-    + (builder.exportDark ? '<meta name="color-scheme" content="light dark">' : '') + '<title>' + esc(builder.title) + '</title><style>' + builderExportCSS("html") + '</style><nav class="nav">' + nav + '</nav>' + pages + '</html>';
+    + (builder.exportDark ? '<meta name="color-scheme" content="light dark">' : '') + '<title>' + esc(builder.title) + '</title><style>' + builderExportCSS("html") + '</style><nav class="nav">' + nav + '</nav>' + pages + '<script>/* ajusta la altura de cada elemento a su contenido */document.querySelectorAll("iframe").forEach(function(f){f.addEventListener("load",function(){try{f.style.height=f.contentDocument.documentElement.scrollHeight+"px"}catch(e){}})})</script></html>';
 }
 function exportBuilder() {
   downloadBlob(new Blob([builderExportHTML()], { type: "text/html;charset=utf-8" }), "proyecto-estilos-multipantalla.html", 1500);
@@ -192,12 +196,12 @@ function exportBuilder() {
 function builderReactFiles(screens) {
   const blocksCss = screens.map(sc => sc.blocks.map(b => ".blk-" + b.id.slice(4) + "{" + b.style + "}").join("")).join("");
   const data = screens.map(sc => ({
-    id: sc.id, title: sc.title, subtitle: sc.subtitle,
-    blocks: sc.blocks.map(b => ({ id: b.id, cls: b.cls + " blk-" + b.id.slice(4), tab: b.tab, n: b.n, label: b.label, desc: b.desc, srcdoc: b.srcdoc }))
+    id: sc.id, title: sc.title, subtitle: sc.subtitle, hero: sc.hero,
+    blocks: sc.blocks.map(b => ({ id: b.id, bare: b.bare, cls: b.cls + " blk-" + b.id.slice(4), tab: b.tab, n: b.n, label: b.label, desc: b.desc, srcdoc: b.srcdoc }))
   }));
   const app = 'import { useState } from "react";\nimport "./styles.css";\n\n/* Datos del proyecto exportado desde Estilos. Cada bloque se muestra aislado en un iframe. */\nconst SCREENS = ' + JSON.stringify(data, null, 2) + ';\n\n'
     + 'export default function App() {\n  const [i, setI] = useState(0);\n  const s = SCREENS[i];\n  return (\n    <>\n      <nav className="nav" aria-label="Pantallas">\n        {SCREENS.map((x, k) => (\n          <button key={x.id} className={k === i ? "on" : ""} aria-current={k === i ? "page" : undefined} onClick={() => setI(k)}>\n            {x.title}\n          </button>\n        ))}\n      </nav>\n'
-    + '      <main className="app">\n        <div className="mark">✦</div>\n        <small>DISEÑADO CON ESTILOS</small>\n        <h1>{s.title}</h1>\n        <p>{s.subtitle}</p>\n        <button className="primary">Descubrir más ↗</button>\n        {s.blocks.map((b) => (\n          <section key={b.id} className={b.cls}>\n            <div className="component-meta">\n              <span>{b.tab}</span>\n              <small>Bloque {b.n}</small>\n            </div>\n            <h2>{b.label}</h2>\n            <p>{b.desc}</p>\n            <iframe loading="lazy" title={b.label} sandbox="allow-same-origin" srcDoc={b.srcdoc} />\n          </section>\n        ))}\n      </main>\n    </>\n  );\n}\n';
+    + '      <main className="app">\n        {s.hero && (\n          <>\n            <div className="mark">✦</div>\n            <small>DISEÑADO CON ESTILOS</small>\n            <h1>{s.title}</h1>\n            <p>{s.subtitle}</p>\n            <button className="primary">Descubrir más ↗</button>\n          </>\n        )}\n        {s.blocks.map((b) => (\n          <section key={b.id} className={b.cls}>\n            {!b.bare && (\n              <>\n                <div className="component-meta">\n                  <span>{b.tab}</span>\n                  <small>Bloque {b.n}</small>\n                </div>\n                <h2>{b.label}</h2>\n                <p>{b.desc}</p>\n              </>\n            )}\n            <iframe loading="lazy" title={b.label} sandbox="allow-same-origin" srcDoc={b.srcdoc} onLoad={(e) => { try { e.target.style.height = e.target.contentDocument.documentElement.scrollHeight + "px"; } catch {} }} />\n          </section>\n        ))}\n      </main>\n    </>\n  );\n}\n';
   return [
     { name: "package.json", data: JSON.stringify({ name: "proyecto-estilos", private: true, version: "1.0.0", type: "module", scripts: { dev: "vite", build: "vite build", preview: "vite preview" }, dependencies: { react: "^18.3.1", "react-dom": "^18.3.1" }, devDependencies: { "@vitejs/plugin-react": "^4.3.1", vite: "^5.4.0" } }, null, 2) + "\n" },
     { name: "vite.config.js", data: 'import { defineConfig } from "vite";\nimport react from "@vitejs/plugin-react";\n\nexport default defineConfig({ plugins: [react()], base: "./" });\n' },

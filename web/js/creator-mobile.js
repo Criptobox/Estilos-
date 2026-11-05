@@ -62,7 +62,7 @@ function bmSheetBody(tool, i, e, l) {
   if (tool === "capas") {
     const parts = builderLayerParts();
     const scr = builder.screens.map((sc, k) => '<button type="button" class="bmChip' + (k === builder.activeScreenIndex ? " on" : "") + '" data-act="builderscreen" data-index="' + k + '"><i>' + (k + 1) + '</i>' + esc(sc.title || "Pantalla " + (k + 1)) + '</button>').join("") + '<button type="button" class="bmChip ghost" data-act="builderscreenadd">＋ Nueva</button>';
-    return '<div class="bmScr">' + scr + '</div>'
+    return '<div class="bmScr">' + scr + '</div>' + pageStructureHTML()
       + '<label>' + bmH("Nombre de esta pantalla") + '<input class="fld" data-builder="title" maxlength="60" value="' + esc(builder.title) + '"></label>'
       + '<div class="bmBtns"><button type="button" class="cta ghost" data-act="builderscreenduplicate">Duplicar pantalla</button><button type="button" class="cta ghost" data-act="builderscreendelete"' + (builder.screens.length <= 1 ? " disabled" : "") + '>Eliminar pantalla</button></div>'
       + parts.layerPanelHtml
@@ -72,15 +72,16 @@ function bmSheetBody(tool, i, e, l) {
   if (tool === "proyecto") return bmProjectHTML();
   if (!e) return '<p class="sub">Añade un componente para poder editarlo.</p><button type="button" class="cta" data-act="bsheet" data-s="anadir">' + ic("plus", 17) + ' Añadir componente</button>';
   if (tool === "estilos") {
-    return bmH("Variante") + '<div class="bmChips" role="radiogroup" aria-label="Variante visual">' + BM_VARIANTS.map(([v, n]) => bmChip(n, (l.variant || "default") === v, bmSet(i, "variant", v))).join("") + '</div>'
-      + bmH("Color de fondo") + bmSwatches(i, "bg", l.bg)
-      + bmSlider("Redondeo", i, "radius", 6, 32, l.radius || 16, " px")
-      + bmSlider("Espaciado", i, "padding", 4, 32, l.padding || 12, " px")
-      + bmSlider("Elevación", i, "elevation", 0, 5, l.elevation ?? (l.shadow ? 2 : 0), "")
-      + bmSlider("Grosor borde", i, "borderWidth", 0, 5, l.borderWidth || 0, " px");
+    return layerPlaceHTML(i, l) + bmH("Variante") + '<div class="bmChips" role="radiogroup" aria-label="Variante visual">' + BM_VARIANTS.map(([v, n]) => bmChip(n, (l.variant || "default") === v, bmSet(i, "variant", v))).join("") + '</div>'
+      + (l.bare ? '<p class="sub">Sin tarjeta: el elemento se ve tal cual, sin fondo, borde ni sombra. Elige «Con tarjeta» para ajustarlos.</p>'
+        : bmH("Color de fondo") + bmSwatches(i, "bg", l.bg)
+        + bmSlider("Redondeo", i, "radius", 6, 32, l.radius || 16, " px")
+        + bmSlider("Espaciado", i, "padding", 4, 32, l.padding || 12, " px")
+        + bmSlider("Elevación", i, "elevation", 0, 5, l.elevation ?? (l.shadow ? 2 : 0), "")
+        + bmSlider("Grosor borde", i, "borderWidth", 0, 5, l.borderWidth || 0, " px"));
   }
   if (tool === "colores") {
-    return bmH("Fondo") + bmSwatches(i, "bg", l.bg) + bmH("Texto") + bmSwatches(i, "color", l.color) + bmH("Borde") + bmSwatches(i, "borderColor", l.borderColor);
+    return (l.bare ? "" : bmH("Fondo") + bmSwatches(i, "bg", l.bg)) + bmH("Texto") + bmSwatches(i, "color", l.color) + (l.bare ? "" : bmH("Borde") + bmSwatches(i, "borderColor", l.borderColor));
   }
   if (tool === "texto") {
     return '<label>' + bmH("Nombre visible") + '<input class="fld" maxlength="70" data-layer-field="label" data-index="' + i + '" value="' + esc(l.label || e.name) + '"></label>'
