@@ -548,6 +548,50 @@ function readZip(buf) {
     await d.ctx.close();
   }
 
+
+  /* ───────── 19 · Detalle, Paletas, Plantillas, imágenes e iconos ───────── */
+  current = "fase 3"; console.log("\n" + current);
+  {
+    const { ctx, page } = await open();
+    await page.evaluate(() => go({ view: "detail", id: "tar-1", detailTab: "info" })); await page.waitForTimeout(400);
+    ok(/Uso/.test(await page.textContent(".detail")) && await page.isVisible(".panel h3:text('Uso')"), "Detalle: panel de Uso con el consejo del estilo");
+    eq(await page.$$eval(".seg button", l => l.map(b => b.textContent.trim())), ["Detalles", "Código", "Editor", "Relacionados"], "Detalle: pestañas Detalles, Código, Editor y Relacionados");
+    await page.click("[data-act=dtab][data-d=rel]"); await page.waitForTimeout(500);
+    ok((await page.$$eval(".detail .grid .card", l => l.length)) >= 3, "Relacionados: cuadrícula con más estilos de la categoría");
+
+    await page.evaluate(() => go({ view: "explore", tab: "Paletas" })); await page.waitForTimeout(400);
+    const rows = await page.$$eval(".palRow", l => l.length), segs = await page.$$eval(".palSeg", l => l.length);
+    ok(rows >= 5 && segs >= rows * 3, "Paletas: filas con barra de colores (" + rows + " paletas, " + segs + " colores)");
+    await page.click("[data-act=pmode][data-m=dark]"); await page.waitForTimeout(300);
+    const dark = await page.$$eval(".palHead span", l => l.map(x => x.textContent));
+    ok(dark.length >= 1 && dark.every(x => x === "Oscuro") && dark.length < rows, "Paletas: el filtro «Oscuras» solo deja las oscuras");
+    await page.click("[data-act=pmode][data-m=all]"); await page.waitForTimeout(250);
+    await page.locator(".palSeg").first().click({ force: true }); await page.waitForTimeout(250);
+    eq(await page.evaluate(() => S.view), "explore", "Paletas: tocar un color lo copia sin abrir el detalle");
+
+    await page.evaluate(() => go({ view: "explore", tab: "Plantillas" })); await page.waitForTimeout(900);
+    const cols = () => page.evaluate(() => getComputedStyle(document.querySelector(".grid.cols2")).gridTemplateColumns.split(" ").length);
+    eq(await cols(), 3, "Plantillas: tres columnas en pantallas anchas");
+    await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(500);
+    eq(await cols(), 2, "Plantillas: dos columnas en el móvil");
+    ok((await page.$$eval(".card.tpl", l => l.length)) >= 6 && await page.evaluate(() => !!document.querySelector(".card.tpl .pv[data-h]")), "…con sus vistas previas reducidas");
+
+    await page.evaluate(() => go({ view: "detail", id: "tar-1", detailTab: "code" })); await page.waitForTimeout(400);
+    let [dl] = await Promise.all([page.waitForEvent("download"), page.click("[data-act=dlsvg]")]);
+    const svg = fs.readFileSync(await dl.path(), "utf8");
+    eq(dl.suggestedFilename(), "producto-clara.svg", "SVG del componente: nombre de archivo");
+    ok(svg.startsWith("<svg") && svg.includes("<foreignObject") && svg.includes("Auriculares Air") && svg.includes("font/woff2"), "…lleva el componente y la fuente incrustada");
+    ok(await page.evaluate(s => !new DOMParser().parseFromString(s, "image/svg+xml").querySelector("parsererror"), svg), "…y es XML válido");
+    [dl] = await Promise.all([page.waitForEvent("download"), page.click("[data-act=dlpng]")]);
+    const png = fs.readFileSync(await dl.path());
+    ok(png.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) && png.readUInt32BE(16) >= 700 && png.length > 5000, "PNG del componente: imagen válida a doble resolución (" + png.readUInt32BE(16) + "×" + png.readUInt32BE(20) + ")");
+
+    const ic = await page.evaluate(async () => Promise.all(["icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png"].map(u => new Promise(r => { const i = new Image(); i.onload = () => r(i.naturalWidth); i.onerror = () => r(0); i.src = u; }))));
+    eq(ic, [192, 512, 512], "iconos de la app (192, 512 y maskable)");
+    eq(await page.evaluate(() => fetch("manifest.webmanifest").then(r => r.json()).then(m => [m.theme_color, m.background_color])), ["#0A0B1E", "#0A0B1E"], "manifest con los colores del nuevo aspecto");
+    await ctx.close();
+  }
+
   current = "global";
   ok(errors.length === 0, "ningún error de consola, ninguna excepción ni diálogo nativo" + (errors.length ? "\n      " + errors.slice(0, 6).join("\n      ") : ""));
   await browser.close(); srv.close();

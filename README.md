@@ -1,4 +1,4 @@
-# Estilos 12.1.0
+# Estilos 12.2.0
 
 Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponible como PWA y envoltorio Android.
 
@@ -9,7 +9,10 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 - **Biblioteca**: cuadrícula de categorías con filtros Todo / Fundamentos / Componentes; cada categoría abre su lista, con un chip «Todo».
 - **Colecciones**: los estilos guardados.
 - **Creador móvil** (pantallas de hasta 759 px): lienzo siempre visible, barra de herramientas (Añadir, Estilos, Colores, Texto, Tamaño) y hojas que suben desde abajo y empujan el lienzo en vez de taparlo, con los cambios en vivo. Modos Diseño / Código / Vista previa, barra de acciones sobre el componente y hoja de Capas y pantallas. En escritorio se mantiene la distribución en columnas.
-- Fase 3 (pendiente): Detalle con Variantes/Uso/Relacionados, Paletas y Tipografías con vistas propias, Plantillas y exportar PNG/SVG.
+- **Detalle**: pestañas Detalles, Código, Editor y Relacionados; panel de Uso; **descarga del componente como PNG o SVG**.
+- **Paletas**: filas con la barra de colores (cada color se copia con un toque) y filtro Todas / Claras / Oscuras.
+- **Plantillas**: cuadrícula de dos columnas con vistas previas reducidas.
+- Iconos de la app con el nuevo estilo.
 
 ## Biblioteca
 - 107 diseños base en 15 categorías con componentes.
@@ -54,8 +57,8 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 
 
 ## Versiones
-- Web/PWA: `12.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 31`, `versionName 12.1`.
+- Web/PWA: `12.2.0` (GitHub Actions añade el número de compilación).
+- Android: `versionCode 32`, `versionName 12.2`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -86,6 +89,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **12.2**: nuevo aspecto (fase 3): Detalle con Relacionados y Uso, PNG/SVG del componente, Paletas, Plantillas e iconos. Ver `docs/CHANGELOG-12.2.md`.
 - **12.1**: nuevo aspecto (fase 2): Creador móvil con lienzo siempre visible, herramientas y hojas. Ver `docs/CHANGELOG-12.1.md`.
 - **12.0**: nuevo aspecto (fase 1): sistema visual oscuro/claro, barra de 5 elementos, Inicio, Biblioteca por categorías y Colecciones. Ver `docs/CHANGELOG-12.0.md`.
 - **11.1**: exportación con Tailwind, copia automática en un archivo, compartir por enlace, reordenar capas con el dedo, calidad de imagen y publicación condicionada a las pruebas. Ver `docs/CHANGELOG-11.1.md`.

@@ -482,13 +482,33 @@ function listFor() {
   return db().filter(e => { const h = fold(e.name + " " + e.desc + " " + e.ref + " " + e.tab + " " + e.tip); return words.every(w => h.includes(w)); });
 }
 function refCount() { return REFS.length + userRefs.length; }
+/* Paletas: filas con la barra de colores (cada color se copia con un toque) y filtro claras/oscuras. */
+function paletteRowHTML(e) {
+  const fav = favs.includes(e.id);
+  return '<article class="palRow" data-act="open" data-id="' + esc(e.id) + '" tabindex="0" role="button" aria-label="' + esc(e.name) + '"><div class="palMain"><div class="palHead"><h3>' + esc(e.name) + '</h3><span>' + (e.mode === "dark" ? "Oscuro" : "Claro") + '</span></div>'
+    + '<div class="palBar">' + e.colors.map(c => '<button class="palSeg" style="background:' + esc(c) + '" data-act="color" data-c="' + esc(c) + '" aria-label="Copiar ' + esc(c) + '" title="' + esc(c) + '"></button>').join("") + '</div></div>'
+    + '<button class="heart' + (fav ? " on" : "") + '" data-act="fav" data-id="' + esc(e.id) + '" aria-label="' + (fav ? "Quitar de guardados" : "Guardar") + '">' + (fav ? icf("heart", 20) : ic("heart", 20)) + '</button></article>';
+}
+function paletteListHTML() {
+  const m = S.pmode || "all", l = db().filter(e => e.tab === "Paletas" && (m === "all" || (m === "dark") === (e.mode === "dark")));
+  return '<div class="chips" role="tablist">' + [["all", "Todas"], ["light", "Claras"], ["dark", "Oscuras"]].map(([k, n]) => '<button class="chip' + (m === k ? " on" : "") + '" role="tab" aria-selected="' + (m === k) + '" data-act="pmode" data-m="' + k + '">' + n + '</button>').join("") + '</div>'
+    + (l.length ? '<div class="palList">' + l.map(paletteRowHTML).join("") + '</div>' : '<div class="empty"><b>No hay paletas aquí</b></div>');
+}
+/* Plantillas: cuadrícula de dos columnas con la vista previa reducida a la mitad. */
+function tplCardHTML(e) {
+  const fav = favs.includes(e.id);
+  return '<article class="card tpl" data-act="open" data-id="' + esc(e.id) + '" tabindex="0" role="button" aria-label="' + esc(e.name) + '"><div class="' + stageCls(e) + ' tplStage">' + pv(e) + '</div>'
+    + '<div class="cardInfo"><div class="cardRow"><div><div class="cardName">' + esc(e.name) + '</div><div class="sub">' + esc(e.ref) + '</div></div><button class="heart' + (fav ? " on" : "") + '" data-act="fav" data-id="' + esc(e.id) + '" aria-label="' + (fav ? "Quitar de guardados" : "Guardar") + '">' + (fav ? icf("heart", 18) : ic("heart", 18)) + '</button></div></div></article>';
+}
 function listHTML() {
   if (S.tab === "Referencias" && !S.q) {
     return '<p class="sub">Toca una captura para ampliarla o sacar su paleta. Las tuyas se guardan solo en este dispositivo.</p><div class="refGrid">'
       + userRefs.map(r => '<button class="refItem" data-act="lbu" data-id="' + esc(r.id) + '"><img src="' + esc(r.url) + '" alt="' + esc(r.label) + '" loading="lazy" decoding="async"><div><span class="tag">Tuya</span> ' + esc(r.label) + '</div></button>').join("")
       + REFS.map((r, i) => '<button class="refItem" data-act="lb" data-i="' + i + '"><img src="' + esc(r.img) + '" alt="' + esc(r.label) + '" loading="lazy" decoding="async"><div>' + esc(r.label) + '</div></button>').join("") + '</div>';
   }
+  if (S.tab === "Paletas" && !S.q) return paletteListHTML();
   const l = listFor();
+  if (S.tab === "Plantillas" && !S.q && l.length) return '<div class="grid cols2">' + l.map(tplCardHTML).join("") + '</div>';
   if (!l.length) return '<div class="empty"><b>No hay estilos aquí</b><span>' + (S.q ? "Prueba con otra palabra." : "Toca + Añadir para crear uno.") + '</span></div>';
   return '<div class="grid">' + l.map(e => cardHTML(e, !!S.q)).join("") + '</div>';
 }
@@ -620,9 +640,9 @@ function renderDetail() {
   const base = getEntry(S.id); if (!base) { S.view = "explore"; return renderExplore(); }
   if (draft && draft.id !== base.id) draft = null;
   const e = live(base), t = tokens(e), ratio = contrast(t.a, t.on), w = wcag(ratio);
-  const dt = ["info", "edit", "code"].includes(S.detailTab) ? S.detailTab : "info", stack = S.stack || "html";
+  const dt = ["info", "edit", "code", "rel"].includes(S.detailTab) ? S.detailTab : "info", stack = S.stack || "html";
   const code = stackCode(e, stack);
-  const rel = db().filter(x => x.tab === e.tab && x.id !== e.id).slice(0, 8);
+  const rel = db().filter(x => x.tab === e.tab && x.id !== e.id).slice(0, 12);
   const info = '<div class="panel"><h3>Paleta</h3><div class="swRow" style="margin:0">' + swatches(e) + '</div>'
     + '<div class="fmt"><span class="sub" style="align-self:center">Copiar como</span>' + ["hex", "css", "tailwind", "json"].map(f => '<button data-act="pal" data-f="' + f + '" data-id="' + esc(e.id) + '">' + (f === "hex" ? "HEX" : f === "css" ? "CSS" : f === "tailwind" ? "Tailwind" : "JSON") + '</button>').join("") + '</div></div>'
     + '<div class="panel"><h3>Detalles</h3>'
@@ -630,11 +650,14 @@ function renderDetail() {
     + '<div class="row"><span>Modo</span><b>' + (e.mode === "dark" ? "Oscuro" : "Claro") + '</b></div>'
     + '<div class="row"><span>Radio</span><b>' + esc(e.radius) + (String(e.radius).indexOf("%") < 0 ? " px" : "") + '</b></div>'
     + '<div class="row"><span>Contraste del acento</span><b>' + ratio.toFixed(1) + ':1 <span class="badge ' + (ratio >= 4.5 ? "ok" : ratio >= 3 ? "mid" : "bad") + '">' + esc(w) + '</span></b></div>'
-    + '<div class="row"><span>Consejo</span><b style="font-weight:600;max-width:62%">' + esc(e.tip) + '</b></div></div>'
-    + (rel.length ? '<h2 class="sec">Más de ' + esc(e.tab) + '</h2><div class="rail">' + rel.map(miniHTML).join("") + '</div>' : '');
+    + '</div>'
+    + '<div class="panel"><h3>Uso</h3><p class="dDesc">' + esc(e.tip || "Todavía no hay un consejo para este estilo.") + '</p><div class="row"><span>Pensado para</span><b>' + (e.mode === "dark" ? "Fondos oscuros" : "Fondos claros") + '</b></div></div>';
+  const relPanel = rel.length ? '<p class="sub">Más estilos de ' + esc(e.tab) + '</p><div class="grid">' + rel.map(x => cardHTML(x, false)).join("") + '</div>' : '<div class="empty"><b>No hay más estilos en esta categoría</b></div>';
   const codePanel = '<div class="fmt" role="radiogroup" aria-label="Plataforma">' + STACKS.map(x => '<button role="radio" aria-checked="' + (x.id === stack) + '" class="' + (x.id === stack ? "on" : "") + '" data-act="stack" data-s="' + x.id + '">' + x.label + '</button>').join("") + '</div>'
     + '<div class="codeBox"><div class="codeHead"><span>' + esc(codeLabel(stack, code)) + '</span><button data-act="copycode" data-id="' + esc(e.id) + '">' + ic("copy", 14) + ' Copiar</button></div><pre><code>' + esc(code) + '</code></pre></div>'
-    + '<p class="sub">' + (stack === "html" ? "Autocontenido: pégalo en tu proyecto. Los iconos van en SVG inline, sin librerías." : "Colores por rol, paleta y radio de este estilo para usarlos en tus componentes. El componente completo está en HTML/CSS.") + '</p>';
+    + '<p class="sub">' + (stack === "html" ? "Autocontenido: pégalo en tu proyecto. Los iconos van en SVG inline, sin librerías." : "Colores por rol, paleta y radio de este estilo para usarlos en tus componentes. El componente completo está en HTML/CSS.") + '</p>'
+    + '<div class="two"><button class="cta ghost" data-act="dlpng" data-id="' + esc(e.id) + '">' + ic("image", 16) + ' Descargar PNG</button><button class="cta ghost" data-act="dlsvg" data-id="' + esc(e.id) + '">' + ic("code", 16) + ' Descargar SVG</button></div>'
+    + '<p class="sub">Imagen del componente tal como se ve, con su fondo. Los estilos con código propio pueden variar algo.</p>';
   const tabBtn = (id, label) => '<button class="' + (dt === id ? "on" : "") + '" role="tab" aria-selected="' + (dt === id) + '" data-act="dtab" data-d="' + id + '">' + label + '</button>';
   return '<div class="wrap detail">'
     + '<div class="dTop"><button class="ib" data-act="back" aria-label="Volver">' + ic("back", 22, 2.4) + '</button><div class="tbtns"><button class="ib" data-act="surprise" aria-label="Otro estilo al azar">' + ic("spark", 20) + '</button><button class="ib" data-act="more" data-id="' + esc(e.id) + '" aria-label="Más opciones">' + ic("dots", 20) + '</button></div></div>'
@@ -642,8 +665,8 @@ function renderDetail() {
     + '<div class="dStageBar">' + (draft ? '<span class="badge mid">Sin guardar</span>' : '') + '<button class="pillbtn" data-act="stage">' + ic(S.stage === "dark" ? "moon" : "sun", 14) + ' Fondo: ' + STAGE_LABEL[S.stage] + '</button></div>'
     + '<div><div class="dName">' + esc(e.name) + '</div><div class="sub" style="margin-top:4px;font-size:13px">' + esc(e.tab) + (e.ref ? " · " + esc(e.ref) : "") + '</div></div>'
     + '<p class="dDesc">' + esc(e.desc) + '</p>'
-    + '<div class="seg" role="tablist">' + tabBtn("info", "Detalles") + tabBtn("edit", "Editor") + tabBtn("code", "Código") + '</div>'
-    + (dt === "code" ? codePanel : dt === "edit" ? editorHTML(base, e) : info)
+    + '<div class="seg" role="tablist">' + tabBtn("info", "Detalles") + tabBtn("code", "Código") + tabBtn("edit", "Editor") + tabBtn("rel", "Relacionados") + '</div>'
+    + (dt === "code" ? codePanel : dt === "edit" ? editorHTML(base, e) : dt === "rel" ? relPanel : info)
     + '</div>';
 }
 /* Refresca solo la vista previa grande (el editor llama a esto en cada cambio). */
@@ -983,6 +1006,9 @@ const ACT = {
   open: d => { draft = null; go({ view: "detail", id: d.id, detailTab: "info", stage: "auto" }); },
   back: () => goBack(),
   nav: d => go({ view: d.v, q: d.v === "explore" ? S.q : "" }),
+  pmode: d => go({ pmode: d.m }, { replace: true, keep: true }),
+  dlpng: d => { const e = getEntry(d.id); if (e) componentImage(live(e), "png"); },
+  dlsvg: d => { const e = getEntry(d.id); if (e) componentImage(live(e), "svg"); },
   libgroup: d => go({ group: d.g }, { replace: true, keep: true }),
   tab: d => go({ view: "explore", tab: d.t, q: "" }),
   gosearch: () => { go({ view: "explore", q: "", tab: "Todo" }); const q = document.getElementById("q"); if (q) q.focus(); },
