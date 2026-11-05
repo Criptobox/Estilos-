@@ -10,6 +10,7 @@
   --danger-bg:#fee2e2;--danger:#b91c1c;
   --ok-bg:#dcfce7;--ok:#166534;--mid-bg:#fef3c7;--mid:#92400e;--bad-bg:#fee2e2;--bad:#991b1b;
   --code-bg:#0f2430;--toast-bg:#0f2430;--toast-ink:#fff;--img-ph:#dbe8ef;
+  --surface:#fff;--pick:#f0efff;--pick-line:#d8d4ff;--pick-ink:#3730a3;
 }
 /* Modo oscuro de la app (las vistas previas conservan su propio escenario). */
 :root[data-theme="dark"]{
@@ -23,6 +24,7 @@
   --danger-bg:rgba(239,68,68,.16);--danger:#fca5a5;
   --ok-bg:rgba(34,197,94,.16);--ok:#86efac;--mid-bg:rgba(245,158,11,.16);--mid:#fcd34d;--bad-bg:rgba(239,68,68,.16);--bad:#fca5a5;
   --code-bg:#08141a;--toast-bg:#e4eef4;--toast-ink:#0f2430;--img-ph:#1c2f3a;
+  --surface:#182833;--pick:rgba(99,91,255,.20);--pick-line:rgba(139,124,255,.45);--pick-ink:#c9c4ff;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
@@ -514,3 +516,19 @@ label.l{font-size:12px;font-weight:700;color:var(--mut)}
 :root[data-theme="dark"][data-dim] .card .stage:not(.dark),
 :root[data-theme="dark"][data-dim] .mini .stage:not(.dark),
 :root[data-theme="dark"][data-dim] .feat .stage:not(.dark){filter:brightness(.78) saturate(.95)}
+
+/* Constructor en modo oscuro: se oscurecen los controles; la maqueta del teléfono
+   muestra el diseño del usuario tal cual (como el escenario de las vistas previas). */
+:root[data-theme="dark"] .builder-preview{background:rgba(28,47,58,.45);border-color:var(--glass-line)}
+:root[data-theme="dark"] .builder-controls .panel{box-shadow:var(--shadow-s)}
+:root[data-theme="dark"] .builder-layer.dragging{background:var(--pick)}
+:root[data-theme="dark"] .layer-actions button{background:var(--soft);border-color:var(--line);color:var(--ink2)}
+:root[data-theme="dark"] .layer-actions button[data-act="builderremove"]{color:#fb7185}
+:root[data-theme="dark"] .layer-actions button[data-act="builderduplicate"]{color:var(--brand-ink)}
+:root[data-theme="dark"] .layer-grip{color:var(--mut2)}
+:root[data-theme="dark"] .layer-select.active,
+:root[data-theme="dark"] .screen-tab.active{background:var(--pick);border-color:var(--pick-line);color:var(--pick-ink)}
+:root[data-theme="dark"] .screen-tab span{background:var(--soft)}
+:root[data-theme="dark"] .screen-tab.active span{background:var(--brand);color:#fff}
+:root[data-theme="dark"] .selected-chip{background:var(--pick);color:var(--pick-ink)}
+:root[data-theme="dark"] .layer-editor .color-field{background:var(--fld-bg)}
