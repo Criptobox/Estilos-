@@ -52,3 +52,31 @@ Ordenadas por impacto / esfuerzo:
 ## Estado en 1.6
 Hecho: historial/Atrás, diálogos propios, delegación de eventos, saneado de entradas, copia con alternativa, versión única, SEED separado del usuario, 107 estilos y rediseño de UI.
 Pendiente: compilar y probar en dispositivo, PWA/offline, tests automáticos en CI, edición visual de colores en el detalle.
+
+
+## Estado 2.1
+Hecho:
+- Constructor de hasta doce capas.
+- Reordenación por botones y arrastrar/soltar.
+- Duplicación y eliminación individual de capas.
+- Exportación HTML con marcos de vista previa responsivos.
+- Versión de aplicación y caché PWA en 2.1.0.
+
+Pendiente:
+- Edición individual de propiedades por componente.
+- Exportación React/Tailwind/Jetpack Compose/Flutter.
+- Pruebas de compilación y uso real en Android.
+
+
+## Estado 3.0
+Hecho:
+- Selección de componente desde la lista y desde la previsualización.
+- Edición individual de etiqueta, fondo, color de texto, redondeo y espaciado.
+- Duplicación, borrado y reordenación conservan la configuración de cada capa.
+- Exportación HTML aplica los estilos individuales de cada bloque.
+
+Siguiente:
+- Edición de tipografía, tamaños, bordes, sombras y alineación por capa.
+- Plantillas multipantalla y navegación entre pantallas.
+- Exportadores específicos de React y Tailwind.
+- Pruebas de interacción y compilación APK en CI.

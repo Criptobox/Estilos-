@@ -7,9 +7,9 @@ jobs:
     environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
     steps:
       - uses: actions/checkout@v4
-      - name: Sellar versión (1.6.<n.º de build>)
+      - name: Sellar versión (3.0.<n.º de build>)
         run: |
-          V="1.6.${{ github.run_number }}"
+          V="3.0.${{ github.run_number }}"
           sed -i "s/const BUILD = \"[^\"]*\"/const BUILD = \"$V\"/" web/sw.js
           sed -i "s/const APP_VERSION = \"[^\"]*\"/const APP_VERSION = \"$V\"/" web/js/util.js
           grep -n "$V" web/sw.js web/js/util.js

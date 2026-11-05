@@ -6,9 +6,9 @@
 
 /* ───────── Almacenamiento ───────── */
 const KEY_USER = "estilos-user-v2", KEY_OLD = "estilos-db-v1", KEY_BAK = "estilos-db-v1-backup", KEY_FAV = "estilos-favs-v1";
-const BASE_TABS = ["Chat", "Tarjetas", "Listas", "Avatares", "Plantillas", "Barras", "Botones", "Formularios", "Entradas", "Hojas", "Avisos", "Datos", "Paletas", "Tipografía", "Encabezados"];
-const TAB_ICON = { Chat: "chat", Tarjetas: "card", Listas: "menu", Avatares: "user", Plantillas: "grid", Barras: "sliders", Botones: "plus", Formularios: "edit", Entradas: "search", Hojas: "arrowUp", Avisos: "bell", Datos: "chart", Paletas: "spark", "Tipografía": "type", Encabezados: "layers", Referencias: "image" };
-const TAB_FAMILY = { Chat: "chat", Tarjetas: "card", Listas: "list", Avatares: "avatar", Plantillas: "tpl", Barras: "bar", Botones: "btn", Formularios: "form", Entradas: "input", Hojas: "sheet", Avisos: "notice", Datos: "data", Paletas: "pal", "Tipografía": "type", Encabezados: "head" };
+const BASE_TABS = ["Chat", "Tarjetas", "Listas", "Avatares", "Plantillas", "Barras", "Botones", "Formularios", "Entradas", "Hojas", "Avisos", "Datos", "Paletas", "Tipografía", "Encabezados", "Animaciones", "Fondos", "Widgets", "Iconos"];
+const TAB_ICON = { Chat: "chat", Tarjetas: "card", Listas: "menu", Avatares: "user", Plantillas: "grid", Barras: "sliders", Botones: "plus", Formularios: "edit", Entradas: "search", Hojas: "arrowUp", Avisos: "bell", Datos: "chart", Paletas: "spark", "Tipografía": "type", Encabezados: "layers", Animaciones: "spark", Fondos: "image", Widgets: "grid", Iconos: "spark", Referencias: "image" };
+const TAB_FAMILY = { Chat: "chat", Tarjetas: "card", Listas: "list", Avatares: "avatar", Plantillas: "tpl", Barras: "bar", Botones: "btn", Formularios: "form", Entradas: "input", Hojas: "sheet", Avisos: "notice", Datos: "data", Paletas: "pal", "Tipografía": "type", Encabezados: "head", Animaciones: "motion", Fondos: "background", Widgets: "widget", Iconos: "icon" };
 
 function readJSON(k, fb) { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : fb; } catch (e) { return fb; } }
 function writeJSON(k, v) {
@@ -74,6 +74,13 @@ function allTabs() {
 
 /* ───────── Estado y navegación ───────── */
 let S = { view: "home", tab: "Tarjetas", id: null, q: "", detailTab: "info", stage: "auto" };
+let builder = readJSON("estilos-builder-v1", { title: "Mi nueva interfaz", subtitle: "Una experiencia diseñada a tu manera", palette: "#635BFF", bg: "#F5F6FA", font: "Inter", radius: 20, selected: [] });
+const _rawSelected = Array.isArray(builder.selected) ? builder.selected : [];
+const _rawLayers = Array.isArray(builder.layers) ? builder.layers : [];
+const _validLayers = _rawSelected.map((id,i)=>({id,layer:_rawLayers[i]})).filter(x=>getEntry(x.id)).slice(0,12);
+builder.selected = _validLayers.map(x=>x.id);
+builder.layers = _validLayers.map(x=>{const l=x.layer&&typeof x.layer==="object"?x.layer:{};return {uid:String(l.uid||("layer-"+Math.random().toString(36).slice(2,9))).slice(0,40),label:String(l.label||"").slice(0,70),bg:safeColor(l.bg||"#FFFFFF"),color:safeColor(l.color||"#263247"),radius:Math.max(6,Math.min(32,Number(l.radius)||16)),padding:Math.max(4,Math.min(32,Number(l.padding)||12))};});
+builder.activeLayer = Math.max(0, Math.min(builder.selected.length - 1, Number(builder.activeLayer) || 0));
 let pendingConfirm = null;
 
 function go(patch, opt) {
@@ -204,6 +211,35 @@ function renderExplore() {
     + '<label class="search">' + ic("search", 18) + '<input id="q" data-input="q" type="search" placeholder="Buscar estilo…" aria-label="Buscar estilo" value="' + esc(S.q) + '"></label>'
     + chipsHTML() + '<div id="list">' + listHTML() + '</div></div>';
 }
+
+function builderOptions(tab, selected) {
+  const items = db().filter(e => e.tab === tab);
+  return '<option value="">Seleccionar ' + esc(tab.toLowerCase()) + '</option>' + items.map(e => '<option value="' + esc(e.id) + '"' + (selected === e.id ? ' selected' : '') + '>' + esc(e.name) + '</option>').join('');
+}
+function builderPreview() {
+  const picked = builder.selected.map(getEntry).filter(Boolean);
+  const accent = safeColor(builder.palette || '#635BFF'), bg = safeColor(builder.bg || '#F5F6FA');
+  const r = Math.max(8, Math.min(32, Number(builder.radius) || 20));
+  return '<div class="builder-device" style="--b-accent:' + accent + ';--b-bg:' + bg + ';--b-radius:' + r + 'px;font-family:' + (builder.font === 'Georgia' ? 'Georgia,serif' : builder.font === 'Plus Jakarta Sans' ? 'Plus Jakarta Sans,system-ui' : 'Inter,system-ui') + '">' +
+    '<div class="builder-screen"><div class="builder-status"><span>9:41</span><span>●●● ▰</span></div><div class="builder-top"><span class="builder-mark">✦</span><span>•••</span></div><small class="builder-eyebrow">TU ESPACIO DIGITAL</small><h3>' + esc(builder.title || 'Mi nueva interfaz') + '</h3><p>' + esc(builder.subtitle || 'Una experiencia diseñada a tu manera') + '</p><button class="builder-primary">Descubrir más <b>↗</b></button>' +
+    picked.map((e,i)=>{const l=builder.layers[i]||{};const label=l.label||e.name;return '<section class="builder-block ' + (i===builder.activeLayer?'is-active':'') + '" data-act="builderselect" data-index="' + i + '" data-builder-preview-layer="' + i + '" style="background:' + safeColor(l.bg||'#FFFFFF') + ';color:' + safeColor(l.color||'#263247') + ';border-radius:' + Math.max(6,Math.min(32,Number(l.radius)||16)) + 'px;padding:' + Math.max(4,Math.min(32,Number(l.padding)||12)) + 'px"><div class="builder-block-head"><b>' + esc(label) + '</b><small>' + esc(e.tab) + '</small></div><div class="builder-live-component">' + pv(e) + '</div></section>';}).join('') +
+    '<div class="builder-bottom"><span>⌂<small>Inicio</small></span><span>⌕<small>Buscar</small></span><span>♡<small>Guardados</small></span><span>◉<small>Perfil</small></span></div></div></div>';
+}
+function renderBuilder() {
+  const fields = [ ['Tarjetas','card'], ['Avatares','avatar'], ['Botones','button'], ['Widgets','widget'], ['Animaciones','motion'], ['Iconos','icon'] ];
+  return '<div class="wrap builder-wrap"><div class="top"><div><h1 class="big">Constructor</h1><div class="sub">Combina recursos y crea una pantalla propia</div></div><button class="ib" data-act="builderreset" aria-label="Restablecer">↺</button></div>' +
+  '<div class="builder-layout"><div class="builder-controls"><section class="panel"><h3>Identidad de pantalla</h3><label class="l">Nombre del proyecto</label><input class="fld" data-builder="title" value="' + esc(builder.title) + '" maxlength="60"><label class="l">Descripción</label><input class="fld" data-builder="subtitle" value="' + esc(builder.subtitle) + '" maxlength="100"><div class="two"><div><label class="l">Color principal</label><input class="fld color-field" type="color" data-builder="palette" value="' + esc(builder.palette) + '"></div><div><label class="l">Fondo</label><input class="fld color-field" type="color" data-builder="bg" value="' + esc(builder.bg) + '"></div></div><div class="two"><div><label class="l">Tipografía</label><select class="fld" data-builder="font"><option' + (builder.font==='Inter'?' selected':'') + '>Inter</option><option' + (builder.font==='Plus Jakarta Sans'?' selected':'') + '>Plus Jakarta Sans</option><option' + (builder.font==='Georgia'?' selected':'') + '>Georgia</option></select></div><div><label class="l">Redondeo</label><input class="fld" type="range" min="8" max="32" step="2" data-builder="radius" value="' + Number(builder.radius) + '"></div></div></section>' +
+  '<section class="panel"><h3>Componentes de la biblioteca</h3><p class="sub">Añade hasta doce elementos. Reordena las capas para decidir cómo aparece cada bloque.</p>' + fields.map(([tab])=>'<label class="l">' + tab + '</label><select class="fld" data-builder-select="' + tab + '">' + builderOptions(tab, builder.selected.find(id=>{const e=getEntry(id);return e&&e.tab===tab;})) + '</select>').join('') + '<div class="selected-list">' + (pickedBuilder().length ? pickedBuilder().map((e,i)=>'<div class="builder-layer" draggable="true" data-layer-index="' + i + '"><span class="layer-grip" aria-hidden="true">⠿</span><button class="layer-select ' + (i===builder.activeLayer?'active':'') + '" data-act="builderselect" data-index="' + i + '"><b>' + esc((builder.layers[i]&&builder.layers[i].label)||e.name) + '</b><small>' + esc(e.tab) + ' · Capa ' + (i+1) + '</small></button><span class="layer-actions"><button data-act="buildermove" data-index="' + i + '" data-dir="-1" aria-label="Mover arriba" ' + (i===0?'disabled':'') + '>↑</button><button data-act="buildermove" data-index="' + i + '" data-dir="1" aria-label="Mover abajo" ' + (i===pickedBuilder().length-1?'disabled':'') + '>↓</button><button data-act="builderduplicate" data-index="' + i + '" aria-label="Duplicar componente">＋</button><button data-act="builderremove" data-index="' + i + '" aria-label="Eliminar componente">×</button></span></div>').join('') : '<small class="sub">Todavía no has añadido componentes.</small>') + '</div>' + (pickedBuilder().length ? (function(){const i=builder.activeLayer,e=pickedBuilder()[i],l=builder.layers[i]||{};return '<div class="layer-editor"><h4>Editar componente seleccionado</h4><label class="l">Nombre visible</label><input class="fld" maxlength="70" data-layer-field="label" data-index="' + i + '" value="' + esc(l.label||e.name) + '"><div class="two"><div><label class="l">Fondo del bloque</label><input class="fld color-field" type="color" data-layer-field="bg" data-index="' + i + '" value="' + esc(l.bg||'#FFFFFF') + '"></div><div><label class="l">Color del texto</label><input class="fld color-field" type="color" data-layer-field="color" data-index="' + i + '" value="' + esc(l.color||'#263247') + '"></div></div><div class="two"><div><label class="l">Redondeo</label><input class="fld" type="range" min="6" max="32" data-layer-field="radius" data-index="' + i + '" value="' + Math.max(6,Math.min(32,Number(l.radius)||16)) + '"></div><div><label class="l">Espaciado</label><input class="fld" type="range" min="4" max="32" data-layer-field="padding" data-index="' + i + '" value="' + Math.max(4,Math.min(32,Number(l.padding)||12)) + '"></div></div></div>';})() : '') + '</div></section><button class="cta"  data-act="builderexport">' + ic('arrowDown',17) + ' Exportar pantalla HTML</button></div><div class="builder-preview"><div class="preview-heading"><b>Vista previa en vivo</b><span>390 × 844</span></div>' + builderPreview() + '<p class="sub">La vista previa se actualiza al cambiar los controles.</p></div></div></div>';
+}
+function pickedBuilder(){return builder.selected.map(getEntry).filter(Boolean);}
+function saveBuilder(){try{localStorage.setItem('estilos-builder-v1',JSON.stringify(builder));}catch(e){toast('No se pudo guardar el constructor');}}
+function exportBuilder(){
+ const accent=safeColor(builder.palette),bg=safeColor(builder.bg),r=Math.max(8,Math.min(32,Number(builder.radius)||20));
+ const components=pickedBuilder().map((e,i)=>{const l=builder.layers[i]||{};const label=l.label||e.name;return '<section class="component" style="background:'+safeColor(l.bg||'#FFFFFF')+';color:'+safeColor(l.color||'#263247')+';border-radius:'+Math.max(6,Math.min(32,Number(l.radius)||16))+'px;padding:'+Math.max(4,Math.min(32,Number(l.padding)||12))+'px"><div class="component-meta"><span>'+esc(e.tab)+'</span><small>Bloque '+(i+1)+'</small></div><h2>'+esc(label)+'</h2><p>'+esc(e.desc)+'</p><iframe loading="lazy" title="'+esc(label)+'" sandbox="allow-same-origin" srcdoc="'+esc('<!doctype html><meta charset=utf-8><meta name=viewport content=width=device-width,initial-scale=1><style>body{margin:0;padding:8px;font-family:system-ui,sans-serif;overflow:hidden}*{box-sizing:border-box}</style>'+designCode(e))+'"></iframe></section>';}).join('');
+ const html='<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(builder.title)+'</title><style>*{box-sizing:border-box}body{margin:0;padding:24px;background:'+bg+';font-family:'+ (builder.font==='Georgia'?'Georgia,serif':'Inter,system-ui,sans-serif') +';color:#182033}.app{max-width:460px;margin:20px auto;background:white;border-radius:'+r+'px;padding:24px;box-shadow:0 20px 60px #1d2b4a18}.mark{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:'+accent+';color:white;font-size:22px}small{color:#7c8497;letter-spacing:1px}h1{font-size:32px;line-height:1.05;margin:20px 0 8px}p{color:#737b8d;line-height:1.5}.primary{margin:18px 0;padding:14px 18px;border:0;border-radius:'+r+'px;background:'+accent+';color:white;font-weight:700}.component{margin-top:18px;padding:16px;border:1px solid #e8eaf0;border-radius:'+r+'px;overflow:hidden}.component h2{font-size:16px;margin:8px 0}.component p{font-size:13px}.component-meta{display:flex;justify-content:space-between;font-size:10px;color:#8991a2;text-transform:uppercase;letter-spacing:.08em}.component iframe{display:block;width:100%;height:230px;border:0;border-radius:12px;background:#f7f8fb;margin-top:12px}.sample{margin-top:12px;padding:14px;border-radius:'+r+'px;background:'+bg+';color:'+accent+';font-weight:700}</style><main class="app"><div class="mark">✦</div><small>DISEÑADO CON ESTILOS</small><h1>'+esc(builder.title)+'</h1><p>'+esc(builder.subtitle)+'</p><button class="primary">Descubrir más ↗</button>'+components+'</main></html>';
+ const blob=new Blob([html],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mi-pantalla-estilos.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Pantalla HTML preparada');
+}
+
 function renderFavs() {
   const l = favs.map(getEntry).filter(Boolean);
   return '<div class="wrap"><div><h1 class="big">Guardados</h1><div class="sub">' + l.length + ' estilos marcados</div></div>'
@@ -250,13 +286,12 @@ function renderDetail() {
 
 function navHTML() {
   const item = (v, icon, label) => '<button class="ni' + (S.view === v ? " nia" : "") + '" data-act="nav" data-v="' + v + '" aria-label="' + label + '"' + (S.view === v ? ' aria-current="page"' : "") + '>' + icon + (S.view === v ? '<span>' + label + '</span>' : "") + '</button>';
-  return item("home", ic("home", 22), "Inicio") + item("explore", ic("grid", 22), "Explorar") + item("favs", ic("bookmark", 22), "Guardados")
-    + '<button class="ni" data-act="menu" aria-label="Ajustes">' + ic("sliders", 22) + '</button>';
+  return item("home", ic("home", 22), "Inicio") + item("explore", ic("grid", 22), "Explorar") + item("builder", ic("plus", 22), "Crear") + item("favs", ic("bookmark", 22), "Guardados") + '<button class="ni" data-act="menu" aria-label="Ajustes">' + ic("sliders", 22) + '</button>';
 }
 
 function render(keepScroll) {
   const v = document.getElementById("view"), top = v.scrollTop;
-  v.innerHTML = S.view === "home" ? renderHome() : S.view === "explore" ? renderExplore() : S.view === "favs" ? renderFavs() : renderDetail();
+  v.innerHTML = S.view === "home" ? renderHome() : S.view === "explore" ? renderExplore() : S.view === "favs" ? renderFavs() : S.view === "builder" ? renderBuilder() : renderDetail();
   hydrate(v);
   const nav = document.getElementById("nav"), act = document.getElementById("actbar");
   if (S.view === "detail") {
@@ -404,6 +439,12 @@ const ACT = {
   import: () => doImport(),
   backup: () => { document.getElementById("ioText").value = localStorage.getItem(KEY_BAK) || ""; toast("Respaldo de la v1.5 cargado"); },
   restore: () => askConfirm("¿Restaurar el catálogo?", "Se deshacen tus ediciones y borrados del catálogo. Lo que creaste tú se conserva.", "Restaurar", () => { user.edits = {}; user.deleted = []; saveUser(); closeSheet(); render(true); toast("Catálogo restaurado"); }),
+  builderreset: () => askConfirm("Restablecer constructor", "Se borrarán los componentes y ajustes de esta pantalla.", "Restablecer", () => { builder={title:"Mi nueva interfaz",subtitle:"Una experiencia diseñada a tu manera",palette:"#635BFF",bg:"#F5F6FA",font:"Inter",radius:20,selected:[],layers:[],activeLayer:0};saveBuilder();closeSheet();render(); }),
+  builderselect: d => { builder.activeLayer=Math.max(0,Math.min(builder.selected.length-1,Number(d.index)||0));saveBuilder();render(true); },
+  builderremove: d => { const i=Number(d.index); if(Number.isInteger(i)&&i>=0&&i<builder.selected.length){builder.selected.splice(i,1);builder.layers.splice(i,1);builder.activeLayer=Math.max(0,Math.min(builder.selected.length-1,builder.activeLayer));} else builder.selected=builder.selected.filter(id=>id!==d.id); saveBuilder();render(true); },
+  buildermove: d => { const i=Number(d.index),to=i+Number(d.dir); if(Number.isInteger(i)&&to>=0&&to<builder.selected.length){const item=builder.selected.splice(i,1)[0];builder.selected.splice(to,0,item);const layer=builder.layers.splice(i,1)[0];builder.layers.splice(to,0,layer);builder.activeLayer=to;saveBuilder();render(true);} },
+  builderduplicate: d => { const i=Number(d.index); if(builder.selected.length>=12){toast('Máximo doce capas');return;} if(Number.isInteger(i)&&i>=0&&i<builder.selected.length){builder.selected.splice(i+1,0,builder.selected[i]);const copy=Object.assign({},builder.layers[i]||{}, {uid:"layer-"+Math.random().toString(36).slice(2,9)});builder.layers.splice(i+1,0,copy);builder.activeLayer=i+1;saveBuilder();render(true);toast('Componente duplicado');} },
+  builderexport: () => exportBuilder(),
   closesheet: () => closeSheet(),
   lb: d => openLB(+d.i),
   closelb: () => closeLB()
@@ -420,9 +461,48 @@ document.addEventListener("keydown", ev => {
 document.addEventListener("input", ev => {
   const t = ev.target;
   if (t.dataset && t.dataset.input === "q") { S.q = t.value; renderList(); }
+  if (t.dataset && t.dataset.builder) { builder[t.dataset.builder] = t.type === "range" ? Number(t.value) : t.value; saveBuilder(); const old=document.querySelector(".builder-preview"); if(old){const fresh=renderBuilder();const tmp=document.createElement("div");tmp.innerHTML=fresh;const next=tmp.querySelector(".builder-preview");old.replaceWith(next);hydrate(next);} }
+  if (t.dataset && t.dataset.layerField !== undefined) { const i=Number(t.dataset.index); if(!builder.layers[i]) return; const k=t.dataset.layerField; builder.layers[i][k]=(t.type==="range")?Number(t.value):t.value; saveBuilder(); const old=document.querySelector(".builder-preview"); if(old){const fresh=renderBuilder();const tmp=document.createElement("div");tmp.innerHTML=fresh;const next=tmp.querySelector(".builder-preview");old.replaceWith(next);hydrate(next);} const label=document.querySelector('.layer-select[data-index="'+i+'"] b'); if(label&&k==="label") label.textContent=t.value||((getEntry(builder.selected[i])||{}).name||"Componente"); }
 });
+let builderDragIndex = null;
+document.addEventListener("dragstart", ev => {
+  const layer = ev.target.closest && ev.target.closest("[data-layer-index]");
+  if (!layer) return;
+  builderDragIndex = Number(layer.dataset.layerIndex);
+  if (ev.dataTransfer) { ev.dataTransfer.effectAllowed = "move"; ev.dataTransfer.setData("text/plain", String(builderDragIndex)); }
+  layer.classList.add("dragging");
+});
+document.addEventListener("dragend", ev => {
+  const layer = ev.target.closest && ev.target.closest("[data-layer-index]");
+  if (layer) layer.classList.remove("dragging");
+  builderDragIndex = null;
+});
+document.addEventListener("dragover", ev => {
+  const layer = ev.target.closest && ev.target.closest("[data-layer-index]");
+  if (layer && builderDragIndex !== null) ev.preventDefault();
+});
+document.addEventListener("drop", ev => {
+  const layer = ev.target.closest && ev.target.closest("[data-layer-index]");
+  if (!layer || builderDragIndex === null) return;
+  ev.preventDefault();
+  const target = Number(layer.dataset.layerIndex), from = builderDragIndex;
+  if (from !== target && from >= 0 && target >= 0 && from < builder.selected.length && target < builder.selected.length) {
+    const moved = builder.selected.splice(from, 1)[0];
+    builder.selected.splice(target, 0, moved);
+    const movedLayer = builder.layers.splice(from, 1)[0]; builder.layers.splice(target, 0, movedLayer);
+    builder.activeLayer = target;
+    saveBuilder(); render(true); toast("Orden de capas actualizado");
+  }
+  builderDragIndex = null;
+});
+
 document.addEventListener("change", ev => {
   const t = ev.target;
+  if (t.dataset && t.dataset.builderSelect) {
+    if (t.value) { if (builder.selected.length < 12) { builder.selected.push(t.value); builder.layers.push({uid:"layer-"+Math.random().toString(36).slice(2,9),label:"",bg:"#FFFFFF",color:"#263247",radius:16,padding:12}); builder.activeLayer=builder.selected.length-1; } else toast("Máximo doce componentes"); saveBuilder(); render(true); }
+    return;
+  }
+  if (t.dataset && t.dataset.builder) { builder[t.dataset.builder] = t.type === "range" ? Number(t.value) : t.value; saveBuilder(); render(true); return; }
   if (t.dataset && t.dataset.input === "tabsel") {
     document.getElementById("f-newtab").style.display = t.value === "__new" ? "block" : "none";
     document.getElementById("f-v").innerHTML = variantOptions(t.value, "");

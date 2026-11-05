@@ -134,3 +134,39 @@ label.l{font-size:12px;font-weight:700;color:var(--mut)}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media (min-width:700px){.chips{margin:0;padding:2px 0;-webkit-mask-image:none;mask-image:none;flex-wrap:wrap}.refGrid{grid-template-columns:repeat(4,1fr)}}
+
+
+/* Estilos 2.0 · Constructor visual */
+.builder-wrap{max-width:1080px}.builder-layout{display:grid;grid-template-columns:minmax(280px,390px) minmax(300px,1fr);gap:22px;align-items:start}.builder-controls{display:grid;gap:14px}.builder-controls .panel{box-shadow:0 8px 26px rgba(23,55,80,.07)}.builder-controls .fld{margin:5px 0 12px}.builder-controls .two{gap:10px}.color-field{height:44px;padding:5px!important;cursor:pointer}.builder-preview{position:sticky;top:12px;display:grid;justify-items:center;gap:12px;padding:18px;background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.8);border-radius:28px}.preview-heading{width:100%;display:flex;justify-content:space-between;font-size:12px;color:var(--mut)}.preview-heading span{font-variant-numeric:tabular-nums}.builder-device{width:min(100%,340px);padding:9px;border-radius:38px;background:#171923;box-shadow:0 24px 60px rgba(17,24,39,.25)}.builder-screen{min-height:620px;border-radius:30px;background:var(--b-bg);padding:15px 16px 18px;overflow:hidden;color:#182033}.builder-status,.builder-top{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:800}.builder-top{margin:20px 0 25px;color:var(--b-accent)}.builder-mark{width:34px;height:34px;display:grid;place-items:center;background:var(--b-accent);color:#fff;border-radius:12px;font-size:19px}.builder-eyebrow{font-size:9px;font-weight:800;letter-spacing:1.5px;color:#8a91a1}.builder-screen h3{font-size:27px;line-height:1.05;letter-spacing:-1px;margin:9px 0}.builder-screen>p{font-size:12px;line-height:1.5;color:#777f90}.builder-primary{width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 15px;margin:18px 0;border-radius:var(--b-radius);background:var(--b-accent);color:#fff;font-weight:800;font-size:12px}.builder-block{margin-top:17px}.builder-block-head{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:11px;margin-bottom:8px}.builder-block-head small{color:#8a91a1;font-size:9px}.builder-block-art{min-height:66px;padding:12px;display:flex;gap:12px;align-items:center}.builder-block-art>span{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#fff;font-size:22px}.builder-block-art b,.builder-block-art small{display:block}.builder-block-art b{font-size:11px}.builder-block-art small{font-size:9px;line-height:1.4;color:#737b8d;margin-top:3px}.builder-bottom{display:flex;justify-content:space-around;margin:23px -4px 0;padding:13px 5px 5px;border-top:1px solid #dfe3eb;color:var(--b-accent);font-size:17px}.builder-bottom span{display:grid;justify-items:center;gap:3px}.builder-bottom small{font-size:8px;color:#8a91a1}.selected-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}.selected-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:20px;background:#eef2ff;color:#3730a3;font-size:10px;font-weight:700}.selected-chip button{font-size:16px;line-height:1}.builder-preview>.sub{max-width:340px;text-align:center}.builder-controls input[type=range]{accent-color:var(--brand)}
+@media(max-width:760px){.builder-layout{grid-template-columns:1fr}.builder-preview{position:static;grid-row:1}.builder-controls{grid-row:2}.builder-device{width:min(100%,320px)}.builder-screen{min-height:590px}.builder-wrap{gap:14px}}
+.builder-live-component{padding:12px;border:1px solid #e6e9f0;border-radius:var(--b-radius);background:#fff;overflow:hidden}.builder-live-component .pv{max-width:100%}.builder-live-component .pvf{height:190px}.builder-block{min-width:0}
+
+.component iframe{display:block;width:100%;min-height:220px;border:0;border-radius:12px;background:#fff;margin-top:12px}
+
+
+/* Estilos 2.1 · capas reordenables del constructor */
+.builder-layer{display:flex;align-items:center;gap:8px;padding:9px 8px;border:1px solid var(--line,#e7eaf0);border-radius:12px;background:var(--surface,#fff);min-width:0;transition:border-color .16s,background .16s,transform .16s}
+.builder-layer:active{cursor:grabbing}
+.builder-layer.dragging{opacity:.45;border:1px dashed var(--brand);background:#f3f2ff}
+.layer-grip{font-size:18px;color:#9aa2b2;cursor:grab;user-select:none;touch-action:none}
+.layer-name{display:grid;gap:2px;min-width:0;flex:1}
+.layer-name b{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layer-name small{font-size:9px;color:var(--mut)}
+.layer-actions{display:flex;gap:3px;flex:none}
+.layer-actions button{width:25px;height:25px;display:grid;place-items:center;border:1px solid #e7eaf0;border-radius:7px;background:#fff;color:#5b6476;font-size:13px;font-weight:800}
+.layer-actions button:disabled{opacity:.3;cursor:not-allowed}
+.layer-actions button[data-act="builderremove"]{color:#d14e5b}
+.layer-actions button[data-act="builderduplicate"]{color:var(--brand)}
+@media(max-width:420px){.layer-actions{gap:2px}.layer-actions button{width:23px;height:23px}.builder-layer{gap:5px;padding:8px 6px}}
+
+/* Estilos 3.0 · editor individual de capas */
+.layer-select{flex:1;min-width:0;text-align:left;border:0;background:transparent;padding:3px 5px;color:inherit;display:grid;gap:3px;border-radius:8px}
+.layer-select b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.layer-select small{font-size:9px;color:var(--mut)}
+.layer-select.active{background:#f0efff;color:var(--brand)}
+.layer-editor{margin-top:13px;padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+.layer-editor h4{margin:0 0 10px;font-size:12px}
+.builder-block{cursor:pointer;transition:box-shadow .16s,outline-color .16s}
+.builder-block.is-active{outline:2px solid var(--brand);outline-offset:2px}
+.layer-actions{display:flex;gap:3px;flex:none}
+@media(max-width:520px){.layer-editor .two{gap:8px}.layer-editor{padding:10px}}
