@@ -58,6 +58,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **10.9 + PWA**: modo oscuro (también en el constructor), editor en vivo, código para Tailwind/Compose/SwiftUI/Flutter, capturas propias y paleta, copia en archivo, búsqueda sin acentos, carga diferida, caché primero, WebP y foco accesible. En el constructor: textos junto a iconos editables y deshacer fiable en modo Texto. Ver `docs/CHANGELOG-10.9.md`.
 - **10.9**: Auditoría y correcciones de integración. Ver `docs/CHANGELOG-10.9.md`.
 - **10.8**: Deshacer y rehacer. Ver `docs/CHANGELOG-10.8.md`.
 - **10.7**: Grupos y carpetas de capas. Ver `docs/CHANGELOG-10.7.md`.

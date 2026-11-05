@@ -255,6 +255,12 @@ function isSvgEl(n){return !!(n&&n.tagName&&String(n.tagName).toLowerCase()==="s
 /* Analiza HTML en un documento inerte: los atributos on*, scripts e imágenes no se
    ejecutan ni se cargan (un div creado con document.createElement sí los dispararía). */
 function inertHost(html){return new DOMParser().parseFromString("<!doctype html><body>"+html,"text/html").body;}
+/* Texto propio de un elemento: solo sus nodos de texto directos (p. ej. «Añadir al carrito»
+   dentro de un botón que además lleva un icono SVG). Las claves "ruta::own" lo editan sin
+   tocar los elementos hijos. */
+function ownText(n){return [...n.childNodes].filter(c=>c.nodeType===3).map(c=>c.nodeValue).join("").trim();}
+function setOwnText(n,v){const ts=[...n.childNodes].filter(c=>c.nodeType===3&&c.nodeValue.trim());if(!ts.length){n.appendChild(n.ownerDocument.createTextNode(v));return;}const lead=(ts[0].nodeValue.match(/^\s*/)||[""])[0];ts[0].nodeValue=lead+v;for(let i=1;i<ts.length;i++)ts[i].nodeValue="";}
+function applyTextEdit(root,key,value){const own=/::own$/.test(key),node=root.querySelector(own?key.slice(0,-5):key);if(!node)return;if(own)setOwnText(node,value);else node.textContent=value;}
 function builderNodePath(node,root){
   const parts=[];let el=node;
   while(el&&el!==root){
@@ -269,13 +275,13 @@ function applyBuilderTextEdits(pvEl,shadow){
   const block=pvEl.closest(".builder-block");if(!block)return;
   const layer=builder.layers[Number(block.dataset.builderPreviewLayer)]||{};
   Object.entries(layer.textEdits||{}).forEach(([path,value])=>{
-    try{const node=shadow.querySelector(path);if(node)node.textContent=value;}catch(_){}
+    try{applyTextEdit(shadow,path,value);}catch(_){}
   });
 }
 function builderEditedCode(entry,layer){
   const edits=layer&&layer.textEdits||{};if(!Object.keys(edits).length)return designCode(entry);
   const host=inertHost(designCode(entry));
-  Object.entries(edits).forEach(([path,value])=>{try{const node=host.querySelector(path);if(node)node.textContent=value;}catch(_){}});
+  Object.entries(edits).forEach(([path,value])=>{try{applyTextEdit(host,path,value);}catch(_){}});
   return host.innerHTML;
 }
 function applyBuilderMediaEdits(pvEl,shadow){
@@ -312,7 +318,8 @@ const pvIO = "IntersectionObserver" in window ? new IntersectionObserver(ents =>
 }), { root: document.getElementById("view"), rootMargin: "400px 0px" }) : null;
 function hydrate(root) {
   (root || document).querySelectorAll(".pv:not([data-h])").forEach(el => {
-    if (pvIO && !el.hasAttribute("data-now")) pvIO.observe(el); else hydrateEl(el);
+    /* La maqueta del constructor se redibuja con cada cambio: se pinta al momento para que no parpadee. */
+    if (pvIO && !el.hasAttribute("data-now") && !el.closest(".builder-preview")) pvIO.observe(el); else hydrateEl(el);
   });
 }
 function hydrateEl(el) {
@@ -639,10 +646,10 @@ function closeSheet() {
 }
 /* Pide un nombre con una hoja propia (prompt() no existe en todos los contenedores). */
 let pendingName = null;
-function askName(title, text, value, okLabel, onOk) {
+function askName(title, text, value, okLabel, onOk, max) {
   pendingName = onOk;
   openSheet('<div class="handle"></div><h2>' + esc(title) + '</h2>' + (text ? '<span class="sub">' + esc(text) + '</span>' : '')
-    + '<input class="fld" id="askNameField" maxlength="40" value="' + esc(value || "") + '"><div class="two"><button class="cta ghost" data-act="closesheet">Cancelar</button><button class="cta" data-act="nameok">' + esc(okLabel) + '</button></div>');
+    + '<input class="fld" id="askNameField" maxlength="' + (max || 40) + '" value="' + esc(value || "") + '"><div class="two"><button class="cta ghost" data-act="closesheet">Cancelar</button><button class="cta" data-act="nameok">' + esc(okLabel) + '</button></div>');
   const f = document.getElementById("askNameField"); if (f) { f.focus(); f.select(); }
 }
 function askConfirm(title, text, okLabel, onOk) {
@@ -955,7 +962,8 @@ document.addEventListener("change",ev=>{
 },true);
 document.addEventListener("click",ev=>{
   if(!builderTextEditMode)return;
-  builderHistorySnapshot();
+  /* El punto de historial se guarda solo al empezar a editar un texto: antes se guardaba
+     en cualquier clic, también en «Deshacer», que entonces volvía al mismo estado. */
   const path=ev.composedPath?ev.composedPath():[];
   const block=path.find(n=>n&&n.classList&&n.classList.contains("builder-block"));
   if(!block)return;
@@ -964,8 +972,18 @@ document.addEventListener("click",ev=>{
   if(!pvEl||!pvEl.shadowRoot){toast("Este diseño usa un código aislado y no permite edición directa");return;}
   if(path.some(n=>n&&n.tagName==="BUTTON"&&n.getRootNode&&n.getRootNode()!==pvEl.shadowRoot))return;
   const node=path.find(n=>n&&n.nodeType===1&&n.getRootNode&&n.getRootNode()===pvEl.shadowRoot&&n.children&&n.children.length===0&&String(n.textContent||"").trim()&&!/^(svg|path|style|script)$/i.test(n.tagName));
-  if(!node)return;
+  if(!node){
+    const own=path.find(n=>n&&n.nodeType===1&&n.getRootNode&&n.getRootNode()===pvEl.shadowRoot&&!/^(svg|path|style|script)$/i.test(n.tagName)&&ownText(n));
+    if(!own)return;
+    ev.preventDefault();ev.stopPropagation();
+    const idx=Number(block.dataset.builderPreviewLayer),lay=builder.layers[idx];if(!lay)return;
+    const key=builderNodePath(own,pvEl.shadowRoot)+"::own";
+    builderHistorySnapshot();
+    askName("Editar texto","Este texto va junto a un icono; el icono se conserva.",ownText(own),"Guardar",v=>{lay.textEdits=lay.textEdits||{};lay.textEdits[key]=String(v).slice(0,500);setOwnText(own,lay.textEdits[key]);saveBuilder();toast("Texto actualizado");},120);
+    return;
+  }
   ev.preventDefault();ev.stopPropagation();
+  builderHistorySnapshot();
   const index=Number(block.dataset.builderPreviewLayer),layer=builder.layers[index];if(!layer)return;
   node.dataset.previousOutline=node.style.outline||"";node.dataset.previousRadius=node.style.borderRadius||"";node.style.outline="2px solid #635bff";node.style.borderRadius="4px";node.setAttribute("contenteditable","true");node.setAttribute("spellcheck","true");
   node.dataset.builderInlineEdit="1";node.dataset.builderInlineIndex=String(index);
