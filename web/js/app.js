@@ -105,7 +105,8 @@ applyDim();
 
 /* ───────── Estado y navegación ───────── */
 let S = { view: "home", tab: "Tarjetas", id: null, q: "", detailTab: "info", stage: "auto", stack: "html" };
-let builder = readJSON("estilos-builder-v1", { title: "Mi nueva interfaz", subtitle: "Una experiencia diseñada a tu manera", palette: "#635BFF", bg: "#F5F6FA", font: "Inter", radius: 20, selected: [] });
+const BUILDER_FONTS = ["Inter", "Plus Jakarta Sans", "Georgia"];
+let builder = sanitizeBuilder(readJSON("estilos-builder-v1", null));
 let builderCollapsedGroups = new Set();
 let builderHistory=[],builderFuture=[],builderHistoryBusy=false,builderHistoryLast="",builderHistoryNeedsCheckpoint=false;
 const BUILDER_HISTORY_MAX_STEPS=60,BUILDER_HISTORY_MAX_CHARS=12000000,BUILDER_HISTORY_MAX_SINGLE=8000000;
@@ -128,13 +129,14 @@ function builderHistorySnapshot(){
   if(snap===builderHistoryLast&&!builderHistoryNeedsCheckpoint)return;
   builderHistoryNeedsCheckpoint=false;
   if(snap.length>BUILDER_HISTORY_MAX_SINGLE){
-    builderHistory=[];builderFuture=[];builderHistoryLast=snap;
+    builderHistory=[];builderFuture=[];builderHistoryLast=snap;builderHistoryPersist();
     toast("Este proyecto es demasiado grande para guardar más pasos en el historial");
     return;
   }
   builderHistory.push(snap);
   builderHistoryLast=snap;
   builderHistoryTrim();
+  builderHistoryPersist();
 }
 function builderHistoryRestore(from,to){
   if(!from.length){toast("No hay más cambios para recuperar");return;}
@@ -144,16 +146,39 @@ function builderHistoryRestore(from,to){
   const target=from.pop();to.push(current);builderHistoryTrim();
   builderHistoryBusy=true;
   try{
-    builder=JSON.parse(target);
+    builder=sanitizeBuilder(JSON.parse(mediaInflate(target)));
     loadActiveScreen();
     saveBuilder();
     render(true);
     // Force the next edit after undo/redo to establish a fresh branch checkpoint.
     builderHistoryLast=JSON.stringify(builder);
     builderHistoryNeedsCheckpoint=true;
+    builderHistoryPersist();
   }finally{builderHistoryBusy=false;}
   toast(from===builderHistory?"Cambio deshecho":"Cambio recuperado");
 }
+const HIST_KEY = "estilos-builder-hist-v1", strippedCache = new Map();
+let histTimer = 0;
+function builderHistoryPersist() { clearTimeout(histTimer); histTimer = setTimeout(builderHistoryPersistNow, 400); }
+function builderHistoryPersistNow() {
+  clearTimeout(histTimer);
+  try {
+    const hs = x => { let r = strippedCache.get(x); if (r === undefined) { r = mediaStrip(x); strippedCache.set(x, r); } return r; };
+    const d = JSON.stringify({ h: builderHistory.map(hs), f: builderFuture.map(hs) });
+    if (strippedCache.size > 200) strippedCache.clear();
+    if (d.length > 1800000 || /"data:image\//.test(d)) sessionStorage.removeItem(HIST_KEY); else sessionStorage.setItem(HIST_KEY, d);
+  } catch (e) { /* sin sessionStorage o lleno: el historial dura lo que dure la página */ }
+}
+function builderHistoryLoad() {
+  try {
+    const o = JSON.parse(sessionStorage.getItem(HIST_KEY) || "null");
+    if (!o || !Array.isArray(o.h) || !Array.isArray(o.f) || builderHistory.length || builderFuture.length) return;
+    builderHistory = o.h.filter(x => typeof x === "string").slice(-BUILDER_HISTORY_MAX_STEPS);
+    builderFuture = o.f.filter(x => typeof x === "string").slice(0, BUILDER_HISTORY_MAX_STEPS);
+    builderHistoryLast = mediaInflate(builderHistory[builderHistory.length - 1] || "");
+  } catch (e) { /* ignorar */ }
+}
+addEventListener("pagehide", () => builderHistoryPersistNow());
 function builderUndo(){builderHistoryRestore(builderHistory,builderFuture);}
 function builderRedo(){builderHistoryRestore(builderFuture,builderHistory);}
 
@@ -172,7 +197,7 @@ function cleanLayer(id, raw) {
     animation:["none","fade","rise","zoom","float","pulse"].includes(l.animation)?l.animation:"none",
     duration:Math.max(300,Math.min(3000,Number(l.duration)||700)),
     elevation:Math.max(0,Math.min(5,Number(l.elevation??(l.shadow?2:0)))),
-    borderStyle:["solid","dashed","dotted"].includes(l.borderStyle)?l.borderStyle:"solid",hidden:!!l.hidden,locked:!!l.locked,group:String(l.group||"").slice(0,40),textEdits:l.textEdits&&typeof l.textEdits==="object"?Object.fromEntries(Object.entries(l.textEdits).slice(0,40).map(([k,v])=>[String(k).slice(0,300),String(v).slice(0,500)])): {},mediaEdits:l.mediaEdits&&typeof l.mediaEdits==="object"?Object.fromEntries(Object.entries(l.mediaEdits).slice(0,30).map(([k,v])=>[String(k).slice(0,300),String(v).slice(0,2500000)])):{} };
+    borderStyle:["solid","dashed","dotted"].includes(l.borderStyle)?l.borderStyle:"solid",hidden:!!l.hidden,locked:!!l.locked,group:String(l.group||"").slice(0,40),textEdits:l.textEdits&&typeof l.textEdits==="object"?Object.fromEntries(Object.entries(l.textEdits).slice(0,40).map(([k,v])=>[String(k).slice(0,300),String(v).slice(0,500)])): {},editMeta:l.editMeta&&typeof l.editMeta==="object"?Object.fromEntries(Object.entries(l.editMeta).slice(0,80).filter(([k,v])=>v&&typeof v==="object").map(([k,v])=>[String(k).slice(0,310),{t:String(v.t||"").slice(0,20),b:String(v.b||"").slice(0,500)}])):{},mediaEdits:l.mediaEdits&&typeof l.mediaEdits==="object"?Object.fromEntries(Object.entries(l.mediaEdits).slice(0,30).map(([k,v])=>[String(k).slice(0,300),String(v).slice(0,2500000)])):{} };
 }
 function cleanScreen(raw,i) {
   const src=raw&&typeof raw==="object"?raw:{};
@@ -183,9 +208,29 @@ function cleanScreen(raw,i) {
     title:String(src.title||("Pantalla "+(i+1))).slice(0,60),subtitle:String(src.subtitle||"Una experiencia diseñada a tu manera").slice(0,100),
     selected:pairs.map(x=>x.id),layers:pairs.map(x=>cleanLayer(x.id,x.layer)),activeLayer:Math.max(0,Math.min(pairs.length-1,Number(src.activeLayer)||0))};
 }
-builder.screens=Array.isArray(builder.screens)&&builder.screens.length?builder.screens.slice(0,8).map(cleanScreen):[cleanScreen({id:"screen-home",title:builder.title,subtitle:builder.subtitle,selected:builder.selected,layers:builder.layers,activeLayer:builder.activeLayer},0)];
-if(!builder.screens.length) builder.screens=[cleanScreen({},0)];
-builder.activeScreenIndex=Math.max(0,Math.min(builder.screens.length-1,Number(builder.activeScreenIndex)||0));
+/* Valida un proyecto del constructor (al cargarlo, al importar una copia o al restaurar). */
+function sanitizeBuilder(raw) {
+  const b = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const out = {
+    title: String(b.title || "Mi nueva interfaz").slice(0, 60), subtitle: String(b.subtitle || "Una experiencia diseñada a tu manera").slice(0, 100),
+    palette: safeColor(b.palette || "#635BFF"), bg: safeColor(b.bg || "#F5F6FA"), font: BUILDER_FONTS.includes(b.font) ? b.font : "Inter",
+    radius: Math.max(8, Math.min(32, Number(b.radius) || 20)), device: DEVICES[b.device] ? b.device : "m", exportDark: !!b.exportDark,
+    selected: [], layers: [], activeLayer: 0
+  };
+  out.screens = Array.isArray(b.screens) && b.screens.length ? b.screens.slice(0, 8).map(cleanScreen)
+    : [cleanScreen({ id: "screen-home", title: b.title, subtitle: b.subtitle, selected: b.selected, layers: b.layers, activeLayer: b.activeLayer }, 0)];
+  if (!out.screens.length) out.screens = [cleanScreen({}, 0)];
+  out.activeScreenIndex = Math.max(0, Math.min(out.screens.length - 1, Number(b.activeScreenIndex) || 0));
+  return out;
+}
+/* Las imágenes del proyecto viven en IndexedDB: al cargarlas se rellenan las referencias «idb:». */
+function inflateBuilderMedia() {
+  let n = 0;
+  const fix = m => { if (!m || typeof m !== "object") return; Object.keys(m).forEach(k => { const v = m[k]; if (typeof v === "string" && v.indexOf("idb:") === 0) { const d = mediaCache.get(v.slice(4)); if (d) { m[k] = d; n++; } } }); };
+  builder.screens.forEach(sc => sc.layers.forEach(l => fix(l.mediaEdits)));
+  builder.layers.forEach(l => fix(l.mediaEdits));
+  return n;
+}
 function loadActiveScreen(){const sc=builder.screens[builder.activeScreenIndex];builder.title=sc.title;builder.subtitle=sc.subtitle;builder.selected=sc.selected.slice();builder.layers=sc.layers.map(x=>Object.assign({},x));builder.activeLayer=Math.max(0,Math.min(builder.selected.length-1,sc.activeLayer||0));}
 function syncActiveScreen(){const sc=builder.screens[builder.activeScreenIndex];if(!sc)return;sc.title=builder.title;sc.subtitle=builder.subtitle;sc.selected=builder.selected.slice();sc.layers=builder.layers.map(x=>Object.assign({},x));sc.activeLayer=builder.activeLayer;}
 loadActiveScreen();
@@ -260,7 +305,22 @@ function inertHost(html){return new DOMParser().parseFromString("<!doctype html>
    tocar los elementos hijos. */
 function ownText(n){return [...n.childNodes].filter(c=>c.nodeType===3).map(c=>c.nodeValue).join("").trim();}
 function setOwnText(n,v){const ts=[...n.childNodes].filter(c=>c.nodeType===3&&c.nodeValue.trim());if(!ts.length){n.appendChild(n.ownerDocument.createTextNode(v));return;}const lead=(ts[0].nodeValue.match(/^\s*/)||[""])[0];ts[0].nodeValue=lead+v;for(let i=1;i<ts.length;i++)ts[i].nodeValue="";}
-function applyTextEdit(root,key,value){const own=/::own$/.test(key),node=root.querySelector(own?key.slice(0,-5):key);if(!node)return;if(own)setOwnText(node,value);else node.textContent=value;}
+/* Cada edición se guarda con su ruta y, en layer.editMeta, la etiqueta y el texto original del nodo.
+   Al aplicarla se comprueba que el nodo sigue siendo el mismo; si el diseño cambió, se busca por
+   etiqueta/texto y, si no hay una coincidencia clara, se omite (antes se editaba el nodo que cayera
+   en esa posición). Las ediciones antiguas, sin metadatos, se aplican como siempre. */
+function findEditNode(root,path,meta,isOwn,isMedia){
+  let node=null;try{node=root.querySelector(path);}catch(_){}
+  if(!meta)return node;
+  const tag=n=>String(n&&n.tagName||"").toLowerCase();
+  if(isMedia){if(tag(node)===meta.t)return node;const all=[...root.querySelectorAll(meta.t)];return all.length===1?all[0]:null;}
+  const txt=n=>isOwn?ownText(n):String(n.textContent||"").trim();
+  if(node&&tag(node)===meta.t&&txt(node)===meta.b)return node;
+  const c=[...root.querySelectorAll(meta.t)].filter(n=>txt(n)===meta.b&&(isOwn||n.children.length===0));
+  return c.length===1?c[0]:null;
+}
+function editMetaOf(layer,key){return layer&&layer.editMeta&&layer.editMeta[key]||null;}
+function applyTextEdit(root,key,value,meta){const own=/::own$/.test(key),path=own?key.slice(0,-5):key,node=findEditNode(root,path,meta,own,false);if(!node)return;if(own)setOwnText(node,value);else node.textContent=value;}
 function builderNodePath(node,root){
   const parts=[];let el=node;
   while(el&&el!==root){
@@ -275,13 +335,13 @@ function applyBuilderTextEdits(pvEl,shadow){
   const block=pvEl.closest(".builder-block");if(!block)return;
   const layer=builder.layers[Number(block.dataset.builderPreviewLayer)]||{};
   Object.entries(layer.textEdits||{}).forEach(([path,value])=>{
-    try{applyTextEdit(shadow,path,value);}catch(_){}
+    try{applyTextEdit(shadow,path,value,editMetaOf(layer,path));}catch(_){}
   });
 }
 function builderEditedCode(entry,layer){
   const edits=layer&&layer.textEdits||{};if(!Object.keys(edits).length)return designCode(entry);
   const host=inertHost(designCode(entry));
-  Object.entries(edits).forEach(([path,value])=>{try{applyTextEdit(host,path,value);}catch(_){}});
+  Object.entries(edits).forEach(([path,value])=>{try{applyTextEdit(host,path,value,editMetaOf(layer,path));}catch(_){}});
   return host.innerHTML;
 }
 function applyBuilderMediaEdits(pvEl,shadow){
@@ -289,7 +349,8 @@ function applyBuilderMediaEdits(pvEl,shadow){
   const layer=builder.layers[Number(block.dataset.builderPreviewLayer)]||{};
   Object.entries(layer.mediaEdits||{}).forEach(([path,src])=>{
     try{
-      const node=shadow.querySelector(path);if(!node)return;
+      if(!isDataImg(src))return;
+      const node=findEditNode(shadow,path,editMetaOf(layer,"m:"+path),false,true);if(!node)return;
       if(isSvgEl(node)){const img=document.createElement("img");img.src=src;img.alt="Imagen personalizada";img.style.cssText="width:100%;height:100%;object-fit:cover;display:block";node.replaceWith(img);}
       else if(node.tagName==="IMG"){node.src=src;node.removeAttribute("srcset");node.alt=node.alt||"Imagen personalizada";}
       else node.style.backgroundImage='url("'+src+'")';
@@ -301,7 +362,8 @@ function builderEditedMediaCode(entry,layer){
   const host=inertHost(builderEditedCode(entry,layer));
   Object.entries(edits).forEach(([path,src])=>{
     try{
-      const node=host.querySelector(path);if(!node)return;
+      if(!isDataImg(src))return;
+      const node=findEditNode(host,path,editMetaOf(layer,"m:"+path),false,true);if(!node)return;
       if(isSvgEl(node)){const img=document.createElement("img");img.src=src;img.alt="Imagen personalizada";img.style.cssText="width:100%;height:100%;object-fit:cover;display:block";node.replaceWith(img);}
       else if(node.tagName==="IMG"){node.setAttribute("src",src);node.removeAttribute("srcset");}
       else node.style.backgroundImage='url("'+src+'")';
@@ -429,7 +491,7 @@ function builderPreview() {
   const picked = builder.selected.map(getEntry).filter(Boolean);
   const accent = safeColor(builder.palette || '#635BFF'), bg = safeColor(builder.bg || '#F5F6FA');
   const r = Math.max(8, Math.min(32, Number(builder.radius) || 20));
-  return '<div class="builder-device" style="--b-accent:' + accent + ';--b-bg:' + bg + ';--b-radius:' + r + 'px;font-family:' + (builder.font === 'Georgia' ? 'Georgia,serif' : builder.font === 'Plus Jakarta Sans' ? 'Plus Jakarta Sans,system-ui' : 'Inter,system-ui') + '">' +
+  return '<div class="builder-device" style="--dev-w:' + Math.round(deviceOf(builder).w * .872) + 'px;--dev-h:' + Math.round(deviceOf(builder).h * .735) + 'px;--b-accent:' + accent + ';--b-bg:' + bg + ';--b-radius:' + r + 'px;font-family:' + (builder.font === 'Georgia' ? 'Georgia,serif' : builder.font === 'Plus Jakarta Sans' ? 'Plus Jakarta Sans,system-ui' : 'Inter,system-ui') + '">' +
     '<div class="builder-screen"><div class="builder-status"><span>9:41</span><span>●●● ▰</span></div><div class="builder-top"><span class="builder-mark">✦</span><span>•••</span></div><small class="builder-eyebrow">TU ESPACIO DIGITAL</small><h3>' + esc(builder.title || 'Mi nueva interfaz') + '</h3><p>' + esc(builder.subtitle || 'Una experiencia diseñada a tu manera') + '</p><button class="builder-primary">Descubrir más <b>↗</b></button>' +
     picked.map((e,i)=>{const l=builder.layers[i]||{};const label=l.label||e.name;const shadow=builderElevation(l);return '<section class="builder-block ' + (i===builder.activeLayer?'is-active ':'') + (l.hidden?'is-hidden ':'') + (l.locked?'is-locked':'') + '" data-act="builderselect" data-index="' + i + '" data-builder-preview-layer="' + i + '" style="display:' + (l.hidden?'none':'block') + ';background:' + safeColor(l.bg||'#FFFFFF') + ';color:' + safeColor(l.color||'#263247') + ';border-radius:' + Math.max(6,Math.min(32,Number(l.radius)||16)) + 'px;padding:' + Math.max(4,Math.min(32,Number(l.padding)||12)) + 'px;font-size:' + (l.fontSize||14) + 'px;font-weight:' + (l.weight||600) + ';text-align:' + (l.align||'left') + ';border:' + (l.borderWidth||0) + 'px ' + (l.borderStyle||'solid') + ' ' + safeColor(l.borderColor||'#E8EAF0') + ';box-shadow:' + shadow + ';width:' + (l.width||100) + '%;translate:' + (Number(l.offsetX)||0) + 'px ' + (Number(l.offsetY)||0) + 'px;' + builderMotionStyle(l) + '"><div class="builder-block-head"><span class="builder-drag-handle" data-builder-drag="' + i + '" title="Arrastrar">⠿</span><b>' + esc(label) + '</b><small>' + esc(e.tab) + '</small></div><div class="builder-live-component">' + builderVariantHTML(l,pv(e)) + '</div><span class="builder-resize-handle" data-builder-resize="' + i + '" role="slider" aria-label="Cambiar tamaño del componente" title="Arrastra para cambiar tamaño">↘</span></section>';}).join('') +
     '<div class="builder-bottom"><span>⌂<small>Inicio</small></span><span>⌕<small>Buscar</small></span><span>♡<small>Guardados</small></span><span>◉<small>Perfil</small></span></div></div></div>';
@@ -442,16 +504,23 @@ function renderBuilder() {
   const layerGroups=[...new Set(builder.layers.map(x=>String(x.group||"").trim()).filter(Boolean))];
   const layerRowHtml=(entry,index)=>{
     const layer=builder.layers[index]||{},name=layer.label||entry.name;
-    return '<div class="builder-layer-row'+(index===builder.activeLayer?' active':'')+(layer.hidden?' is-hidden':'')+(layer.locked?' is-locked':'')+'" draggable="true" data-layer-index="'+index+'"><button type="button" class="builder-layer-thumb" data-act="builderselect" data-index="'+index+'" aria-label="Seleccionar '+esc(name)+'">'+pv(entry)+'</button><button type="button" class="builder-layer-name" data-act="builderselect" data-index="'+index+'"><b>'+esc(name)+'</b><small>'+esc(entry.tab)+' · Capa '+(index+1)+'</small></button><div class="builder-layer-tools"><button type="button" data-act="builderlayerhide" data-index="'+index+'" aria-label="'+(layer.hidden?'Mostrar':'Ocultar')+'">'+(layer.hidden?'◉':'◌')+'</button><button type="button" data-act="builderlayerlock" data-index="'+index+'" aria-label="'+(layer.locked?'Desbloquear':'Bloquear')+'">'+(layer.locked?'🔒':'🔓')+'</button><button type="button" data-act="buildermove" data-index="'+index+'" data-dir="-1" '+(index===0?'disabled':'')+'>↑</button><button type="button" data-act="buildermove" data-index="'+index+'" data-dir="1" '+(index===picked.length-1?'disabled':'')+'>↓</button><button type="button" data-act="builderduplicate" data-index="'+index+'">＋</button><button type="button" data-act="builderremove" data-index="'+index+'">×</button></div><div class="builder-layer-group-select"><label>Carpeta</label><select data-layer-group="'+index+'" aria-label="Mover a carpeta"><option value="">Sin carpeta</option>'+layerGroups.map(g=>'<option value="'+esc(g)+'"'+(layer.group===g?' selected':'')+'>'+esc(g)+'</option>').join('')+'</select></div></div>';
+    return '<div class="builder-layer-row'+(index===builder.activeLayer?' active':'')+(layer.hidden?' is-hidden':'')+(layer.locked?' is-locked':'')+'" draggable="true" data-layer-index="'+index+'"><button type="button" class="builder-layer-thumb" data-act="builderselect" data-index="'+index+'" aria-label="Seleccionar '+esc(name)+'">'+pv(entry)+'</button><button type="button" class="builder-layer-name" data-act="builderselect" data-index="'+index+'"><b>'+esc(name)+'</b><small>'+esc(entry.tab)+' · Capa '+(index+1)+'</small></button><div class="builder-layer-tools">'+
+      '<button type="button" data-act="builderlayerhide" data-index="'+index+'" aria-label="Ocultar «'+esc(name)+'»" aria-pressed="'+(!!layer.hidden)+'" title="'+(layer.hidden?'Mostrar':'Ocultar')+'">'+ic(layer.hidden?'eyeOff':'eye',16)+'</button>'+
+      '<button type="button" data-act="builderlayerlock" data-index="'+index+'" aria-label="Bloquear «'+esc(name)+'»" aria-pressed="'+(!!layer.locked)+'" title="'+(layer.locked?'Desbloquear':'Bloquear')+'">'+ic(layer.locked?'lock':'unlock',16)+'</button>'+
+      '<button type="button" data-act="buildermove" data-index="'+index+'" data-dir="-1" aria-label="Subir «'+esc(name)+'»" title="Subir" '+(index===0?'disabled':'')+'>'+ic('arrowUp',16)+'</button>'+
+      '<button type="button" data-act="buildermove" data-index="'+index+'" data-dir="1" aria-label="Bajar «'+esc(name)+'»" title="Bajar" '+(index===picked.length-1?'disabled':'')+'>'+ic('arrowDown',16)+'</button>'+
+      '<button type="button" data-act="builderduplicate" data-index="'+index+'" aria-label="Duplicar «'+esc(name)+'»" title="Duplicar">'+ic('copy',16)+'</button>'+
+      '<button type="button" data-act="builderremove" data-index="'+index+'" aria-label="Eliminar «'+esc(name)+'»" title="Eliminar">'+ic('trash',16)+'</button></div>'
+    +'<div class="builder-layer-group-select"><label>Carpeta</label><select data-layer-group="'+index+'" aria-label="Mover a carpeta"><option value="">Sin carpeta</option>'+layerGroups.map(g=>'<option value="'+esc(g)+'"'+(layer.group===g?' selected':'')+'>'+esc(g)+'</option>').join('')+'</select></div></div>';
   };
-  const historyControlsHtml='<div class="builder-history-controls"><button type="button" data-act="builderundo">↶ Deshacer</button><button type="button" data-act="builderredo">↷ Rehacer</button><small>Hasta 60 cambios</small></div>';
+  const historyControlsHtml='<div class="builder-history-controls"><button type="button" data-act="builderundo">'+ic('undo',15)+' Deshacer</button><button type="button" data-act="builderredo">'+ic('redo',15)+' Rehacer</button><small>Hasta 60 cambios</small></div>';
   const layerPanelHtml='<div class="builder-layers-panel" id="builder-layers-panel"><div class="builder-layers-heading"><div><b>Capas y carpetas</b><small>'+picked.length+' / 12 elementos · '+layerGroups.length+' carpetas</small></div><button type="button" data-act="buildergroupadd" class="builder-folder-add">＋ Nueva carpeta</button></div>'+historyControlsHtml+'<div class="builder-layer-list">'+(picked.length?(()=>{
     const ungrouped=picked.map((entry,index)=>({entry,index})).filter(x=>!String((builder.layers[x.index]||{}).group||"").trim());
     let html=ungrouped.map(x=>layerRowHtml(x.entry,x.index)).join('');
     layerGroups.forEach(group=>{
       const members=picked.map((entry,index)=>({entry,index})).filter(x=>(builder.layers[x.index]||{}).group===group);
       const collapsed=builderCollapsedGroups.has(group);
-      html+='<section class="builder-folder'+(collapsed?' collapsed':'')+'"><header><button type="button" class="builder-folder-toggle" data-act="buildergroupcollapse" data-group="'+esc(group)+'">'+(collapsed?'▸':'▾')+' <b>▣ '+esc(group)+'</b><small>'+members.length+'</small></button><span><button type="button" data-act="buildergrouprename" data-group="'+esc(group)+'" aria-label="Renombrar carpeta">✎</button><button type="button" data-act="buildergroupdelete" data-group="'+esc(group)+'" aria-label="Eliminar carpeta">×</button></span></header><div class="builder-folder-content" '+(collapsed?'hidden':'')+'>'+members.map(x=>layerRowHtml(x.entry,x.index)).join('')+'</div></section>';
+      html+='<section class="builder-folder'+(collapsed?' collapsed':'')+'"><header><button type="button" class="builder-folder-toggle" data-act="buildergroupcollapse" data-group="'+esc(group)+'" aria-expanded="'+(!collapsed)+'">'+ic(collapsed?'chevR':'chevD',14)+' '+ic('folder',15)+' <b>'+esc(group)+'</b><small>'+members.length+'</small></button><span><button type="button" data-act="buildergrouprename" data-group="'+esc(group)+'" aria-label="Renombrar carpeta «'+esc(group)+'»">'+ic('edit',14)+'</button><button type="button" data-act="buildergroupdelete" data-group="'+esc(group)+'" aria-label="Eliminar carpeta «'+esc(group)+'»">'+ic('close',14)+'</button></span></header><div class="builder-folder-content" '+(collapsed?'hidden':'')+'>'+members.map(x=>layerRowHtml(x.entry,x.index)).join('')+'</div></section>';
     });
     return html||'<div class="builder-layers-empty">No hay capas todavía.</div>';
   })():'<div class="builder-layers-empty">Añade componentes desde la biblioteca y organízalos en carpetas.</div>')+'</div></div>';
@@ -462,23 +531,10 @@ function renderBuilder() {
   '<nav class="builder-mobile-nav" aria-label="Navegación del constructor"><button type="button" data-act="buildermobilejump" data-target="builder-preview-panel">▣<span>Vista</span></button><button type="button" data-act="buildermobilejump" data-target="builder-controls-panel">⚙<span>Editar</span></button><button type="button" data-act="buildermobilejump" data-target="builder-library-panel">✦<span>Biblioteca</span></button><button type="button" data-act="buildermobilejump" data-target="builder-layers-panel">▤<span>Capas</span></button><button type="button" data-act="buildertextmode">Aa<span>Texto</span></button><button type="button" data-act="buildermediamode">▧<span>Imagen</span></button></nav>' +
   '<div class="builder-layout"><div class="builder-controls" id="builder-controls-panel"><section class="panel"><h3>Identidad de pantalla</h3><label class="l">Nombre de esta pantalla</label><input class="fld" data-builder="title" value="' + esc(builder.title) + '" maxlength="60"><label class="l">Descripción</label><input class="fld" data-builder="subtitle" value="' + esc(builder.subtitle) + '" maxlength="100"><div class="two"><div><label class="l">Color principal</label><input class="fld color-field" type="color" data-builder="palette" value="' + esc(builder.palette) + '"></div><div><label class="l">Fondo</label><input class="fld color-field" type="color" data-builder="bg" value="' + esc(builder.bg) + '"></div></div><div class="two"><div><label class="l">Tipografía</label><select class="fld" data-builder="font"><option' + (builder.font==='Inter'?' selected':'') + '>Inter</option><option' + (builder.font==='Plus Jakarta Sans'?' selected':'') + '>Plus Jakarta Sans</option><option' + (builder.font==='Georgia'?' selected':'') + '>Georgia</option></select></div><div><label class="l">Redondeo general</label><input class="fld" type="range" min="8" max="32" step="2" data-builder="radius" value="' + Number(builder.radius) + '"></div></div></section>' +
   '<section class="panel"><h3>Temas reutilizables</h3><div class="two"><select class="fld" data-theme-select><option value="">Seleccionar tema</option><option value="violet">Violeta Studio</option><option value="midnight">Midnight</option><option value="ivory">Ivory</option><option value="mint">Mint</option>' + builderThemes.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.name)+'</option>').join('') + '</select><button class="secondary" data-act="builderthemesave">Guardar tema actual</button></div><p class="sub">Guarda combinaciones de color, tipografía y redondeo para reutilizarlas en otros proyectos.</p></section>' +
-  '<section class="panel builder-library-panel" id="builder-library-panel"><h3>Biblioteca visual</h3><p class="sub">Elige por apariencia, no por nombre. Abre una categoría para ver las miniaturas reales y toca un diseño para añadirlo a la pantalla.</p><label class="builder-picker-search"><span>⌕</span><input type="search" data-builder-picker-search placeholder="Buscar por nombre o categoría…"></label><div class="builder-picker-groups">' + fields.map(([tab])=>builderVisualPicker(tab)).join('') + '</div>' + layerPanelHtml + layerEditor + '</section><button class="cta" data-act="builderexport">' + ic('arrowDown',17) + ' Exportar todas las pantallas HTML</button></div><div class="builder-preview'+(builderTextEditMode?' text-edit-mode':'')+(builderMediaEditMode?' media-edit-mode':'')+'" id="builder-preview-panel"><div class="preview-heading"><b>Vista previa en vivo</b><button type="button" class="builder-text-toggle" data-act="buildertextmode">'+(builderTextEditMode?'✓ Terminar texto':'Aa Editar texto')+'</button><button type="button" class="builder-text-toggle" data-act="buildermediamode">'+(builderMediaEditMode?'✓ Terminar imagen':'▧ Cambiar imagen')+'</button><span>390 × 844 · Pantalla '+(builder.activeScreenIndex+1)+'</span></div><input type="file" id="builder-media-file" accept="image/png,image/jpeg,image/webp" hidden>' + builderPreview() + '<p class="sub">Selecciona un bloque. Usa ⠿ para moverlo y la esquina ↘ para cambiar su tamaño. Los cambios se guardan automáticamente.</p></div></div></div>';
+  '<section class="panel builder-library-panel" id="builder-library-panel"><h3>Biblioteca visual</h3><p class="sub">Elige por apariencia, no por nombre. Abre una categoría para ver las miniaturas reales y toca un diseño para añadirlo a la pantalla.</p><label class="builder-picker-search"><span>⌕</span><input type="search" data-builder-picker-search placeholder="Buscar por nombre o categoría…"></label><div class="builder-picker-groups">' + fields.map(([tab])=>builderVisualPicker(tab)).join('') + '</div>' + layerPanelHtml + layerEditor + '</section><section class="panel builder-export-box"><h3>Exportar proyecto</h3><button type="button" class="switchRow" role="switch" aria-checked="' + (!!builder.exportDark) + '" data-act="builderexportdark"><span>Modo oscuro automático<small>El marco de la página se oscurece si quien la abre usa modo oscuro. Los colores de tus bloques no cambian.</small></span><i class="sw2"></i></button><button class="cta" data-act="builderexport">' + ic('arrowDown',17) + ' Todas las pantallas en HTML</button><button class="cta ghost" data-act="builderexportzip">' + ic('layers',17) + ' ZIP: HTML + React + imágenes</button></section></div><div class="builder-preview'+(builderTextEditMode?' text-edit-mode':'')+(builderMediaEditMode?' media-edit-mode':'')+'" id="builder-preview-panel"><div class="preview-heading"><b>Vista previa en vivo</b><button type="button" class="builder-text-toggle" data-act="buildertextmode">'+(builderTextEditMode?'✓ Terminar texto':'Aa Editar texto')+'</button><button type="button" class="builder-text-toggle" data-act="buildermediamode">'+(builderMediaEditMode?'✓ Terminar imagen':'▧ Cambiar imagen')+'</button><span class="builder-device-pick"><select data-builder="device" aria-label="Tamaño de pantalla">'+Object.keys(DEVICES).map(k=>'<option value="'+k+'"'+(deviceOf(builder)===DEVICES[k]?' selected':'')+'>'+DEVICES[k].n+' · '+DEVICES[k].w+'×'+DEVICES[k].h+'</option>').join('')+'</select> · Pantalla '+(builder.activeScreenIndex+1)+'</span></div><input type="file" id="builder-media-file" accept="image/png,image/jpeg,image/webp" hidden>' + builderPreview() + '<p class="sub">Selecciona un bloque. Usa ⠿ para moverlo y la esquina ↘ para cambiar su tamaño. Los cambios se guardan automáticamente.</p></div></div></div>';
 }
 function pickedBuilder(){return builder.selected.map(getEntry).filter(Boolean);}
-function saveBuilder(){syncActiveScreen();try{localStorage.setItem('estilos-builder-v1',JSON.stringify(builder));}catch(e){toast('No se pudo guardar el constructor');}}
-function exportBuilder(){
- syncActiveScreen();
- const accent=safeColor(builder.palette),bg=safeColor(builder.bg),r=Math.max(8,Math.min(32,Number(builder.radius)||20));
- const pages=builder.screens.map((sc,si)=>{
-   const blocks=sc.selected.map((id,i)=>{const e=getEntry(id);if(!e)return '';const l=sc.layers[i]||{};const shadow=builderElevation(l);const label=l.label||e.name;
-     return '<section class="component '+(l.variant||"default")+'" style="display:'+(l.hidden?'none':'block')+';background:'+safeColor(l.bg||'#FFFFFF')+';color:'+safeColor(l.color||'#263247')+';border-radius:'+Math.max(6,Math.min(32,Number(l.radius)||16))+'px;padding:'+Math.max(4,Math.min(32,Number(l.padding)||12))+'px;font-size:'+(l.fontSize||14)+'px;font-weight:'+(l.weight||600)+';text-align:'+(l.align||'left')+';border:'+(l.borderWidth||0)+'px '+(l.borderStyle||'solid')+' '+safeColor(l.borderColor||'#E8EAF0')+';box-shadow:'+shadow+';width:'+(l.width||100)+'%;translate:'+(Number(l.offsetX)||0)+'px '+(Number(l.offsetY)||0)+'px;'+builderMotionStyle(l)+'"><div class="component-meta"><span>'+esc(e.tab)+'</span><small>Bloque '+(i+1)+'</small></div><h2>'+esc(label)+'</h2><p>'+esc(e.desc)+'</p><iframe loading="lazy" title="'+esc(label)+'" sandbox="allow-same-origin" srcdoc="'+esc('<!doctype html><meta charset=utf-8><meta name=viewport content=width=device-width,initial-scale=1><style>body{margin:0;padding:8px;font-family:system-ui,sans-serif;overflow:hidden}*{box-sizing:border-box}</style>'+builderEditedMediaCode(e,l))+'"></iframe></section>';
-   }).join('');
-   return '<main class="app page '+(si===0?'active':'')+'" id="page-'+si+'"><div class="mark">✦</div><small>DISEÑADO CON ESTILOS</small><h1>'+esc(sc.title)+'</h1><p>'+esc(sc.subtitle)+'</p><button class="primary">Descubrir más ↗</button>'+blocks+'</main>';
- }).join('');
- const nav=builder.screens.map((sc,i)=>'<a href="#page-'+i+'">'+esc(sc.title||('Pantalla '+(i+1)))+'</a>').join('');
- const html='<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(builder.title)+'</title><style>*{box-sizing:border-box}body{margin:0;padding:18px;background:'+bg+';font-family:'+(builder.font==='Georgia'?'Georgia,serif':'Inter,system-ui,sans-serif')+';color:#182033}.nav{max-width:460px;margin:0 auto 12px;display:flex;gap:6px;overflow:auto}.nav a{white-space:nowrap;border:1px solid #e4e7ef;background:white;color:#596276;border-radius:999px;padding:9px 13px;text-decoration:none}.app{display:none;max-width:460px;margin:0 auto;background:white;border-radius:'+r+'px;padding:24px;box-shadow:0 20px 60px #1d2b4a18}.app:first-of-type{display:block}.app:target{display:block}body:has(.app:target) .app:first-of-type:not(:target){display:none}.mark{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:'+accent+';color:white;font-size:22px}small{color:#7c8497;letter-spacing:1px}h1{font-size:32px;line-height:1.05;margin:20px 0 8px}p{color:#737b8d;line-height:1.5}.primary{margin:18px 0;padding:14px 18px;border:0;border-radius:'+r+'px;background:'+accent+';color:white;font-weight:700}.component{margin-top:18px;border:1px solid #e8eaf0;overflow:hidden}.component h2{font-size:16px;margin:8px 0}.component p{font-size:13px}.component-meta{display:flex;justify-content:space-between;font-size:10px;color:#8991a2;text-transform:uppercase;letter-spacing:.08em}.component iframe{display:block;width:100%;height:230px;border:0;border-radius:12px;background:#f7f8fb;margin-top:12px}.component.glass{background:#ffffff88!important;backdrop-filter:blur(12px);border-color:#ffffffaa!important}.component.soft{background:linear-gradient(145deg,#fff,#f0f1f8)!important;box-shadow:8px 8px 18px #202a4014!important}.component.outline{background:transparent!important;border-width:1px!important;border-color:currentColor!important;box-shadow:none!important}.component.bold{background:linear-gradient(135deg,#635bff18,#26b9d418)!important;border-width:2px!important}@keyframes estilosFade{from{opacity:0}to{opacity:1}}@keyframes estilosRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes estilosZoom{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}@keyframes estilosFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}@keyframes estilosPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}@media (prefers-reduced-motion:reduce){.component{animation:none!important}}</style><nav class="nav">'+nav+'</nav>'+pages+'</html>';
- const blob=new Blob([html],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='proyecto-estilos-multipantalla.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Proyecto multipantalla exportado');
-}
+function saveBuilder(){syncActiveScreen();try{localStorage.setItem('estilos-builder-v1',mediaStrip(JSON.stringify(builder)));}catch(e){toast('No se pudo guardar el constructor');}}
 
 function renderFavs() {
   const l = favs.map(getEntry).filter(Boolean);
@@ -713,31 +769,43 @@ function openMenu() {
     + '<div class="btns"><div class="two"><button class="cta ghost" data-act="dlfile">' + ic("arrowDown", 16) + ' Descargar</button>'
     + (canShare ? '<button class="cta ghost" data-act="sharefile">' + ic("share", 16) + ' Compartir</button>' : '<button class="cta ghost" data-act="impfile">' + ic("upload", 16) + ' Importar</button>') + '</div>'
     + (canShare ? '<button class="cta ghost" data-act="impfile">' + ic("upload", 16) + ' Importar desde archivo</button>' : '')
-    + '<span class="sub">Incluye tus estilos, ediciones y borrados. Las capturas propias no viajan en la copia.</span></div>'
+    + '<span class="sub">Incluye tus estilos, ediciones y borrados, el proyecto del constructor con sus imágenes, tus temas y tus capturas propias.</span></div>'
     + '<details class="adv"><summary>Exportar o importar como texto</summary>'
     + '<textarea class="fld" id="ioText" rows="6" placeholder="Exporta para ver o pega un JSON para importar"></textarea>'
     + '<div class="btns"><button class="cta ghost" data-act="export">Mostrar mis cambios</button><div class="two"><button class="cta ghost" data-act="copyio">Copiar</button><button class="cta ghost" data-act="import">Importar</button></div>'
     + (bak ? '<button class="cta ghost" data-act="backup">Ver respaldo de la versión 1.5</button>' : '') + '</div></details>'
     + '<div class="btns"><button class="cta ghost" data-act="restore">Restaurar el catálogo original</button><button class="cta ghost" data-act="closesheet">Cerrar</button></div>');
 }
-function exportJSON() { return JSON.stringify({ app: "estilos", version: APP_VERSION, added: user.added, edits: user.edits, deleted: user.deleted }, null, 2); }
-function exportFile() { return new File([exportJSON()], "estilos-" + new Date().toISOString().slice(0, 10) + ".json", { type: "application/json" }); }
-function downloadFile() {
-  const f = exportFile(), url = URL.createObjectURL(f), a = document.createElement("a");
-  a.href = url; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 4000); toast("Copia descargada: " + f.name);
+function blobToDataURL(b) { return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => rej(fr.error); fr.readAsDataURL(b); }); }
+/* Copia completa: estilos del usuario, proyecto del constructor (con sus imágenes), temas y capturas propias.
+   Con {media:false} (cuadro de texto) se omiten las imágenes para que el texto sea manejable. */
+async function exportJSON(opts) {
+  const withMedia = !opts || opts.media !== false;
+  syncActiveScreen();
+  let bj = mediaInflate(JSON.stringify(Object.assign({}, builder, { layers: undefined, selected: undefined, activeLayer: undefined })));
+  if (!withMedia) bj = bj.replace(MEDIA_RE, '""').replace(MEDIA_REF_RE, '""');
+  const out = { app: "estilos", format: 2, version: APP_VERSION, added: user.added, edits: user.edits, deleted: user.deleted, builder: JSON.parse(bj), themes: builderThemes };
+  if (withMedia && userRefs.length) out.refs = await Promise.all(userRefs.map(async r => ({ id: r.id, label: r.label, date: r.date, data: await blobToDataURL(r.blob) })));
+  return JSON.stringify(out, null, withMedia ? 0 : 2);
 }
-function shareFile() {
-  const f = exportFile();
-  const p = navigator.canShare && navigator.canShare({ files: [f] }) ? navigator.share({ files: [f], title: "Copia de Estilos" }) : navigator.share({ title: "Copia de Estilos", text: exportJSON() });
-  p.catch(err => { if (err && err.name !== "AbortError") downloadFile(); });
+async function exportFile() { return new File([await exportJSON()], "estilos-" + new Date().toISOString().slice(0, 10) + ".json", { type: "application/json" }); }
+async function downloadFile() {
+  const f = await exportFile();
+  downloadBlob(f, f.name); toast("Copia descargada: " + f.name);
 }
-function doExport() {
-  document.getElementById("ioText").value = exportJSON();
-  toast("Listo para copiar");
+async function shareFile() {
+  try {
+    const f = await exportFile();
+    if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ files: [f], title: "Copia de Estilos" });
+    else await navigator.share({ title: "Copia de Estilos", text: await exportJSON({ media: false }) });
+  } catch (err) { if (err && err.name !== "AbortError") downloadFile(); }
+}
+async function doExport() {
+  document.getElementById("ioText").value = await exportJSON({ media: false });
+  toast("Listo para copiar (sin imágenes)");
 }
 function doImport() { doImportText(document.getElementById("ioText").value); }
-function doImportText(text) {
+async function doImportText(text) {
   try {
     const raw = JSON.parse(text);
     let n = 0;
@@ -751,6 +819,27 @@ function doImportText(text) {
     });
     Object.keys(src.edits || {}).forEach(id => { if (SEED_IDS.has(safeId(id))) { const e = normalize(Object.assign({ name: "x", tab: "x" }, src.edits[id])); if (e) { delete e.id; const part = {}; Object.keys(src.edits[id]).forEach(k => { if (k in e && k !== "id") part[k] = e[k]; }); user.edits[safeId(id)] = part; n++; } } });
     (Array.isArray(src.deleted) ? src.deleted : []).forEach(id => { id = safeId(id); if (SEED_IDS.has(id) && !user.deleted.includes(id)) user.deleted.push(id); });
+    if (src.builder && typeof src.builder === "object" && !Array.isArray(src.builder)) {
+      builderHistorySnapshot();    /* se puede deshacer desde el constructor */
+      builder = sanitizeBuilder(src.builder); loadActiveScreen(); saveBuilder(); n++;
+    }
+    if (Array.isArray(src.themes)) {
+      src.themes.slice(0, 50).forEach(t => {
+        if (!t || typeof t !== "object") return;
+        const th = { id: "theme-" + (safeId(t.id).replace(/^theme-/, "") || Date.now().toString(36)), name: String(t.name || "Tema").slice(0, 40), palette: safeColor(t.palette), bg: safeColor(t.bg), font: BUILDER_FONTS.includes(t.font) ? t.font : "Inter", radius: Math.max(8, Math.min(32, Number(t.radius) || 20)) };
+        const i = builderThemes.findIndex(x => x.id === th.id); if (i >= 0) builderThemes[i] = th; else builderThemes.push(th);
+        n++;
+      });
+      writeJSON("estilos-themes-v1", builderThemes);
+    }
+    if (Array.isArray(src.refs)) {
+      const ok = src.refs.filter(r => r && typeof r === "object" && isDataImg(r.data)).slice(0, 40);
+      for (const r of ok) {
+        const p = dataUrlBytes(r.data); if (!p) continue;
+        await RefStore.put({ id: "r" + safeId(r.id || Date.now().toString(36)), label: String(r.label || "Captura").slice(0, 60), date: Number(r.date) || Date.now(), blob: new Blob([p.bytes], { type: p.mime }) }); n++;
+      }
+      if (ok.length) await loadUserRefs();
+    }
     if (!n && !(src.deleted || []).length) throw 0;
     if (!saveUser()) return;
     closeSheet(); render(true); toast("Importado: " + n + " cambios");
@@ -783,6 +872,7 @@ function paletteFromLB() {
     openSheet('<div class="handle"></div><h2>Paleta de la captura</h2><span class="sub">' + esc(r.label) + ' · toca un color para copiarlo</span>'
       + '<div class="palBig">' + cols.map(c => '<button data-act="color" data-c="' + c + '" style="background:' + c + ';color:' + inkOn(c) + '" aria-label="Copiar ' + c + '">' + c + '</button>').join("") + '</div>'
       + '<div class="btns"><button class="cta" data-act="mkstyle" data-c="' + cols.join(",") + '" data-l="' + esc(r.label) + '">' + ic("plus", 16, 2.6) + ' Crear estilo con esta paleta</button>'
+      + '<button class="cta ghost" data-act="palbuilder" data-c="' + cols.join(",") + '" data-l="' + esc(r.label) + '">' + ic("layers", 16) + ' Aplicar al constructor</button>'
       + '<div class="two"><button class="cta ghost" data-act="palcopy" data-c="' + cols.join(",") + '">Copiar HEX</button><button class="cta ghost" data-act="closesheet">Cerrar</button></div></div>');
   }).catch(() => toast("No se pudo leer la imagen"));
 }
@@ -858,6 +948,16 @@ const ACT = {
   addref: () => document.getElementById("fileRef").click(),
   lbu: d => { const r = userRefs.find(x => x.id === d.id); if (r) openLB({ src: r.url, label: r.label, uid: r.id }); },
   palette: () => paletteFromLB(),
+  palbuilder: d => {
+    const cols = String(d.c || "").split(",").filter(c => HEX_RE.test(c)); if (!cols.length) return;
+    builderHistorySnapshot();
+    const accent = bestAccent(cols), light = cols.slice().sort((a, b) => lum(b) - lum(a))[0];
+    const bg = mix(light, "#FFFFFF", .82).toUpperCase(), name = ("Paleta · " + (d.l || "captura")).slice(0, 40);
+    builder.palette = safeColor(accent); builder.bg = safeColor(bg);
+    builderThemes.push({ id: "theme-" + Date.now().toString(36), name, palette: builder.palette, bg: builder.bg, font: builder.font, radius: builder.radius });
+    writeJSON("estilos-themes-v1", builderThemes); saveBuilder();
+    closeSheet(); closeLB(); go({ view: "builder" }); toast("Paleta aplicada al constructor y guardada como tema");
+  },
   palcopy: d => copyText(d.c.split(",").join("\n"), "Paleta copiada"),
   mkstyle: d => { closeSheet(); closeLB(); openForm(null, { tab: "Paletas", v: "pal.sample", name: ("Paleta · " + (d.l || "captura")).slice(0, 80), ref: d.l || "", colors: d.c.split(","), radius: "16", mode: "light", desc: "Paleta extraída de una captura.", tip: "" }); },
   delref: d => askConfirm("¿Borrar esta captura?", "Se elimina de este dispositivo.", "Borrar", () => { closeSheet(); closeLB(); RefStore.del(d.id).then(loadUserRefs).then(() => toast("Captura borrada")).catch(() => toast("No se pudo borrar")); }),
@@ -908,6 +1008,8 @@ const ACT = {
   buildermove: d => { const i=Number(d.index),to=i+Number(d.dir); if(builder.layers[i]&&builder.layers[i].locked){toast("Desbloquea la capa para cambiar su orden");return;} if(Number.isInteger(i)&&to>=0&&to<builder.selected.length&&!(builder.layers[to]&&builder.layers[to].locked)){const item=builder.selected.splice(i,1)[0];builder.selected.splice(to,0,item);const layer=builder.layers.splice(i,1)[0];builder.layers.splice(to,0,layer);builder.activeLayer=to;saveBuilder();render(true);} },
   builderduplicate: d => { const i=Number(d.index); if(builder.selected.length>=12){toast('Máximo doce capas');return;} if(Number.isInteger(i)&&i>=0&&i<builder.selected.length){builder.selected.splice(i+1,0,builder.selected[i]);const copy=JSON.parse(JSON.stringify(builder.layers[i]||{}));copy.uid="layer-"+Math.random().toString(36).slice(2,9);copy.locked=false;builder.layers.splice(i+1,0,copy);builder.activeLayer=i+1;saveBuilder();render(true);toast('Componente duplicado');} },
   builderexport: () => exportBuilder(),
+  builderexportzip: () => exportBuilderZip(),
+  builderexportdark: () => { builder.exportDark = !builder.exportDark; saveBuilder(); const b = document.querySelector('[data-act="builderexportdark"]'); if (b) b.setAttribute("aria-checked", !!builder.exportDark); },
   closesheet: () => closeSheet(),
   lb: d => { const r = REFS[+d.i]; if (r) openLB({ src: r.img, label: r.label }); },
   closelb: () => closeLB()
@@ -928,7 +1030,7 @@ document.addEventListener("click",ev=>{
   builderHistorySnapshot();
   ev.preventDefault();ev.stopPropagation();
   const index=Number(block.dataset.builderPreviewLayer);
-  builderPendingMedia={index,path:builderNodePath(node,pvEl.shadowRoot)};
+  builderPendingMedia={index,path:builderNodePath(node,pvEl.shadowRoot),tag:String(node.tagName||"").toLowerCase()};
   const input=document.getElementById("builder-media-file");
   if(input){input.value="";input.click();}
 },true);
@@ -952,7 +1054,7 @@ document.addEventListener("change",ev=>{
       if(data.length>850000)data=canvas.toDataURL("image/jpeg",.68);
       if(data.length>1000000){toast("La imagen sigue siendo demasiado pesada");return;}
       const layer=builder.layers[pending.index];if(!layer)return;
-      layer.mediaEdits=layer.mediaEdits||{};layer.mediaEdits[pending.path]=data;
+      layer.mediaEdits=layer.mediaEdits||{};layer.mediaEdits[pending.path]=data;layer.editMeta=layer.editMeta||{};layer.editMeta["m:"+pending.path]={t:pending.tag,b:""};
       builder.activeLayer=pending.index;saveBuilder();render(true);toast("Imagen reemplazada");
     }catch(_){toast("No se pudo procesar la imagen");}
     finally{URL.revokeObjectURL(url);builderPendingMedia=null;}
@@ -979,7 +1081,8 @@ document.addEventListener("click",ev=>{
     const idx=Number(block.dataset.builderPreviewLayer),lay=builder.layers[idx];if(!lay)return;
     const key=builderNodePath(own,pvEl.shadowRoot)+"::own";
     builderHistorySnapshot();
-    askName("Editar texto","Este texto va junto a un icono; el icono se conserva.",ownText(own),"Guardar",v=>{lay.textEdits=lay.textEdits||{};lay.textEdits[key]=String(v).slice(0,500);setOwnText(own,lay.textEdits[key]);saveBuilder();toast("Texto actualizado");},120);
+    const prevMeta=editMetaOf(lay,key),base=prevMeta?prevMeta.b:ownText(own),tagName=String(own.tagName||"").toLowerCase();
+    askName("Editar texto","Este texto va junto a un icono; el icono se conserva.",ownText(own),"Guardar",v=>{lay.textEdits=lay.textEdits||{};lay.textEdits[key]=String(v).slice(0,500);lay.editMeta=lay.editMeta||{};lay.editMeta[key]={t:tagName,b:base};setOwnText(own,lay.textEdits[key]);saveBuilder();toast("Texto actualizado");},120);
     return;
   }
   ev.preventDefault();ev.stopPropagation();
@@ -987,6 +1090,7 @@ document.addEventListener("click",ev=>{
   const index=Number(block.dataset.builderPreviewLayer),layer=builder.layers[index];if(!layer)return;
   node.dataset.previousOutline=node.style.outline||"";node.dataset.previousRadius=node.style.borderRadius||"";node.style.outline="2px solid #635bff";node.style.borderRadius="4px";node.setAttribute("contenteditable","true");node.setAttribute("spellcheck","true");
   node.dataset.builderInlineEdit="1";node.dataset.builderInlineIndex=String(index);
+  {const k0=builderNodePath(node,pvEl.shadowRoot),pm=editMetaOf(layer,k0);node.dataset.builderBase=pm?pm.b:String(node.textContent||"").trim();node.dataset.builderTag=String(node.tagName||"").toLowerCase();}
   node.focus();
 },true);
 document.addEventListener("focusout",ev=>{
@@ -997,7 +1101,7 @@ document.addEventListener("focusout",ev=>{
   const layer=builder.layers[index];
   if(layer&&shadow&&shadow.host){
     const key=builderNodePath(node,shadow);
-    layer.textEdits=layer.textEdits||{};layer.textEdits[key]=String(node.textContent||"").slice(0,500);
+    layer.textEdits=layer.textEdits||{};layer.textEdits[key]=String(node.textContent||"").slice(0,500);layer.editMeta=layer.editMeta||{};layer.editMeta[key]={t:node.dataset.builderTag||String(node.tagName||"").toLowerCase(),b:node.dataset.builderBase||""};delete node.dataset.builderBase;delete node.dataset.builderTag;
     node.removeAttribute("contenteditable");node.style.outline=node.dataset.previousOutline||"";node.style.borderRadius=node.dataset.previousRadius||"";delete node.dataset.previousOutline;delete node.dataset.previousRadius;delete node.dataset.builderInlineEdit;delete node.dataset.builderInlineIndex;
     saveBuilder();toast("Texto actualizado");
   }
@@ -1166,7 +1270,7 @@ document.addEventListener("change", ev => {
   if (t.id === "fileRef") { if (t.files && t.files.length) addRefs(t.files); t.value = ""; return; }
   if (t.id === "fileJson") {
     const f = t.files && t.files[0]; t.value = ""; if (!f) return;
-    if (f.size > 2e6) return toast("Archivo demasiado grande");
+    if (f.size > 60e6) return toast("Archivo demasiado grande");
     f.text().then(doImportText).catch(() => toast("No se pudo leer el archivo"));
     return;
   }
@@ -1190,4 +1294,13 @@ document.addEventListener("change", ev => {
 try { history.replaceState(S, ""); } catch (e) { /* ignorar */ }
 render();
 loadUserRefs();
+mediaLoadAll().then(() => {
+  const raw = (() => { try { return localStorage.getItem("estilos-builder-v1") || ""; } catch (e) { return ""; } })();
+  /* Migración: los proyectos antiguos llevaban las imágenes dentro de localStorage. */
+  if (raw.indexOf('"data:image/') >= 0) saveBuilder();
+  builderHistoryLoad();
+  if (inflateBuilderMedia() && (S.view === "builder" || S.view === "home")) render(true);
+  let hist = ""; try { hist = sessionStorage.getItem(HIST_KEY) || ""; } catch (e) { /* ignorar */ }
+  mediaCollect(new Set([...mediaRefsIn(raw), ...mediaRefsIn(hist), ...mediaRefsIn(mediaStrip(JSON.stringify(builder)))]));
+});
 if (migrated) setTimeout(() => toast("Actualizado a v" + APP_VERSION + ". Tu copia anterior está en Ajustes."), 600);

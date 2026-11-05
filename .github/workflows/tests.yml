@@ -1,0 +1,25 @@
+name: Pruebas
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+permissions: { contents: read }
+concurrency: { group: "pruebas-${{ github.ref }}", cancel-in-progress: true }
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Sintaxis de los JavaScript
+        run: for f in web/js/*.js web/sw.js; do node --check "$f" || exit 1; done
+      - name: Instalar Playwright y Chromium
+        working-directory: tests
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Pruebas de extremo a extremo
+        working-directory: tests
+        run: npm test

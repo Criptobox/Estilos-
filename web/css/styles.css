@@ -543,3 +543,20 @@ label.l{font-size:12px;font-weight:700;color:var(--mut)}
 :root[data-theme="dark"] .builder-layer.builder-drop-active,
 :root[data-theme="dark"] .builder-drag-handle{background:var(--pick)}
 :root[data-theme="dark"] .builder-preview.media-edit-mode .preview-heading:after{color:#34d3b4}
+
+/* 11.0 · tamaño de pantalla de la maqueta (variables --dev-w / --dev-h que pone builderPreview) */
+.builder-device{width:min(100%,var(--dev-w,340px))!important}
+.builder-screen{min-height:var(--dev-h,620px)!important}
+.builder-device-pick{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.builder-device-pick select{max-width:176px;min-height:34px;padding:4px 8px;border:1px solid var(--line,#e5e7ef);border-radius:10px;background:var(--surface,#fff);color:var(--ink,#263247);font:700 11px/1.2 inherit}
+
+/* 11.0 · panel de capas con iconos SVG (antes emojis): botones con estado visible */
+.builder-layer-tools button svg,.builder-folder-toggle svg,.builder-folder>header>span button svg,.builder-history-controls button svg{display:block;flex:none}
+.builder-layer-tools button[aria-pressed="true"]{background:var(--pick,#f0efff);border-color:var(--pick-line,#d8d4ff);color:var(--pick-ink,#3730a3)}
+.builder-history-controls button{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.builder-folder-toggle{gap:6px}
+.builder-folder-toggle small{margin-left:auto}
+
+/* 11.0 · exportar */
+.builder-export-box{display:grid;gap:10px}
+.builder-export-box h3{margin:0}
