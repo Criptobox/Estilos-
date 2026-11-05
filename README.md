@@ -30,6 +30,9 @@ docs/                   análisis y hoja de ruta
 1. En `designs-*.js`: `D["card.mio"] = t => [\`<html>\`, \`css\`]` (usa `t.c0…c3`, `t.a`, `t.r`, `t.dark`).
 2. En `data.js` añade una entrada con `v:"card.mio"`.
 
+## Instalar como PWA (sin APK)
+Sube el repo a GitHub → *Settings → Pages → Source: GitHub Actions*. El workflow `pages.yml` publica `web/` en `https://<usuario>.github.io/<repo>/`. Ábrelo en Chrome/Safari → *Instalar app / Añadir a pantalla de inicio*. Funciona sin conexión (service worker `web/sw.js`; cada despliegue sella la versión `1.6.<n.º de build>` automáticamente y los móviles se actualizan solos).
+
 ## Probar en el navegador
 ```bash
 cd web && python3 -m http.server 8000

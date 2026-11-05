@@ -1,0 +1,19 @@
+name: Publicar PWA
+on: { push: { branches: [main] }, workflow_dispatch: {} }
+permissions: { contents: read, pages: write, id-token: write }
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sellar versión (1.6.<n.º de build>)
+        run: |
+          V="1.6.${{ github.run_number }}"
+          sed -i "s/const BUILD = \"[^\"]*\"/const BUILD = \"$V\"/" web/sw.js
+          sed -i "s/const APP_VERSION = \"[^\"]*\"/const APP_VERSION = \"$V\"/" web/js/util.js
+          grep -n "$V" web/sw.js web/js/util.js
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: web }
+      - id: d
+        uses: actions/deploy-pages@v4
