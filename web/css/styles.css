@@ -432,3 +432,10 @@ label.l{font-size:12px;font-weight:700;color:var(--mut)}
 .builder-folder-toggle:focus-visible,
 .builder-folder-add:focus-visible{outline:2px solid var(--brand,#635bff);outline-offset:2px}
 .builder-history-controls button:disabled{opacity:.4;cursor:not-allowed}
+
+/* 10.9 · la barra del constructor (Vista, Editar…) se apila encima de la barra
+   principal de la app en lugar de taparla: así siempre se puede salir del constructor. */
+@media (max-width:759px){
+  .builder-mobile-nav{bottom:calc(96px + env(safe-area-inset-bottom))}
+  .builder-wrap{padding-bottom:84px}
+}

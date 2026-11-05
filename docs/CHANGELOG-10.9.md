@@ -7,3 +7,15 @@
 - Revisada la integración de carpetas, bloqueo, visibilidad, edición directa, imágenes, exportación y accesos móviles.
 - Pruebas aisladas de secuencia: cambio → deshacer → nueva rama → deshacer/rehacer y sincronización de pantalla activa.
 - Validación de sintaxis JavaScript y estructura HTML del paquete.
+
+## Correcciones al integrar en main
+- **En el móvil, la barra del constructor tapaba la barra principal** (Inicio, Explorar, Crear…): no se podía salir del constructor. Ahora se apila encima.
+- **Tocar una tarjeta del selector visual no añadía el diseño** (la acción leía `data-id` y la tarjeta solo tiene `data-picker-id`). En el móvil, donde el arrastre HTML5 no funciona con el dedo, no había forma de añadir componentes.
+- Modo Imagen: tocar un icono SVG no hacía nada (se comparaba `tagName` con "SVG" y el DOM devuelve "svg"). Ahora se reemplaza por la imagen elegida.
+- Modo Texto e Imagen: ya se pueden editar textos e iconos que están dentro de botones del propio diseño (antes se ignoraba cualquier botón).
+- Carpetas: crear, renombrar y eliminar usan hojas propias en lugar de `prompt()`/`confirm()`; Enter confirma.
+- Ctrl/Cmd+Z y +Y solo actúan en el constructor (antes deshacían cambios del constructor desde otras pantallas).
+- Se recuperan las correcciones de la 9.1 que el paquete había perdido: el desplazamiento X/Y y el arrastre ya no se anulan con las animaciones, Flotar y Pulso se repiten, se quita la casilla «Sombra suave» (la sustituye la elevación), y en la exportación Outline respeta el estilo de borde y se respeta «reducir movimiento».
+- Al escribir en un campo del constructor y tocar la barra inferior ya no se pierde el toque.
+- Las ediciones de texto e imagen se aplican sobre un documento inerte (DOMParser): el HTML analizado no ejecuta atributos `on*` ni carga recursos.
+- Versión unificada en 10.9 (workflow de Pages, comentarios, README) y sin las diez copias `preview-10.x.html`.
