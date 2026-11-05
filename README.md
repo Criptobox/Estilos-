@@ -17,6 +17,18 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 - Guardado de temas personalizados en el dispositivo.
 - Exportación HTML autocontenida con navegación entre pantallas.
 
+## Novedades (PWA)
+- Archivos nuevos: `web/js/stacks.js` (tokens para otras plataformas) y `web/js/userrefs.js` (capturas propias y extracción de paleta).
+- **Editor en vivo** (pestaña *Editor* del detalle): colores, radio y modo con vista previa al instante; *Aplicar a este estilo* o *Guardar variante*.
+- **Código para más plataformas**: HTML/CSS (componente completo) y tokens del tema para Tailwind (v3 y v4), Jetpack Compose, SwiftUI y Flutter.
+- **Capturas propias** en *Referencias* (se guardan en este dispositivo con IndexedDB) y **sacar la paleta** de cualquier captura → crear un estilo con ella.
+- **Copia de seguridad en archivo**: descargar, compartir (menú del sistema) e importar `.json`.
+- Búsqueda sin acentos y con varias palabras; vistas previas que se dibujan al acercarse a la pantalla.
+- Service worker «caché primero»: abre al instante sin conexión o con mala red.
+- Capturas de referencia en WebP (2,8 MB → 0,65 MB).
+- Accesibilidad: el foco queda dentro de hojas y visor y vuelve al botón que los abrió; *Eliminar* pasa al menú «⋯» del detalle.
+- Opción en Ajustes para atenuar las vistas previas claras de las listas en modo oscuro.
+
 ## Modo oscuro
 - Tema **Automático / Claro / Oscuro**: botón en la cabecera de Inicio (alterna) y selector en Ajustes. Se guarda en `localStorage` (`estilos-theme`) y se aplica antes de pintar (sin destello).
 - Toda la interfaz usa variables CSS (`:root` y `:root[data-theme="dark"]` en `css/styles.css`); las vistas previas mantienen su propio escenario claro/oscuro.

@@ -97,3 +97,7 @@ Siguiente:
 - Editor de texto/contenido interno de cada componente.
 - Exportación React/Tailwind como proyecto fuente real.
 - Pruebas end-to-end en navegador y compilación APK.
+
+## Estado tras las mejoras de PWA
+Hecho: modo oscuro, editor en vivo, tokens multiplataforma, capturas propias + paleta, copia en archivo/compartir, búsqueda sin acentos, carga diferida, SW caché primero, WebP, foco accesible, menú «⋯».
+Aparcado mientras la app sea solo PWA: endurecer el WebView (`WebViewAssetLoader`), `OnBackPressedCallback` y compilar el APK en CI.
