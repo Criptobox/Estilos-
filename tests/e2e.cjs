@@ -317,9 +317,10 @@ function readZip(buf) {
     await goBuilder(page);
     await page.locator(".builder-picker-card:visible").first().tap(); await page.waitForTimeout(250);
     eq(await page.evaluate(() => builder.selected.length), 1, "en el móvil se añade un componente tocando la tarjeta");
+    await page.tap(".bmTools [data-s=texto]"); await page.waitForTimeout(250);
     await page.fill('[data-layer-field="label"]', "Hola");
-    await page.tap("#nav [data-v=library]"); await page.waitForTimeout(300);
-    eq(await page.evaluate(() => S.view), "library", "al primer toque en la barra principal se sale del constructor (barras apiladas)");
+    await page.tap(".bmTop [data-act=back]"); await page.waitForTimeout(300);
+    eq(await page.evaluate(() => S.view), "home", "tras escribir en un campo, el primer toque en «Volver» sale del creador (no se pierde el toque)");
     await ctx.close();
   }
 
@@ -439,7 +440,9 @@ function readZip(buf) {
     const t = await open({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
     await t.page.addStyleTag({ content: "*{scroll-behavior:auto!important}" });   /* el desplazamiento suave deja las posiciones inestables durante la prueba */
     await setProject(t.page, ["tar-1", "chat-1", "tar-2"]); await t.page.waitForTimeout(400);
-    await t.page.evaluate(() => { document.getElementById("builder-layers-panel").scrollIntoView({ block: "start" }); }); await t.page.waitForTimeout(400);
+    await t.page.tap(".bmTop [data-s=capas]"); await t.page.waitForTimeout(400);
+    /* la primera asa se coloca 100 px por debajo del borde de la hoja: así las tres quedan dentro de la zona visible */
+    await t.page.evaluate(() => { const sh = document.querySelector(".bmSheet"), g = document.querySelector('[data-layer-grip="0"]'); sh.scrollTop += g.getBoundingClientRect().y - (sh.getBoundingClientRect().y + 100); }); await t.page.waitForTimeout(400);
     const cdp = await t.ctx.newCDPSession(t.page);
     const tp = (type, p) => cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x: p.x, y: p.y, id: 1 }] });
     a = await box(t.page, 0); z = await box(t.page, 2);
@@ -478,6 +481,71 @@ function readZip(buf) {
     eq(await page.evaluate(() => builder.imageQuality), "high", "la calidad elegida se guarda con el proyecto");
     ok(/imagen/.test(await page.textContent("#imgq ~ .sub")), "el panel muestra cuántas imágenes y cuánto pesan");
     await ctx.close();
+  }
+
+
+  /* ───────── 18 · creador móvil ───────── */
+  current = "creador móvil"; console.log("\n" + current);
+  {
+    const { ctx, page } = await open({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+    await page.addStyleTag({ content: "*{scroll-behavior:auto!important}" });
+    await goBuilder(page);
+    ok(!(await page.isVisible("#nav")), "la barra principal se oculta dentro del creador (más altura)");
+    eq(await page.$$eval(".bmTools .ni", l => l.map(b => b.textContent.trim())), ["Añadir", "Estilos", "Colores", "Texto", "Tamaño"], "barra de herramientas: Añadir, Estilos, Colores, Texto, Tamaño");
+    eq(await page.evaluate(() => document.querySelector(".bmSheet").dataset.tool), "anadir", "un proyecto vacío abre «Añadir» directamente");
+    await page.waitForFunction(() => document.querySelectorAll(".builder-picker-card .pv[data-h]").length > 0, null, { timeout: 4000 }).catch(() => {});
+    ok(await page.evaluate(() => document.querySelectorAll(".builder-picker-card .pv[data-h]").length > 0), "las miniaturas de la hoja se dibujan (no quedan en blanco)");
+    const heightWith = async () => page.$eval(".bmCanvas", e => Math.round(e.getBoundingClientRect().height));
+    ok(await heightWith() >= 150, "con la hoja abierta el lienzo sigue visible (" + await heightWith() + " px)");
+    await page.locator(".builder-picker-card:visible").first().tap(); await page.waitForTimeout(400);
+    eq(await page.evaluate(() => builder.selected.length), 1, "tocar una tarjeta añade el componente");
+    ok(!(await page.$(".bmSheet")), "…y la hoja se cierra para ver el resultado");
+    eq(await page.$$eval(".bmCtx button", l => l.length), 6, "sin hoja aparece la barra del componente (duplicar, eliminar, subir, bajar, bloquear, ocultar)");
+    ok(await page.$$eval(".bmCtx button", l => l.every(b => b.getAttribute("aria-label"))), "…con nombres accesibles");
+
+    await page.tap(".bmTools [data-s=estilos]"); await page.waitForTimeout(350);
+    await page.fill("input[data-layer-field=radius]", "28"); await page.waitForTimeout(250);
+    eq(await page.evaluate(() => builder.layers[0].radius), 28, "Estilos: el deslizador de redondeo cambia la capa");
+    eq(await page.$eval(".builder-block", e => getComputedStyle(e).borderTopLeftRadius), "28px", "…y el bloque del lienzo, en vivo");
+    eq(await page.textContent(".bmRow output"), "28 px", "…y el valor numérico se actualiza");
+    await page.tap('.bmChip[data-field=variant][data-value=glass]'); await page.waitForTimeout(250);
+    eq(await page.evaluate(() => builder.layers[0].variant), "glass", "Estilos: elegir la variante Glass");
+    await page.tap(".bmTools [data-s=colores]"); await page.waitForTimeout(300);
+    await page.tap('.bmSw[data-field=bg][data-value="#111827"]'); await page.waitForTimeout(250);
+    eq(await page.evaluate(() => builder.layers[0].bg), "#111827", "Colores: un color de fondo del muestrario");
+    ok(await page.$eval('.bmSw[data-field=bg][data-value="#111827"]', e => e.getAttribute("aria-pressed") === "true"), "…y queda marcado como activo");
+    await page.tap(".bmTools [data-s=texto]"); await page.waitForTimeout(300);
+    await page.tap('.bmChip[data-field=weight][data-value="400"]'); await page.tap('.bmChip[data-field=align][data-value=center]'); await page.waitForTimeout(250);
+    eq(await page.evaluate(() => [builder.layers[0].weight, builder.layers[0].align]), ["400", "center"], "Texto: peso y alineación");
+    await page.tap(".bmTools [data-s=tamano]"); await page.waitForTimeout(300);
+    await page.fill("input[data-layer-field=width]", "70"); await page.tap('.bmChip[data-act=devset][data-v=t]'); await page.waitForTimeout(250);
+    eq(await page.evaluate(() => [builder.layers[0].width, builder.device]), [70, "t"], "Tamaño: ancho del bloque y tamaño de pantalla (tablet)");
+
+    await page.tap('.bmModes [data-m=code]'); await page.waitForTimeout(300);
+    ok(/Auriculares/.test(await page.textContent(".bmCode pre")) && !(await page.$(".bmTools")), "modo Código: muestra el HTML del componente y oculta las herramientas");
+    await page.tap('.bmCode [data-act=stack][data-s=tailwind]'); await page.waitForTimeout(250);
+    ok(/@theme/.test(await page.textContent(".bmCode pre")), "…con las demás plataformas (Tailwind)");
+    await page.tap('.bmModes [data-m=preview]'); await page.waitForTimeout(300);
+    ok(await page.evaluate(() => !!document.querySelector(".builder-preview.bm-clean") && getComputedStyle(document.querySelector(".builder-block-head")).display === "none"), "modo Vista previa: lienzo limpio, sin selección ni asas");
+    await page.tap('.bmModes [data-m=design]'); await page.waitForTimeout(250);
+
+    await page.tap(".bmTop [data-s=capas]"); await page.waitForTimeout(400);
+    ok(await page.isVisible("#builder-layers-panel") && await page.isVisible(".bmScr"), "Capas y pantallas: lista de capas y pantallas en una hoja");
+    await page.tap('.bmScr [data-act=builderscreenadd]'); await page.waitForTimeout(300);
+    eq(await page.evaluate(() => builder.screens.length), 2, "…se puede añadir una pantalla");
+    await page.tap('.bmSheet [data-act=bsheet][data-s=exportar]'); await page.waitForTimeout(300);
+    ok(await page.isVisible('[data-act=builderexportzip]') && await page.isVisible('[data-act=builderlink]'), "Exportar y compartir: ZIP y enlace en su hoja");
+    await page.tap(".bmSheet .bmDone"); await page.waitForTimeout(250);
+    ok(!(await page.$(".bmSheet")), "«Hecho» cierra la hoja");
+    await page.tap('.bmTop [data-act=builderundo]'); await page.waitForTimeout(300);
+    eq(await page.evaluate(() => builder.screens.length), 1, "Deshacer desde la barra superior");
+    await page.tap(".bmTop [data-act=back]"); await page.waitForTimeout(300);
+    ok(await page.isVisible("#nav"), "al salir vuelve la barra principal");
+    await ctx.close();
+    const d = await open();
+    await goBuilder(d.page);
+    ok(!(await d.page.$(".bm")) && !!(await d.page.$("#builder-layers-panel")), "en escritorio se mantiene la distribución en columnas");
+    await d.ctx.close();
   }
 
   current = "global";

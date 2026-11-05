@@ -392,7 +392,7 @@ function builderEditedMediaCode(entry,layer){
    búsqueda y las listas no tienen que crear todos los Shadow DOM de golpe. */
 const pvIO = "IntersectionObserver" in window ? new IntersectionObserver(ents => ents.forEach(en => {
   if (en.isIntersecting) { pvIO.unobserve(en.target); hydrateEl(en.target); }
-}), { root: document.getElementById("view"), rootMargin: "400px 0px" }) : null;
+}), { rootMargin: "400px 0px" }) : null;
 function hydrate(root) {
   (root || document).querySelectorAll(".pv:not([data-h])").forEach(el => {
     /* La maqueta del constructor se redibuja con cada cambio: se pinta al momento para que no parpadee. */
@@ -527,10 +527,8 @@ function builderPreview() {
     '<div class="builder-bottom"><span>⌂<small>Inicio</small></span><span>⌕<small>Buscar</small></span><span>♡<small>Guardados</small></span><span>◉<small>Perfil</small></span></div></div></div>';
 }
 
-function renderBuilder() {
-  const fields = allTabs().filter(tab=>tab!=="Referencias"&&db().some(e=>e.tab===tab)).map(tab=>[tab,TAB_FAMILY[tab]||"misc"]);
-  const screenOptions=builder.screens.map((sc,i)=>'<button class="screen-tab '+(i===builder.activeScreenIndex?'active':'')+'" data-act="builderscreen" data-index="'+i+'"><span>'+(i+1)+'</span>'+esc(sc.title||('Pantalla '+(i+1)))+'</button>').join('');
-  const picked=pickedBuilder(),i=builder.activeLayer,e=picked[i],l=builder.layers[i]||{};
+function builderLayerParts(){
+  const picked=pickedBuilder();
   const layerGroups=[...new Set(builder.layers.map(x=>String(x.group||"").trim()).filter(Boolean))];
   const layerRowHtml=(entry,index)=>{
     const layer=builder.layers[index]||{},name=layer.label||entry.name;
@@ -554,7 +552,15 @@ function renderBuilder() {
     });
     return html||'<div class="builder-layers-empty">No hay capas todavía.</div>';
   })():'<div class="builder-layers-empty">Añade componentes desde la biblioteca y organízalos en carpetas.</div>')+'</div></div>';
-
+  return {layerPanelHtml,layerGroups,picked};
+}
+function isMobileBuilder() { return !!(window.matchMedia && matchMedia("(max-width:759px)").matches); }
+function renderBuilder() {
+  if (isMobileBuilder()) return renderBuilderMobile();
+  const fields = allTabs().filter(tab=>tab!=="Referencias"&&db().some(e=>e.tab===tab)).map(tab=>[tab,TAB_FAMILY[tab]||"misc"]);
+  const screenOptions=builder.screens.map((sc,i)=>'<button class="screen-tab '+(i===builder.activeScreenIndex?'active':'')+'" data-act="builderscreen" data-index="'+i+'"><span>'+(i+1)+'</span>'+esc(sc.title||('Pantalla '+(i+1)))+'</button>').join('');
+  const picked=pickedBuilder(),i=builder.activeLayer,e=picked[i],l=builder.layers[i]||{};
+  const {layerPanelHtml,layerGroups}=builderLayerParts();
   const layerEditor=e?'<div class="layer-editor"><h4>Propiedades del componente</h4><label class="l">Nombre visible</label><input class="fld" maxlength="70" data-layer-field="label" data-index="'+i+'" value="'+esc(l.label||e.name)+'"><div class="two"><div><label class="l">Fondo</label><input class="fld color-field" type="color" data-layer-field="bg" data-index="'+i+'" value="'+esc(l.bg||'#FFFFFF')+'"></div><div><label class="l">Texto</label><input class="fld color-field" type="color" data-layer-field="color" data-index="'+i+'" value="'+esc(l.color||'#263247')+'"></div></div><div class="two"><div><label class="l">Tamaño de fuente</label><input class="fld" type="range" min="10" max="30" data-layer-field="fontSize" data-index="'+i+'" value="'+(l.fontSize||14)+'"></div><div><label class="l">Peso</label><select class="fld" data-layer-field="weight" data-index="'+i+'">'+['400','500','600','700','800'].map(v=>'<option value="'+v+'"'+(String(l.weight||'600')===v?' selected':'')+'>'+v+'</option>').join('')+'</select></div></div><div class="two"><div><label class="l">Alineación</label><select class="fld" data-layer-field="align" data-index="'+i+'">'+['left','center','right'].map(v=>'<option value="'+v+'"'+((l.align||'left')===v?' selected':'')+'>'+({left:'Izquierda',center:'Centro',right:'Derecha'}[v])+'</option>').join('')+'</select></div><div><label class="l">Redondeo</label><input class="fld" type="range" min="6" max="32" data-layer-field="radius" data-index="'+i+'" value="'+(l.radius||16)+'"></div></div><div class="two"><div><label class="l">Espaciado</label><input class="fld" type="range" min="4" max="32" data-layer-field="padding" data-index="'+i+'" value="'+(l.padding||12)+'"></div><div><label class="l">Ancho (%)</label><input class="fld" type="range" min="50" max="100" data-layer-field="width" data-index="'+i+'" value="'+(l.width||100)+'"></div></div><div class="two"><div><label class="l">Borde</label><input class="fld color-field" type="color" data-layer-field="borderColor" data-index="'+i+'" value="'+esc(l.borderColor||'#E8EAF0')+'"></div><div><label class="l">Grosor borde</label><input class="fld" type="range" min="0" max="5" data-layer-field="borderWidth" data-index="'+i+'" value="'+(l.borderWidth||0)+'"></div></div><div class="two"><div><label class="l">Desplazamiento X</label><input class="fld" type="range" min="-40" max="40" data-layer-field="offsetX" data-index="'+i+'" value="'+(l.offsetX||0)+'"></div><div><label class="l">Desplazamiento Y</label><input class="fld" type="range" min="-40" max="40" data-layer-field="offsetY" data-index="'+i+'" value="'+(l.offsetY||0)+'"></div></div><label class="l">Variante visual</label><select class="fld" data-layer-field="variant" data-index="'+i+'">'+[['default','Clásica'],['glass','Glass'],['soft','Soft UI'],['outline','Outline'],['bold','Bold']].map(([v,n])=>'<option value="'+v+'"'+((l.variant||'default')===v?' selected':'')+'>'+n+'</option>').join('')+'</select><label class="l">Animación</label><select class="fld" data-layer-field="animation" data-index="'+i+'">'+[['none','Sin animación'],['fade','Fade in'],['rise','Subir'],['zoom','Zoom'],['float','Flotar'],['pulse','Pulso']].map(([v,n])=>'<option value="'+v+'"'+((l.animation||'none')===v?' selected':'')+'>'+n+'</option>').join('')+'</select><div class="two"><div><label class="l">Duración (ms)</label><input class="fld" type="range" min="300" max="3000" step="100" data-layer-field="duration" data-index="'+i+'" value="'+(l.duration||700)+'"></div><div><label class="l">Elevación</label><input class="fld" type="range" min="0" max="5" data-layer-field="elevation" data-index="'+i+'" value="'+(l.elevation??(l.shadow?2:0))+'"></div></div><label class="l">Estilo de borde</label><select class="fld" data-layer-field="borderStyle" data-index="'+i+'">'+['solid','dashed','dotted'].map(v=>'<option value="'+v+'"'+((l.borderStyle||'solid')===v?' selected':'')+'>'+({solid:'Continuo',dashed:'Discontinuo',dotted:'Punteado'}[v])+'</option>').join('')+'</select><div class="preset-row"><button type="button" data-act="builderpreset" data-preset="glass">Glass</button><button type="button" data-act="builderpreset" data-preset="soft">Soft</button><button type="button" data-act="builderpreset" data-preset="outline">Outline</button><button type="button" data-act="builderpreset" data-preset="bold">Bold</button></div></div>':'';
   return '<div class="wrap builder-wrap"><div class="top"><div><h1 class="big">Constructor</h1><div class="sub">Diseña varias pantallas y personaliza cada componente</div></div><button class="ib" data-act="builderreset" aria-label="Restablecer">↺</button></div>' +
   '<div class="screen-manager"><div class="screen-tabs">'+screenOptions+'</div><div class="screen-actions"><button data-act="builderscreenadd">＋ Nueva</button><button data-act="builderscreenduplicate">Duplicar</button><button data-act="builderscreendelete" '+(builder.screens.length<=1?'disabled':'')+'>Eliminar</button></div></div>' +
@@ -693,6 +699,10 @@ function navHTML() {
 
 function render(keepScroll) {
   const v = document.getElementById("view"), top = v.scrollTop;
+  /* creador móvil: se conserva el desplazamiento del lienzo y (si no cambia de herramienta) el de la hoja */
+  const oldCv = v.querySelector(".bmCanvas"), oldSh = v.querySelector(".bmSheet");
+  const keepCv = oldCv ? oldCv.scrollTop : 0, keepSh = oldSh && keepScroll ? [oldSh.dataset.tool, oldSh.scrollTop] : null;
+  document.body.dataset.view = S.view;
   if (pvIO) pvIO.disconnect();
   v.innerHTML = S.view === "home" ? renderHome() : S.view === "library" ? renderLibrary() : S.view === "explore" ? renderExplore() : S.view === "favs" ? renderFavs() : S.view === "builder" ? renderBuilder() : renderDetail();
   hydrate(v);
@@ -704,9 +714,11 @@ function render(keepScroll) {
       + '<button class="fav' + (fav ? " on" : "") + '" data-act="fav" data-id="' + esc(S.id) + '" aria-label="' + (fav ? "Quitar de guardados" : "Guardar") + '">' + (fav ? icf("bookmark", 20) : ic("bookmark", 20)) + '</button>'
       + '<button data-act="dtab" data-d="edit" aria-label="Abrir editor">' + ic("sliders", 20) + '</button>';
   } else {
-    nav.style.display = "flex"; act.style.display = "none"; nav.innerHTML = navHTML();
+    nav.style.display = S.view === "builder" && isMobileBuilder() ? "none" : "flex"; act.style.display = "none"; nav.innerHTML = navHTML();
   }
   v.scrollTop = keepScroll ? top : 0;
+  const cv = v.querySelector(".bmCanvas"); if (cv && oldCv) cv.scrollTop = keepCv;
+  const sh = v.querySelector(".bmSheet"); if (sh && keepSh && sh.dataset.tool === keepSh[0]) sh.scrollTop = keepSh[1];
 }
 function renderList() {
   const el = document.getElementById("list"); if (!el) return;
@@ -1046,7 +1058,7 @@ const ACT = {
   builderthemesave: () => { openSheet('<div class="handle"></div><h2>Guardar tema</h2><span class="sub">Guarda los colores, tipografía y redondeo actuales para reutilizarlos.</span><label class="l">Nombre del tema</label><input class="fld" id="builderThemeName" maxlength="40" placeholder="Ej. Mi tema premium"><div class="two"><button class="cta ghost" data-act="closesheet">Cancelar</button><button class="cta" data-act="builderthemesaveconfirm">Guardar</button></div>'); },
   builderthemesaveconfirm: () => { const field=document.getElementById("builderThemeName"),name=field&&field.value.trim();if(!name){toast("Escribe un nombre para el tema");return;}builderThemes.push({id:"theme-"+Date.now(),name:name.slice(0,40),palette:safeColor(builder.palette),bg:safeColor(builder.bg),font:builder.font,radius:builder.radius});writeJSON("estilos-themes-v1",builderThemes);closeSheet();toast("Tema guardado");render(true); },
   builderpreset: d => { const i=builder.activeLayer,l=builder.layers[i];if(!l)return;const v=d.preset;l.variant=v;if(v==="glass"){l.bg="#FFFFFF";l.borderWidth=1;l.borderColor="#FFFFFF";l.elevation=3;}if(v==="soft"){l.bg="#F2F3FA";l.borderWidth=0;l.elevation=3;}if(v==="outline"){l.bg="#FFFFFF";l.borderWidth=1;l.borderColor=l.color||"#635BFF";l.elevation=0;}if(v==="bold"){l.bg="#EEEDFF";l.borderWidth=0;l.elevation=3;l.radius=20;}saveBuilder();render(true);toast("Estilo "+v+" aplicado"); },
-  builderadd: d => { const id=String(d.id||d.pickerId||""); /* las tarjetas del selector llevan data-picker-id */if(!getEntry(id))return;if(builder.selected.length>=12){toast("Máximo doce componentes por pantalla");return;}builder.selected.push(id);builder.layers.push({uid:"layer-"+Math.random().toString(36).slice(2,9),label:"",bg:"#FFFFFF",color:"#263247",radius:16,padding:12});builder.activeLayer=builder.selected.length-1;saveBuilder();render(true);toast("Diseño añadido a la pantalla"); },
+  builderadd: d => { const id=String(d.id||d.pickerId||""); /* las tarjetas del selector llevan data-picker-id */if(!getEntry(id))return;if(builder.selected.length>=12){toast("Máximo doce componentes por pantalla");return;}builder.selected.push(id);builder.layers.push({uid:"layer-"+Math.random().toString(36).slice(2,9),label:"",bg:"#FFFFFF",color:"#263247",radius:16,padding:12});builder.activeLayer=builder.selected.length-1;if(isMobileBuilder())S.btool=null;saveBuilder();render(true);toast("Diseño añadido a la pantalla");setTimeout(bmFocusActive,30); },
   builderselect: d => { builder.activeLayer=Math.max(0,Math.min(builder.selected.length-1,Number(d.index)||0));saveBuilder();render(true); },
   builderundo: () => builderUndo(),
   builderredo: () => builderRedo(),
@@ -1064,6 +1076,17 @@ const ACT = {
   builderduplicate: d => { const i=Number(d.index); if(builder.selected.length>=12){toast('Máximo doce capas');return;} if(Number.isInteger(i)&&i>=0&&i<builder.selected.length){builder.selected.splice(i+1,0,builder.selected[i]);const copy=JSON.parse(JSON.stringify(builder.layers[i]||{}));copy.uid="layer-"+Math.random().toString(36).slice(2,9);copy.locked=false;builder.layers.splice(i+1,0,copy);builder.activeLayer=i+1;saveBuilder();render(true);toast('Componente duplicado');} },
   builderexport: () => exportBuilder(),
   builderexportzip: () => exportBuilderZip(),
+  bsheet: d => { const cur = bmTool(); go({ btool: cur === d.s ? null : d.s }, { replace: true, keep: true }); setTimeout(bmFocusActive, 30); },
+  bmode: d => go({ bmode: d.m }, { replace: true, keep: true }),
+  layerset: d => {
+    const i = Number(d.index), l = builder.layers[i]; if (!l) return;
+    const f = String(d.field), v = String(d.value), hex = /^#[0-9a-f]{3,8}$/i;
+    const ok = { bg: hex, color: hex, borderColor: hex, variant: /^(default|glass|soft|outline|bold)$/, weight: /^(400|500|600|700|800)$/, align: /^(left|center|right)$/, animation: /^(none|fade|rise|zoom|float|pulse)$/ };
+    if (!ok[f] || !ok[f].test(v)) return;
+    builderHistorySnapshot(); l[f] = f === "bg" || f === "color" || f === "borderColor" ? safeColor(v) : v; saveBuilder(); render(true);
+  },
+  devset: d => { if (!DEVICES[d.v]) return; builderHistorySnapshot(); builder.device = d.v; saveBuilder(); render(true); },
+  bcopy: () => { const e = pickedBuilder()[builder.activeLayer]; if (!e) return; const l = builder.layers[builder.activeLayer] || {}, st = S.stack || "html"; copyText(st === "html" ? builderEditedMediaCode(e, l) : stackCode(e, st), "Código copiado"); },
   abchoose: async () => { try { const ok = await AutoBackup.choose(); toast(ok ? "Copia automática activada" : "Activada, pero aún no se pudo escribir"); } catch (e) { if (!(e && e.name === "AbortError")) toast("No se pudo elegir el archivo"); } openMenu(); },
   abreconnect: async () => { const ok = await AutoBackup.reconnect(); toast(ok ? "Copia automática reactivada" : "No se concedió el permiso"); openMenu(); },
   abnow: async () => { const ok = await AutoBackup.write(); toast(ok ? "Copia guardada" : "No se pudo guardar"); openMenu(); },
@@ -1200,6 +1223,12 @@ document.addEventListener("keydown", ev => {
   }
 });
 document.addEventListener("focusin",ev=>{const el=ev.target;if(el&&el.dataset&&(el.dataset.builder!==undefined||el.dataset.layerField!==undefined||el.dataset.layerGroup!==undefined))builderHistorySnapshot();},true);
+/* el número que acompaña a cada deslizador del creador móvil se actualiza mientras se arrastra */
+document.addEventListener("input", ev => {
+  const t = ev.target;
+  if (t && t.matches && t.matches("input[type=range][data-unit]")) { const o = t.parentElement && t.parentElement.querySelector("output"); if (o) o.textContent = t.value + t.dataset.unit; }
+});
+if (window.matchMedia) { const mq = matchMedia("(max-width:759px)"); (mq.addEventListener ? mq.addEventListener.bind(mq, "change") : mq.addListener.bind(mq))(() => { if (S.view === "builder") render(true); }); }
 let qTimer = 0;
 document.addEventListener("input", ev => {
   const t = ev.target;

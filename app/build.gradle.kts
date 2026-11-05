@@ -11,8 +11,8 @@ android {
         applicationId = "com.estilos.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 30
-        versionName = "12.0"
+        versionCode = 31
+        versionName = "12.1"
     }
 
     // Release signing comes from env vars (CI secrets). Without them the

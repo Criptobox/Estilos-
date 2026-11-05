@@ -1,4 +1,4 @@
-# Estilos 12.0.0
+# Estilos 12.1.0
 
 Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponible como PWA y envoltorio Android.
 
@@ -8,7 +8,8 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 - **Inicio**: título, buscador, accesos rápidos con cifras reales y «Recientes» (los últimos estilos abiertos).
 - **Biblioteca**: cuadrícula de categorías con filtros Todo / Fundamentos / Componentes; cada categoría abre su lista, con un chip «Todo».
 - **Colecciones**: los estilos guardados.
-- Fase 1 de 3: el Creador móvil (lienzo con hojas desde abajo) y las pantallas restantes siguen en las fases 2 y 3.
+- **Creador móvil** (pantallas de hasta 759 px): lienzo siempre visible, barra de herramientas (Añadir, Estilos, Colores, Texto, Tamaño) y hojas que suben desde abajo y empujan el lienzo en vez de taparlo, con los cambios en vivo. Modos Diseño / Código / Vista previa, barra de acciones sobre el componente y hoja de Capas y pantallas. En escritorio se mantiene la distribución en columnas.
+- Fase 3 (pendiente): Detalle con Variantes/Uso/Relacionados, Paletas y Tipografías con vistas propias, Plantillas y exportar PNG/SVG.
 
 ## Biblioteca
 - 107 diseños base en 15 categorías con componentes.
@@ -53,8 +54,8 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 
 
 ## Versiones
-- Web/PWA: `12.0.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 30`, `versionName 12.0`.
+- Web/PWA: `12.1.0` (GitHub Actions añade el número de compilación).
+- Android: `versionCode 31`, `versionName 12.1`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -85,6 +86,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **12.1**: nuevo aspecto (fase 2): Creador móvil con lienzo siempre visible, herramientas y hojas. Ver `docs/CHANGELOG-12.1.md`.
 - **12.0**: nuevo aspecto (fase 1): sistema visual oscuro/claro, barra de 5 elementos, Inicio, Biblioteca por categorías y Colecciones. Ver `docs/CHANGELOG-12.0.md`.
 - **11.1**: exportación con Tailwind, copia automática en un archivo, compartir por enlace, reordenar capas con el dedo, calidad de imagen y publicación condicionada a las pruebas. Ver `docs/CHANGELOG-11.1.md`.
 - **11.0**: copia de seguridad completa (con el constructor), imágenes en IndexedDB, historial persistente, tamaños de pantalla, exportación ZIP con React y modo oscuro, ediciones robustas, paleta → constructor, panel de capas accesible y pruebas automáticas. Ver `docs/CHANGELOG-11.0.md`.
