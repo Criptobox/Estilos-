@@ -52,3 +52,7 @@ Ordenadas por impacto / esfuerzo:
 ## Estado en 1.6
 Hecho: historial/Atrás, diálogos propios, delegación de eventos, saneado de entradas, copia con alternativa, versión única, SEED separado del usuario, 107 estilos y rediseño de UI.
 Pendiente: compilar y probar en dispositivo, PWA/offline, tests automáticos en CI, edición visual de colores en el detalle.
+
+## Estado tras las mejoras de PWA
+Hecho: modo oscuro, editor en vivo, tokens multiplataforma, capturas propias + paleta, copia en archivo/compartir, búsqueda sin acentos, carga diferida, SW caché primero, WebP, foco accesible, menú «⋯».
+Aparcado mientras la app sea solo PWA: endurecer el WebView (`WebViewAssetLoader`), `OnBackPressedCallback` y compilar el APK en CI.

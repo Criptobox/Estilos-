@@ -4,6 +4,17 @@ Biblioteca de referencia de componentes UI para consultar sin internet: **107 es
 
 > Versión actual: **1.6** (`versionCode 7`, paquete `com.estilos.app`, minSdk 26, targetSdk 34).
 
+## Novedades (PWA)
+- **Editor en vivo** (pestaña *Editor* del detalle): colores, radio y modo con vista previa al instante; *Aplicar a este estilo* o *Guardar variante*.
+- **Código para más plataformas**: HTML/CSS (componente completo) y tokens del tema para Tailwind (v3 y v4), Jetpack Compose, SwiftUI y Flutter.
+- **Capturas propias** en *Referencias* (se guardan en este dispositivo con IndexedDB) y **sacar la paleta** de cualquier captura → crear un estilo con ella.
+- **Copia de seguridad en archivo**: descargar, compartir (menú del sistema) e importar `.json`.
+- Búsqueda sin acentos y con varias palabras; vistas previas que se dibujan al acercarse a la pantalla.
+- Service worker «caché primero»: abre al instante sin conexión o con mala red.
+- Capturas de referencia en WebP (2,8 MB → 0,65 MB).
+- Accesibilidad: el foco queda dentro de hojas y visor y vuelve al botón que los abrió; *Eliminar* pasa al menú «⋯» del detalle.
+- Opción en Ajustes para atenuar las vistas previas claras de las listas en modo oscuro.
+
 ## Modo oscuro
 - Tema **Automático / Claro / Oscuro**: botón en la cabecera de Inicio (alterna) y selector en Ajustes. Se guarda en `localStorage` (`estilos-theme`) y se aplica antes de pintar (sin destello).
 - Toda la interfaz usa variables CSS (`:root` y `:root[data-theme="dark"]` en `css/styles.css`); las vistas previas mantienen su propio escenario claro/oscuro.
@@ -26,6 +37,8 @@ web/
   js/designs-core.js    motor: tokens(), D{}, designCode()
   js/designs-{a,b,c,d}.js  los diseños: D["familia.variante"] = (t,e) => [html, css]
   js/data.js            SEED (107) y REFS (27)
+  js/stacks.js          tokens para Tailwind / Compose / SwiftUI / Flutter
+  js/userrefs.js        capturas propias (IndexedDB) y extracción de paleta
   js/app.js             vistas, almacenamiento, navegación
 app/                    envoltorio Android (WebView)
 docs/                   análisis y hoja de ruta
