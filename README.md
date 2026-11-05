@@ -17,6 +17,12 @@ Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponib
 - Guardado de temas personalizados en el dispositivo.
 - Exportación HTML autocontenida con navegación entre pantallas.
 
+## Modo oscuro
+- Tema **Automático / Claro / Oscuro**: botón en la cabecera de Inicio (alterna) y selector en Ajustes. Se guarda en `localStorage` (`estilos-theme`) y se aplica antes de pintar (sin destello).
+- Toda la interfaz usa variables CSS (`:root` y `:root[data-theme="dark"]` en `css/styles.css`); las vistas previas mantienen su propio escenario claro/oscuro.
+- Android 10+ (API 29): tema `DayNight` en `res/values-v29`, así el modo Automático y las barras del sistema siguen al teléfono. En Android 8–9 el modo Automático usa claro; elige Oscuro a mano.
+
+
 ## Versiones
 - Web/PWA: `10.9.0` (GitHub Actions añade el número de compilación).
 - Android: `versionCode 27`, `versionName 10.9`.
