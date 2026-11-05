@@ -212,3 +212,19 @@ label.l{font-size:12px;font-weight:700;color:var(--mut)}
 .builder-block-head b{min-width:0;flex:1}
 .builder-block-head small{flex:none}
 @media(max-width:700px){.screen-manager{align-items:stretch}.screen-actions{width:100%}.screen-actions button{flex:1}.screen-tabs{width:100%}}
+
+
+/* Estilos 9.1 · controles visuales integrados en el constructor principal */
+.builder-variant{transition:transform .25s ease,filter .25s ease}
+.builder-variant.glass{background:rgba(255,255,255,.50);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.65);border-radius:15px;padding:3px;box-shadow:0 8px 24px rgba(49,55,100,.10)}
+.builder-variant.soft{border-radius:17px;background:linear-gradient(145deg,#fff,#f0f1f8);padding:3px;box-shadow:8px 8px 18px #202a4014,-6px -6px 16px #fff}
+.builder-variant.outline{border:1px solid currentColor;border-radius:13px;padding:4px;background:transparent}
+.builder-variant.bold{border-radius:16px;padding:4px;background:linear-gradient(135deg,#635bff22,#26b9d422);box-shadow:0 10px 26px #635bff20}
+.builder-variant:hover{filter:brightness(1.015)}
+.preset-row{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.preset-row button{border:1px solid var(--line,#e7e9f0);border-radius:999px;padding:8px 12px;background:var(--surface,#fff);font-weight:700;color:var(--ink,#263247);font-size:12px}
+@keyframes estilosFade{from{opacity:0}to{opacity:1}}
+@keyframes estilosRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes estilosZoom{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@keyframes estilosFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes estilosPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
