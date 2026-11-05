@@ -24,6 +24,9 @@
 - `pages.yml` ejecuta `tests.yml` (reutilizable) antes de desplegar: si las pruebas fallan o se cancelan, la PWA no se publica. La publicación manual admite `skip_tests` para emergencias.
 - `tests.yml` sigue ejecutándose en cada pull request.
 
+## Reproducibilidad de las pruebas en CI
+- `tests/package.json` fija Playwright en la versión exacta probada (1.63.0) y `tests/package-lock.json` se instala con `npm ci`. Con una versión flotante (`^1.63.0`) la primera ejecución en GitHub falló: npm resolvió una versión cuyo `playwright-core` aún no estaba disponible en el registro, y la publicación quedó bloqueada (la protección funcionó, pero por una causa evitable).
+
 ## Verificación
 - 104 comprobaciones de extremo a extremo correctas en Chromium (escritorio y móvil con pantalla táctil simulada por CDP, claro y oscuro).
 - `actionlint` sin errores en `pages.yml` y `tests.yml`.

@@ -23,7 +23,7 @@ jobs:
       - name: Instalar Playwright y Chromium
         working-directory: tests
         run: |
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Pruebas de extremo a extremo
         working-directory: tests

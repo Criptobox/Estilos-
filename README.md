@@ -60,7 +60,7 @@ Abrir `http://localhost:8000`.
 Pruebas de extremo a extremo con Playwright y Chromium (`tests/e2e.cjs`): arranque y tema, búsqueda, editor en vivo, constructor (añadir, deshacer, carpetas, imágenes, texto), persistencia, copia de seguridad, exportación HTML/ZIP, accesibilidad, móvil y sin conexión.
 ```bash
 cd tests
-npm install
+npm ci
 npx playwright install chromium
 npm test
 ```
