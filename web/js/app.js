@@ -845,10 +845,24 @@ function autoBackupHTML() {
   else body = '<p class="sub">Activa en <b>' + esc(s.name) + '</b> · ' + (s.last ? "última copia a las " + new Date(s.last).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "aún sin copiar") + (s.error ? "<br>Error: " + esc(s.error) : "") + '</p><div class="two"><button class="cta ghost" data-act="abnow">Guardar ahora</button><button class="cta ghost" data-act="abstop">Desactivar</button></div>';
   return '<label class="l">Copia automática en un archivo</label>' + body;
 }
+/* Instalación como app (PWA): se guarda el aviso nativo del navegador para ofrecerlo desde Ajustes. */
+let installEvt = null;
+addEventListener("beforeinstallprompt", ev => { ev.preventDefault(); installEvt = ev; });
+addEventListener("appinstalled", () => { installEvt = null; toast("App instalada"); });
+function isStandalone() { return matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
+function installHTML() {
+  if (isStandalone()) return "";
+  if (installEvt) return '<label class="l">Instalar</label><div class="btns"><button class="cta" data-act="install">' + ic("arrowDown", 16) + ' Instalar la app</button><span class="sub">Se abre a pantalla completa y funciona sin internet.</span></div>';
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  return '<label class="l">Instalar</label><span class="sub">' + (ios
+    ? 'En Safari: botón <b>Compartir</b> → <b>Añadir a pantalla de inicio</b>.'
+    : 'En el menú del navegador (⋮): <b>Instalar app</b> o <b>Añadir a pantalla de inicio</b>. Si no aparece, ábrela en Chrome o Edge (no dentro de otra aplicación) y recarga la página una vez.') + '</span>';
+}
 function openMenu() {
   let bak = false; try { bak = !!localStorage.getItem(KEY_BAK); } catch (e) { /* ignorar */ }
   const canShare = !!navigator.share;
   openSheet('<div class="handle"></div><h2>Ajustes</h2><span class="sub">Estilos v' + APP_VERSION + ' · ' + db().length + ' estilos · ' + refCount() + ' referencias · Sin internet · Datos en tu teléfono</span>'
+    + installHTML()
     + '<label class="l">Tema</label>' + themeSegHTML()
     + '<button class="switchRow" role="switch" aria-checked="' + dimPreviews + '" data-act="dim"><span>Atenuar vistas previas claras en modo oscuro<small>Solo en las listas; el detalle se ve siempre tal cual.</small></span><i class="sw2"></i></button>'
     + '<label class="l">Copia de seguridad</label>'
@@ -1064,6 +1078,7 @@ const ACT = {
   confirm: () => { const f = pendingConfirm; pendingConfirm = null; if (f) f(); },
   nameok: () => { const f = pendingName, el = document.getElementById("askNameField"), v = el ? el.value.trim() : ""; if (!v) { toast("Escribe un nombre"); return; } pendingName = null; closeSheet(); if (f) f(v); },
   menu: () => openMenu(),
+  install: () => { if (!installEvt) return openMenu(); const ev = installEvt; installEvt = null; ev.prompt(); ev.userChoice.then(r => { toast(r.outcome === "accepted" ? "Instalando…" : "Instalación cancelada"); }).catch(() => {}); closeSheet && closeSheet(); },
   theme: d => {
     setTheme(d.t);
     document.querySelectorAll(".themeSeg button").forEach(b => { const on = b.dataset.t === theme; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });

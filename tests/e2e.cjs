@@ -589,6 +589,15 @@ function readZip(buf) {
     const ic = await page.evaluate(async () => Promise.all(["icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png"].map(u => new Promise(r => { const i = new Image(); i.onload = () => r(i.naturalWidth); i.onerror = () => r(0); i.src = u; }))));
     eq(ic, [192, 512, 512], "iconos de la app (192, 512 y maskable)");
     eq(await page.evaluate(() => fetch("manifest.webmanifest").then(r => r.json()).then(m => [m.theme_color, m.background_color])), ["#0A0B1E", "#0A0B1E"], "manifest con los colores del nuevo aspecto");
+    /* Instalación: Ajustes explica cómo instalar y ofrece el botón cuando el navegador lo permite. */
+    await openSettings(page);
+    ok(/Instalar app|Añadir a pantalla de inicio/.test(await page.textContent("#sheet, .sheet, [role=dialog]").catch(() => "") || await page.evaluate(() => document.body.innerText)), "Ajustes explica cómo instalar la app");
+    await page.click("[data-act=closesheet]"); await page.waitForTimeout(200);
+    await page.evaluate(() => { const e = new Event("beforeinstallprompt", { cancelable: true }); e.prompt = () => { window.__prompted = true; }; e.userChoice = Promise.resolve({ outcome: "accepted" }); dispatchEvent(e); });
+    await openSettings(page);
+    ok(await page.isVisible("[data-act=install]"), "con el aviso nativo del navegador, Ajustes muestra «Instalar la app»");
+    await page.click("[data-act=install]"); await page.waitForTimeout(200);
+    ok(await page.evaluate(() => window.__prompted === true), "…y al pulsarlo lanza el aviso de instalación");
     await ctx.close();
   }
 
