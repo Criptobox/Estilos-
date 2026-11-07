@@ -90,3 +90,12 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 /* Historial del borrador, visible en los tres pasos sin recargar la cabecera móvil. */
 .draft-history{max-width:1240px;margin:0 auto 6px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:7px 0 12px;border-bottom:1px solid var(--line)}.history-actions{display:flex;gap:8px;flex:none}.history-actions button{font:inherit;font-size:11px;border:1px solid var(--line);border-radius:12px;min-height:40px;padding:10px 14px;background:var(--paper)}.history-actions button:not(:disabled):hover{border-color:var(--coral)}.draft-history p{font-size:10px;color:var(--muted);line-height:1.6;margin:0;text-align:right}
 @media(max-width:1320px){.draft-history{margin-left:36px;margin-right:36px}}@media(max-width:720px){.draft-history{margin:0 24px 4px;flex-wrap:wrap;gap:8px}.draft-history p{text-align:left;font-size:9px}.history-actions button{min-height:42px}}@media(max-width:370px){.draft-history{margin-left:16px;margin-right:16px}}
+
+/* Favoritos */
+.gallery-item{position:relative}
+.fav-button{position:absolute;top:16px;right:16px;z-index:2;width:34px;height:34px;border-radius:50%;border:1px solid #dad8ce;background:#fffd;color:#74746a;font-size:17px;line-height:1;display:grid;place-items:center;cursor:pointer}
+.fav-button[aria-pressed=true]{color:#cc5735;border-color:#cc5735}
+.fav-button:focus-visible{outline:2px solid #cc5735;outline-offset:2px}
+#favToggle[aria-pressed=true]{color:#cc5735}
+:root[data-theme=dark] .fav-button{background:#252a22cc;border-color:#424a3a}
+#favToggle{margin-left:14px}

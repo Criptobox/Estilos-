@@ -50,7 +50,7 @@ function readZip(buf) {
     page.on("pageerror", e => errors.push(current + ": " + e.message));
     page.on("console", m => { if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(current + ": " + m.text()); });
     page.on("dialog", d => { errors.push(current + ": DIÁLOGO NATIVO " + d.message()); d.dismiss(); });
-    await page.goto(BASE + (url || "biblioteca.html")); await page.waitForTimeout(350);
+    await page.goto(BASE + (url || "biblioteca.html?clasica=1")); await page.waitForTimeout(350);
     return { ctx, page };
   }
   /* Ajustes está en la cabecera de Inicio (la barra inferior ya no lo lleva). */

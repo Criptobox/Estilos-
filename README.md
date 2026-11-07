@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 36`, `versionName 12.6`.
+- Android: `versionCode 37`, `versionName 12.7`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -284,6 +284,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **12.7**: una sola biblioteca dentro de Tinta (Favoritos incluidos); `biblioteca.html` redirige a Tinta. Ver `docs/CHANGELOG-12.7.md`.
 - **12.6**: botón «Instalar la app» en Tinta, capturas e `id` en el manifest y arreglo de la publicación. Ver `docs/CHANGELOG-12.6.md`.
 - **12.5**: el Agente ofrece «Ver 3 propuestas» para comparar y elegir. Ver `docs/CHANGELOG-12.5.md`.
 - **12.4**: «Adaptar textos a mi idea» rellena los bloques según el sector; botón Atrás de Android y pruebas unificadas. Ver `docs/CHANGELOG-12.4.md`.

@@ -16,9 +16,9 @@
       "description": "Idea, bloques y pantalla con estilos e historial"
     },
     {
-      "name": "Biblioteca clásica",
+      "name": "Biblioteca de diseños",
       "short_name": "Biblioteca",
-      "url": "./biblioteca.html"
+      "url": "./index.html#bloques"
     },
     {
       "name": "Editor clásico",

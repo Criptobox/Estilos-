@@ -28,7 +28,7 @@ function ok(v, m) { if (!v) throw Error(m); pass++; console.log('✓ ' + m); }
     ok(await p.evaluate(() => document.documentElement.dataset.theme) === 'dark', 'modo oscuro conserva alternativa violeta');
     await p.reload();
     ok(await p.evaluate(() => document.documentElement.dataset.theme) === 'dark', 'se respeta la preferencia de tema guardada');
-    await p.goto('http://127.0.0.1:' + server.address().port + '/biblioteca.html');
+    await p.goto('http://127.0.0.1:' + server.address().port + '/biblioteca.html?clasica=1');
     ok(await p.locator('.studio-welcome img').evaluate(el => el.complete && el.naturalWidth > 0), 'Luma visible también en biblioteca');
     ok((await p.textContent('.welcome-action')).includes('Diseñar con Luma'), 'entrada al editor con identidad del agente');
     ok(await p.locator('.studio-welcome').evaluate(el => getComputedStyle(el).backgroundImage.includes('gradient')), 'cabecera con profundidad y acabado lavanda');

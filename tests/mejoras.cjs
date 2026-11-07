@@ -58,7 +58,7 @@ function serve() {
 
   /* ── 2 · Explorar y barra de tres modos ── */
   console.log('explorar');
-  const p = await newPage('biblioteca.html');
+  const p = await newPage('biblioteca.html?clasica=1');
   eq(await p.$$eval('#nav .ni', l => l.map(b => b.textContent.trim())), ['Biblioteca', 'Crear', 'Editor'], 'la barra tiene tres modos');
   ok(await p.$eval('#nav a.ni', a => a.getAttribute('href') === 'agente.html'), 'Agente enlaza a la página del agente');
   eq(await p.$$eval('.modeSeg button', l => l.map(b => b.textContent.trim())), ['Estilos', 'Plantillas', 'Colecciones'], 'Explorar tiene sus tres segmentos');
@@ -141,7 +141,7 @@ function serve() {
   const hdrExpected = await a.evaluate(() => Object.values(ENTRY).filter(e => e.tab === 'Encabezados').length);
   eq(await a.$$eval('#pickerGrid .pick', l => l.length), hdrExpected, 'el selector de Encabezado muestra sus ' + hdrExpected + ' diseños');
   await a.keyboard.press('Escape');
-  ok(await a.$eval('a[href="biblioteca.html"]:has-text("Biblioteca")', el => /Biblioteca/.test(el.textContent)), 'el Agente enlaza de vuelta a la biblioteca');
+  ok(await a.$eval('a[href="index.html#bloques"]:has-text("Biblioteca")', el => /Biblioteca/.test(el.textContent)), 'el Agente enlaza de vuelta a la biblioteca');
 
   /* ── 6 · Cobertura: los 126 diseños se ven en la biblioteca y en el Agente ── */
   console.log('cobertura de diseños');
