@@ -1,0 +1,104 @@
+/* Estilos · piel de Tinta. Una sola identidad visual para toda la app:
+   papel cálido, tinta oscura, acento coral, relieve suave y tipografía Jakarta.
+   Se carga la última en el Editor y en la biblioteca clásica; sustituye al vidrio lavanda. */
+@font-face{font-family:Jakarta;src:url('../fonts/plus-jakarta-sans.woff2') format('woff2');font-style:normal;font-weight:500 800;font-display:swap}
+:root,:root[data-theme=light]{
+ color-scheme:light;
+ --bg:#f3f1ed;--panel:#faf9f6;--panel-2:#f3f1ed;--panel-3:#ebe9e3;
+ --txt:#242421;--txt-2:#55554e;--mut:#6c6c65;--ink:#242421;--ink2:#55554e;--mut2:#74746d;
+ --acc:#242422;--acc-2:#ff704b;--acc-ink:#fff;--acc-soft:rgba(255,112,75,.12);
+ --brand:#ff704b;--brand-d:#cc5735;--brand-ink:#b8472a;
+ --line:#deddd6;--line-2:#cfcdc4;--glass:#faf9f6;--glass-line:#fff;
+ --card:#faf9f6;--glass-card:linear-gradient(140deg,#faf9f6,#efeee8);--bd:#fff;
+ --soft:#ebe9e3;--surface:#fff;--fld-bg:#faf9f6;--fld-line:#d6d4cb;
+ --pick:#f7e3da;--pick-line:#efc8b8;--pick-ink:#b8472a;--nav-bg:#faf9f6;
+ --grad:#242422;--bg-grad:#f3f1ed;--hero-grad:#242421;
+ --glass-depth:8px 10px 22px #24241a0b,-4px -4px 14px #ffffffb3,inset 0 1px 1px #fff;
+ --glass-soft:4px 6px 14px #24241a0a,inset 0 1px 1px #fff;
+ --shadow:var(--glass-depth);--shadow-s:var(--glass-soft);--nav-shadow:var(--glass-depth);--sh-1:0 1px 2px #24241a10;--sh-2:0 8px 24px #24241a14;--sh-3:0 24px 60px #24241a26;
+ --brand-glow:transparent;--grad-glow:none;--halo:none;--bg-grid:transparent;
+}
+:root[data-theme=dark]{
+ color-scheme:dark;
+ --bg:#191c18;--panel:#20241e;--panel-2:#272c24;--panel-3:#30362b;
+ --txt:#edeee7;--txt-2:#c3c8b8;--mut:#afb5a5;--ink:#edeee7;--ink2:#c3c8b8;--mut2:#afb5a5;
+ --acc:#edeee7;--acc-2:#ff906d;--acc-ink:#191c18;--acc-soft:rgba(255,144,109,.14);
+ --brand:#ff906d;--brand-d:#ffa67d;--brand-ink:#ffa67d;
+ --line:#3e4439;--line-2:#4d5546;--glass:#20241e;--glass-line:#3e4439;
+ --card:#20241e;--glass-card:linear-gradient(140deg,#262b23,#20241e);--bd:#3e4439;
+ --soft:#272c24;--surface:#272c24;--fld-bg:#272c24;--fld-line:#4d5546;
+ --pick:#3a2e28;--pick-line:#5a4034;--pick-ink:#ffa67d;--nav-bg:#20241e;
+ --grad:#edeee7;--bg-grad:#191c18;--hero-grad:#edeee7;
+ --glass-depth:6px 9px 20px #00000030,-3px -3px 12px #ffffff03,inset 0 1px 1px #ffffff0c;
+ --glass-soft:4px 6px 14px #00000026,inset 0 1px 1px #ffffff0a;
+ --shadow:var(--glass-depth);--shadow-s:var(--glass-soft);--nav-shadow:var(--glass-depth);--sh-1:0 1px 2px #0006;--sh-2:0 8px 24px #00000059;--sh-3:0 24px 60px #00000080;
+ --brand-glow:transparent;--grad-glow:none;--halo:none;--bg-grid:transparent;
+}
+body[data-app]{background:var(--bg);color:var(--txt);font-family:Jakarta,'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body[data-app]::before,body[data-app]::after{content:none!important;display:none!important}
+body[data-app] *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body[data-app] :focus-visible{outline:2px solid var(--acc-2);outline-offset:3px}
+
+/* Botones: píldora, primario en tinta oscura como en Tinta */
+body[data-app] .btn{border-radius:999px;font-family:inherit;font-weight:600;box-shadow:none}
+body[data-app] .btn.primary,body[data-app=studio] .btn.primary{background:var(--acc);color:var(--acc-ink);border-color:transparent;box-shadow:none}
+body[data-app] .btn.primary:hover{filter:brightness(1.15)}
+body[data-app] .iconbtn{border-radius:12px}
+
+/* Superficies: papel con relieve suave */
+body[data-app=studio] .topbar{background:var(--bg);border-bottom:1px solid var(--line);padding:0 22px}
+body[data-app=studio] .side{background:var(--bg);border-right:1px solid var(--line)}
+body[data-app=studio] .canvas{background-color:var(--bg);background-image:none}
+body[data-app=studio] .canvas-bar{background:var(--bg)}
+body[data-app=studio] .phone{border-color:#242422;box-shadow:var(--sh-3)}
+.sheet,.modal .sheet{background:var(--panel);border:1px solid var(--line);border-radius:26px;box-shadow:var(--sh-3)}
+.modal{background:rgba(36,36,33,.45)}
+.toast{background:var(--acc);color:var(--acc-ink)}
+
+/* Marca y navegación compartidas con Tinta */
+.tinta-wordmark{font-weight:700;font-size:26px;letter-spacing:-1.4px;line-height:1;color:var(--txt);text-decoration:none;padding:0 4px;white-space:nowrap}
+.tinta-wordmark>span{font-size:11px;vertical-align:top;margin-left:1px;font-weight:600}
+.tinta-steps{display:flex;gap:18px;align-items:center;margin-left:6px}
+.tinta-steps a{font-size:12.5px;color:var(--mut);text-decoration:none;padding:8px 0;border-bottom:2px solid transparent;white-space:nowrap}
+.tinta-steps a span{font-size:10px;margin-right:6px;opacity:.7}
+.tinta-steps a:hover{color:var(--txt)}
+.tinta-steps a[aria-current=page]{color:var(--txt);border-bottom-color:var(--acc-2)}
+@media (max-width:1180px){.tinta-steps{display:none}}
+@media (max-width:720px){.tinta-wordmark{font-size:22px}}
+.workspace-avatar{display:none}
+
+/* Luma (compañera del Editor) */
+.agent-presence{position:absolute;width:8px;height:8px;bottom:0;right:1px;border-radius:50%;background:#78bda9;border:2px solid var(--bg)}
+.agent-companion{display:flex;align-items:center;gap:12px;padding:10px 8px 14px;border-bottom:1px solid var(--line)}
+.agent-companion img{border-radius:50%;border:1px solid var(--line);box-shadow:var(--glass-soft);flex:none;width:52px;height:52px;object-fit:cover}
+.agent-companion>div{display:grid;gap:4px;min-width:0}
+.agent-companion b{font-size:17px;letter-spacing:-.5px;font-weight:700}
+.agent-companion small{font-size:11px;line-height:1.5;color:var(--mut)}
+.agent-overline{font-size:9px;letter-spacing:1.2px;color:var(--mut);font-weight:700}
+
+/* La marca y los pasos ya están arriba: la barra lateral solo guarda el espacio de trabajo */
+.studio-nav .studio-wordmark,.studio-nav .nav-caption{display:none}
+body[data-app=studio] .studio-nav{background:var(--bg);border-right:1px solid var(--line);box-shadow:none;border-radius:0}
+body[data-app=studio] .studio-nav .active,body[data-app=studio] .studio-nav a.active{background:var(--panel-3);color:var(--txt);box-shadow:none}
+
+/* Entrada de la biblioteca clásica con la misma identidad (tinta oscura + coral) */
+.studio-welcome{position:relative;display:flex;align-items:center;justify-content:space-between;min-height:200px;border-radius:26px;padding:26px 30px;overflow:hidden;background:#242422;color:#f3f1ed;box-shadow:var(--sh-2)}
+.welcome-copy{position:relative;z-index:2}
+.agent-kicker{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:1.1px;color:#d9d6cc;font-weight:600}
+.agent-kicker i{width:6px;height:6px;border-radius:50%;background:#ff704b}
+.studio-welcome h2{font-size:28px;letter-spacing:-.9px;line-height:1.18;margin:12px 0 8px;font-weight:600;color:#fff}
+.studio-welcome h2 em{font-style:normal;font-weight:700;color:#ff906d}
+.studio-welcome p{font-size:12px;color:#d9d6cc;line-height:1.6}
+.welcome-action{display:inline-flex;gap:16px;align-items:center;margin-top:14px;font-size:12px;font-weight:700;color:#fff;text-decoration:none;border-bottom:1px solid #ff906d99;padding:0 0 5px}
+.welcome-avatar{position:relative;width:150px;height:150px;flex:none;display:grid;place-items:center}
+.welcome-avatar img{width:132px;height:132px;object-fit:cover;border-radius:50%;border:1px solid #ffffff55}
+.welcome-caption{display:none}
+@media (max-width:720px){.studio-welcome{padding:20px 17px;min-height:170px}.studio-welcome h2{font-size:21px}.welcome-copy{max-width:68%}.welcome-avatar{position:absolute;right:10px;top:40px;width:96px;height:96px}.welcome-avatar img{width:84px;height:84px}}
+
+/* Editor ≥1200 px: la cabecera de Tinta ocupa todo el ancho y la barra lateral queda debajo */
+@media(min-width:1200px){
+ body[data-app=studio] .app{grid-template-columns:168px minmax(0,1fr);grid-template-rows:68px minmax(0,1fr)}
+ body[data-app=studio] .topbar{grid-column:1/3;grid-row:1}
+ .studio-nav{grid-column:1;grid-row:2;padding:16px 10px}
+}
+@media (max-width:400px){.workspace-title{display:none}.tinta-wordmark{font-size:21px}}

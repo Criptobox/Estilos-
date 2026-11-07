@@ -5,7 +5,7 @@
   "archivos_sha256": {
     "web/index.html": "053c867b532baae1887aaea12c6e39f393122f507ea96f4b3346cd85f330b954",
     "web/crear.html": "053c867b532baae1887aaea12c6e39f393122f507ea96f4b3346cd85f330b954",
-    "web/sw.js": "2383fdafeedf81f0b901ade9fd033d6793e6002fc460206597d271eb5d756e08",
+    "web/sw.js": "3e6f1bfc74517747dfe4ef7f4213689d5adeb1c2342fafd02b6c22567b443766",
     "web/js/crear.js": "b0aab96f8426d2a0b4a1b4435d9a6d22fbdf176edf256f3314f04177a9b1a7f8",
     "web/js/tinta-history.js": "09fbfa828fc1a88b373f07a3f6fa9014f0c1f80337d8f58c061f1e5c91d47628"
   }

@@ -68,7 +68,7 @@ const S = {
   theme: "light",
   density: "comoda",
   radius: 18,
-  palette: { acc: "#8874D6", acc2: "#C0A9E5", page: "#F4F0FA" },
+  palette: { acc: "#FF704B", acc2: "#FFB08F", page: "#F3F1ED" },
   blocks: {},
   hidden: {},
   content: {},
@@ -209,7 +209,7 @@ function projectNavigation(active) {
   projectsButton.classList.toggle("active",active); editorLink.classList.toggle("active",!active);
   if (active) { projectsButton.setAttribute("aria-current","page"); editorLink.removeAttribute("aria-current"); }
   else { projectsButton.removeAttribute("aria-current"); editorLink.setAttribute("aria-current","page"); }
-  document.querySelector(".workspace-title>span").textContent = active ? "MIS PROYECTOS" : "ESTILOS STUDIO";
+  document.querySelector(".workspace-title>span").textContent = active ? "MIS PROYECTOS" : "EDITOR";
   document.querySelector(".workspace-title>b").textContent = active ? "Tu espacio creativo" : "Diseña con Luma";
 }
 function closeProjects() { $("mProjects").hidden = true; projectNavigation(false); $("btnProjects").focus(); requestAnimationFrame(fitPhone); }

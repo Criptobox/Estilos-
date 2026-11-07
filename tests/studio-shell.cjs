@@ -64,7 +64,7 @@ function ok(v, m) { if (!v) throw Error(m); pass++; console.log('✓ ' + m); }
     ok(await p.locator('.mini .pv').first().evaluate(el=>getComputedStyle(el).position==='absolute'), 'miniaturas ajustadas para mostrar diseño completo');
     const sharedTheme=await p.evaluate(()=>document.documentElement.dataset.theme);
     await p.click('.nav-projects');
-    ok(await p.isVisible('#mProjects'), 'abre proyectos desde la navegación de biblioteca');
+    await p.waitForSelector('#mProjects',{state:'visible',timeout:5000});ok(await p.isVisible('#mProjects'), 'abre proyectos desde la navegación de biblioteca');
     ok(await p.evaluate(()=>document.documentElement.dataset.theme)===sharedTheme, 'tema compartido entre biblioteca y editor');
     ok(errors.length===0, 'sin excepciones');
     console.log(pass + ' correctas, 0 fallidas');

@@ -488,7 +488,7 @@ function renderHome() {
   const rec = recentIds().map(getEntry).filter(Boolean).slice(0, 6);
   const picks = rec.length ? rec : [0, 7, 15, 23].map(k => list[(day + k) % list.length]).filter(Boolean);
   return '<div class="wrap home">'
-    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 22) + '</span><div><b>Estilos Studio</b><div class="sub">Tu biblioteca de componentes</div></div></div><div class="tbtns"><button class="ib" data-act="themecycle" aria-label="Tema: ' + THEME_LABEL[theme] + ' (cambiar)" title="Tema: ' + THEME_LABEL[theme] + '">' + ic(THEME_ICON[theme], 20) + '</button><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div></div>'
+    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 22) + '</span><div><b>Estilos</b><div class="sub">Biblioteca clásica</div></div></div><div class="tbtns"><button class="ib" data-act="themecycle" aria-label="Tema: ' + THEME_LABEL[theme] + ' (cambiar)" title="Tema: ' + THEME_LABEL[theme] + '">' + ic(THEME_ICON[theme], 20) + '</button><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div></div>'
     + '<div class="library-heading"><div><span class="eyebrow">BIBLIOTECA DE DISEÑO</span><h1 class="big">Explorar</h1></div><a class="studio-launch" href="agente.html">Abrir editor <span aria-hidden="true">↗</span></a></div>'
     + '<p class="sub">' + list.length + ' estilos · ' + visibleTabs().length + ' categorías · funciona sin internet</p>'
     + '<section class="studio-welcome" aria-label="Diseña con Luma"><div class="welcome-copy"><span class="agent-kicker"><i></i> LUMA · TU AGENTE DE DISEÑO</span><h2>Las buenas ideas<br>merecen verse <em>increíbles.</em></h2><p>Tu estilo. Tus bloques. Una pantalla hecha por ti.</p><a href="agente.html" class="welcome-action">Diseñar con Luma <span aria-hidden="true">↗</span></a></div><div class="welcome-avatar"><span class="avatar-orbit"></span><img src="images/luma-avatar.webp" alt="Luma, el agente de diseño de Estilos Studio" width="180" height="180"></div><span class="welcome-caption">CREA · COMBINA · EXPLORA</span></section>'
@@ -760,7 +760,7 @@ function moreSheet(id) {
 function navHTML() {
   const on = { explore: ["home", "library", "explore", "favs"].includes(S.view), builder: S.view === "builder" };
   const item = (key, attrs, icon, label) => '<button class="ni' + (on[key] ? " nia" : "") + '" data-act="' + attrs + '" aria-label="' + label + '"' + (on[key] ? ' aria-current="page"' : "") + '>' + ic(icon, 22) + '<span>' + label + '</span></button>';
-  return '<a class="library-nav-brand" href="biblioteca.html"><span class="library-nav-mark">' + ic("layers",20) + '</span><span>Estilos <b>Studio</b></span></a>'
+  return '<a class="library-nav-brand" href="biblioteca.html"><span class="library-nav-mark">' + ic("layers",20) + '</span><span>Estilos</span></a>'
     + '<small class="library-nav-caption">ESPACIO DE TRABAJO</small>'
     + '<a class="nav-projects" href="agente.html?projects=1">' + ic("grid",19) + '<span>Mis proyectos</span></a>'
     + item("explore", 'nav" data-v="home', "grid", "Biblioteca")
