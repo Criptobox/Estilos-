@@ -1,0 +1,12 @@
+{
+  "commit": "4d2262dce5c5db48ccd66972c219bb7cd0f2af41",
+  "entrada": "web/index.html",
+  "interfaz": "Tinta actual con estilos e historial",
+  "archivos_sha256": {
+    "web/index.html": "36edc54fb2a8cf0530433b91d2a71ef78f0fa2c735010d34a72ffb0169c7d944",
+    "web/crear.html": "36edc54fb2a8cf0530433b91d2a71ef78f0fa2c735010d34a72ffb0169c7d944",
+    "web/sw.js": "68166c4b2ad54d0793718b38ad33d895429fe4ad4f0a628b7471495f4c615bf5",
+    "web/js/crear.js": "ab08c1d2c23a6231f01bc3d08e66c1e10aac9fc4b827fa08520bad56f56b5ec7",
+    "web/js/tinta-history.js": "09fbfa828fc1a88b373f07a3f6fa9014f0c1f80337d8f58c061f1e5c91d47628"
+  }
+}

@@ -1,6 +1,17 @@
-# Estilos · Prototipo Tinta + Studio 14.1
+# Estilos · Tinta actual + biblioteca y editor clásicos
 
 Biblioteca UI y constructor visual multipantalla, pensado para móvil y disponible como PWA y envoltorio Android.
+
+## Entrada de esta entrega
+
+**La portada publicada es ahora Tinta**, con la mancha 3D, modo oscuro, estilos de botones/tarjetas y Deshacer/Rehacer. `web/index.html` contiene la misma versión que `web/crear.html`. Ya no abre la interfaz clásica por defecto.
+
+- Tinta: `/` o `/index.html`; alias compatible: `/crear.html`.
+- Biblioteca clásica preservada: `/biblioteca.html`.
+- Editor clásico y sus proyectos: `/agente.html`.
+- GitHub Pages publica la carpeta `web` mediante `.github/workflows/pages.yml`. Ver [`LEEME-SUBIR-A-GITHUB.md`](LEEME-SUBIR-A-GITHUB.md).
+- La caché PWA cambia de versión y precarga los recursos de Tinta; se conserva el almacenamiento de proyectos. La navegación busca primero la versión de red y usa la caché sin conexión.
+- Fuente de la portada: `web/crear.html`. Tras editarla, ejecutar `python tools/sync-tinta-entry.py`; CI verifica que ambas entradas coincidan.
 
 ## Especificación maestra de la biblioteca
 

@@ -25,12 +25,12 @@ jobs:
     environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
     steps:
       - uses: actions/checkout@v4
-      - name: Sellar versión (14.1.<n.º de build>)
+      - name: Sellar versión de Tinta
         run: |
-          V="14.1.${{ github.run_number }}"
+          V="tinta-${{ github.run_id }}-${{ github.run_attempt }}"
           sed -i "s/const BUILD = \"[^\"]*\"/const BUILD = \"$V\"/" web/sw.js
-          sed -i "s/const APP_VERSION = \"[^\"]*\"/const APP_VERSION = \"$V\"/" web/js/util.js
-          grep -n "$V" web/sw.js web/js/util.js
+          sed -i "s/const APP_VERSION = \"[^\"]*\"/const APP_VERSION = \"14.1.${{ github.run_number }}\"/" web/js/util.js
+          grep -n "$V" web/sw.js
       - uses: actions/upload-pages-artifact@v3
         with: { path: web }
       - id: d

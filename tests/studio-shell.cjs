@@ -55,7 +55,7 @@ function ok(v, m) { if (!v) throw Error(m); pass++; console.log('✓ ' + m); }
     const mobileBox=await p.locator('#mContent .sheet').boundingBox();
     ok(mobileBox.y > 0 && Math.abs(mobileBox.y+mobileBox.height-844)<2, 'panel móvil anclado abajo');
     await p.keyboard.press('Escape');
-    await p.goto('http://127.0.0.1:' + server.address().port + '/index.html');
+    await p.goto('http://127.0.0.1:' + server.address().port + '/biblioteca.html');
     await p.setViewportSize({width:1440,height:1000});
     await p.waitForTimeout(300);
     ok(await p.isVisible('.nav-projects'), 'acceso a proyectos desde biblioteca');

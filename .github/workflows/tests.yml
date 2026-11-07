@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Verificar entrada actual de Tinta
+        run: python tools/sync-tinta-entry.py --check
       - name: Sintaxis de los JavaScript
         run: for f in web/js/*.js web/sw.js; do node --check "$f" || exit 1; done
       - name: Instalar Playwright y Chromium

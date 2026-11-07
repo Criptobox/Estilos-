@@ -2,6 +2,10 @@
   "name": "estilos-tests",
   "private": true,
   "description": "Pruebas de extremo a extremo de la PWA (Playwright + Chromium)",
-  "scripts": { "test": "node e2e.cjs" },
-  "devDependencies": { "playwright": "1.63.0" }
+  "scripts": {
+    "test": "node e2e.cjs && node tinta-entry.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
 }

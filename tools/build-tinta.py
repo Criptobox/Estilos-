@@ -3,11 +3,14 @@ Algunos visores procesan esas etiquetas antes de ejecutar JavaScript.
 """
 from pathlib import Path
 import base64
+import argparse
 import re
 
 root = Path(__file__).resolve().parents[1]
 web = root / 'web'
-output = Path('/home/user/entrega/Estilos-Tinta.html')
+parser = argparse.ArgumentParser()
+parser.add_argument('--output', default='/home/user/entrega/Estilos-Tinta.html')
+output = Path(parser.parse_args().output)
 def uri(path, mime):
     return 'data:' + mime + ';base64,' + base64.b64encode(path.read_bytes()).decode('ascii')
 
@@ -24,7 +27,7 @@ html = re.sub(r'<script src="[^"]+"></script>', '', html)
 html = html.replace('</body>', '<script>' + bootstrap + '</script></body>')
 html = html.replace('images/tinta-avatar.webp', uri(web / 'images/tinta-avatar.webp', 'image/webp'))
 html = html.replace('icons/icon-192.png', uri(web / 'icons/icon-192.png', 'image/png'))
-html = html.replace('<a href="index.html">Biblioteca completa</a><a href="agente.html">Editor clásico y proyectos</a>', '<small>Esta copia contiene solo el prototipo Tinta; el editor clásico sigue en el proyecto original.</small>')
+html = html.replace('<a href="biblioteca.html">Biblioteca completa</a><a href="agente.html">Editor clásico y proyectos</a>', '<small>Esta copia contiene solo el prototipo Tinta; el editor clásico sigue en el proyecto original.</small>')
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(html)
 print(output)

@@ -50,7 +50,7 @@ function readZip(buf) {
     page.on("pageerror", e => errors.push(current + ": " + e.message));
     page.on("console", m => { if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(current + ": " + m.text()); });
     page.on("dialog", d => { errors.push(current + ": DIÁLOGO NATIVO " + d.message()); d.dismiss(); });
-    await page.goto(BASE + (url || "index.html")); await page.waitForTimeout(350);
+    await page.goto(BASE + (url || "biblioteca.html")); await page.waitForTimeout(350);
     return { ctx, page };
   }
   /* Ajustes está en la cabecera de Inicio (la barra inferior ya no lo lleva). */
@@ -404,7 +404,7 @@ function readZip(buf) {
     await b.page.evaluate(() => builderUndo()); await b.page.waitForTimeout(200);
     eq(await b.page.evaluate(() => builder.screens[0].selected.length), 0, "abrir un proyecto compartido se puede deshacer");
     await b.ctx.close();
-    const c = await open({}, "index.html#p1=AAAAAAAA");
+    const c = await open({}, "biblioteca.html#p1=AAAAAAAA");
     ok(/no es válido/.test(await c.page.evaluate(() => (document.getElementById("toast") || {}).textContent || "")), "un enlace dañado muestra un aviso y no rompe la app");
     await c.ctx.close();
     const d = await open();
@@ -591,7 +591,7 @@ function readZip(buf) {
 
     const ic = await page.evaluate(async () => Promise.all(["icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png"].map(u => new Promise(r => { const i = new Image(); i.onload = () => r(i.naturalWidth); i.onerror = () => r(0); i.src = u; }))));
     eq(ic, [192, 512, 512], "iconos de la app (192, 512 y maskable)");
-    eq(await page.evaluate(() => fetch("manifest.webmanifest").then(r => r.json()).then(m => [m.theme_color, m.background_color])), ["#0A0B1E", "#0A0B1E"], "manifest con los colores del nuevo aspecto");
+    eq(await page.evaluate(() => fetch("manifest.webmanifest").then(r => r.json()).then(m => [m.theme_color, m.background_color])), ["#f3f1ed", "#f3f1ed"], "manifest con los colores de Tinta, nueva entrada");
     /* Instalación: Ajustes explica cómo instalar y ofrece el botón cuando el navegador lo permite. */
     await openSettings(page);
     ok(/Instalar app|Añadir a pantalla de inicio/.test(await page.textContent("#sheet, .sheet, [role=dialog]").catch(() => "") || await page.evaluate(() => document.body.innerText)), "Ajustes explica cómo instalar la app");

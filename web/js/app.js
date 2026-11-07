@@ -760,7 +760,7 @@ function moreSheet(id) {
 function navHTML() {
   const on = { explore: ["home", "library", "explore", "favs"].includes(S.view), builder: S.view === "builder" };
   const item = (key, attrs, icon, label) => '<button class="ni' + (on[key] ? " nia" : "") + '" data-act="' + attrs + '" aria-label="' + label + '"' + (on[key] ? ' aria-current="page"' : "") + '>' + ic(icon, 22) + '<span>' + label + '</span></button>';
-  return '<a class="library-nav-brand" href="index.html"><span class="library-nav-mark">' + ic("layers",20) + '</span><span>Estilos <b>Studio</b></span></a>'
+  return '<a class="library-nav-brand" href="biblioteca.html"><span class="library-nav-mark">' + ic("layers",20) + '</span><span>Estilos <b>Studio</b></span></a>'
     + '<small class="library-nav-caption">ESPACIO DE TRABAJO</small>'
     + '<a class="nav-projects" href="agente.html?projects=1">' + ic("grid",19) + '<span>Mis proyectos</span></a>'
     + item("explore", 'nav" data-v="home', "grid", "Biblioteca")
