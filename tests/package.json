@@ -3,7 +3,7 @@
   "private": true,
   "description": "Pruebas de extremo a extremo de la PWA (Playwright + Chromium)",
   "scripts": {
-    "test": "node e2e.cjs && node tinta-entry.cjs"
+    "test": "node run-all.cjs"
   },
   "devDependencies": {
     "playwright": "1.63.0"

@@ -20,6 +20,9 @@ jobs:
           node-version: 22
       - name: Verificar entrada actual de Tinta
         run: python tools/sync-tinta-entry.py --check
+      - name: Python para generar la versión autónoma
+        uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
       - name: Sintaxis de los JavaScript
         run: for f in web/js/*.js web/sw.js; do node --check "$f" || exit 1; done
       - name: Instalar Playwright y Chromium
@@ -29,4 +32,4 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Pruebas de extremo a extremo
         working-directory: tests
-        run: npm test
+        run: npm test  # run-all.cjs: las 22 pruebas con servidor propio

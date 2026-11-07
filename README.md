@@ -266,8 +266,11 @@ Pruebas de extremo a extremo con Playwright y Chromium (`tests/e2e.cjs`): arranq
 cd tests
 npm ci
 npx playwright install chromium
-npm test
+npm test            # todas las pruebas (tests/run-all.cjs)
+node run-all.cjs tinta   # solo las que contengan «tinta»
 ```
+`run-all.cjs` levanta su propio servidor estático, genera el HTML autónomo y guarda capturas en un directorio temporal; también comprueba la coherencia de versiones (`version.json` ⇄ Gradle ⇄ README) y el precache del service worker. La versión de Android se cambia **solo** en `version.json`.
+
 Las ejecuta el workflow `tests.yml` en cada pull request, y `pages.yml` las ejecuta antes de publicar: **si fallan, la PWA no se publica** (una publicación manual puede saltárselas con `skip_tests`).
 
 ## Compilar APK

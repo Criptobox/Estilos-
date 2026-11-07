@@ -3,6 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// Fuente única de versión Android: ../version.json (la comprueba tests/versions.cjs).
+val versionJson = file("../version.json").readText()
+fun versionField(name: String) = Regex("\"$name\"\\s*:\\s*\"?([^\",}\\s]+)").find(versionJson)!!.groupValues[1]
+
 android {
     namespace = "com.estilos.app"
     compileSdk = 34
@@ -11,8 +15,8 @@ android {
         applicationId = "com.estilos.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 33
-        versionName = "12.3"
+        versionCode = versionField("versionCode").toInt()
+        versionName = versionField("versionName")
     }
 
     // Release signing comes from env vars (CI secrets). Without them the
