@@ -161,5 +161,8 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');i
 $('idea').addEventListener('blur',()=>draftHistory.breakGroup());
 document.addEventListener('keydown',ev=>{if(!(ev.ctrlKey||ev.metaKey)||ev.altKey||ev.defaultPrevented||document.querySelector('dialog[open]'))return;const editing=ev.composedPath().some(el=>el instanceof Element&&(el.matches('input,textarea,select')||el.isContentEditable));if(editing)return;const key=ev.key.toLowerCase(),direction=key==='z'?(ev.shiftKey?1:-1):key==='y'&&!ev.shiftKey?1:0;if(!direction)return;ev.preventDefault();moveDraftHistory(direction);});
 
+/* Botón Atrás de Android (WebView): cierra diálogos y menú, luego vuelve a Idea; solo sale de la app desde Idea. */
+window.estilosBack=function(){const open=document.querySelectorAll('dialog[open]');if(open.length){open[open.length-1].close();return true;}const menu=$('siteMenu');if(menu&&!menu.hidden){menu.hidden=true;const b=document.querySelector('.menu-button');if(b)b.setAttribute('aria-expanded','false');return true;}if(state.page&&state.page!=='home'){go('home');return true;}return false;};
+
 load();resetDraftHistory();$('idea').value=state.brief;renderPage(({idea:'home',bloques:'explore',pantalla:'review'})[location.hash.slice(1)]||'home',false);
 })();

@@ -1,7 +1,10 @@
 package com.estilos.app
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
@@ -22,7 +25,17 @@ class MainActivity : Activity() {
             allowFileAccess = true
             loadsImagesAutomatically = true
         }
-        web.webViewClient = WebViewClient()
+        // Los enlaces http(s) se abren en el navegador; la app solo navega por sus assets.
+        web.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                val url = request.url
+                if (url.scheme == "http" || url.scheme == "https") {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url.toString())))
+                    return true
+                }
+                return false
+            }
+        }
         setContentView(web)
         web.loadUrl("file:///android_asset/index.html")
     }
