@@ -66,12 +66,11 @@ function readZip(buf) {
   {
     const { ctx, page } = await open();
     const nav = () => page.evaluate(() => [...document.querySelectorAll("#nav .ni")].map(b => ({ t: b.textContent.trim(), cur: b.getAttribute("aria-current") })));
-    eq((await nav()).map(x => x.t), ["Inicio", "Biblioteca", "Creador", "Plantillas", "Colecciones"], "la barra inferior tiene 5 elementos con etiqueta");
-    eq((await nav()).filter(x => x.cur).map(x => x.t), ["Inicio"], "el activo (Inicio) se marca con aria-current");
-    ok(await page.isVisible(".tiles .tile") && /\d+ estilos con vista previa real/.test(await page.textContent(".hero p")), "Inicio: título, buscador y accesos rápidos con cifras reales");
-    await page.click("#nav [data-v=library]"); await page.waitForTimeout(300);
+    eq((await nav()).map(x => x.t), ["Biblioteca", "Crear", "Editor"], "la barra inferior tiene tres modos: Explorar, Crear y Agente");
+    eq((await nav()).filter(x => x.cur).map(x => x.t), ["Biblioteca"], "el activo (Explorar) se marca con aria-current");
+    ok(await page.isVisible(".modeSeg") && /\d+ estilos · \d+ categorías/.test(await page.textContent("p.sub")), "Explorar: segmentos y cifras reales en la portada");
     const total = await page.evaluate(() => db().length), cats = await page.$$eval(".catk", l => l.length);
-    ok(cats >= 19 && new RegExp(total + " estilos").test(await page.textContent(".top .sub")), "Biblioteca: cuadrícula de categorías (" + cats + ") y total real (" + total + ")");
+    ok(cats >= 19 && new RegExp(total + " estilos").test(await page.textContent("p.sub")), "Explorar: cuadrícula de categorías (" + cats + ") y total real (" + total + ")");
     await page.click('[data-act=libgroup][data-g=Fundamentos]'); await page.waitForTimeout(250);
     const fund = await page.$$eval(".catk b", l => l.map(x => x.textContent));
     ok(fund.includes("Paletas") && fund.includes("Tipografía") && !fund.includes("Tarjetas"), "el filtro «Fundamentos» muestra paletas y tipografía, no tarjetas");
@@ -80,12 +79,13 @@ function readZip(buf) {
     ok(comp.includes("Tarjetas") && !comp.includes("Paletas"), "el filtro «Componentes» muestra tarjetas, no paletas");
     await page.click('.catk[data-t=Tarjetas]'); await page.waitForTimeout(500);
     eq(await page.evaluate(() => [S.view, S.tab]), ["explore", "Tarjetas"], "tocar una categoría abre su lista");
-    ok(await page.evaluate(() => document.querySelector('#nav .nia').textContent.trim() === "Biblioteca"), "…y Biblioteca sigue activa en la barra");
+    ok(await page.evaluate(() => document.querySelector('#nav .nia').textContent.trim() === "Biblioteca"), "…y Explorar sigue activo en la barra");
     await page.click('.chip[data-t=Todo]'); await page.waitForTimeout(500);
     eq(await page.textContent("#count"), total + " estilos", "el chip «Todo» lista todos los estilos");
-    await page.click("#nav [data-act=tab][data-t=Plantillas]"); await page.waitForTimeout(500);
-    ok(await page.evaluate(() => S.tab === "Plantillas" && document.querySelector('#nav .nia').textContent.trim() === "Plantillas"), "«Plantillas» de la barra abre esa categoría y se marca activa");
-    await page.click("#nav [data-v=favs]"); await page.waitForTimeout(300);
+    await page.evaluate(() => go({ view: "home", q: "" })); await page.waitForTimeout(300);
+    await page.click('.modeSeg button:has-text("Plantillas")'); await page.waitForTimeout(500);
+    ok(await page.evaluate(() => S.tab === "Plantillas" && document.querySelector('#nav .nia').textContent.trim() === "Biblioteca"), "«Plantillas» del segmento abre esa categoría dentro de Explorar");
+    await page.click('.modeSeg [data-v=favs]'); await page.waitForTimeout(300);
     ok(/Colecciones/.test(await page.textContent("h1.big")), "«Colecciones» muestra los guardados");
     // recientes: abrir un detalle lo añade a Inicio
     await page.evaluate(() => go({ view: "detail", id: "tar-2", detailTab: "info" })); await page.waitForTimeout(300);
@@ -98,13 +98,13 @@ function readZip(buf) {
   current = "arranque"; console.log("\n" + current);
   {
     const d = await open({ colorScheme: "light" });
-    eq(await d.page.evaluate(() => document.documentElement.dataset.theme), "dark", "por defecto la app usa el aspecto oscuro, aunque el sistema sea claro");
+    eq(await d.page.evaluate(() => document.documentElement.dataset.theme), "light", "por defecto la app usa Lavender Glass claro para una instalación nueva");
     await d.ctx.close();
     const { ctx, page } = await open({ colorScheme: "dark", init: () => { try { if (window.top === window && !sessionStorage.getItem("t")) { sessionStorage.setItem("t", "1"); localStorage.setItem("estilos-theme", "auto"); } } catch (e) { /* iframes aislados */ } } });
     eq(await page.evaluate(() => document.documentElement.dataset.theme), "dark", "en modo Automático sigue al sistema (oscuro)");
     await page.click("[data-act=themecycle]"); await page.waitForTimeout(100);
     eq(await page.evaluate(() => localStorage.getItem("estilos-theme")), "light", "el botón de tema cambia y se guarda");
-    await page.click("[data-act=gosearch]"); await page.fill("#q", "tipografia"); await page.waitForTimeout(300);
+    await page.evaluate(() => ACT.gosearch()); await page.fill("#q", "tipografia"); await page.waitForTimeout(300);
     ok(/^[5-9]|^\d{2,}/.test(await page.textContent("#count")), "la búsqueda ignora acentos («tipografia»)");
     await page.fill("#q", "boton primario"); await page.waitForTimeout(300);
     ok(parseInt(await page.textContent("#count"), 10) >= 1, "la búsqueda acepta varias palabras");
@@ -117,7 +117,7 @@ function readZip(buf) {
   current = "detalle"; console.log("\n" + current);
   {
     const { ctx, page } = await open();
-    await page.click("[data-act=gosearch]"); await page.click("article.card"); await page.waitForTimeout(200);
+    await page.evaluate(() => ACT.gosearch()); await page.click("article.card"); await page.waitForTimeout(200);
     await page.click("[data-act=dtab][data-d=edit]"); await page.fill('.lhex[data-i="0"]', "#FF0055"); await page.waitForTimeout(100);
     ok(await page.isEnabled("[data-act=lapply]"), "el editor en vivo activa «Aplicar» al cambiar un color");
     await page.click("[data-act=lapply]"); await page.waitForTimeout(150);
@@ -330,7 +330,7 @@ function readZip(buf) {
     const { ctx, page } = await open();
     await page.waitForFunction(() => navigator.serviceWorker && navigator.serviceWorker.controller, null, { timeout: 8000 }).catch(() => {});
     await page.waitForTimeout(1500); await ctx.setOffline(true); await page.reload(); await page.waitForTimeout(500);
-    ok(await page.isVisible(".hero"), "la app abre sin conexión");
+    ok(await page.isVisible(".modeSeg"), "la app abre sin conexión");
     await ctx.close();
   }
 

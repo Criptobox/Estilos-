@@ -1,0 +1,75 @@
+/* Editor de contenido: vista previa, persistencia, aislamiento, exportación y XSS. */
+const { chromium } = require('playwright');
+const http = require('http'), fs = require('fs'), path = require('path');
+const root = path.join(__dirname, '../web');
+let pass = 0;
+function ok(v, m) { if (!v) throw Error(m); pass++; console.log('✓ ' + m); }
+(async () => {
+  const server = http.createServer((req, res) => {
+    const file = path.join(root, req.url.split('?')[0] === '/' ? 'agente.html' : req.url.split('?')[0]);
+    fs.readFile(file, (err, data) => { res.writeHead(err ? 404 : 200, { 'Content-Type': ({ '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2' })[path.extname(file)] || 'application/octet-stream' }); res.end(err ? '' : data); });
+  });
+  await new Promise(r => server.listen(0, '127.0.0.1', r));
+  let browser;
+  try {
+    browser = await chromium.launch();
+    const p = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const errors = []; p.on('pageerror', e => errors.push(e.message));
+    await p.goto('http://127.0.0.1:' + server.address().port + '/agente.html');
+    await p.click('#btnProjects');
+    ok(await p.isVisible('#mProjects'), 'abre proyectos en móvil');
+    await p.click('[data-act=saveproject]');
+    ok((await p.textContent('#projectStatus')).includes('Escribe un nombre'), 'valida nombre vacío');
+    await p.fill('#projectName', 'Tienda inicial');
+    await p.click('[data-act=saveproject]');
+    ok(await p.locator('.project-row').count() === 1, 'guarda una copia con nombre');
+    const id = await p.locator('.project-row').getAttribute('data-project');
+    const savedRadius = await p.evaluate(() => S.radius);
+    const row = () => p.locator('[data-project="' + id + '"]');
+    await row().locator('input').fill('<img src=x onerror=alert(1)>');
+    await row().locator('[data-act=renameproject]').click();
+    ok(await row().locator('input').inputValue() === '<img src=x onerror=alert(1)>', 'renombra como texto seguro');
+    ok(await p.locator('#projectList img').count() === 0, 'no interpreta HTML en nombres');
+    await row().locator('[data-act=duplicateproject]').click();
+    ok(await p.locator('.project-row').count() === 2, 'duplica sin alterar el original');
+    await p.keyboard.press('Escape');
+    await p.evaluate(() => { S.radius = 30; renderAll(); });
+    await p.click('#btnProjects');
+    await row().locator('[data-act=openproject]').click();
+    ok(await p.evaluate(() => S.radius) === 30, 'abrir solicita confirmación sin cambiar pantalla');
+    await row().locator('[data-act=cancelproject]').click();
+    ok(await p.evaluate(() => S.radius) === 30, 'cancelar apertura conserva la pantalla');
+    await row().locator('[data-act=openproject]').click();
+    await row().locator('[data-act=confirmproject]').click();
+    ok(await p.evaluate(() => S.radius) === savedRadius, 'abre el estado guardado');
+    ok(await p.locator('.topbar [data-act=undo]').isDisabled(), 'abrir inicia historial independiente');
+    await p.evaluate(() => { S.radius = 28; renderAll(); });
+    await p.click('#btnProjects');
+    await row().locator('[data-act=replaceproject]').click();
+    await row().locator('[data-act=confirmproject]').click();
+    ok(await p.evaluate(id => projects.find(x => x.id === id).state.radius, id) === 28, 'actualiza copia con pantalla actual');
+    await row().locator('[data-act=deleteproject]').click();
+    ok(await p.locator('.project-row').count() === 2, 'eliminar pide confirmación');
+    await row().locator('[data-act=cancelproject]').click();
+    ok(await p.locator('.project-row').count() === 2, 'cancelar eliminación conserva copias');
+    await row().locator('[data-act=deleteproject]').click();
+    await row().locator('[data-act=confirmproject]').click();
+    ok(await p.locator('.project-row').count() === 1, 'elimina solo la copia confirmada');
+    ok(await p.evaluate(() => S.radius) === 28, 'eliminar no borra pantalla de trabajo');
+    await p.reload();
+    await p.click('#btnProjects');
+    ok(await p.locator('.project-row').count() === 1, 'proyectos sobreviven a la recarga');
+    ok(await p.evaluate(() => S.radius) === 28, 'borrador sobrevive a la recarga');
+    await p.evaluate(() => { const original = Storage.prototype.setItem; window.restoreStorage = () => Storage.prototype.setItem = original; Storage.prototype.setItem = function(k,v) { if(k === PROJECTS_KEY) throw new Error('Quota'); return original.call(this,k,v); }; });
+    await p.fill('#projectName', 'No cabe');
+    await p.click('[data-act=saveproject]');
+    ok((await p.textContent('#projectStatus')).includes('No se pudo guardar'), 'informa error de almacenamiento');
+    ok(await p.locator('.project-row').count() === 1, 'fallo de escritura no crea falso proyecto');
+    await p.evaluate(() => window.restoreStorage());
+    ok(await p.evaluate(() => document.documentElement.scrollWidth === innerWidth), 'sin desbordamiento en móvil');
+    await p.keyboard.press('Escape');
+    ok(await p.evaluate(() => document.activeElement.id === 'btnProjects'), 'devuelve foco al cerrar');
+    ok(errors.length === 0, 'sin excepciones');
+    console.log(pass + ' correctas, 0 fallidas');
+  } finally { if (browser) await browser.close(); server.close(); }
+})().catch(e => { console.error(e); process.exitCode = 1; });

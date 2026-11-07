@@ -3,19 +3,21 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Estilos · Biblioteca de diseño UI</title>
-<meta name="theme-color" content="#0A0B1E">
+<meta name="theme-color" content="#29223F">
 <script>/* Aplica el tema antes de pintar: evita el destello blanco en modo oscuro. */
-(function(){var t="dark";try{t=localStorage.getItem("estilos-theme")||"dark"}catch(e){}
+(function(){var t="light";try{t=localStorage.getItem("estilos-theme")||localStorage.getItem("estilos-studio-theme")||"light"}catch(e){}
 var d=t==="dark"||(t!=="light"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);
 document.documentElement.setAttribute("data-theme",d?"dark":"light");
-document.querySelector('meta[name="theme-color"]').content=d?"#0A0B1E":"#E9E4FF";})();</script>
+document.querySelector('meta[name="theme-color"]').content=d?"#29223F":"#DAD7EC";})();</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/studio-shell.css">
+<link rel="stylesheet" href="css/lavender-glass.css">
 </head>
-<body>
+<body data-app="library">
 <div id="app"><main id="view" aria-live="polite"></main></div>
 <nav id="nav" aria-label="Navegación principal"></nav>
 <div id="actbar" class="actbar" style="display:none"></div>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Estilos Studio · Agente de diseño</title>
+<meta name="theme-color" content="#0A0C11">
+<script>
+(function () {
+  var t = "light";
+  try { t = localStorage.getItem("estilos-theme") || localStorage.getItem("estilos-studio-theme") || "light"; } catch (e) {}
+  var d = t === "dark" || (t !== "light" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.setAttribute("data-theme", d ? "dark" : "light");
+})();
+</script>
+<link rel="stylesheet" href="css/agente.css">
+<link rel="stylesheet" href="css/studio-shell.css">
+<link rel="stylesheet" href="css/lavender-glass.css">
+</head>
+<body data-app="studio">
+<div class="app">
+  <nav class="studio-nav" aria-label="Estilos Studio">
+    <a class="studio-wordmark" href="index.html"><span class="studio-symbol"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 9 5-9 5-9-5 9-5Z M3 12l9 5 9-5 M3 16l9 5 9-5"/></svg></span><span>Estilos <b>Studio</b></span></a>
+    <small class="nav-caption">ESPACIO DE TRABAJO</small>
+    <a href="index.html"><span aria-hidden="true">▦</span><span>Biblioteca</span></a>
+    <button data-studio-nav="projects"><span aria-hidden="true">▣</span><span>Mis proyectos</span></button>
+    <a href="agente.html" class="active" aria-current="page"><span aria-hidden="true">◇</span><span>Editor</span></a>
+    <div class="nav-bottom"><span class="local-dot"></span><span>Local y privado<br><small>Sin cuenta · sin servidor</small></span></div>
+  </nav>
+
+  <!-- ───────── Barra superior ───────── -->
+  <header class="topbar">
+    <div class="workspace-avatar"><img src="images/luma-avatar.webp" alt="Luma, tu agente de diseño" width="42" height="42"><span class="agent-presence" aria-hidden="true"></span></div><div class="workspace-title"><span>ESTILOS STUDIO</span><b>Diseña con Luma</b></div>
+    <div class="spacer"></div>
+
+<div class="history-controls" role="group" aria-label="Historial de diseño">
+      <button class="btn sm" data-act="undo" disabled aria-label="Deshacer cambio" title="Deshacer · Ctrl/⌘Z">↶ <span>Deshacer</span></button>
+      <button class="btn sm" data-act="redo" disabled aria-label="Rehacer cambio" title="Rehacer · Ctrl/⌘Mayús+Z o Ctrl+Y">↷ <span>Rehacer</span></button>
+    </div>
+    <button class="iconbtn" id="btnTheme" aria-label="Cambiar tema" title="Tema claro / oscuro"></button>
+    <button class="btn ghost hide-sm" id="btnShuffle" title="Otra combinación con el mismo brief">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+      Sorpréndeme
+    </button>
+    <button class="btn primary" id="btnExport">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 18v2h16v-2"/></svg>
+      Exportar
+    </button>
+  </header>
+
+  <div class="main">
+
+    <!-- ───────── Panel izquierdo ───────── -->
+    <aside class="side" id="side">
+      <div class="agent-companion"><img src="images/luma-avatar.webp" alt="Avatar de Luma" width="60" height="60"><div><span class="agent-overline">TU AGENTE DE DISEÑO</span><b>Hola, soy Luma.</b><small>Una idea. Tu próximo diseño.</small></div></div>
+      <div class="project-entry"><span class="hint">Pantalla de trabajo · guardado local</span><button class="btn sm" id="btnProjects">Proyectos</button></div>
+
+      <details class="card brief" id="briefPanel" open>
+        <summary><h2>Idea de pantalla</h2><span class="count" id="briefCount">0/240</span></summary>
+        <textarea id="brief" maxlength="240" placeholder="Ej.: app para pedir café a domicilio, tono cálido, modo claro y tarjetas grandes…"></textarea>
+        <div class="vlabs" id="vlabs"></div>
+        <button class="btn primary block" id="btnGenerate">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>
+          Crear con Luma
+        </button>
+        <p class="readout" id="readout">Elige un sector o escribe tu brief. Luma combina encabezados, tarjetas, botones y barras a partir de recetas locales. Tú decides el resultado.</p>
+      </details>
+
+      <section class="card">
+        <header><h2>Capas y bloques</h2><span class="count" id="blkCount">7</span></header>
+        <button class="btn block add-block" data-studio-nav="add">＋ Añadir / cambiar bloque</button><div class="blocks" id="blocks"></div>
+      </section>
+
+      <section class="card">
+        <header><h2>Marca</h2></header>
+        <div class="dna-row">
+          <label>Colores</label>
+          <div class="swatches" id="swatches"></div>
+        </div>
+        <div class="dna-row">
+          <label>Redondeo</label>
+          <input type="range" id="radius" min="0" max="32" step="2" aria-label="Redondeo">
+          <span class="hint" id="radiusVal" style="width:34px;text-align:right">18</span>
+        </div>
+        <div class="dna-row">
+          <label>Tema</label>
+          <div class="pills" id="themePills">
+            <button data-dna-theme="light">Claro</button>
+            <button data-dna-theme="dark">Oscuro</button>
+          </div>
+        </div>
+        <div class="dna-row">
+          <label>Densidad</label>
+          <div class="pills" id="densPills">
+            <button data-density="comoda">Cómoda</button>
+            <button data-density="compacta">Compacta</button>
+          </div>
+        </div>
+        <p class="hint" style="margin-top:10px">El redondeo y los colores se aplican a todos los bloques a la vez: así el resultado se ve de una sola pieza.</p>
+      </section>
+
+      <section class="card review" aria-labelledby="revTitle">
+        <header><h2 id="revTitle">Revisión</h2><span class="count" id="reviewScore">0/0</span></header>
+        <ul class="checks" id="checks"></ul>
+      </section>
+
+      <section class="card">
+        <header><h2>Código</h2><button class="btn sm" id="btnCode">Ver</button></header>
+        <p class="hint">HTML autocontenido (Shadow DOM declarativo), tokens JSON y un prompt listo para pegar en otra IA.</p>
+      </section>
+    </aside>
+
+    <!-- ───────── Lienzo ───────── -->
+    <main class="canvas">
+      <div class="canvas-bar">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="label" id="canvasLabel">Vista en vivo</span>
+        <div class="spacer"></div>
+        <span class="viewport-badge">Móvil · 390 px</span><span class="hint" id="canvasMeta">7 bloques · 390 × 760</span>
+        <button class="btn sm ghost" id="btnPane" style="display:none">Ver lienzo</button>
+      </div>
+      <div class="stagewrap" id="stagewrap">
+        <div class="phone" id="phone">
+          <div class="screen" id="screen">
+            <div class="scroll" id="scroll"></div>
+            <div class="dock" id="dock"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <aside class="inspector-empty" id="inspectorEmpty"><div class="inspector-kicker">INSPECTOR</div><span class="inspector-icon">◇</span><h3>Hazlo tuyo.</h3><p>Selecciona un bloque del lienzo o de la lista para editar su contenido sin perder de vista tu pantalla.</p><div class="inspector-tip">01 · Elige un bloque<br>02 · Personaliza su contenido<br>03 · Exporta tu diseño</div></aside>
+<div class="modal" id="mContent" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="contentTitle">
+    <header><div><h3 id="contentTitle">Propiedades del bloque</h3><div class="sub">Contenido · imagen · destinos</div></div><div class="spacer"></div><button class="iconbtn" data-studio-nav="closeinspector" aria-label="Cerrar propiedades">×</button></header>
+    <div class="body"><p class="hint">Edita textos, imágenes compatibles y destinos. Los enlaces funcionan en el HTML exportado; no navegan dentro del editor. Imágenes locales: PNG, JPEG o WebP hasta 5 MB. Las URLs externas necesitan internet.</p><p class="hint" id="mediaStatus" role="status" aria-live="polite"></p><div id="contentFields"></div></div>
+    <footer><div class="history-controls" role="group" aria-label="Historial de diseño">
+      <button class="btn sm" data-act="undo" disabled aria-label="Deshacer cambio" title="Deshacer · Ctrl/⌘Z">↶ <span>Deshacer</span></button>
+      <button class="btn sm" data-act="redo" disabled aria-label="Rehacer cambio" title="Rehacer · Ctrl/⌘Mayús+Z o Ctrl+Y">↷ <span>Rehacer</span></button>
+    </div><button class="btn" data-act="resetcontent">Restaurar originales</button><button class="btn primary" data-act="donecontent">Listo</button></footer>
+  </div>
+</div>
+
+<div class="modal" id="mProjects" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="projectsTitle">
+    <header><div><h3 id="projectsTitle">Mis proyectos</h3><div class="sub" id="projectCount"></div></div><div class="spacer"></div><button class="iconbtn" data-act="closeprojects" aria-label="Cerrar proyectos">×</button></header>
+    <div class="body"><p class="hint">La pantalla de trabajo se guarda automáticamente. Los proyectos son copias independientes: usa Actualizar para guardar cambios en una copia. Solo se almacenan en este navegador; borrar sus datos elimina los proyectos.</p>
+      <div class="project-save"><label>Nombre de la nueva copia<input id="projectName" maxlength="80" placeholder="Ej.: Tienda · Inicio"></label><button class="btn primary" data-act="saveproject">Guardar copia</button></div>
+      <div class="backup-tools"><button class="btn sm" data-act="exportbackup">Exportar todos · JSON</button><button class="btn sm" data-act="importbackup">Importar respaldo</button><input id="backupFile" type="file" accept=".json,application/json" hidden></div>
+      <p class="hint">Máximo 8 MB. Exportar incluye las copias guardadas: actualízalas primero si cambió el borrador.</p>
+      <div class="project-confirm" id="backupPreview" hidden><h4>Proyectos del archivo</h4><ul id="backupNames"></ul><button class="btn primary sm" data-act="confirmimport">Importar como copias nuevas</button><button class="btn sm" data-act="cancelimport">Cancelar importación</button></div>
+      <p id="projectStatus" role="status" aria-live="polite"></p><div id="projectList"></div>
+    </div><footer><button class="btn" data-act="closeprojects">Abrir editor</button></footer>
+  </div>
+</div>
+
+  </div>
+
+  <nav class="mobile-tabs" aria-label="Móvil">
+    <a href="index.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Biblioteca</a>
+    <button class="on" data-pane-btn="side">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      Ajustes
+    </button>
+    <button data-pane-btn="canvas">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg>
+      Vista
+    </button>
+    <button id="mExport">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 18v2h16v-2"/></svg>
+      Exportar
+    </button>
+  </nav>
+</div>
+
+<!-- Modal: selector de diseño -->
+<div class="modal" id="mPicker" hidden>
+  <div class="sheet picker-sheet" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+    <header><div><h3 id="pickerTitle">Cambiar bloque</h3><div class="sub" id="pickerSub"></div></div><div class="spacer"></div><button class="iconbtn" data-act="pickerclose" aria-label="Cerrar selector">×</button></header>
+    <div class="body">
+      <div class="picker-tools"><label>Bloque<select id="pickerSlotChoice"></select></label>
+        <label class="searchbox"><span aria-hidden="true">⌕</span><input id="pickerSearch" aria-label="Buscar diseños" placeholder="Nombre, descripción o referencia…" autocomplete="off"></label>
+        <label>Origen<select id="pickerMode"><option value="all">Todos los temas</option><option value="light">Original claro</option><option value="dark">Original oscuro</option></select></label>
+        <label>Orden<select id="pickerSort"><option value="catalog">Catálogo</option><option value="name">Nombre A–Z</option><option value="current">Actual primero</option></select></label>
+      </div>
+      <div class="picker-summary"><span id="pickerCount" role="status" aria-live="polite"></span><button class="btn sm" data-act="pickerreset">Limpiar filtros</button></div>
+      <div class="picker-workspace">
+        <div class="picker-grid" id="pickerGrid"></div>
+        <section class="picker-detail" aria-label="Comparar diseños">
+          <h4 id="candidateName"></h4><p class="hint" id="candidateDesc"></p>
+          <p class="hint">Ambas vistas usan tu marca. Los filtros indican el tema original del diseño.</p>
+          <div class="compare-panes"><div><h5>Actual</h5><div class="compare-shot" id="pickerCurrent"></div></div><div><h5>Propuesta</h5><div class="compare-shot" id="pickerCandidate"></div></div></div>
+        </section>
+      </div>
+    </div>
+    <footer><span class="hint">Elegir una opción no cambia tu pantalla hasta aplicarla.</span><div class="spacer"></div><button class="btn" data-act="pickerclose">Cancelar</button><button class="btn primary" id="pickerApply" data-act="pickerapply" disabled>Aplicar diseño</button></footer>
+  </div>
+</div>
+
+<!-- Modal: código -->
+<div class="modal" id="mCode" hidden>
+  <div class="sheet">
+    <header>
+      <div>
+        <h3>Exportar</h3>
+        <div class="sub">Lo que ves es exactamente lo que copias</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="iconbtn" data-close aria-label="Cerrar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+    <div class="body">
+      <div class="tabs" id="codeTabs">
+        <button class="on" data-code="html">HTML</button>
+        <button data-code="tokens">Tokens JSON</button>
+        <button data-code="prompt">Prompt para IA</button>
+      </div>
+      <pre class="code" id="codeOut"></pre>
+    </div>
+    <footer>
+      <button class="btn" id="btnDownload">Descargar</button>
+      <button class="btn primary" id="btnCopy">Copiar</button>
+    </footer>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/util.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/designs-core.js"></script>
+<script src="js/designs-a.js"></script>
+<script src="js/designs-b.js"></script>
+<script src="js/designs-c.js"></script>
+<script src="js/designs-d.js"></script>
+<script src="js/data.js"></script>
+<script src="js/designs-extra.js"></script>
+<script src="js/studio-media.js"></script>
+<script src="js/agente.js"></script>
+<script src="js/project-backup.js"></script>
+</body>
+</html>

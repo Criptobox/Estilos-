@@ -1,0 +1,73 @@
+/* Editor de contenido: vista previa, persistencia, aislamiento, exportación y XSS. */
+const { chromium } = require('playwright');
+const http = require('http'), fs = require('fs'), path = require('path');
+const root = path.join(__dirname, '../web');
+let pass = 0;
+function ok(v, m) { if (!v) throw Error(m); pass++; console.log('✓ ' + m); }
+(async () => {
+  const server = http.createServer((req, res) => {
+    const file = path.join(root, req.url.split('?')[0] === '/' ? 'agente.html' : req.url.split('?')[0]);
+    fs.readFile(file, (err, data) => { res.writeHead(err ? 404 : 200, { 'Content-Type': ({ '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2' })[path.extname(file)] || 'application/octet-stream' }); res.end(err ? '' : data); });
+  });
+  await new Promise(r => server.listen(0, '127.0.0.1', r));
+  let browser;
+  try {
+    browser = await chromium.launch();
+    const p = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const errors = []; p.on('pageerror', e => errors.push(e.message));
+    await p.goto('http://127.0.0.1:' + server.address().port + '/agente.html');
+    await p.evaluate(() => { S.blocks.cards='tar-1'; S.hidden.cards=false; renderAll(); });
+    await p.click('.blk[data-slot=cards] [data-act=editcontent]');
+    ok(await p.locator('input[data-media=image]').count() === 1, 'detecta imagen de producto compatible');
+    const image = p.locator('input[data-media=image]').first();
+    const link = p.locator('input[data-media=link]').last();
+    await link.fill('javascript:alert(1)');
+    ok(await link.getAttribute('aria-invalid') === 'true', 'rechaza javascript en destinos');
+    await link.fill('https://example.com/producto?q=1');
+    ok(await link.getAttribute('aria-invalid') === null, 'acepta enlace HTTPS');
+    const linkMarkup = await p.evaluate(() => partsFor(styled('tar-1')).html);
+    ok(linkMarkup.includes('data-studio-link') && linkMarkup.includes('noopener noreferrer'), 'exporta enlaces con protección de ventana');
+    ok(!linkMarkup.includes('javascript:'), 'no incluye URL insegura');
+    await image.fill('data:image/svg+xml,<svg onload=alert(1)>');
+    ok(await image.getAttribute('aria-invalid') === 'true', 'rechaza imágenes SVG data URL');
+    await image.fill('http://example.com/foto.png');
+    ok(await image.getAttribute('aria-invalid') === 'true', 'imágenes remotas requieren HTTPS');
+    const png = await p.evaluate(() => { const c=document.createElement('canvas');c.width=24;c.height=24;const x=c.getContext('2d');x.fillStyle='#3366ff';x.fillRect(0,0,24,24);return c.toDataURL().split(',')[1] });
+    await p.locator('input[data-upload]').setInputFiles({name:'foto.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});
+    await p.waitForFunction(() => document.getElementById('mediaStatus').textContent.includes('Imagen incorporada'));
+    ok(await p.evaluate(() => S.assets['tar-1'].images[0].src.startsWith('data:image/jpeg;base64,')), 'comprime e incorpora imagen local');
+    await p.locator('input[data-media=alt]').fill('Auriculares de prueba');
+    ok(await p.evaluate(() => partsFor(styled('tar-1')).html.includes('alt="Auriculares de prueba"')), 'guarda texto alternativo');
+    ok(await p.evaluate(() => exportHTML().includes('data:image/jpeg;base64,')), 'HTML exportado lleva imagen incorporada');
+    await p.locator('#mContent [data-act=undo]').click();
+    ok(await p.locator('input[data-media=alt]').inputValue() === '', 'deshace descripción de imagen');
+    await p.locator('#mContent [data-act=redo]').click();
+    ok(await p.locator('input[data-media=alt]').inputValue() === 'Auriculares de prueba', 'rehace descripción de imagen');
+    await p.click('[data-act=donecontent]');
+    await p.reload();
+    ok(await p.evaluate(() => S.assets['tar-1'].images[0].alt) === 'Auriculares de prueba', 'recupera imágenes tras recargar');
+    await p.click('#btnProjects'); await p.fill('#projectName','Con imagen'); await p.click('[data-act=saveproject]');
+    const dlEvent = p.waitForEvent('download');await p.click('[data-act=exportbackup]');const dl=await dlEvent;
+    const backup=JSON.parse(fs.readFileSync(await dl.path(),'utf8'));
+    ok(backup.projects[0].state.assets['tar-1'].images[0].alt === 'Auriculares de prueba', 'respaldo conserva imágenes y descripción');
+    await p.locator('#backupFile').setInputFiles({name:'respaldo.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+    await p.waitForSelector('#backupPreview:not([hidden])');await p.click('[data-act=confirmimport]');
+    ok(await p.evaluate(() => projects[0].state.assets['tar-1'].links.some(x => x && x.includes('example.com'))), 'importa destinos en copias nuevas');
+    backup.projects[0].state.assets['tar-1'].links=['javascript:alert(1)'];
+    await p.locator('#backupFile').setInputFiles({name:'malo.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+    await p.waitForFunction(() => document.getElementById('projectStatus').textContent.includes('No se importó'));
+    ok(await p.locator('.project-row').count() === 2, 'respaldo con enlaces inseguros no se importa');
+    await p.keyboard.press('Escape');
+    await p.click('.blk[data-slot=cards] [data-act=editcontent]');await p.click('[data-act=resetimage]');
+    ok(await p.evaluate(() => !partsFor(styled('tar-1')).html.includes('<img')), 'restaura ilustración original');
+    ok(await p.evaluate(() => !studioURL('//example.com',false) && !studioURL('file:///etc/passwd',false)), 'bloquea URLs relativas y archivos locales');
+    await p.click('[data-act=donecontent]');
+    await p.click('[data-pane-btn=canvas]');
+    const pages = p.waitForEvent('popup',{timeout:500}).then(()=>true,()=>false);
+    await p.locator('#scroll [data-studio-link]').last().click();
+    ok(!(await pages), 'editor no navega al pulsar destinos');
+    ok(await p.evaluate(() => document.documentElement.scrollWidth === innerWidth), 'sin desbordamiento móvil');
+    ok(errors.length === 0, 'sin excepciones');
+    console.log(pass + ' correctas, 0 fallidas');
+  } finally { if (browser) await browser.close(); server.close(); }
+})().catch(e => { console.error(e); process.exitCode = 1; });

@@ -74,23 +74,23 @@ function allTabs() {
 
 /* ───────── Tema de la app (auto / claro / oscuro) ───────── */
 /* Biblioteca: cada categoría con su degradado, y su grupo (Fundamentos o Componentes). */
-const TAB_GRAD = { Chat: "#3B82F6,#6366F1", Tarjetas: "#8B5CF6,#EC4899", Listas: "#06B6D4,#3B82F6", Avatares: "#F97316,#F43F5E", Plantillas: "#2563EB,#22D3EE", Barras: "#A855F7,#6366F1", Botones: "#3B82F6,#6366F1", Formularios: "#14B8A6,#38BDF8", Entradas: "#06B6D4,#3B82F6", Hojas: "#8B5CF6,#6366F1", Avisos: "#F59E0B,#F43F5E", Datos: "#10B981,#06B6D4", Paletas: "#F59E0B,#EC4899", "Tipografía": "#6366F1,#38BDF8", Encabezados: "#A855F7,#EC4899", Animaciones: "#D946EF,#8B5CF6", Fondos: "#0EA5E9,#6366F1", Widgets: "#22C55E,#14B8A6", Iconos: "#14B8A6,#38BDF8", Referencias: "#EC4899,#F97316" };
 const FUNDAMENTOS = ["Paletas", "Tipografía", "Fondos", "Iconos", "Animaciones", "Referencias"];
 const LIB_GROUPS = ["Todo", "Fundamentos", "Componentes"];
 const RECENT_KEY = "estilos-recent";
-function tabGrad(t, i) { const g = TAB_GRAD[t] || ["#8B5CF6,#4F8DFF", "#6366F1,#38BDF8", "#D946EF,#8B5CF6"][(i || 0) % 3]; return "linear-gradient(135deg," + g + ")"; }
+/* Un solo acento de marca para todas las categorías: el color lo ponen las miniaturas. */
+function tabGrad() { return "var(--grad)"; }
 function recentIds() { const r = readJSON(RECENT_KEY, []); return Array.isArray(r) ? r.map(safeId).filter(Boolean) : []; }
 function trackRecent(id) { id = safeId(id); if (!id) return; const r = recentIds().filter(x => x !== id); r.unshift(id); try { localStorage.setItem(RECENT_KEY, JSON.stringify(r.slice(0, 8))); } catch (e) { /* ignorar */ } }
 const THEMES = ["auto", "light", "dark"];
 const THEME_LABEL = { auto: "Automático", light: "Claro", dark: "Oscuro" };
 const THEME_ICON = { auto: "auto", light: "sun", dark: "moon" };
 const darkMQ = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
-let theme = (function () { try { const t = localStorage.getItem(KEY_THEME); return THEMES.includes(t) ? t : "dark"; } catch (e) { return "dark"; } })();
+let theme = (function () { try { const t = localStorage.getItem(KEY_THEME) || localStorage.getItem("estilos-studio-theme"); return THEMES.includes(t) ? t : "light"; } catch (e) { return "light"; } })();
 function isDark() { return theme === "dark" || (theme === "auto" && !!(darkMQ && darkMQ.matches)); }
 function applyTheme() {
   const d = isDark();
   document.documentElement.setAttribute("data-theme", d ? "dark" : "light");
-  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = d ? "#0A0B1E" : "#E9E4FF";
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = d ? "#29223F" : "#DAD7EC";
 }
 function setTheme(t) {
   theme = THEMES.includes(t) ? t : "dark";
@@ -407,6 +407,17 @@ function hydrate(root) {
     if (pvIO && !el.hasAttribute("data-now") && !el.closest(".builder-preview")) pvIO.observe(el); else hydrateEl(el);
   });
 }
+const miniRO = "ResizeObserver" in window ? new ResizeObserver(entries => entries.forEach(({target}) => {
+  const pv = target.querySelector(".pv"); if (pv) fitCatalogPreview(pv);
+})) : null;
+function fitCatalogPreview(el) {
+  const stage = el.closest(".mini .stage, .grid>.card>.stage"); if (!stage) return;
+  el.style.width = "240px"; el.style.position = "absolute";
+  const height = Math.max(1, el.offsetHeight);
+  const scale = Math.min(1,(stage.clientWidth-20)/240,(stage.clientHeight-20)/height);
+  el.style.transform = "translate(-50%,-50%) scale(" + scale.toFixed(3) + ")";
+  el.style.left = "50%"; el.style.top = "50%"; el.style.transformOrigin = "center";
+}
 function hydrateEl(el) {
   {
     if (el.hasAttribute("data-h")) return;
@@ -421,6 +432,10 @@ function hydrateEl(el) {
         el.appendChild(f);
       } else {
         const shadow=el.attachShadow({ mode: "open" }); shadow.innerHTML = designShadow(e); applyBuilderTextEdits(el,shadow); applyBuilderMediaEdits(el,shadow);
+      }
+      if (el.closest(".mini .stage, .grid>.card>.stage")) {
+        requestAnimationFrame(() => fitCatalogPreview(el));
+        if (miniRO) miniRO.observe(el.parentElement);
       }
     } catch (err) { el.textContent = "No se pudo mostrar la vista previa"; }
   }
@@ -451,36 +466,43 @@ function miniHTML(e) {
   return '<article class="mini" data-act="open" data-id="' + esc(e.id) + '" tabindex="0" role="button" aria-label="' + esc(e.name) + '"><div class="' + stageCls(e) + '">' + pv(e) + '</div><b>' + esc(e.name) + '</b><small>' + esc(e.tab) + '</small></article>';
 }
 
-function renderHome() {
-  const list = db(), day = Math.floor(Date.now() / 864e5);
-  const tpl = list.filter(e => e.tab === "Plantillas").length;
-  const rec = recentIds().map(getEntry).filter(Boolean).slice(0, 6);
-  const picks = rec.length ? rec : [0, 7, 15, 23].map(k => list[(day + k) % list.length]).filter(Boolean);
-  const tile = (act, extra, icon, grad, title, sub) => '<button class="tile" data-act="' + act + '"' + extra + '><span class="tileIc" style="background:' + grad + '">' + ic(icon, 23) + '</span><span class="tileTx"><b>' + title + '</b><small>' + sub + '</small></span></button>';
-  return '<div class="wrap home">'
-    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 24) + '</span><div><b>Estilos</b><div class="sub">Biblioteca de diseño UI</div></div></div><div class="tbtns"><button class="ib" data-act="themecycle" aria-label="Tema: ' + THEME_LABEL[theme] + ' (cambiar)" title="Tema: ' + THEME_LABEL[theme] + '">' + ic(THEME_ICON[theme], 20) + '</button><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div></div>'
-    + '<div class="hero"><h1 class="big">Diseña, crea y reutiliza sin límites</h1><p>' + list.length + ' estilos con vista previa real, paleta y código listo para copiar. Funciona sin internet.</p></div>'
-    + '<button class="search" data-act="gosearch" aria-label="Buscar estilos">' + ic("search", 19) + '<span>Buscar componentes, estilos…</span></button>'
-    + '<div class="tiles">'
-    + tile("nav", ' data-v="library"', "layers", "linear-gradient(135deg,#6D5CFF,#38BDF8)", "Biblioteca", list.length + " estilos")
-    + tile("nav", ' data-v="builder"', "edit", "linear-gradient(135deg,#C026D3,#8B5CF6)", "Creador", "Hasta 8 pantallas")
-    + tile("tab", ' data-t="Plantillas"', "grid", "linear-gradient(135deg,#2563EB,#06B6D4)", "Plantillas", tpl + " plantillas")
-    + tile("nav", ' data-v="favs"', "heart", "linear-gradient(135deg,#F97316,#EC4899)", "Colecciones", favs.length + (favs.length === 1 ? " guardado" : " guardados"))
-    + '</div>'
-    + '<div class="secRow"><h2 class="sec">' + (rec.length ? "Recientes" : "Para empezar") + '</h2><button class="link" data-act="nav" data-v="library">Ver todo</button></div>'
-    + '<div class="rail">' + picks.map(miniHTML).join("") + '</div>'
-    + '<button class="cta ghost" data-act="surprise">' + ic("spark", 18) + ' Sorpréndeme</button></div>';
+/* Segmentos de Explorar: Estilos · Plantillas · Colecciones (antes eran destinos sueltos de la barra). */
+function modeSegHTML(active) {
+  const items = [["home", "Estilos", 'data-act="nav" data-v="home"'], ["tpl", "Plantillas", 'data-act="tab" data-t="Plantillas"'], ["favs", "Colecciones", 'data-act="nav" data-v="favs"']];
+  return '<div class="seg modeSeg" role="tablist" aria-label="Explorar">' + items.map(([k, n, a]) => '<button role="tab" aria-selected="' + (k === active) + '" class="' + (k === active ? "on" : "") + '" ' + a + '>' + n + '</button>').join("") + '</div>';
 }
-function renderLibrary() {
-  const tabs = allTabs().filter(t => S.group === "Todo" || (S.group === "Fundamentos") === FUNDAMENTOS.includes(t));
-  const cards = tabs.map((t, i) => {
+/* Categorías con estilos (las vacías no aportan nada en la portada). */
+function visibleTabs() {
+  const all = db();
+  return allTabs().filter(t => (t === "Referencias" ? refCount() > 0 : all.some(e => e.tab === t)));
+}
+function catCardsHTML() {
+  const tabs = visibleTabs().filter(t => S.group === "Todo" || (S.group === "Fundamentos") === FUNDAMENTOS.includes(t));
+  return tabs.map((t, i) => {
     const n = t === "Referencias" ? refCount() : db().filter(e => e.tab === t).length;
     return '<button class="catk" data-act="tab" data-t="' + esc(t) + '"><span class="tileIc sm" style="background:' + tabGrad(t, i) + '">' + ic(TAB_ICON[t] || "grid", 21) + '</span><span class="tileTx"><b>' + esc(t) + '</b><small>' + n + (t === "Referencias" ? " capturas" : " estilos") + '</small></span></button>';
   }).join("");
-  return '<div class="wrap"><div class="top"><div><h1 class="big">Biblioteca</h1><div class="sub">' + db().length + ' estilos · ' + allTabs().length + ' categorías</div></div><div class="tbtns"><button class="ib" data-act="gosearch" aria-label="Buscar">' + ic("search", 20) + '</button><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div></div>'
-    + '<div class="chips" role="tablist">' + LIB_GROUPS.map(g => '<button class="chip' + (S.group === g ? " on" : "") + '" role="tab" aria-selected="' + (S.group === g) + '" data-act="libgroup" data-g="' + g + '">' + g + '</button>').join("") + '</div>'
-    + '<div class="catGrid">' + cards + '</div></div>';
 }
+function renderHome() {
+  const list = db(), day = Math.floor(Date.now() / 864e5);
+  const rec = recentIds().map(getEntry).filter(Boolean).slice(0, 6);
+  const picks = rec.length ? rec : [0, 7, 15, 23].map(k => list[(day + k) % list.length]).filter(Boolean);
+  return '<div class="wrap home">'
+    + '<div class="top"><div class="brand"><span class="logo">' + ic("layers", 22) + '</span><div><b>Estilos Studio</b><div class="sub">Tu biblioteca de componentes</div></div></div><div class="tbtns"><button class="ib" data-act="themecycle" aria-label="Tema: ' + THEME_LABEL[theme] + ' (cambiar)" title="Tema: ' + THEME_LABEL[theme] + '">' + ic(THEME_ICON[theme], 20) + '</button><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div></div>'
+    + '<div class="library-heading"><div><span class="eyebrow">BIBLIOTECA DE DISEÑO</span><h1 class="big">Explorar</h1></div><a class="studio-launch" href="agente.html">Abrir editor <span aria-hidden="true">↗</span></a></div>'
+    + '<p class="sub">' + list.length + ' estilos · ' + visibleTabs().length + ' categorías · funciona sin internet</p>'
+    + '<section class="studio-welcome" aria-label="Diseña con Luma"><div class="welcome-copy"><span class="agent-kicker"><i></i> LUMA · TU AGENTE DE DISEÑO</span><h2>Las buenas ideas<br>merecen verse <em>increíbles.</em></h2><p>Tu estilo. Tus bloques. Una pantalla hecha por ti.</p><a href="agente.html" class="welcome-action">Diseñar con Luma <span aria-hidden="true">↗</span></a></div><div class="welcome-avatar"><span class="avatar-orbit"></span><img src="images/luma-avatar.webp" alt="Luma, el agente de diseño de Estilos Studio" width="180" height="180"></div><span class="welcome-caption">CREA · COMBINA · EXPLORA</span></section>'
+    + '<button class="search" data-act="palette" aria-label="Buscar estilos (Ctrl K)">' + ic("search", 19) + '<span>Buscar componentes, colores, tipos…</span><kbd>Ctrl K</kbd></button>'
+    + modeSegHTML("home")
+    + '<div class="secRow"><h2 class="sec">' + (rec.length ? "Recientes" : "Para empezar") + '</h2></div>'
+    + '<div class="rail">' + picks.map(miniHTML).join("") + '</div>'
+    + '<div class="secRow"><h2 class="sec">Categorías</h2></div>'
+    + '<div class="chips" role="tablist" aria-label="Filtrar categorías">' + LIB_GROUPS.map(g => '<button class="chip' + (S.group === g ? " on" : "") + '" role="tab" aria-selected="' + (S.group === g) + '" data-act="libgroup" data-g="' + g + '">' + g + '</button>').join("") + '</div>'
+    + '<div class="catGrid">' + catCardsHTML() + '</div>'
+    + '<button class="cta ghost" data-act="surprise">' + ic("spark", 18) + ' Sorpréndeme</button></div>';
+}
+/* La biblioteca ya es la portada: se conserva el nombre por si quedan estados guardados con esa vista. */
+function renderLibrary() { return renderHome(); }
 
 /* Sin acentos ni mayúsculas: «tipografia» encuentra «Tipografía». Varias palabras = todas deben aparecer. */
 function fold(x) { return String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
@@ -524,6 +546,7 @@ function renderExplore() {
   const isRefs = S.tab === "Referencias" && !S.q;
   const n = isRefs ? refCount() : listFor().length;
   return '<div class="wrap">'
+    + (S.tab === "Plantillas" && !S.q ? modeSegHTML("tpl") : "")
     + '<div class="top"><div><h1 class="big">' + esc(S.q ? "Búsqueda" : S.tab === "Todo" ? "Todos los estilos" : S.tab) + '</h1><div class="sub" id="count">' + (isRefs ? n + " capturas de referencia" : n + (S.q ? " resultados en todas las categorías" : " estilos")) + '</div></div>' + (isRefs ? '<button class="cta addBtn" data-act="addref">' + ic("upload", 16, 2.4) + ' Añadir captura</button>' : '<button class="cta addBtn" data-act="add">' + ic("plus", 16, 2.6) + ' Añadir</button>') + '</div>'
     + '<label class="search">' + ic("search", 18) + '<input id="q" data-input="q" type="search" placeholder="Buscar estilo…" aria-label="Buscar estilo" value="' + esc(S.q) + '"></label>'
     + chipsHTML() + '<div id="list">' + listHTML() + '</div></div>';
@@ -624,7 +647,7 @@ function saveBuilder(){syncActiveScreen();try{localStorage.setItem('estilos-buil
 
 function renderFavs() {
   const l = favs.map(getEntry).filter(Boolean);
-  return '<div class="wrap"><div><h1 class="big">Colecciones</h1><div class="sub">' + l.length + (l.length === 1 ? ' estilo guardado' : ' estilos guardados') + '</div></div><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div>'
+  return '<div class="wrap">' + modeSegHTML("favs") + '<div><h1 class="big">Colecciones</h1><div class="sub">' + l.length + (l.length === 1 ? ' estilo guardado' : ' estilos guardados') + '</div></div><button class="ib" data-act="menu" aria-label="Ajustes">' + ic("sliders", 20) + '</button></div>'
     + (l.length ? '<div class="grid">' + l.map(e => cardHTML(e, true)).join("") + '</div>' : '<div class="empty"><b>Aún no guardaste estilos</b><span>Toca el corazón en cualquier tarjeta.</span></div>') + '</div>';
 }
 
@@ -733,13 +756,16 @@ function moreSheet(id) {
     + '<button class="cta ghost" data-act="closesheet">Cancelar</button></div>');
 }
 
+/* Barra de tres modos: Explorar (estilos, plantillas y colecciones), Crear y Agente (otra página). */
 function navHTML() {
-  const inLib = S.view === "library" || (S.view === "explore" && S.tab !== "Plantillas") || S.view === "detail";
-  const inTpl = S.view === "explore" && S.tab === "Plantillas" && !S.q;
-  const on = { home: S.view === "home", library: inLib && !inTpl, builder: S.view === "builder", tpl: inTpl, favs: S.view === "favs" };
+  const on = { explore: ["home", "library", "explore", "favs"].includes(S.view), builder: S.view === "builder" };
   const item = (key, attrs, icon, label) => '<button class="ni' + (on[key] ? " nia" : "") + '" data-act="' + attrs + '" aria-label="' + label + '"' + (on[key] ? ' aria-current="page"' : "") + '>' + ic(icon, 22) + '<span>' + label + '</span></button>';
-  return item("home", 'nav" data-v="home', "home", "Inicio") + item("library", 'nav" data-v="library', "grid", "Biblioteca") + item("builder", 'nav" data-v="builder', "edit", "Creador")
-    + item("tpl", 'tab" data-t="Plantillas', "layers", "Plantillas") + item("favs", 'nav" data-v="favs', "heart", "Colecciones");
+  return '<a class="library-nav-brand" href="index.html"><span class="library-nav-mark">' + ic("layers",20) + '</span><span>Estilos <b>Studio</b></span></a>'
+    + '<small class="library-nav-caption">ESPACIO DE TRABAJO</small>'
+    + '<a class="nav-projects" href="agente.html?projects=1">' + ic("grid",19) + '<span>Mis proyectos</span></a>'
+    + item("explore", 'nav" data-v="home', "grid", "Biblioteca")
+    + item("builder", 'nav" data-v="builder', "edit", "Crear")
+    + '<a class="ni" href="agente.html" aria-label="Agente de diseño">' + ic("spark", 22) + '<span>Editor</span></a>';
 }
 
 function render(keepScroll) {
@@ -749,6 +775,7 @@ function render(keepScroll) {
   const keepCv = oldCv ? oldCv.scrollTop : 0, keepSh = oldSh && keepScroll ? [oldSh.dataset.tool, oldSh.scrollTop] : null;
   document.body.dataset.view = S.view;
   if (pvIO) pvIO.disconnect();
+  if (miniRO) miniRO.disconnect();
   v.innerHTML = S.view === "home" ? renderHome() : S.view === "library" ? renderLibrary() : S.view === "explore" ? renderExplore() : S.view === "favs" ? renderFavs() : S.view === "builder" ? renderBuilder() : renderDetail();
   hydrate(v);
   const nav = document.getElementById("nav"), act = document.getElementById("actbar");
@@ -768,6 +795,7 @@ function render(keepScroll) {
 function renderList() {
   const el = document.getElementById("list"); if (!el) return;
   if (pvIO) pvIO.disconnect();
+  if (miniRO) miniRO.disconnect();
   el.innerHTML = listHTML(); hydrate(el);
   const c = document.getElementById("count"); if (c) c.textContent = (S.q ? listFor().length + " resultados en todas las categorías" : listFor().length + " estilos");
   const h = document.querySelector("h1.big"); if (h) h.textContent = S.q ? "Búsqueda" : S.tab === "Todo" ? "Todos los estilos" : S.tab;
@@ -1048,6 +1076,7 @@ const ACT = {
   libgroup: d => go({ group: d.g }, { replace: true, keep: true }),
   tab: d => go({ view: "explore", tab: d.t, q: "" }),
   gosearch: () => { go({ view: "explore", q: "", tab: "Todo" }); const q = document.getElementById("q"); if (q) q.focus(); },
+  palette: () => cmdkOpen(),
   fav: d => toggleFav(d.id),
   color: d => copyText(d.c, "Copiado: " + d.c),
   pal: d => { const e = getEntry(d.id); if (e) copyText(palText(e, d.f), "Paleta copiada (" + d.f.toUpperCase() + ")"); },
@@ -1266,7 +1295,94 @@ document.addEventListener("click", ev => {
   if (ev.target.id === "sheetWrap") closeSheet();
   if (ev.target.id === "lightbox") closeLB();
 });
+/* ───────── Buscador global (Ctrl/⌘K o «/») ─────────
+   Encuentra estilos, categorías y acciones a la vez. Entiende el vocabulario de diseño:
+   «navbar» encuentra «Barras», «input» encuentra «Entradas»… */
+const SYN = { navbar: "barra", nav: "barra", menu: "barra", tab: "barra", input: "entrada", campo: "entrada", field: "entrada", card: "tarjeta", button: "boton", btn: "boton", avatar: "avatar", chart: "datos", grafico: "datos", metrica: "datos", metric: "datos", list: "lista", modal: "hoja", sheet: "hoja", alert: "aviso", alerta: "aviso", chat: "chat", mensaje: "chat", color: "paleta", colores: "paleta", font: "tipografia", fuente: "tipografia", header: "encabezado", cabecera: "encabezado", titulo: "encabezado", form: "formulario", login: "formulario", dark: "oscuro", light: "claro" };
+const CMD_ACTIONS = [
+  { label: "Crear una pantalla", hint: "Creador", keys: "crear pantalla editor builder nuevo", run: () => go({ view: "builder" }) },
+  { label: "Ver colecciones", hint: "Guardados", keys: "guardados colecciones favoritos", run: () => go({ view: "favs", q: "" }) },
+  { label: "Ver plantillas", hint: "Explorar", keys: "plantillas templates", run: () => go({ view: "explore", tab: "Plantillas", q: "" }) },
+  { label: "Abrir el Agente de diseño", hint: "Página aparte", keys: "agente ia stitch elegir bloques", run: () => { location.href = "agente.html"; } },
+  { label: "Cambiar tema", hint: "Claro / oscuro", keys: "tema modo oscuro claro", run: () => ACT.themecycle() }
+];
+let cmdkEl = null, cmdkPrev = null, cmdkItems = [], cmdkSel = 0;
+function cmdkResults(q) {
+  const words = fold(q).split(/\s+/).filter(Boolean);
+  const hit = (h, w) => h.includes(w) || (SYN[w] ? h.includes(SYN[w]) : false);
+  const out = [];
+  visibleTabs().forEach(t => {
+    const n = t === "Referencias" ? refCount() : db().filter(e => e.tab === t).length, h = fold(t);
+    if (words.length && !words.every(w => hit(h, w))) return;
+    out.push({ kind: "Categoría", label: t, meta: n + (t === "Referencias" ? " capturas" : " estilos"), score: 2, run: () => go({ view: "explore", tab: t, q: "" }) });
+  });
+  if (!words.length) {
+    recentIds().map(getEntry).filter(Boolean).slice(0, 4).forEach(e => out.push({ kind: "Reciente", label: e.name, meta: e.tab, score: 3, colors: e.colors, run: () => ACT.open({ id: e.id }) }));
+  }
+  CMD_ACTIONS.forEach(a => {
+    const h = fold(a.label + " " + a.hint + " " + a.keys);
+    if (words.length && !words.every(w => hit(h, w))) return;
+    out.push({ kind: "Acción", label: a.label, meta: a.hint, score: 1, run: a.run });
+  });
+  if (words.length) {
+    db().forEach(e => {
+      const all = fold([e.name, e.tab, e.desc, e.ref, e.tip, e.mode === "dark" ? "oscuro dark" : "claro light"].join(" "));
+      if (!words.every(w => hit(all, w))) return;
+      const nameHit = fold(e.name);
+      out.push({ kind: "Estilo", label: e.name, meta: e.tab, score: words.every(w => hit(nameHit, w)) ? 4 : 3, colors: e.colors, run: () => ACT.open({ id: e.id }) });
+    });
+  }
+  return out.sort((a, b) => b.score - a.score).slice(0, 14);
+}
+function cmdkRender() {
+  const q = cmdkEl.querySelector("input").value;
+  cmdkItems = cmdkResults(q); cmdkSel = 0;
+  cmdkEl.querySelector(".cmdkList").innerHTML = cmdkItems.length
+    ? cmdkItems.map((it, i) => '<button class="cmdkItem' + (i === 0 ? " on" : "") + '" role="option" aria-selected="' + (i === 0) + '" data-i="' + i + '"><span class="cmdkKind">' + esc(it.kind) + '</span><span class="cmdkTx"><b>' + esc(it.label) + '</b><small>' + esc(it.meta) + '</small></span>'
+        + (it.colors ? '<span class="cmdkSw" aria-hidden="true">' + it.colors.slice(0, 4).map(c => '<i style="background:' + esc(c) + '"></i>').join("") + '</span>' : "") + '</button>').join("")
+    : '<div class="empty"><b>Sin resultados</b><span>Prueba con «botón», «tarjeta» o «barra».</span></div>';
+}
+function cmdkMark() {
+  cmdkEl.querySelectorAll(".cmdkItem").forEach((b, i) => { b.classList.toggle("on", i === cmdkSel); b.setAttribute("aria-selected", String(i === cmdkSel)); });
+  const cur = cmdkEl.querySelector(".cmdkItem.on"); if (cur) cur.scrollIntoView({ block: "nearest" });
+}
+function cmdkIsOpen() { return !!cmdkEl && cmdkEl.style.display !== "none"; }
+function cmdkOpen() {
+  if (!cmdkEl) {
+    cmdkEl = document.createElement("div");
+    cmdkEl.className = "cmdk";
+    cmdkEl.innerHTML = '<div class="cmdkBox" role="dialog" aria-modal="true" aria-label="Buscar estilos">'
+      + '<label class="cmdkField">' + ic("search", 19) + '<input type="search" autocomplete="off" spellcheck="false" placeholder="Busca un componente, color o categoría…" aria-label="Buscar"></label>'
+      + '<div class="cmdkList" role="listbox" aria-label="Resultados"></div>'
+      + '<div class="cmdkFoot"><span><kbd>↑</kbd> <kbd>↓</kbd> moverse</span><span><kbd>Enter</kbd> abrir</span><span><kbd>Esc</kbd> cerrar</span></div></div>';
+    document.body.appendChild(cmdkEl);
+    const inp = cmdkEl.querySelector("input");
+    inp.addEventListener("input", cmdkRender);
+    inp.addEventListener("keydown", ev => {
+      if (ev.key === "ArrowDown" || ev.key === "ArrowUp") { ev.preventDefault(); if (cmdkItems.length) { cmdkSel = (cmdkSel + (ev.key === "ArrowDown" ? 1 : -1) + cmdkItems.length) % cmdkItems.length; cmdkMark(); } }
+      else if (ev.key === "Enter") { ev.preventDefault(); cmdkPick(cmdkSel); }
+      else if (ev.key === "Escape") { ev.preventDefault(); cmdkClose(); }
+    });
+    cmdkEl.addEventListener("mousedown", ev => { if (ev.target === cmdkEl) cmdkClose(); });
+    cmdkEl.addEventListener("click", ev => { const b = ev.target.closest(".cmdkItem"); if (b) cmdkPick(+b.dataset.i); });
+  }
+  cmdkPrev = document.activeElement;
+  cmdkEl.style.display = "flex";
+  const inp = cmdkEl.querySelector("input"); inp.value = ""; cmdkRender(); inp.focus();
+}
+function cmdkClose() {
+  if (!cmdkIsOpen()) return;
+  cmdkEl.style.display = "none";
+  if (cmdkPrev && cmdkPrev.focus && document.contains(cmdkPrev)) cmdkPrev.focus();
+}
+function cmdkPick(i) { const it = cmdkItems[i]; if (!it) return; cmdkClose(); it.run(); }
+function cmdkToggle() { if (cmdkIsOpen()) cmdkClose(); else cmdkOpen(); }
+
 document.addEventListener("keydown", ev => {
+  if ((ev.ctrlKey || ev.metaKey) && !ev.altKey && ev.key.toLowerCase() === "k") { ev.preventDefault(); cmdkToggle(); return; }
+  const typing0 = /INPUT|TEXTAREA|SELECT/.test(ev.target.tagName || "") || ev.target.isContentEditable;
+  if (ev.key === "/" && !typing0 && !ev.ctrlKey && !ev.metaKey && !cmdkIsOpen() && document.getElementById("sheetWrap").style.display === "none") { ev.preventDefault(); cmdkOpen(); return; }
+  if (cmdkIsOpen()) return;
   if((ev.ctrlKey||ev.metaKey)&&!ev.altKey&&S.view==="builder"&&document.getElementById("sheetWrap").style.display==="none"){
     const typing=ev.target&&(/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)||ev.target.isContentEditable);
     if(ev.key.toLowerCase()==="z"&&!typing){ev.preventDefault();ev.shiftKey?builderRedo():builderUndo();return;}

@@ -1,0 +1,234 @@
+/* Estilos Studio 14 · entorno neutro compartido. Los bloques conservan su identidad. */
+:root{
+ --panel:#fff;--panel-2:#f7f8fa;--panel-3:#eef0f4;--bg:#f4f5f7;--txt:#202532;--txt-2:#555f70;--mut:#697386;
+ --acc:#5963e8;--acc-2:#7079f0;--acc-soft:#eceefe;--acc-ink:#fff;--line:#e6e8ed;--line-2:#d4d8e1;
+ --ink:#202532;--ink2:#465062;--mut2:#7e8796;--brand:#5963e8;--brand-d:#4650bf;--brand-ink:#4650bf;
+ --card:#fff;--soft:#f0f2f6;--bg1:#f4f5f7;--bg2:#f4f5f7;--glass:#fff;--glass-card:#fff;--glass-line:#e3e6ec;--bd:#e3e6ec;
+ --fld-bg:#fff;--fld-line:#d9dde5;--surface:#fff;--pick:#eceefe;--pick-line:#d9dcfa;--pick-ink:#4650bf;--nav-bg:#fff;
+ --grad:#5963e8;--bg-grad:#f4f5f7;--hero-grad:#202532;--brand-glow:transparent;--grad-glow:none;
+ --shadow:0 2px 6px rgba(25,35,55,.04);--shadow-s:none;--nav-shadow:none;--sh-1:0 1px 2px #141b2c08;--sh-3:0 24px 80px #0c152833;
+}
+:root[data-theme=dark]{
+ --panel:#171a20;--panel-2:#1d2129;--panel-3:#272d37;--bg:#101216;--txt:#edf0f5;--txt-2:#abb3c1;--mut:#939dac;
+ --acc:#8790ff;--acc-2:#a0a7ff;--acc-soft:#292e49;--acc-ink:#101326;--line:#2a303a;--line-2:#3b4452;
+ --ink:#edf0f5;--ink2:#c6cdda;--mut2:#929bad;--brand:#8790ff;--brand-d:#b1b8ff;--brand-ink:#b1b8ff;
+ --card:#171a20;--soft:#222730;--bg1:#101216;--bg2:#101216;--glass:#171a20;--glass-card:#171a20;--glass-line:#2a303a;--bd:#2a303a;
+ --fld-bg:#1d2129;--fld-line:#3b4452;--surface:#171a20;--pick:#292e49;--pick-line:#444e72;--pick-ink:#b1b8ff;--nav-bg:#171a20;
+ --grad:#8790ff;--bg-grad:#101216;--hero-grad:#edf0f5;--brand-glow:transparent;--grad-glow:none;--shadow:none;--shadow-s:none;--nav-shadow:none;
+}
+/* Marcas y controles: un acento, sin resplandores ni vidrio. */
+body[data-app]{background:var(--bg);color:var(--txt)}
+body[data-app] button,body[data-app] a{touch-action:manipulation}
+body[data-app] :focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+body[data-app=studio] .btn.primary{background:var(--acc);box-shadow:none;color:var(--acc-ink)}
+body[data-app=studio] .topbar{background:var(--panel);backdrop-filter:none;padding:0 24px;gap:12px}
+.workspace-title{display:grid;gap:4px}.workspace-title>span,.eyebrow{font-size:10px;letter-spacing:1.4px;font-weight:800;color:var(--mut)}
+.workspace-title>b{font-size:14px;letter-spacing:-.25px}
+.studio-nav{display:none}
+body[data-app=studio] .side{padding:20px 16px;gap:22px;background:var(--panel);scrollbar-width:thin}
+body[data-app=studio] .side>.card{background:none;border:0;border-radius:0;padding:0}
+body[data-app=studio] .side>.card+.card{border-top:1px solid var(--line);padding-top:22px}
+body[data-app=studio] .side h2{font-size:11px;letter-spacing:.5px;color:var(--txt-2);text-transform:none}
+body[data-app=studio] .vlabs{gap:5px}
+body[data-app=studio] .vlab{padding:6px 8px;font-size:11px;border-radius:7px;background:var(--panel-2)}
+body[data-app=studio] .readout{font-size:11px;line-height:1.65;color:var(--mut);border:0;padding:0;margin-top:12px}
+body[data-app=studio] #brief{font-size:12px;min-height:90px;background:var(--panel-2)}
+body[data-app=studio] .add-block{margin-bottom:12px;background:var(--acc-soft);color:var(--acc);border:1px dashed var(--line-2);font-size:11px}
+body[data-app=studio] .blk{padding:9px;border:1px solid var(--line);background:var(--panel);border-radius:9px;grid-template-columns:30px minmax(0,1fr);gap:7px;cursor:pointer}
+body[data-app=studio] .blk .thumb{width:30px;height:30px;border-radius:6px}
+body[data-app=studio] .blk .meta small{font-size:9px;letter-spacing:.5px}
+body[data-app=studio] .blk .meta b{font-size:11px}
+body[data-app=studio] .blk .acts{grid-column:1/-1;justify-content:flex-start;opacity:.65;gap:4px}
+body[data-app=studio] .blk .acts .iconbtn{width:27px;height:27px}
+body[data-app=studio] .blk:hover .acts,body[data-app=studio] .blk:focus-within .acts{opacity:1}
+body[data-app=studio] .blk.selected{background:var(--acc-soft);border-color:var(--acc)}
+body[data-app=studio] .canvas{background-color:var(--bg);background-image:radial-gradient(var(--line-2) .7px,transparent .7px);background-size:20px 20px;min-width:0}
+body[data-app=studio] .canvas-bar{background:var(--bg);border-bottom:1px solid var(--line);padding:12px 20px;gap:8px;min-height:54px}
+body[data-app=studio] #canvasMeta{display:none}
+body[data-app=studio] .canvas-bar .label{font-size:11px;color:var(--txt-2)}
+.viewport-badge{font-size:10px;border:1px solid var(--line-2);padding:5px 9px;border-radius:6px;color:var(--mut);white-space:nowrap}
+body[data-app=studio] .phone{border-radius:30px;border:6px solid #252a34;box-shadow:0 18px 50px #11182720}
+body[data-app=studio] .phone::before{display:none}
+body[data-app=studio] .stagewrap{padding:24px 18px;overflow:hidden}
+body[data-app=studio] #scroll>[data-slot]{cursor:pointer;outline-offset:4px;border-radius:4px}
+body[data-app=studio] #scroll>[data-slot]:hover{outline:2px solid #5963e877}
+.inspector-empty{display:none}
+#contentFields>h4{font-size:14px;letter-spacing:-.3px;margin-top:12px}
+#contentFields>h5{padding-top:18px;border-top:1px solid var(--line)}
+/* Escritorio: navegación / capas / lienzo / inspector. */
+@media(min-width:1200px){
+ body[data-app=studio] .app{grid-template-columns:184px minmax(0,1fr);grid-template-rows:68px minmax(0,1fr)}
+ .studio-nav{display:flex;flex-direction:column;grid-column:1;grid-row:1/3;background:var(--panel);border-right:1px solid var(--line);padding:22px 12px;gap:7px}
+ .studio-nav>a,.studio-nav>button{display:flex;align-items:center;gap:12px;padding:11px 12px;font-size:12px;text-decoration:none;color:var(--txt-2);border-radius:8px;text-align:left}
+ .studio-nav>a>span:first-child,.studio-nav>button>span:first-child{font-size:19px;line-height:1}
+ .studio-nav .active{color:var(--acc);background:var(--acc-soft);font-weight:700}
+ .studio-nav .studio-wordmark{padding:0 4px 30px;color:var(--txt);gap:9px;font-size:14px}
+ .studio-symbol{display:grid;place-items:center;width:30px;height:30px;background:var(--acc);color:var(--acc-ink);border-radius:8px;font-size:17px!important;font-weight:800;flex:none}
+ .studio-wordmark>span:last-child{font-weight:500}.studio-wordmark b{display:block;font-weight:800}
+ .nav-caption{color:var(--mut);font-size:8px;letter-spacing:1.2px;margin:0 12px 9px}
+ .nav-bottom{display:flex;align-items:start;gap:8px;margin-top:auto;padding:12px 7px;color:var(--txt-2);font-size:10px;line-height:1.8}.nav-bottom small{color:var(--mut);font-size:9px}
+ .local-dot{background:#42ae88;width:6px;height:6px;border-radius:50%;margin-top:6px;flex:none}
+ body[data-app=studio] .topbar{grid-column:2;grid-row:1}
+ body[data-app=studio] .main{grid-column:2;grid-row:2;grid-template-columns:260px minmax(0,1fr) 300px;overflow:hidden}
+ .inspector-empty{display:flex;grid-column:3;grid-row:1;flex-direction:column;padding:24px;background:var(--panel);border-left:1px solid var(--line);color:var(--txt-2)}
+ .inspector-kicker{font-size:10px;letter-spacing:1.5px;color:var(--mut)}
+ .inspector-icon{width:52px;height:52px;display:grid;place-items:center;font-size:30px;border:1px solid var(--line);border-radius:14px;margin:80px 0 20px;color:var(--acc)}
+ .inspector-empty h3{font-size:23px;letter-spacing:-.8px;color:var(--txt)}.inspector-empty p{font-size:12px;line-height:1.9;margin:12px 0;color:var(--mut)}
+ .inspector-tip{font-size:11px;line-height:2.5;border-top:1px solid var(--line);padding-top:20px;margin-top:20px;color:var(--mut)}
+ .main:has(#mContent:not([hidden])) .inspector-empty{display:none}
+ body[data-app=studio] #mContent:not([hidden]){display:flex;position:static;inset:auto;grid-column:3;grid-row:1;z-index:1;background:var(--panel);backdrop-filter:none;padding:0;border-left:1px solid var(--line);min-height:0;min-width:0}
+ body[data-app=studio] #mContent .sheet{width:100%;max-height:none;border:0;border-radius:0;box-shadow:none;animation:none;min-height:0}
+ body[data-app=studio] #mContent header{padding:18px 16px;gap:6px}
+ body[data-app=studio] #mContent header h3{font-size:13px}body[data-app=studio] #mContent header .sub{font-size:10px;margin-top:5px}
+ body[data-app=studio] #mContent .body{flex:1;padding:16px;scrollbar-width:thin}
+ body[data-app=studio] #mContent .body>.hint{font-size:10px;line-height:1.7}
+ body[data-app=studio] #mContent .content-field{font-size:10px;margin:13px 0;gap:6px}
+ body[data-app=studio] #mContent textarea{font-size:12px;min-height:48px;padding:9px}
+ body[data-app=studio] #mContent input{font-size:11px;padding:9px}
+ body[data-app=studio] #mContent footer{padding:12px;gap:6px;background:var(--panel-2)}
+ body[data-app=studio] #mContent footer .history-controls{display:none}
+ body[data-app=studio] #mContent footer .btn{height:30px;padding:0 9px;font-size:10px}
+ body[data-app=studio] #mContent .sheet{overflow:hidden}
+ body[data-app=studio] .content-field textarea{resize:vertical}
+ body[data-app=studio] .project-entry>.hint{font-size:9px;max-width:100px;line-height:1.6}
+ body[data-app=studio] .dna-row{flex-wrap:wrap;gap:7px}body[data-app=studio] .dna-row label{min-width:60px}
+}
+@media(min-width:1200px) and (max-width:1370px){
+ body[data-app=studio] .app{grid-template-columns:64px minmax(0,1fr)}
+ .studio-nav{padding:22px 8px}.studio-nav>a,.studio-nav>button{justify-content:center;padding:12px 8px}.studio-nav .studio-wordmark{padding:0 0 28px}
+ .studio-nav>a>span:last-child,.studio-nav>button>span:last-child,.nav-caption,.nav-bottom{display:none}
+}
+@media(min-width:721px) and (max-width:1199px){body[data-app=studio] .main{grid-template-columns:300px minmax(0,1fr)}body[data-app=studio] .side{border-right:1px solid var(--line)}body[data-app=studio] .canvas{min-height:0}}
+@media(max-width:1199px){
+ body[data-app=studio] #mContent{position:fixed;align-items:end;padding:0;background:#0c132c55;z-index:90}
+ body[data-app=studio] #mContent .sheet{width:min(680px,100%);max-height:82dvh;border-radius:18px 18px 0 0}
+}
+@media(max-width:720px){
+ body[data-app=studio] .topbar{padding:0 12px;gap:7px}.workspace-title>b{font-size:12px}.workspace-title>span{font-size:8px;letter-spacing:.5px}
+ body[data-app=studio] #btnShuffle{width:32px;min-width:32px;font-size:0;padding:0;gap:0}body[data-app=studio] #btnShuffle svg{width:16px;height:16px}
+ body[data-app=studio] .main{grid-template-columns:1fr}body[data-app=studio] .side{padding:18px 16px}
+ body[data-app=studio] .blk .acts{opacity:1;grid-column:1/-1}body[data-app=studio] .blk .acts .iconbtn{width:34px;height:34px}
+ body[data-app=studio] .mobile-tabs{background:var(--panel)}body[data-app=studio] .mobile-tabs button{font-size:11px}
+ body[data-app=studio] .canvas-bar{padding:10px 14px}body[data-app=studio] .canvas{min-height:0}
+ body[data-app=studio] .sheet footer>.hint{display:none}
+}
+/* Biblioteca: contenedor editorial, muestras con marcos consistentes. */
+body[data-app=library] .wrap{max-width:1120px;gap:22px}
+body[data-app=library] .logo{border-radius:10px;background:var(--brand);box-shadow:none;width:36px;height:36px}
+body[data-app=library] .brand b{font-size:16px}
+body[data-app=library] .top{padding-bottom:18px;border-bottom:1px solid var(--line)}
+body[data-app=library] .library-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px}
+body[data-app=library] .library-heading .eyebrow{display:block;margin-bottom:10px}
+body[data-app=library] h1.big{font-size:36px;color:var(--ink);background:none;-webkit-text-fill-color:var(--ink)}
+.studio-launch{display:flex;align-items:center;gap:18px;color:var(--card);background:var(--brand);border-radius:8px;padding:12px 16px;text-decoration:none;font-size:12px;font-weight:700}
+:root[data-theme=dark] .studio-launch{color:#101326}
+body[data-app=library] .search{border-radius:10px;height:48px;background:var(--card);box-shadow:none;font-size:13px}
+body[data-app=library] .modeSeg{align-self:flex-start;border:0;border-radius:0;padding:0;background:transparent;gap:24px;border-bottom:1px solid var(--line);width:100%;margin:0}
+body[data-app=library] .modeSeg button{flex:0 0 auto;border-radius:0;padding:12px 0;background:transparent;color:var(--mut);font-size:13px;box-shadow:none;border-bottom:2px solid transparent}
+body[data-app=library] .modeSeg button.on{color:var(--ink);border-bottom-color:var(--brand)}
+body[data-app=library] .rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;overflow:visible;margin:0;padding:0;mask-image:none;-webkit-mask-image:none}
+body[data-app=library] .mini{width:auto;min-width:0;border-radius:12px;padding:8px 8px 12px;box-shadow:none}
+body[data-app=library] .mini .stage{height:220px;min-height:220px;border-radius:8px;padding:12px;overflow:hidden;background-image:none;display:block}
+body[data-app=library] .mini b{font-size:12px;margin:12px 6px 4px}body[data-app=library] .mini small{font-size:11px}
+body[data-app=library] .sec{font-size:16px}
+body[data-app=library] .catGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+body[data-app=library] .catk{border:1px solid var(--line);border-radius:10px;background:var(--card);min-height:76px;box-shadow:none}
+body[data-app=library] .tileIc.sm{width:34px;height:34px;border-radius:8px;background:var(--soft)!important;color:var(--brand);box-shadow:none}
+body[data-app=library] .tileTx b{font-size:12px}body[data-app=library] .tileTx small{font-size:11px}
+body[data-app=library] .chip{border-radius:7px;padding:9px 14px;font-size:12px}
+body[data-app=library] .chip.on{background:var(--pick);color:var(--pick-ink);border-color:var(--pick-line);box-shadow:none}
+body[data-app=library] .card{border-radius:12px;box-shadow:none}
+body[data-app=library] .ib{border-radius:8px;background:var(--card)}
+body[data-app=library] .cta{border-radius:9px;box-shadow:none}
+body[data-app=library] .ni.nia{box-shadow:none;color:var(--acc-ink)}
+@media(min-width:1000px){
+ body[data-app=library] #app{margin-left:184px}
+ body[data-app=library] #view{padding:34px 40px 70px}
+ body[data-app=library] #nav{inset:0 auto 0 0;width:184px;height:100%;max-width:none;border:0;border-right:1px solid var(--line);border-radius:0;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:8px;padding:30px 14px;margin:0;backdrop-filter:none;box-shadow:none;background:var(--panel)}
+ body[data-app=library] #nav::before{content:'ESTILOS STUDIO';font-size:11px;font-weight:800;letter-spacing:1.5px;padding:4px 12px 36px;color:var(--ink)}
+ body[data-app=library] #nav::after{content:'Diseña con intención.';margin-top:auto;font-size:11px;color:var(--mut);padding:12px}
+ body[data-app=library] #nav .ni{width:100%;height:44px;display:flex;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 12px;border-radius:8px;font-size:12px}
+ body[data-app=library] #nav .ni svg{width:19px;height:19px}
+ body[data-app=library] #nav .nia{background:var(--pick);color:var(--pick-ink);font-size:12px}
+ body[data-app=library][data-view=builder] #nav{display:none}
+ body[data-app=library][data-view=builder] #app{margin-left:0}
+}
+@media(max-width:999px){body[data-app=library] .catGrid{grid-template-columns:repeat(3,minmax(0,1fr))}body[data-app=library] .rail{grid-template-columns:repeat(2,minmax(0,1fr))}body[data-app=library] #nav{border-radius:16px;box-shadow:0 8px 24px #10182714}}
+@media(max-width:550px){
+ body[data-app=library] .catGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-app=library] .library-heading{align-items:end}body[data-app=library] h1.big{font-size:30px}.studio-launch{font-size:11px;padding:10px;gap:8px}
+ body[data-app=library] .rail{gap:10px}body[data-app=library] .mini .stage{height:170px;min-height:170px;padding:8px}
+ body[data-app=library] .library-heading .eyebrow{font-size:8px;letter-spacing:1px}
+}
+@media(prefers-reduced-motion:reduce){body[data-app] *,body[data-app] *::before,body[data-app] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* Ajustes de contención y estados de selección. */
+body[data-app=studio] #scroll>[data-slot].is-selected,body[data-app=studio] #dock.is-selected{outline:2px solid var(--acc);outline-offset:3px}
+body[data-app=library] .grid>.card>.stage{height:240px;min-height:240px;position:relative;overflow:hidden;background-image:none}
+.library-nav-brand,.library-nav-caption,.nav-projects{display:none}
+@media(min-width:1200px){
+ body[data-app=studio] #mContent:not([hidden]){align-items:stretch;justify-content:stretch}
+ body[data-app=studio] #mContent .sheet{height:100%}
+}
+@media(min-width:1000px){
+ body[data-app=library] #nav::before{display:none}
+ .library-nav-brand{display:flex;gap:9px;align-items:center;text-decoration:none;color:var(--ink);font-size:14px;padding:0 4px 30px;order:-4}
+ .library-nav-brand b{display:block}.library-nav-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--brand);color:var(--acc-ink)}
+ .library-nav-caption{display:block;font-size:8px;letter-spacing:1px;color:var(--mut);padding:0 10px 12px;order:-3}
+ body[data-app=library] #nav .ni:first-of-type{order:0}
+ .nav-projects{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:12px;color:var(--mut);padding:12px;order:1;border-radius:8px}
+ body[data-app=library] #nav a.ni{order:2}
+ body[data-app=library] #nav button[data-v=builder]{order:3;margin-top:20px;border-top:1px solid var(--line);border-radius:0;color:var(--mut);font-size:11px}
+ body[data-app=library][data-view=builder] #nav{display:none!important}
+}
+/* Los textos de interfaz no dependen de etiquetas microscópicas. */
+body[data-app=library] .library-heading .eyebrow{font-size:11px;letter-spacing:1px}
+.nav-caption,.library-nav-caption{font-size:10px}
+body[data-app=studio] .blk .meta small{font-size:10px}
+body[data-app=studio] #mContent .body>.hint,body[data-app=studio] #mContent .content-field{font-size:11px}
+body[data-app=studio] #mContent input{font-size:12px}
+body[data-app=studio] #mContent footer .btn{font-size:11px}
+body[data-app=studio] .project-entry>.hint{font-size:11px;line-height:1.6}
+body[data-app=studio] .blk.drag-over{border-color:var(--acc);box-shadow:inset 0 3px var(--acc)}
+body[data-app=studio] .blk .thumb{cursor:grab}
+/* El gesto de arrastre del creador clásico no debe convertirse en scroll táctil. */
+body[data-app=library] .builder-layer-grip,body[data-app=library] .builder-drag-handle,body[data-app=library] .builder-resize-handle{touch-action:none}
+/* Proyectos: una vista de trabajo, no otro modal en escritorio. */
+.project-thumbnail{height:180px;border:1px solid var(--line);border-radius:9px;background:var(--bg);position:relative;overflow:hidden;pointer-events:none}
+.project-thumbnail iframe{position:absolute;width:300px;height:440px;left:50%;top:12px;transform:translateX(-50%) scale(.55);transform-origin:top center;border:5px solid #272d37;border-radius:20px;background:#fff;pointer-events:none}
+.project-thumbnail::after{content:'';position:absolute;bottom:0;left:0;right:0;height:26px;background:linear-gradient(transparent,var(--bg))}
+@media(min-width:1200px){
+ body[data-app=studio] .main:has(#mProjects:not([hidden])){display:block}
+ body[data-app=studio] .main:has(#mProjects:not([hidden]))>.side,body[data-app=studio] .main:has(#mProjects:not([hidden]))>.canvas,body[data-app=studio] .main:has(#mProjects:not([hidden]))>.inspector-empty,body[data-app=studio] .main:has(#mProjects:not([hidden]))>#mContent{display:none!important}
+ body[data-app=studio] #mProjects:not([hidden]){display:flex;position:static;inset:auto;z-index:1;align-items:stretch;justify-content:center;height:100%;padding:28px 32px;background:var(--bg);backdrop-filter:none;overflow:hidden}
+ body[data-app=studio] #mProjects .sheet{width:100%;max-width:1100px;max-height:none;height:100%;border:0;background:none;box-shadow:none;border-radius:0;animation:none}
+ body[data-app=studio] #mProjects header{padding:0 0 18px;border:0}
+ body[data-app=studio] #mProjects header h3{font-size:28px;letter-spacing:-1px}
+ body[data-app=studio] #mProjects header .sub{font-size:12px;margin-top:7px}
+ body[data-app=studio] #mProjects .body{padding:0 10px 20px 0;flex:1;scrollbar-width:thin}
+ body[data-app=studio] #mProjects .project-save{background:var(--panel);border:1px solid var(--line);padding:18px;border-radius:12px}
+ body[data-app=studio] #projectList{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;align-items:start}
+ body[data-app=studio] #projectList>.empty-note{grid-column:1/-1;background:var(--panel);border:1px dashed var(--line-2);border-radius:12px;padding:60px 20px}
+ body[data-app=studio] .project-row{margin:0;background:var(--panel);padding:12px}
+ body[data-app=studio] .project-actions{gap:6px}body[data-app=studio] .project-actions .btn{font-size:10px;padding:0 8px}
+ body[data-app=studio] #mProjects footer{background:none;border-top:1px solid var(--line);padding:16px 0 0}
+}
+body[data-app=library] #nav::after{order:99}
+body[data-app=studio] .pv.grid2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+body[data-app=studio] .pv.grid2>.pv{min-width:0}
+body[data-app=studio] #briefPanel>summary{display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none}
+body[data-app=studio] #briefPanel>summary::-webkit-details-marker{display:none}
+body[data-app=studio] #briefPanel>summary::after{content:'⌄';margin-left:auto;color:var(--mut)}
+body[data-app=studio] #briefPanel[open]>summary{margin-bottom:14px}
+body[data-app=studio] #briefPanel[open]>summary::after{content:'⌃'}
+body[data-app=studio] #briefPanel>summary .count{font-size:10px;color:var(--mut)}
+@media(min-width:1200px) and (hover:hover){
+ body[data-app=studio] .blk:not(.selected):not(:hover):not(:focus-within) .acts button:not([data-act=editcontent]):not([data-act=change]){opacity:0}
+}
+@media(max-width:720px){
+ body[data-app=studio] .mobile-tabs a{flex:1;display:grid;justify-items:center;gap:3px;padding:9px 0;font-size:11px;font-weight:700;color:var(--mut);text-decoration:none}
+}
+@media(max-width:999px){
+ body[data-app=library] #nav{left:0;right:0;bottom:0;max-width:none;height:64px;border-radius:0;border:0;border-top:1px solid var(--line);box-shadow:none;background:var(--panel);backdrop-filter:none}
+ body[data-app=library] #nav .ni{border-radius:8px;height:52px;flex:1}
+ body[data-app=library] #nav .ni.nia{background:none;color:var(--brand);box-shadow:none}
+}

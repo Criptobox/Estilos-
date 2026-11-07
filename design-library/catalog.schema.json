@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:estilos:catalog:v1",
+  "title": "Inventario Estilos v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "modules",
+    "records"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 26,
+      "maxItems": 26
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "module",
+        "subcategory",
+        "type",
+        "description",
+        "family",
+        "variants",
+        "tags",
+        "frameworks",
+        "states",
+        "responsive",
+        "accessibility",
+        "origin",
+        "quality",
+        "source",
+        "schema_version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module": {
+          "enum": [
+            "buttons",
+            "cards",
+            "forms",
+            "navigation",
+            "indicators",
+            "identity",
+            "typography",
+            "colors",
+            "icons",
+            "layouts",
+            "app-screens",
+            "web-sections",
+            "visual-styles",
+            "motion",
+            "surfaces",
+            "media",
+            "data",
+            "responsive",
+            "accessibility",
+            "tokens",
+            "code",
+            "templates",
+            "creator",
+            "files",
+            "metadata",
+            "acceptance"
+          ]
+        },
+        "type": {
+          "enum": [
+            "component",
+            "template",
+            "resource"
+          ]
+        },
+        "family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "variants": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "frameworks": {
+          "oneOf": [{"const":["html-css"]},{"const":["html-css","vanilla-js"]}]
+        },
+        "schema_version": {
+          "const": 1
+        },
+        "origin": {
+          "type": "object",
+          "required": [
+            "reference",
+            "author",
+            "license",
+            "status"
+          ]
+        },
+        "accessibility": {
+          "type": "object",
+          "required": [
+            "status"
+          ]
+        },
+        "responsive": {
+          "type": "object",
+          "required": [
+            "status"
+          ]
+        },
+        "quality": {
+          "type": "object",
+          "required": [
+            "status",
+            "duplicates",
+            "behavior"
+          ]
+        }
+      }
+    }
+  }
+}
