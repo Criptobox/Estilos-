@@ -1,7 +1,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 (async()=>{
  let n=0;const ok=(value,label)=>{assert.ok(value,label);n++;};
- const context=vm.createContext({});vm.runInContext(fs.readFileSync('web/js/tinta-history.js','utf8')+';this.H=TintaHistory',context);
+ const context=vm.createContext({});vm.runInContext(fs.readFileSync(require('path').join(__dirname,'../web/js/tinta-history.js'),'utf8')+';this.H=TintaHistory',context);
  const h=context.H.create({limit:3});h.reset({brief:'',selected:[],assets:{}});ok(!h.status().canUndo,'empty history');
  h.record({brief:'a',selected:[],assets:{}},{group:'brief'});h.record({brief:'ab',selected:[],assets:{}},{group:'brief'});ok(h.status().undoCount===1,'typing grouped');ok(h.undo().draft.brief==='','group undo');ok(h.redo().draft.brief==='ab','group redo');
  h.record({brief:'ab',selected:[],assets:{}});ok(h.status().undoCount===1,'no-op excluded');h.breakGroup();h.record({brief:'abc',selected:[],assets:{}},{group:'brief'});ok(h.status().undoCount===2,'blur splits typing');h.undo();h.record({brief:'new',selected:[],assets:{}});ok(!h.status().canRedo,'new branch clears future');
