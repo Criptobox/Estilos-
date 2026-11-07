@@ -64,6 +64,7 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>
           Crear con Luma
         </button>
+        <button class="btn block" id="btnProposals" title="Compara tres combinaciones distintas y quédate con la que prefieras">Ver 3 propuestas</button>
         <p class="readout" id="readout">Elige un sector o escribe tu brief. Luma combina encabezados, tarjetas, botones y barras a partir de recetas locales. Tú decides el resultado.</p>
       </details>
 
@@ -194,6 +195,15 @@
       </div>
     </div>
     <footer><span class="hint">Elegir una opción no cambia tu pantalla hasta aplicarla.</span><div class="spacer"></div><button class="btn" data-act="pickerclose">Cancelar</button><button class="btn primary" id="pickerApply" data-act="pickerapply" disabled>Aplicar diseño</button></footer>
+  </div>
+</div>
+
+<!-- Modal: tres propuestas -->
+<div class="modal" id="mProposals" hidden>
+  <div class="sheet proposals-sheet" role="dialog" aria-modal="true" aria-labelledby="proposalsTitle">
+    <header><div><h3 id="proposalsTitle">Tres propuestas</h3><div class="sub">Compara y elige. Los bloques con candado se conservan; nada cambia hasta que eliges.</div></div><div class="spacer"></div><button class="iconbtn" data-close aria-label="Cerrar propuestas">×</button></header>
+    <div class="body"><div class="proposals" id="proposalList"></div></div>
+    <footer><span class="hint">Después de elegir puedes deshacer con Ctrl+Z.</span><div class="spacer"></div><button class="btn" data-close>Cancelar</button></footer>
   </div>
 </div>
 

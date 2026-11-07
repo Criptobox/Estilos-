@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 34`, `versionName 12.4`.
+- Android: `versionCode 35`, `versionName 12.5`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -284,6 +284,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **12.5**: el Agente ofrece «Ver 3 propuestas» para comparar y elegir. Ver `docs/CHANGELOG-12.5.md`.
 - **12.4**: «Adaptar textos a mi idea» rellena los bloques según el sector; botón Atrás de Android y pruebas unificadas. Ver `docs/CHANGELOG-12.4.md`.
 - **12.3**: el creador arma la página entera: pantalla vacía por defecto, posición Arriba/Contenido/Abajo, elementos sin tarjeta, cabecera y barra de ejemplo opcionales, 20 elementos por pantalla. Ver `docs/CHANGELOG-12.3.md`.
 - **12.2**: nuevo aspecto (fase 3): Detalle con Relacionados y Uso, PNG/SVG del componente, Paletas, Plantillas e iconos. Ver `docs/CHANGELOG-12.2.md`.

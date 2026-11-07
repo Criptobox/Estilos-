@@ -436,3 +436,15 @@ input[type="range"]::-webkit-slider-thumb {
 #contentFields h5{margin:22px 0 10px;font-size:13px}
 .media-upload{display:block;max-width:100%;font:inherit;font-size:12px;margin:10px 0}
 #mediaStatus{line-height:1.6;margin:10px 0}
+
+/* Tres propuestas */
+.proposals-sheet { width: min(1040px, 100%); }
+.proposals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.proposal { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.proposal h4 { font-size: 13px; font-weight: 800; }
+.proposal .btn { align-self: stretch; }
+.prop-frame { position: relative; width: 100%; aspect-ratio: 390 / 760; overflow: hidden; border-radius: 18px; border: 1px solid var(--line-2); }
+.prop-screen { position: absolute; top: 0; left: 0; width: 390px; height: 760px; transform-origin: top left; overflow: hidden; pointer-events: none; }
+.prop-scroll { display: flex; flex-direction: column; padding: 34px 14px 90px; }
+.prop-dock { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 12px 14px; }
+@media (max-width: 760px) { .proposals { grid-template-columns: 1fr; } .prop-frame { max-width: 260px; margin: 0 auto; } }

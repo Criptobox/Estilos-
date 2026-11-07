@@ -532,16 +532,16 @@ function partsFor(entry, state = S) {
   return studioApply(p,entry,state);
 }
 
-function shadowFor(entry) {
-  const p = partsFor(entry);
+function shadowFor(entry, state = S) {
+  const p = partsFor(entry, state);
   return "<style>" + SHADOW_BASE + p.css + "</style>" + p.html;
 }
 
-function pvNode(entry) {
+function pvNode(entry, state = S) {
   const host = document.createElement("div");
   host.className = "pv";
   const sh = host.attachShadow({ mode: "open" });
-  sh.innerHTML = shadowFor(entry);
+  sh.innerHTML = shadowFor(entry, state);
   sh.addEventListener("click", ev => { if (ev.target.closest("a")) ev.preventDefault(); });
   return host;
 }
@@ -577,6 +577,80 @@ function renderScreen() {
   $("canvasLabel").textContent = "Vivo · " + (VERTICALS.find(v => v.id === S.vertical) || {}).label;
   syncCanvasSelection();
 }
+
+/* ───────── Tres propuestas ─────────
+   Tres combinaciones distintas con las recetas del sector: A) la primera opción de
+   cada bloque, B) la segunda con los acentos intercambiados, C) la tercera en el tema
+   contrario. Los bloques con candado se conservan en las tres. Nada cambia hasta elegir. */
+const PROPOSAL_NAMES = ["Propuesta A · Clásica", "Propuesta B · Alternativa", "Propuesta C · Contraste"];
+function proposalState(i) {
+  const st = JSON.parse(JSON.stringify(S));
+  const rec = RECIPES[S.vertical] || {};
+  SLOTS.forEach(sl => {
+    if (S.locked[sl.key] && S.blocks[sl.key]) return;
+    const c = rec[sl.key] || [];
+    const id = c.length ? c[i % c.length] : null;
+    st.blocks[sl.key] = id; st.hidden[sl.key] = !id;
+  });
+  if (["enc-3", "enc-5"].includes(st.blocks.header) && st.blocks.search && !S.locked.search) st.hidden.search = true;
+  if (i === 1) st.palette = { ...st.palette, acc: S.palette.acc2, acc2: S.palette.acc };
+  if (i === 2) {
+    const v = VERTICALS.find(x => x.id === S.vertical) || VERTICALS[0];
+    st.theme = S.theme === "dark" ? "light" : "dark";
+    st.palette = { ...st.palette, page: st.theme === "dark" ? (isDarkish(v.page) ? v.page : "#0E1116") : lightenPage(isDarkish(S.palette.page) ? "#F4F5F8" : S.palette.page) };
+  }
+  return st;
+}
+function proposalScreen(st) {
+  const screen = document.createElement("div"); screen.className = "prop-screen";
+  screen.style.background = brand(st).page;
+  const scroll = document.createElement("div"); scroll.className = "prop-scroll"; scroll.style.gap = st.density === "compacta" ? "9px" : "15px";
+  let dockNode = null;
+  SLOTS.forEach(sl => {
+    const id = st.blocks[sl.key];
+    if (!id || st.hidden[sl.key] || !ENTRY[id]) return;
+    if (sl.pinned) { dockNode = pvNode(styled(id, st), st); dockNode.classList.add("prop-dock"); return; }
+    const wrap = document.createElement("div");
+    const pair = sl.type === "grid2" ? cardPair(id) : [id];
+    wrap.className = "pv" + (pair.length > 1 ? " grid2" : "");
+    pair.forEach(cid => { const e = styled(cid, st); if (e) wrap.appendChild(pvNode(e, st)); });
+    scroll.appendChild(wrap);
+  });
+  screen.appendChild(scroll); if (dockNode) screen.appendChild(dockNode);
+  const frame = document.createElement("div"); frame.className = "prop-frame"; frame.appendChild(screen);
+  if (globalThis.ResizeObserver) new ResizeObserver(() => { screen.style.transform = "scale(" + (frame.clientWidth / 390) + ")"; }).observe(frame);
+  return frame;
+}
+let proposalStates = [];
+function openProposals() {
+  proposalStates = [0, 1, 2].map(proposalState);
+  const list = $("proposalList"); list.replaceChildren();
+  proposalStates.forEach((st, i) => {
+    const card = document.createElement("article"); card.className = "proposal"; card.dataset.proposal = i;
+    const h = document.createElement("h4"); h.textContent = PROPOSAL_NAMES[i];
+    const meta = document.createElement("p"); meta.className = "hint";
+    meta.textContent = (st.theme === "dark" ? "Tema oscuro" : "Tema claro") + " · " + SLOTS.filter(sl => st.blocks[sl.key] && !st.hidden[sl.key]).length + " bloques" + (SLOTS.some(sl => S.locked[sl.key]) ? " · conserva tus candados" : "");
+    const btn = document.createElement("button"); btn.className = "btn primary sm"; btn.dataset.act = "pickproposal"; btn.dataset.i = i; btn.textContent = "Quedarme con la " + "ABC"[i];
+    card.append(h, meta, proposalScreen(st), btn); list.appendChild(card);
+  });
+  $("mProposals").hidden = false;
+  list.querySelector("button").focus({ preventScroll: true }); list.closest(".body").scrollTop = 0;
+}
+function closeProposals() { $("mProposals").hidden = true; }
+function pickProposal(i) {
+  const st = proposalStates[i]; if (!st) return;
+  S.blocks = st.blocks; S.hidden = st.hidden; S.palette = st.palette; S.theme = st.theme;
+  closeProposals(); renderAll(); toast(PROPOSAL_NAMES[i].split(" · ")[0] + " aplicada. Puedes deshacer.");
+}
+$("btnProposals").addEventListener("click", openProposals);
+$("mProposals").addEventListener("click", ev => { const b = ev.target.closest('[data-act="pickproposal"]'); if (b) pickProposal(+b.dataset.i); });
+$("mProposals").addEventListener("keydown", ev => {
+  if (ev.key !== "Tab") return;
+  const f = [...$("mProposals").querySelectorAll("button")].filter(b => !b.hidden), first = f[0], last = f[f.length - 1];
+  if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
+  else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+});
+new MutationObserver(() => { if ($("mProposals").hidden) $("btnProposals").focus({ preventScroll: true }); }).observe($("mProposals"), { attributes: true, attributeFilter: ["hidden"] });
 
 function renderAll() { renderVlabs(); renderBlocks(); renderSwatches(); renderScreen(); renderReview(); save(); }
 

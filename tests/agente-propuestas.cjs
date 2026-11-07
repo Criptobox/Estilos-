@@ -1,0 +1,30 @@
+/* Tres propuestas del Agente: comparar, elegir, candados, deshacer, teclado y móvil. */
+const { chromium } = require('playwright'); const assert = require('node:assert/strict'); let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
+(async () => {
+  const b = await chromium.launch(), pg = await b.newPage({ viewport: { width: 1280, height: 900 } }), errors = []; pg.on('pageerror', e => errors.push(e.message));
+  await pg.goto('http://127.0.0.1:8080/agente.html'); await pg.evaluate(() => { document.getElementById('briefPanel').open = true; });
+  const st = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-studio-v1')));
+  const before = await st();
+  await pg.click('#btnProposals'); ok(await pg.locator('#mProposals').isVisible(), 'abre el comparador');
+  ok(await pg.locator('.proposal').count() === 3, 'muestra tres propuestas');
+  ok(await pg.evaluate(() => [...document.querySelectorAll('.proposal')].every(p => [...p.querySelectorAll('.pv')].filter(h => h.shadowRoot).length >= 4 && [...p.querySelectorAll('.pv')].filter(h => h.shadowRoot).every(h => h.shadowRoot.textContent.length > 0))), 'cada propuesta renderiza bloques reales');
+  const sig = await pg.evaluate(() => [...document.querySelectorAll('.proposal')].map(p => p.querySelector('.prop-screen').style.background + '|' + [...p.querySelectorAll('.pv')].filter(h => h.shadowRoot).map(h => h.shadowRoot.innerHTML.length).join(',')));
+  ok(new Set(sig).size === 3, 'las tres son distintas entre sí');
+  ok(/oscuro/.test(await pg.locator('.proposal').nth(2).locator('.hint').textContent()) !== /oscuro/.test(await pg.locator('.proposal').nth(0).locator('.hint').textContent()), 'C usa el tema contrario');
+  ok(JSON.stringify(await st()) === JSON.stringify(before), 'abrir no cambia la pantalla');
+  ok(await pg.evaluate(() => document.activeElement.dataset.act === 'pickproposal'), 'el foco entra al diálogo');
+  await pg.keyboard.press('Escape'); ok(!(await pg.locator('#mProposals').isVisible()), 'Escape cierra');
+  ok(await pg.evaluate(() => document.activeElement.id === 'btnProposals'), 'el foco vuelve al botón');
+  ok(JSON.stringify(await st()) === JSON.stringify(before), 'cancelar no cambia nada');
+  await pg.click('[data-act=lock][data-slot=header]'); const locked = (await st()).blocks.header; ok(!!(await st()).locked.header, 'candado en Encabezado');
+  await pg.click('#btnProposals'); await pg.click('[data-act=pickproposal][data-i="2"]');
+  const after = await st(); ok(!(await pg.locator('#mProposals').isVisible()), 'elegir cierra el diálogo');
+  ok(after.theme !== before.theme && JSON.stringify(after.blocks) !== JSON.stringify(before.blocks), 'aplica tema y bloques de la C');
+  ok(after.blocks.header === locked, 'conserva el bloque con candado');
+  ok(/aplicada/.test(await pg.locator('#toast').textContent()), 'avisa de que se aplicó');
+  await pg.keyboard.press('Control+z'); const undone = await st(); ok(undone.theme === before.theme && JSON.stringify(undone.blocks) === JSON.stringify(before.blocks), 'se deshace con Ctrl+Z');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/agente.html'); await m.evaluate(() => { document.getElementById('briefPanel').open = true; }); await m.click('#btnProposals');
+  ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth) && await m.locator('.proposal').count() === 3, 'móvil sin desbordamiento');
+  ok(await m.evaluate(() => { const s = document.querySelector('.proposals-sheet').getBoundingClientRect(); return s.left >= 0 && s.right <= innerWidth; }), 'el diálogo cabe en móvil');
+  ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de propuestas correctas.`);
+})().catch(e => { console.error(e); process.exit(1); });
