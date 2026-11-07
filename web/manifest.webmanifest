@@ -1,4 +1,5 @@
 {
+  "id": "./index.html",
   "name": "Estilos · Tinta",
   "short_name": "Estilos",
   "start_url": "./index.html",
@@ -41,6 +42,32 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "description": "De una idea a una pantalla: elige tus bloques y compón con Tinta.",
+  "categories": [
+    "design",
+    "productivity",
+    "utilities"
+  ],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/tinta-movil.jpg",
+      "sizes": "540x960",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Tu idea, en una pantalla"
+    },
+    {
+      "src": "screenshots/tinta-escritorio.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Tinta en escritorio"
     }
   ]
 }
