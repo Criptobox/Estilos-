@@ -14,7 +14,7 @@
     const out = new Uint8Array(n); let o = 0; parts.forEach(p => { out.set(p, o); o += p.length; }); return out;
   }
   /* Solo lo que define la pantalla; nunca imágenes (assets). */
-  const pick = d => ({ brief: d.brief, selected: d.selected, choices: d.choices, content: d.content, repeat: d.repeat, motion: d.motion, ui: d.ui, buttonStyles: d.buttonStyles, cardStyles: d.cardStyles, assets: {} });
+  const pick = d => ({ brief: d.brief, selected: d.selected, choices: d.choices, content: d.content, repeat: d.repeat, motion: d.motion, palette: d.palette, ui: d.ui, buttonStyles: d.buttonStyles, cardStyles: d.cardStyles, assets: {} });
   async function encode(draft) {
     const raw = new TextEncoder().encode(JSON.stringify(pick(draft)));
     if (typeof CompressionStream !== 'function') return { code: 't0=' + b64(raw), compressed: false };

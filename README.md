@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 43`, `versionName 12.13`.
+- Android: `versionCode 44`, `versionName 12.14`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -284,6 +284,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **12.14**: paletas de color como capa sobre fondo, tarjetas y botones. Ver `docs/CHANGELOG-12.14.md`.
 - **12.13**: Recientes y descarga PNG/SVG en Tinta. Ver `docs/CHANGELOG-12.13.md`.
 - **12.12**: animaciones en la biblioteca, aplicables a la pantalla y a la exportación. Ver `docs/CHANGELOG-12.12.md`.
 - **12.11**: plantillas completas en la biblioteca de Tinta. Ver `docs/CHANGELOG-12.11.md`.
