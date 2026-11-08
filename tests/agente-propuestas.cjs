@@ -12,12 +12,12 @@ const { chromium } = require('playwright'); const assert = require('node:assert/
   ok(new Set(sig).size === 3, 'las tres son distintas entre sí');
   ok(/oscuro/.test(await pg.locator('.proposal').nth(2).locator('.hint').textContent()) !== /oscuro/.test(await pg.locator('.proposal').nth(0).locator('.hint').textContent()), 'C usa el tema contrario');
   ok(JSON.stringify(await st()) === JSON.stringify(before), 'abrir no cambia la pantalla');
-  ok(await pg.evaluate(() => document.activeElement.dataset.act === 'pickproposal'), 'el foco entra al diálogo');
+  await pg.waitForFunction(() => document.activeElement && document.activeElement.dataset.act === 'pickproposal', null, { timeout: 5000 }); ok(true, 'el foco entra al diálogo');
   await pg.keyboard.press('Escape'); ok(!(await pg.locator('#mProposals').isVisible()), 'Escape cierra');
-  ok(await pg.evaluate(() => document.activeElement.id === 'btnProposals'), 'el foco vuelve al botón');
+  await pg.waitForFunction(() => document.activeElement && document.activeElement.id === 'btnProposals', null, { timeout: 5000 }); ok(true, 'el foco vuelve al botón');
   ok(JSON.stringify(await st()) === JSON.stringify(before), 'cancelar no cambia nada');
   await pg.click('[data-act=lock][data-slot=header]'); const locked = (await st()).blocks.header; ok(!!(await st()).locked.header, 'candado en Encabezado');
-  await pg.click('#btnProposals'); await pg.click('[data-act=pickproposal][data-i="2"]');
+  await pg.click('#btnProposals'); await pg.waitForSelector('.proposal', { state: 'visible' }); await pg.click('[data-act=pickproposal][data-i="2"]');
   const after = await st(); ok(!(await pg.locator('#mProposals').isVisible()), 'elegir cierra el diálogo');
   ok(after.theme !== before.theme && JSON.stringify(after.blocks) !== JSON.stringify(before.blocks), 'aplica tema y bloques de la C');
   ok(after.blocks.header === locked, 'conserva el bloque con candado');
