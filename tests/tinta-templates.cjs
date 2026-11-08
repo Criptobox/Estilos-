@@ -20,7 +20,8 @@ ok(TT.problems({ blocks: [{ id: 'c-coral', repeat: 9 }] }, byId).length >= 1 && 
   await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   const d = await draft(); ok(JSON.stringify(d.selected) === JSON.stringify(['h-search', 'c-coffee', 'a-coral', 'n-soft']) && d.repeat['c-coffee'] === 4, 'carga los bloques y las copias de la plantilla');
   ok(d.choices.header === 'h-search' && d.choices.nav === 'n-soft', 'fija cabecera y barra');
-  ok(/cafetería/.test(d.brief) && Object.keys(d.content).length === 0, 'usa la idea de ejemplo y parte de contenido limpio');
+  ok(/cafetería/.test(d.brief) && JSON.stringify(Object.keys(d.content).sort()) === '["a-coral","h-search"]', 'usa la idea de ejemplo y adapta el texto de la cabecera y del botón (las tarjetas llevan sus copias)');
+  ok(!/Algo bueno empieza aquí|Crear algo increíble/.test(JSON.stringify(d.content)), 'la cabecera y el botón ya no conservan los textos genéricos');
   ok(await pg.locator('#phoneContent .component-host').count() >= 6, 'la pantalla muestra las 4 copias con contenido del sector');
   ok(/aplicada/.test(await pg.locator('#toast').textContent()), 'avisa de que se aplicó y se puede deshacer');
   await pg.keyboard.press('Control+z'); ok(JSON.stringify((await draft()).selected) === JSON.stringify(prev), 'Ctrl+Z restaura la selección anterior');
