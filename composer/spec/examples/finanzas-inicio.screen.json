@@ -1,0 +1,70 @@
+{
+  "spec_version": 1,
+  "brief_id": "finanzas-personales",
+  "screen": {
+    "name": "Resumen",
+    "role": "summary",
+    "viewport": "mobile"
+  },
+  "tokens": {
+    "theme": "light"
+  },
+  "blocks": [
+    {
+      "ref": "h-minimal",
+      "slots": {
+        "eyebrow": "TU DINERO, CLARO",
+        "headline": "Menos ruido.\nMás",
+        "headline_accent": "control.",
+        "subtitle": "Así va tu mes."
+      }
+    },
+    {
+      "ref": "c-balance",
+      "slots": {
+        "label": "Balance disponible",
+        "amount": "$24,380",
+        "amount_decimals": ".00",
+        "trend": "↗ 12.4%",
+        "trend_note": "este mes"
+      }
+    },
+    {
+      "ref": "a-dark",
+      "slots": {
+        "label": "Enviar dinero"
+      }
+    },
+    {
+      "ref": "a-soft",
+      "slots": {
+        "label": "Ver movimientos"
+      }
+    },
+    {
+      "ref": "n-dark"
+    }
+  ],
+  "rationale": [
+    {
+      "ref": "h-minimal",
+      "why": "Una cabecera sobria da seriedad a una app de dinero."
+    },
+    {
+      "ref": "c-balance",
+      "why": "El saldo es el dato protagonista y lleva su tendencia."
+    },
+    {
+      "ref": "a-dark",
+      "why": "Una acción principal sobria que acompaña el tono serio de una app de dinero."
+    },
+    {
+      "ref": "a-soft",
+      "why": "Acción secundaria silenciosa que no compite con la principal."
+    },
+    {
+      "ref": "n-dark",
+      "why": "Navegación compacta de iconos que acompaña el tono grafito."
+    }
+  ]
+}

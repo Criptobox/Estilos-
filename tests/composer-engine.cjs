@@ -1,0 +1,47 @@
+/* Motor de composición de Tinta (sin IA): reglas, determinismo, diversidad y flujo en la app. */
+const { chromium } = require('playwright'); const assert = require('node:assert/strict'); const fs = require('node:fs'), path = require('node:path');
+const Data = require('../web/js/tinta-composition-data.js'), Sectors = require('../web/js/tinta-sectors.js'), Composer = require('../web/js/tinta-composer.js');
+let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
+const c = Composer.create(Data, Sectors.detect), ids = new Set(Data.blocks.map(b => b.id)), role = id => Data.blocks.find(b => b.id === id).role;
+const briefs = ['Una app para mi cafetería', 'Mis finanzas personales', 'Una tienda de ropa', 'App de gimnasio', 'Viajes de fin de semana', 'clínica y citas', 'curso de inglés', 'música y podcast', 'algo diferente', ''];
+for (const b of briefs) {
+  const r = c.compose({ brief: b }), ps = r.proposals;
+  ok(ps.length === 3, `tres propuestas para «${b}»`);
+  ok(ps.every(p => p.blocks.every(id => ids.has(id))), 'solo bloques que existen');
+  ok(ps.every(p => ['header', 'cards', 'actions', 'nav'].every(rl => p.blocks.some(id => role(id) === rl))), 'cada propuesta cubre encabezado, tarjeta, acción y navegación');
+  ok(ps.every(p => p.blocks.filter(id => role(id) === 'header').length === 1 && p.blocks.filter(id => role(id) === 'nav').length === 1), 'un encabezado y una navegación');
+  ok(ps.every(p => !p.issues.some(i => i.level === 'aviso')), `sin avisos de diseño para «${b}»`);
+  ok(new Set(ps.map(p => p.blocks.join())).size === 3, 'propuestas distintas');
+  ok(JSON.stringify(c.compose({ brief: b })) === JSON.stringify(r), 'determinista: misma idea, mismas propuestas');
+  ok(ps.every((p, i) => !i || ps[i - 1].score >= p.score - 2), 'ordenadas por calidad');
+}
+const first = b => c.compose({ brief: b }).proposals[0].blocks.join();
+ok(first('Una app para mi cafetería') === 'h-search,c-coffee,a-coral,n-soft', 'cafetería: búsqueda, producto, acción cálida y navegación esencial');
+ok(first('Mis finanzas personales') === 'h-minimal,c-balance,a-dark,n-dark', 'finanzas: cabecera sobria, balance y acción en grafito');
+ok(first('Una tienda de ropa') === 'h-search,c-summary,a-dark,n-float', 'tienda: búsqueda, resumen y barra flotante');
+ok(c.compose({ brief: 'x', sector: 'finanzas' }).sector === 'finanzas', 'permite forzar el sector');
+const lint = (l, s) => c.lint(l, s).map(i => i.rule);
+ok(lint(['h-search', 'c-coffee', 'a-dark', 'a-coral', 'n-soft']).includes('conflicto'), 'detecta dos acciones principales');
+ok(lint(['h-search', 'c-coral', 'a-coral', 'n-float']).includes('acento'), 'detecta exceso de coral');
+ok(lint(['h-minimal', 'c-balance', 'c-coral', 'a-dark', 'n-soft']).includes('peso'), 'detecta dos bloques muy pesados');
+ok(lint(['h-search', 'c-summary', 'a-soft', 'n-soft']).includes('requiere'), 'la acción suave necesita una principal');
+ok(lint(['h-search', 'c-balance', 'a-dark', 'n-soft'], 'comida').includes('no-encaja'), 'avisa de bloques que no encajan con el sector');
+ok(lint(['c-summary']).includes('sin-accion-principal') && c.lint(['c-summary']).some(i => i.rule === 'falta-encabezado'), 'avisa de lo que falta');
+ok(lint(['h-minimal', 'c-summary', 'a-dark', 'n-soft'], 'finanzas').length === 0, 'una pantalla correcta no da avisos');
+ok(fs.readFileSync(path.join(__dirname, '..', 'web', 'js', 'tinta-composition-data.js'), 'utf8').includes('TintaCompositionData'), 'datos generados presentes');
+(async () => {
+  const b = await chromium.launch(), errors = [], pg = await b.newPage({ viewport: { width: 1100, height: 900 } }); pg.on('pageerror', e => errors.push(e.message));
+  const sel = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).selected.join());
+  await pg.goto('http://127.0.0.1:8080/crear.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('.gallery-item');
+  ok(await sel() === 'h-search,c-coffee,a-coral,n-soft', 'Ayúdame a empezar usa la primera propuesta del motor');
+  ok(await pg.locator('#nextProposal').isVisible() && /Propuesta 1 de 3/.test(await pg.locator('#exploreNote').textContent()), 'aparece «Otra propuesta» y la nota indica cuál');
+  await pg.click('#nextProposal'); const second = await sel(); ok(second !== 'h-search,c-coffee,a-coral,n-soft' && second.split(',').length >= 4, 'otra propuesta cambia los bloques sugeridos');
+  ok(/Propuesta 2 de 3/.test(await pg.locator('#exploreNote').textContent()), 'la nota indica la propuesta 2');
+  await pg.click('#nextProposal'); await pg.click('#nextProposal'); ok(await sel() === 'h-search,c-coffee,a-coral,n-soft', 'tras la tercera vuelve a la primera');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/crear.html'); await m.click('[data-idea=finanzas]'); await m.locator('#briefForm [type=submit]').click(); await m.waitForSelector('.gallery-item');
+  ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
+  const keep = await b.newPage(); await keep.goto('http://127.0.0.1:8080/crear.html'); await keep.evaluate(() => localStorage.setItem('estilos-tinta-prototype-v1', JSON.stringify({ selected: ['c-coral'] }))); await keep.reload();
+  await keep.click('[data-idea=comida]'); await keep.locator('#briefForm [type=submit]').click(); await keep.waitForSelector('.gallery-item');
+  const kept = await keep.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).selected); ok(kept.includes('c-coral') && !kept.includes('c-coffee'), 'conserva la tarjeta elegida y completa lo que falta');
+  ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones del motor de composición correctas.`);
+})().catch(e => { console.error(e); process.exit(1); });

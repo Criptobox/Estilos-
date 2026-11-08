@@ -23,8 +23,10 @@ jobs:
       - name: Python para generar la versión autónoma
         uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - name: Validar metadatos de IA, ScreenSpec y briefs
-        run: node ai/tools/validate-ai.cjs
+      - name: Datos de composición al día
+        run: node tools/build-composition-data.cjs --check
+      - name: Validar metadatos de composición, ScreenSpec y briefs
+        run: node composer/tools/validate-composer.cjs
       - name: Sintaxis de los JavaScript
         run: for f in web/js/*.js web/sw.js; do node --check "$f" || exit 1; done
       - name: Instalar Playwright y Chromium

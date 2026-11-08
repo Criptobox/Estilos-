@@ -3,7 +3,7 @@
 // Sin dependencias. Los *.schema.json describen el contrato; este script aplica
 // la parte estructural y las reglas semánticas que el esquema no puede expresar
 // (ids que existen, huecos declarados, reglas de composición).
-// Uso: node ai/tools/validate-ai.cjs
+// Uso: node composer/tools/validate-composer.cjs
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..', '..');
@@ -13,17 +13,25 @@ const err = (where, msg) => errors.push(where + ': ' + msg);
 
 const catalog = read('design-library/catalog.json');
 const catalogIds = new Set(catalog.records.map((r) => r.id));
-const meta = read('design-library/ai-metadata.json');
+const meta = read('design-library/composition.json');
 
 const ROLES = ['header', 'cards', 'actions', 'nav'];
 const POSITIONS = ['top', 'body', 'bottom'];
 const KINDS = ['text', 'textlist', 'color', 'image', 'link'];
+const TONES = ['calido', 'sobrio', 'energico', 'editorial'];
+const ACCENTS = ['coral', 'grafito', 'neutro'];
+const WEIGHTS = ['ligero', 'medio', 'fuerte'];
+const SECTOR_IDS = ['comida', 'tienda', 'finanzas', 'fitness', 'viajes', 'salud', 'musica', 'educacion'];
+for (const id of SECTOR_IDS.concat('default')) {
+  const t = meta.sectors && meta.sectors[id] && meta.sectors[id].tones;
+  if (!Array.isArray(t) || !t.length || t.some((x) => !TONES.includes(x))) err('composition', 'sectors.' + id + '.tones inválido');
+}
 
 // 1. Metadatos de bloques
 const byId = new Map();
-if (meta.schema_version !== 1) err('ai-metadata', 'schema_version debe ser 1');
+if (meta.schema_version !== 1) err('composition', 'schema_version debe ser 1');
 for (const b of meta.blocks) {
-  const w = 'ai-metadata[' + b.id + ']';
+  const w = 'composition[' + b.id + ']';
   if (byId.has(b.id)) err(w, 'id duplicado');
   byId.set(b.id, b);
   if (!catalogIds.has(b.id)) err(w, 'no existe en catalog.json');
@@ -34,8 +42,17 @@ for (const b of meta.blocks) {
     for (const ref of (b.rules && b.rules[k]) || []) if (!catalogIds.has(ref)) err(w, k + ' apunta a un id inexistente: ' + ref);
   }
   for (const k of ['when_to_use', 'avoid_when']) {
-    if (!b.ai || typeof b.ai[k] !== 'string' || b.ai[k].length < 10) err(w, 'ai.' + k + ' requerido (mín. 10 caracteres)');
+    if (!b.guide || typeof b.guide[k] !== 'string' || b.guide[k].length < 10) err(w, 'guide.' + k + ' requerido (mín. 10 caracteres)');
   }
+  const d = b.design || {};
+  if (!Array.isArray(d.tones) || !d.tones.length || d.tones.some((t) => !TONES.includes(t))) err(w, 'design.tones inválido');
+  if (!ACCENTS.includes(d.accent)) err(w, 'design.accent inválido');
+  if (!WEIGHTS.includes(d.weight)) err(w, 'design.weight inválido');
+  for (const sec of SECTOR_IDS) {
+    const v = d.affinity && d.affinity[sec];
+    if (!Number.isInteger(v) || v < 0 || v > 3) err(w, 'design.affinity.' + sec + ' debe ser un entero de 0 a 3');
+  }
+  for (const ref of (b.rules && b.rules.requires_any) || []) if (!catalogIds.has(ref)) err(w, 'requires_any apunta a un id inexistente: ' + ref);
   const names = new Set();
   for (const s of b.slots || []) {
     if (!/^[a-z][a-z0-9_]*$/.test(s.name || '')) err(w, 'nombre de hueco inválido: ' + s.name);
@@ -96,6 +113,10 @@ function checkSpec(spec, where) {
   for (const ref of used) {
     for (const c of byId.get(ref).rules.conflicts_with || []) if (used.has(c)) err(where, ref + ' no puede convivir con ' + c);
   }
+  for (const ref of used) {
+    const need = byId.get(ref).rules.requires_any;
+    if (need && !need.some((r) => used.has(r))) err(where, ref + ' necesita que haya también uno de: ' + need.join(', '));
+  }
   if ((roleCount.header || 0) > 1) err(where, 'más de un encabezado');
   if ((roleCount.nav || 0) > 1) err(where, 'más de una barra de navegación');
   if (!Array.isArray(spec.rationale) || !spec.rationale.length) err(where, 'rationale obligatorio');
@@ -107,12 +128,12 @@ function checkSpec(spec, where) {
     for (const ref of used) if (!spec.rationale.some((r) => r.ref === ref)) err(where, 'falta rationale para ' + ref);
   }
 }
-const exDir = path.join(root, 'ai/spec/examples');
+const exDir = path.join(root, 'composer/spec/examples');
 const examples = fs.readdirSync(exDir).filter((f) => f.endsWith('.screen.json'));
 for (const f of examples) checkSpec(JSON.parse(fs.readFileSync(path.join(exDir, f), 'utf8')), 'ejemplo ' + f);
 
 // 3. Briefs de oro
-const briefsFile = path.join(root, 'ai/evals/briefs/briefs.jsonl');
+const briefsFile = path.join(root, 'composer/evals/briefs/briefs.jsonl');
 const briefIds = new Set();
 let briefs = 0;
 fs.readFileSync(briefsFile, 'utf8').split('\n').filter(Boolean).forEach((line, i) => {

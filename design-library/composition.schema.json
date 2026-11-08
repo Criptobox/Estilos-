@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:estilos:composition:v1",
+  "title": "Metadatos de composición por bloque v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "sectors",
+    "blocks"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "note": {
+      "type": "string"
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/block"
+      }
+    },
+    "sectors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "tones"
+        ],
+        "properties": {
+          "tones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/tone"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slot": {
+      "type": "object",
+      "required": [
+        "name",
+        "kind",
+        "selector"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "kind": {
+          "enum": [
+            "text",
+            "textlist",
+            "color",
+            "image",
+            "link"
+          ]
+        },
+        "selector": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Selector CSS dentro del HTML del bloque."
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Longitud máxima por texto."
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Elementos esperados en un textlist."
+        },
+        "parts": {
+          "type": "integer",
+          "minimum": 2,
+          "description": "Textos de Tinta que ocupa el hueco; el valor se escribe en líneas separadas por \\n."
+        },
+        "own": {
+          "type": "boolean",
+          "description": "Solo el texto directo del elemento, sin el de sus hijos."
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "block": {
+      "type": "object",
+      "required": [
+        "id",
+        "design",
+        "slots",
+        "rules",
+        "guide"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Debe existir en catalog.json."
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slot"
+          }
+        },
+        "rules": {
+          "type": "object",
+          "required": [
+            "role",
+            "position",
+            "max_per_screen"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "role": {
+              "enum": [
+                "header",
+                "cards",
+                "actions",
+                "nav"
+              ]
+            },
+            "position": {
+              "enum": [
+                "top",
+                "body",
+                "bottom"
+              ]
+            },
+            "max_per_screen": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "pairs_with": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "conflicts_with": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "requires_any": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Debe haber al menos uno de estos bloques en la pantalla."
+            }
+          }
+        },
+        "design": {
+          "type": "object",
+          "required": [
+            "tones",
+            "accent",
+            "weight",
+            "affinity"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "tones": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/tone"
+              }
+            },
+            "accent": {
+              "enum": [
+                "coral",
+                "grafito",
+                "neutro"
+              ]
+            },
+            "weight": {
+              "enum": [
+                "ligero",
+                "medio",
+                "fuerte"
+              ]
+            },
+            "affinity": {
+              "type": "object",
+              "description": "Encaje con cada sector, de 0 (no encaja) a 3 (ideal).",
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              }
+            }
+          }
+        },
+        "guide": {
+          "type": "object",
+          "required": [
+            "when_to_use",
+            "avoid_when"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "when_to_use": {
+              "type": "string",
+              "minLength": 10
+            },
+            "avoid_when": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        }
+      }
+    },
+    "tone": {
+      "enum": [
+        "calido",
+        "sobrio",
+        "energico",
+        "editorial"
+      ]
+    }
+  }
+}

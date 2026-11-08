@@ -1,9 +1,9 @@
-/* IA: los huecos declarados existen en los bloques reales y las ScreenSpec de ejemplo se convierten a proyectos de Tinta que se dibujan. */
+/* Composición: los huecos declarados existen en los bloques reales y las ScreenSpec de ejemplo se convierten a proyectos de Tinta que se dibujan. */
 const { chromium } = require('playwright'); const assert = require('node:assert/strict');
 const fs = require('node:fs'), path = require('node:path');
-const { convert, checkBlocks, STORE } = require('../ai/tools/spec-to-tinta.cjs');
+const { convert, checkBlocks, STORE } = require('../composer/tools/spec-to-tinta.cjs');
 let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
-const examples = path.join(__dirname, '..', 'ai', 'spec', 'examples');
+const examples = path.join(__dirname, '..', 'composer', 'spec', 'examples');
 (async () => {
   const b = await chromium.launch(), errors = [];
   const pg = await b.newPage({ viewport: { width: 1100, height: 900 } }); pg.on('pageerror', e => errors.push(e.message));
@@ -25,5 +25,5 @@ const examples = path.join(__dirname, '..', 'ai', 'spec', 'examples');
   }
   const rep = await convert(pg, { screen: { name: 'x' }, blocks: [{ ref: 'a-dark', slots: { label: 'A' } }, { ref: 'a-dark', slots: { label: 'B' } }, { ref: 'c-coffee', repeat: 3 }] });
   ok(rep.problems.some(p => /repetido/.test(p)) && rep.problems.some(p => /repeat/.test(p)), 'rechaza bloques repetidos y repeat > 1');
-  ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de IA (huecos y ScreenSpec) correctas.`);
+  ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de composición (huecos y ScreenSpec) correctas.`);
 })().catch(e => { console.error(e); process.exit(1); });

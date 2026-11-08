@@ -1,330 +1,216 @@
-# Plan · Estilos AI
+# Plan · Tinta compone sola
 
-IA especializada en código y diseño de web apps. Usa la biblioteca de Estilos como única fuente de piezas, arma pantallas completas con ellas y se mejora con el uso y con otros modelos.
+Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación hacen el trabajo, de forma local, rápida y repetible. Una IA puede sumarse después como un proponente más, opcional, que pasa por las mismas reglas.
 
-> Estado: **fase 0 en curso.** Hecho: esquema de `ScreenSpec`, metadatos de IA de 12 bloques, 2 pantallas de ejemplo, 10 briefs, validador, `CLAUDE.md`, skills `add-block` y `compose-screen`, plantillas de GitHub y validación en CI (ver §10). Lo demás sigue siendo propuesta.
+> Estado: **versión 12.9.** El motor local compone tres propuestas por idea y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
 
-## 0. Idea en una frase
+## 0. Principios
 
-**Le das un brief y la biblioteca. Te devuelve pantallas armadas solo con bloques de la biblioteca, con el código listo, y aprende de lo que eliges.**
+1. **El motor local es el producto.** Cada mejora de calidad se busca primero con datos y reglas: más bloques descritos, mejores reglas, más sectores. Eso mejora a todas las personas que usan Tinta, sin conexión y sin coste por uso.
+2. **La biblioteca es la única fuente de piezas.** Toda pantalla se arma con ids de `design-library/catalog.json`. Si falta una pieza, se añade con la skill `add-block` y entra por revisión.
+3. **Un contrato común.** El motor, una persona o un modelo producen lo mismo (una lista de bloques, o una `ScreenSpec` con textos) y todos pasan por la misma revisión de diseño (`lint`).
+4. **Medir.** El motor es la línea base. Cualquier proponente nuevo, IA incluida, solo se activa si le gana de forma medible.
 
-Tres decisiones que ordenan todo el proyecto:
+## 1. Qué hay hoy
 
-1. **La biblioteca es la verdad.** El modelo no inventa interfaces: elige bloques por `id`, rellena sus huecos (textos, imágenes, colores) y los coloca. Si falta una pieza, propone una nueva que entra a la biblioteca por revisión.
-2. **El modelo habla en `ScreenSpec`.** Un JSON con esquema fijo es el contrato entre cualquier modelo y el renderizador. Se valida antes de dibujar, así un modelo malo falla rápido y de forma medible.
-3. **Medir antes de entrenar.** Primero un banco de pruebas (briefs de oro + métricas automáticas). Con él se compara cualquier modelo, prompt o ajuste fino.
-
-## 1. Punto de partida (lo que ya existe)
-
-| Pieza actual | Dónde | Qué aporta a la IA |
+| Pieza | Dónde | Estado |
 |---|---|---|
-| Catálogo de 138 recursos en 26 módulos, con esquema | `design-library/catalog.json`, `catalog.schema.json` | Base de conocimiento y herramienta de búsqueda |
-| Motor de render `designParts` | `web/js/tinta-library.js`, `tinta-catalog.js`, `designs-*.js` | Renderizador de pantallas ya probado |
-| Edición de textos, color, estilos de botones y tarjetas | `tinta-button-style.js`, `tinta-card-style.js` | Los "huecos" (slots) que la IA rellena |
-| Agente con tres propuestas para comparar | `web/js/agente.js` (Estilos 12.5) | Fuente natural de datos de preferencia |
-| Recetas por palabras, sin modelo de lenguaje | `crear.js` | Línea base contra la que medir a la IA |
-| Exportación HTML autónoma, proyectos JSON, PWA | `export.js`, `tinta-pwa.js` | Salida y persistencia |
-| Pruebas Playwright y CI | `tests/`, `.github/workflows/` | Base para el arnés de evaluación |
+| Catálogo de 138 recursos en 26 módulos | `design-library/catalog.json` | Existe |
+| Motor de render y edición de textos, color, botones y tarjetas | `web/js/tinta-*.js`, `crear.js` | Existe |
+| Detector de sector y textos por sector (8 sectores) | `web/js/tinta-sectors.js` | Existe |
+| **Metadatos de composición** de 12 bloques de Tinta: huecos, reglas, tono, acento, peso visual y afinidad por sector | `design-library/composition.json` | Nuevo (12.9) |
+| **Motor de composición**: tres propuestas distintas, puntuación, `lint` | `web/js/tinta-composer.js` | Nuevo (12.9) |
+| **Otra propuesta** en la pantalla de bloques | `web/js/crear.js`, `crear.html` | Nuevo (12.9) |
+| Contrato `ScreenSpec` y convertidor a proyecto de Tinta | `composer/spec/`, `composer/tools/spec-to-tinta.cjs` | Nuevo |
+| Validador y 10 briefs de oro | `composer/tools/validate-composer.cjs`, `composer/evals/briefs/` | Nuevo |
+| Pruebas del motor (100 comprobaciones) y de los huecos | `tests/composer-engine.cjs`, `tests/composer-spec.cjs` | Nuevo |
+| Skills `add-block` y `compose-screen`, plantillas de issue y PR, `CLAUDE.md` | `.claude/`, `.github/` | Nuevo |
 
-Carencias que el plan debe cerrar:
+Límites de hoy, a la vista:
 
-- El catálogo describe las piezas pero no declaraba sus huecos ni sus reglas de composición. Se cierra con `design-library/ai-metadata.json` (12 bloques de Tinta hasta ahora).
-- No hay ningún modelo de lenguaje conectado.
-- **El módulo `web-sections` está vacío** (0 de 138 registros). Mientras no haya secciones web (héroes, precios, pie de página), la IA solo puede armar pantallas de app. Para cubrir "web app" completa hay que llenarlo, y es prioridad de la fase 1.
-- Los registros `lib-*` (126 de la biblioteca original) aún no tienen metadatos de IA. Se añaden por módulos, empezando por `app-screens`, `forms` y `cards`.
-- Hoy la composición de Tinta usa cuatro roles: `header`, `cards`, `actions`, `nav`. El esquema parte de ellos.
+- Solo 12 bloques tienen metadatos de composición. Los 126 `lib-*` aún no entran en las propuestas.
+- **El módulo `web-sections` está vacío** (0 de 138). Sin héroes, precios ni pies de página, Tinta compone pantallas de app, no sitios web.
+- Tinta compone con cuatro roles (`header`, `cards`, `actions`, `nav`) y cada bloque aparece una sola vez por pantalla.
+- El motor propone qué bloques usar. Los textos los pone el botón existente «Adaptar textos a la idea». Todavía no rellena los huecos por sí mismo.
+- Hay una sola pantalla por idea. Una app necesita varias (inicio, detalle, carrito).
 
-## 2. Arquitectura
+## 2. Cómo compone el motor
 
 ```
-Brief ─► Planificador ─► Recuperador ─► Compositor ─► Crítico ─► Render ─► Código
-            (qué pantallas)   (busca bloques)  (ScreenSpec)   (reglas + a11y)   (designParts)  (HTML/Tailwind/…)
-                                   ▲                                   │
-                              Biblioteca ◄──── propuesta de bloque nuevo ┘
-                                   ▲
-                      Conectores MCP + Skills (§5, §6)
+Idea ─► Sector ─► Candidatos ─► Reglas de diseño ─► Puntuación ─► Selección diversa ─► 3 propuestas
+ (texto)  (8)     (todas las      (lint: avisos)     (afinidad,     (cambian ≥ 2 roles     (con «por qué»
+                   combinaciones)                      tono, pares)   entre sí)               y avisos)
 ```
 
-### 2.1 Capas
+1. **Sector.** `TintaSectors.detect` lee la idea. Sin sector, cada bloque vale por su versatilidad media.
+2. **Candidatos.** Todas las combinaciones válidas de encabezado × tarjetas (una o dos) × acción principal (con o sin acción suave) × navegación. Son unas 240 y se evalúan en milisegundos.
+3. **Reglas de diseño** (`lint`, también disponible para pantallas armadas a mano):
+   - una acción principal clara y sin dos que compitan;
+   - un solo acento coral (dos penalizan poco, tres mucho);
+   - no dos bloques muy pesados a la vez;
+   - no más de dos tarjetas;
+   - la acción suave necesita una principal al lado;
+   - aviso si un bloque no suele encajar con el sector;
+   - aviso si falta encabezado, navegación o acción principal.
+4. **Puntuación.** Encaje de cada bloque con el sector (0 a 3), coherencia de tono, pares que se llevan bien, y una penalización por pantallas largas.
+5. **Selección.** Se toman primero las pantallas sin avisos. Cada propuesta debe cambiar al menos dos roles respecto a las anteriores, así las tres son realmente distintas.
+6. **Salida.** Tres propuestas con nombre («La más acertada», «Variante: otra acción y otra navegación»), tono, puntuación y el porqué de cada bloque, sacado de su ficha.
 
-1. **Biblioteca** (`design-library/`): catálogo + índice de búsqueda semántica + tokens. Se amplía con `slots` y `rules` por bloque (§3).
-2. **Especificación** (`ai/spec/`): `ai/spec/screen-spec.schema.json` y `design-library/ai-metadata.schema.json`. Una sola definición compartida por agente, renderizador y pruebas.
-3. **Núcleo del agente** (`ai/agent/`): planificador, recuperador, compositor, crítico. Cada uno es una función pura con entrada y salida tipadas, para poder probarlos por separado.
-4. **Proveedores** (`ai/providers/`): adaptador por modelo (Claude, otros APIs compatibles, modelo local). Misma interfaz: `complete(messages, tools, schema) → ScreenSpec`.
-5. **Conector MCP** (`ai/mcp-server/`): expone la biblioteca y el renderizador como herramientas a cualquier cliente.
-6. **Skills** (`.claude/skills/`): procedimientos repetibles para humanos y agentes (§6).
-7. **Evaluación y entrenamiento** (`ai/evals/`, `ai/training/`): banco de pruebas, conjuntos de datos y guiones de ajuste (§7).
-8. **Interfaz** (`web/`): panel del Agente dentro de Tinta y pantalla Laboratorio (§8).
+Es determinista: la misma idea da siempre las mismas propuestas. Eso permite probarlo y comparar versiones.
 
-### 2.2 Flujo de una petición
+### Cómo mejorar la calidad sin IA
 
-1. **Planificar**: del brief sale la lista de pantallas y la función de cada una (ej. "Inicio", "Detalle de producto", "Carrito").
-2. **Recuperar**: para cada función se buscan candidatos en la biblioteca (texto + filtros por módulo, estilo, plataforma, estado de calidad).
-3. **Componer**: el modelo elige bloques, orden y valores de los huecos, y devuelve un `ScreenSpec`.
-4. **Criticar**: reglas automáticas (esquema, ids existentes, contraste AA, jerarquía de encabezados, un solo botón primario, tamaño táctil mínimo) y, opcionalmente, un segundo modelo con rúbrica. Si falla, vuelve a componer con el informe de errores (máximo 2 vueltas).
-5. **Renderizar**: `designParts` dibuja la pantalla. Se captura imagen con Playwright para la crítica visual.
-6. **Entregar**: tres propuestas para comparar y elegir, con el porqué de cada bloque, y exportación a código.
+| Palanca | Qué se hace | Efecto |
+|---|---|---|
+| Más bloques con metadatos | Describir los `lib-*` con la skill `add-block` (tono, acento, peso, afinidad, huecos) | Más variedad y propuestas menos repetidas |
+| Secciones web | Llenar `web-sections`: héroe, beneficios, precios, testimonios, pie | Tinta pasa de pantallas de app a sitios completos |
+| Varias pantallas por idea | Recetas por tipo de pantalla (inicio, detalle, carrito, perfil) con las plantillas `app-screens` | Una app entera, no una sola vista |
+| Huecos con textos por sector | Los bancos de texto de `tinta-sectors.js` rellenan los huecos de cada bloque | La propuesta sale lista, sin pasar por «Adaptar textos» |
+| Revisión visible | Mostrar los avisos de `lint` en la pantalla de revisión, con un arreglo sugerido | Quien arma a mano también aprende de las reglas |
+| Más sectores | Añadir sectores y ajustar afinidades con las pruebas de gusto | Mejor cobertura de ideas |
+| Variantes de estilo | Tonos, paletas y radios como tokens aplicados a la propuesta | Más identidad sin más bloques |
 
 ## 3. Contratos de datos
 
-### 3.1 Metadatos de IA por bloque
+### 3.1 Metadatos de composición (`design-library/composition.json`)
 
-`catalog.json` se genera con `tools/build-tinta-catalog.cjs`, así que los huecos y reglas viven en un archivo aparte, `design-library/ai-metadata.json` (esquema en `ai-metadata.schema.json`), unido al catálogo por `id`. Un `slot` se localiza con un selector CSS dentro del HTML del bloque. Se llena de forma incremental, empezando por los bloques de Tinta.
+Archivo aparte de `catalog.json` (que se genera con un script). Se une por `id`. Esquema en `composition.schema.json`.
 
 ```jsonc
 {
-  "id": "h-search",
-  "slots": [
-    { "name": "headline",    "kind": "text", "selector": "h1",             "max": 40, "required": true },
-    { "name": "placeholder", "kind": "text", "selector": ".search span",   "max": 50 }
-  ],
-  "rules": {
-    "role": "header",                // header | cards | actions | nav
-    "position": "top",               // top | body | bottom
-    "max_per_screen": 1,
-    "pairs_with": ["n-soft", "n-float", "n-dark"],
-    "conflicts_with": []
+  "id": "c-coffee",
+  "design": {
+    "tones": ["calido"],            // calido | sobrio | energico | editorial
+    "accent": "neutro",             // coral | grafito | neutro
+    "weight": "medio",              // ligero | medio | fuerte
+    "affinity": { "comida": 3, "tienda": 2, "finanzas": 0 }   // 0 a 3 por sector
   },
-  "ai": {
-    "when_to_use": "Inicio de apps de catálogo o contenido donde buscar es la acción principal.",
-    "avoid_when": "Pantallas de pago o de formularios largos."
-  }
+  "slots": [
+    { "name": "title", "kind": "text", "selector": ".details h2", "max": 32, "required": true },
+    { "name": "price", "kind": "text", "selector": ".details > b", "own": true, "max": 10 }
+  ],
+  "rules": { "role": "cards", "position": "body", "max_per_screen": 1, "conflicts_with": [] },
+  "guide": { "when_to_use": "…", "avoid_when": "…" }
 }
 ```
 
-`when_to_use` y `avoid_when` son texto para el modelo. Los escribe una persona (o una skill con revisión), nunca el modelo sin revisar.
+Un hueco se localiza con un selector CSS dentro del HTML del bloque. `own` toma solo el texto directo del elemento. `parts` indica que ocupa varios textos de Tinta (un título con salto de línea) y el valor se escribe en líneas. La prueba `tests/composer-spec.cjs` comprueba contra la página real que cada selector apunta a los textos correctos; en su primera pasada encontró 7 huecos mal declarados.
+
+`web/js/tinta-composition-data.js` se genera desde este archivo con `node tools/build-composition-data.cjs`. CI verifica que esté al día.
 
 ### 3.2 `ScreenSpec`
 
-```jsonc
-{
-  "spec_version": 1,
-  "brief_id": "cafe-pedidos-001",
-  "screen": { "name": "Inicio", "role": "home", "viewport": "mobile" },
-  "tokens": { "theme": "light", "accent": "#e8664a", "radius": "soft" },
-  "blocks": [
-    { "ref": "h-search", "slots": { "headline": "Tu café, listo antes de llegar.", "placeholder": "Buscar café" } },
-    { "ref": "c-coffee", "slots": { "title": "Flat white", "price": "$3.80" }, "repeat": 4 },
-    { "ref": "n-soft", "slots": { "labels": ["Inicio", "Menú", "Pedidos", "Perfil"] } }
-  ],
-  "rationale": [
-    { "ref": "h-search", "why": "La búsqueda es la acción más frecuente en un catálogo." }
-  ]
-}
-```
+Una pantalla con bloques, textos de los huecos y el porqué de cada bloque. Esquema en `composer/spec/screen-spec.schema.json`, ejemplos en `composer/spec/examples/`. `composer/tools/spec-to-tinta.cjs` la convierte en un proyecto de Tinta importable y la dibuja. Hoy la usan las pruebas y los ejemplos; el motor aún devuelve solo bloques. Más adelante el motor también devolverá `ScreenSpec` con los huecos rellenos.
 
-Reglas del contrato:
+Límites de los proyectos de Tinta que condicionan el contrato: cada bloque una vez por pantalla, un encabezado y una navegación, textos guardados por posición de nodo, tema oscuro guardado aparte.
 
-- Todo `ref` debe existir en el catálogo. Un `ref` inventado es un fallo medible (**tasa de alucinación de bloques**).
-- Los `slots` se validan contra la definición del bloque (tipo, longitud, color válido).
-- `rationale` es obligatorio. Alimenta el panel "Por qué" y sirve de dato de entrenamiento.
-- Los proyectos JSON existentes (`estilos-tinta-project` v1) siguen abriéndose. Se añade un convertidor `ScreenSpec ↔ proyecto`.
+## 4. Calidad medible
 
-## 4. Código y diseño: cómo cubre las dos cosas
+El motor se mide igual que se medirá cualquier otro proponente.
 
-| Salida | Cómo se genera | Fase |
-|---|---|---|
-| HTML/CSS autónomo | Render directo de `designParts` (ya existe) | 1 |
-| Tailwind | Plantilla por bloque (`code.tailwind` en el catálogo) | 3 |
-| Jetpack Compose, Flutter, SwiftUI | Plantilla por bloque + prueba de compilación | 4 |
-| React / componentes | Generados desde `ScreenSpec` con plantillas, no con texto libre | 4 |
+**Hoy (pruebas automáticas, 100 comprobaciones):**
+- Tres propuestas distintas para 10 ideas de prueba, incluida una vacía.
+- Cada propuesta cubre encabezado, tarjeta, acción y navegación, y no tiene avisos de diseño.
+- Determinismo: misma idea, mismas propuestas.
+- Cafetería, finanzas y tienda dan la combinación esperada.
+- Cada regla de `lint` salta cuando debe y calla cuando no.
+- Flujo en la app: botón «Otra propuesta», vuelta a la primera, conserva lo que la persona ya eligió, sin desbordamiento en móvil.
 
-Para el código se usa el mismo principio que para el diseño: el modelo no escribe CSS desde cero, elige y parametriza plantillas verificadas. Lo que el modelo escribe libre (bloques nuevos propuestos) pasa por saneado y revisión antes de entrar a la biblioteca, como ya se hace con el código propio actual.
+**Siguiente:**
+- Ampliar los briefs de oro de 10 a 40, con pantallas esperadas y restricciones.
+- Métricas por brief: propuestas sin avisos, diversidad entre las tres, encaje medio con el sector, cobertura de bloques usados.
+- Comparación visual: capturas de las propuestas para detectar regresiones de gusto al cambiar reglas o datos.
+- Accesibilidad: contraste AA y tamaño táctil por bloque, como dato de la ficha.
 
-## 5. Conectores (MCP)
+## 5. IA opcional (más adelante)
 
-Un servidor MCP local (`ai/mcp-server/`) y su registro en `.mcp.json`. Así Claude Code, otros agentes y los modelos que se quieran probar usan las mismas herramientas.
+Cuando el motor ya funcione bien y esté medido, una IA se suma como **proponente**: recibe la idea y la biblioteca, devuelve una `ScreenSpec`, y pasa por `lint` y por la misma validación. No sustituye al motor ni es necesaria para usar Tinta.
 
-| Herramienta | Entrada | Salida |
-|---|---|---|
-| `library_search` | texto, módulo, estilo, plataforma | lista de bloques con puntuación |
-| `library_get_block` | `id` | ficha completa con `slots` y `rules` |
-| `library_propose_block` | HTML/CSS + metadatos | borrador en cola de revisión (no entra solo) |
-| `screen_validate` | `ScreenSpec` | errores y avisos (esquema, reglas, contraste) |
-| `screen_render` | `ScreenSpec` | HTML + captura PNG |
-| `screen_export` | `ScreenSpec`, stack | código del stack elegido |
-| `project_save` / `project_open` | proyecto | persistencia en JSON |
-| `eval_run` | modelo, conjunto de briefs | informe de métricas |
+Condiciones para activarla:
+- Debe ganar al motor en comparación a ciegas con las mismas ideas.
+- Nunca inventa bloques ni ejecuta código: solo elige ids y escribe textos de huecos.
+- Si no hay conexión o clave, Tinta sigue con el motor local.
+- Las claves van en secretos o variables locales, nunca en el repositorio.
 
-Conectores externos recomendados, todos opcionales y por fases:
+Piezas previstas, en este orden y solo si hacen falta:
 
-- **GitHub** (ya disponible en la sesión): issues de "Nuevo bloque", PRs, revisión y Actions.
-- **Figma** (fase 4): importar estilos y tokens como propuesta de bloques o paletas.
-- **Almacenamiento de datos** (fase 3): bucket o repositorio de datos para los conjuntos de entrenamiento, fuera del repo principal.
-- **Seguimiento de experimentos** (fase 3): Weights & Biases o MLflow para comparar ejecuciones.
+| Pieza | Para qué |
+|---|---|
+| Servidor MCP (`library_search`, `library_get_block`, `screen_validate`, `screen_render`) | Que cualquier modelo use la biblioteca y las reglas del motor |
+| Proponente con modelo (`composer/proposers/`) | Generar `ScreenSpec` y compararla con el motor |
+| Banco de pruebas con juez | Comparar motor y modelos en las mismas ideas |
+| Destilación y preferencias | Que un modelo pequeño aprenda de las propuestas buenas y de las elecciones de las personas |
 
-Las claves de API viven en secretos de GitHub Actions y variables locales. Nunca se guardan en el repositorio.
+El conjunto de evaluación nunca se usa para entrenar, y no se usan datos de personas sin su consentimiento.
 
-## 6. Skills del proyecto
+## 6. Interfaz
 
-Carpeta `.claude/skills/<nombre>/SKILL.md`. Cada skill es un procedimiento que se puede repetir igual y que cualquier colaborador o agente invoca por nombre.
+Se mantiene el recorrido **Idea → Bloques → Pantalla**. Ya hecho: «Ayúdame a empezar» arma la primera propuesta y «↻ Otra propuesta» cambia entre las tres; la nota indica cuál se ve y qué tono tiene.
 
-| Skill | Cuándo se usa | Qué hace |
-|---|---|---|
-| `add-block` | Llega un diseño nuevo | Lo normaliza, crea la ficha, declara `slots` y `rules`, valida contra el esquema, añade prueba y entrada de changelog |
-| `compose-screen` | Armar una pantalla desde un brief | Planifica, recupera, compone, valida, renderiza y propone tres variantes |
-| `review-a11y` | Antes de aceptar bloques o pantallas | Contraste, tamaño táctil, orden de foco, etiquetas |
-| `export-stack` | Sacar código | Genera HTML, Tailwind o Compose desde un `ScreenSpec` y lo compila |
-| `eval-run` | Comparar modelos o prompts | Ejecuta el banco de pruebas y publica la tabla |
-| `build-dataset` | Preparar entrenamiento | Filtra ejecuciones aceptadas, anonimiza, versiona el conjunto |
-| `release-library` | Cerrar una versión | Sube versión, regenera catálogo y changelog, sincroniza la entrada de Tinta |
+Siguiente:
+- Mostrar el «por qué» de cada bloque de la propuesta.
+- Mostrar los avisos de `lint` en la revisión, con un botón para arreglar el más importante.
+- Elegir una propuesta entre tres tarjetas con vista previa, en lugar de cambiarla en sitio.
+- Textos en español sin jerga: «pantalla» y «bloque», no «spec» ni «slot».
 
-Orden de creación: `add-block`, `compose-screen`, `eval-run`. Las demás llegan cuando su fase las pide.
-
-Además de las skills, se definen **subagentes** (`.claude/agents/`) con un solo trabajo cada uno: `librarian` (cura la biblioteca), `composer` (arma pantallas), `critic` (revisa con la rúbrica). Separarlos evita que el mismo modelo se corrija a sí mismo sin contraste.
-
-## 7. Evaluación y entrenamiento con otros modelos
-
-### 7.1 Banco de pruebas (`ai/evals/`)
-
-- **Briefs de oro**: empezar con 40 (variedad de sectores: comida, finanzas, salud, educación, tienda, agenda…), crecer a 200. Cada uno con pantallas esperadas y restricciones.
-- **Métricas automáticas** (baratas, se ejecutan en cada PR):
-  - Validez del esquema (%)
-  - Alucinación de bloques (% de `ref` inexistentes, objetivo 0)
-  - Cobertura de la biblioteca (% de bloques usados que vienen del catálogo)
-  - Contraste AA y tamaño táctil (% de pantallas que pasan)
-  - Render sin errores (Playwright)
-  - Coste y latencia por pantalla
-- **Métricas con juez**: un modelo distinto al que compone puntúa coherencia, jerarquía, adecuación al brief y variedad entre las tres propuestas, con rúbrica escrita en `ai/evals/rubrics/`.
-- **Preferencia humana**: cada elección entre las tres propuestas se registra como par (elegida, descartada).
-- **Línea base**: las recetas por palabras actuales. La IA debe ganarles con claridad antes de reemplazarlas.
-
-### 7.2 Escalera de mejora
-
-| Etapa | Qué se hace | Cuándo pasar a la siguiente |
-|---|---|---|
-| A. Prompt + recuperación | Modelo fuerte con herramientas MCP, sin entrenar | Esquema válido ≥ 98 % y alucinación 0 % |
-| B. Destilación | Varios modelos "maestros" generan especificaciones para miles de briefs. Solo se conservan las que pasan todas las reglas automáticas y superan el umbral del juez. Con ellas se ajusta un modelo pequeño (SFT) | El modelo pequeño iguala al maestro en ≥ 90 % de las métricas con menos coste |
-| C. Preferencias | Con los pares de elecciones se aplica DPO o similar | Sube la tasa de propuesta elegida sin bajar las métricas automáticas |
-| D. Conjunto de modelos | Se enruta por tipo de brief y se usa un modelo como crítico del otro | Mejora medible sobre el mejor individual |
-
-Reglas para no engañarse:
-
-- El conjunto de evaluación nunca entra en entrenamiento. Se versiona aparte y se congela por versión.
-- Nada de datos de usuarios sin consentimiento y sin quitar textos personales.
-- Revisar las licencias de los modelos maestros antes de entrenar con sus salidas.
-- Cada ejecución guarda versión del catálogo, del esquema, del modelo y del prompt, para poder reproducirla.
-
-## 8. Diseño de la interfaz
-
-Se mantiene el lenguaje visual de Tinta: papel cálido, grafito y coral, Plus Jakarta Sans, mancha 3D como identidad. La IA no abre una app nueva; vive dentro del recorrido **Idea → Bloques → Pantalla** que ya existe.
-
-### 8.1 Pantallas nuevas o ampliadas
-
-1. **Idea (ampliada)**: campo de brief con adjuntos opcionales (captura de referencia, paleta). Selector de modelo avanzado y oculto por defecto.
-2. **Propuestas (ya existe, se amplía)**: tres tarjetas con vista previa real. Cada una muestra "Por qué" desplegable con los bloques usados y la razón. Botones: Elegir, Pedir cambios, Guardar variante.
-3. **Pedir cambios**: una caja de texto ("más aire", "botón principal más grande", "cámbiale el tono a más serio") que produce un `ScreenSpec` nuevo. Deshacer y Rehacer ya existen y se reutilizan.
-4. **Bloque propuesto**: cuando la IA crea una pieza que no existía, aparece marcada como "Borrador" con revisión de contraste y botón "Enviar a la biblioteca" (abre un issue en GitHub).
-5. **Laboratorio** (solo para mantenedores, ruta separada): tabla de modelos × métricas, enlace a ejecuciones, lista de briefs fallidos, cola de bloques por revisar.
-
-### 8.2 Principios
-
-- La IA siempre enseña de dónde sale cada pieza. Sin cajas negras.
-- Sin conexión sigue funcionando todo lo que funciona hoy. La IA es una mejora, no un requisito.
-- Los textos de la IA van en español, sin jerga técnica (se dice "pantalla" y "bloque", no "spec" ni "slot").
-
-La versión visual de este diseño está en el artefacto "Estilos AI" que acompaña a este plan.
-
-## 9. Repositorio en GitHub
+## 7. Repositorio
 
 ```
 estilos-/
-├─ web/                     (app actual, sin cambios de ruta)
-├─ design-library/          (catálogo + ai-metadata.json con slots y rules)
-├─ ai/
+├─ web/                     app (Tinta, editor clásico, PWA)
+│  └─ js/tinta-composer.js, tinta-composition-data.js
+├─ design-library/          catálogo + composition.json (+ esquemas)
+├─ composer/
 │  ├─ spec/                 screen-spec.schema.json, examples/
-│  ├─ tools/                validate-ai.cjs
-│  ├─ agent/                planner, retriever, composer, critic
-│  ├─ providers/            anthropic, openai-compatible, local
-│  ├─ mcp-server/           herramientas de §5
-│  ├─ evals/                briefs/, rubrics/, runners/, reports/
-│  └─ training/             scripts/, configs/  (los datos van fuera del repo)
-├─ .claude/
-│  ├─ skills/               add-block, compose-screen, eval-run, …
-│  └─ agents/               librarian, composer, critic
-├─ .mcp.json                registro del servidor MCP
-├─ .github/
-│  ├─ ISSUE_TEMPLATE/       nuevo-bloque.yml, brief-fallido.yml, idea-modelo.yml
-│  ├─ workflows/            tests.yml, pages.yml (existen) + evals.yml, dataset-nightly.yml
-│  ├─ pull_request_template.md
-│  └─ CODEOWNERS
+│  ├─ tools/                validate-composer.cjs, spec-to-tinta.cjs
+│  └─ evals/briefs/         briefs de oro
+├─ tools/                   build-tinta-catalog, build-composition-data, …
+├─ tests/                   Playwright (incluye composer-engine y composer-spec)
+├─ .claude/skills/          add-block, compose-screen
+├─ .github/                 workflows, plantillas de issue y PR
 ├─ CLAUDE.md                reglas del proyecto para agentes
 └─ docs/PLAN-IA-ESTILOS.md  este documento
 ```
 
-### 9.1 Automatización
+CI (`tests.yml`) verifica los datos de composición generados, valida los metadatos y las `ScreenSpec`, y ejecuta las 29 pruebas de extremo a extremo.
 
-- **`tests.yml`** (existe): se amplía con validación de los metadatos de IA, los `ScreenSpec` de ejemplo y los briefs (ya activa).
-- **`evals.yml`** (nuevo): en cada PR que toque `ai/` o `design-library/` corre las métricas automáticas con un conjunto pequeño y comenta la tabla en el PR. El conjunto completo corre bajo demanda con una etiqueta.
-- **`dataset-nightly.yml`** (nuevo, fase 3): construye el conjunto de entrenamiento desde ejecuciones aceptadas y lo sube al almacenamiento de datos.
-- **Plantillas de issue**: "Nuevo bloque" (con campos de `slots` y `rules`), "Brief fallido" (el brief, lo que salió, lo que se esperaba), "Idea de modelo".
-- **Etiquetas**: `bloque`, `agente`, `evals`, `entrenamiento`, `a11y`, `conector`, `skill`, `fase-1`…`fase-4`.
-- **Tablero** de GitHub Projects con una columna por fase.
-- **Revisión**: PR obligatorio para `design-library/` y `ai/spec/`. Cualquier cambio al esquema sube `spec_version`.
+## 8. Hoja de ruta
 
-### 9.2 Seguridad y calidad
+| Fase | Entregable | Criterio de salida | Estado |
+|---|---|---|---|
+| 0 · Cimientos | Contratos, validador, briefs, skills, plantillas | El esquema valida bloques y pantallas de ejemplo | Hecho |
+| 1 · Motor | Metadatos de composición, `TintaComposer`, tres propuestas, «Otra propuesta» | Propuestas distintas y sin avisos para 10 ideas | **Hecho en 12.9** |
+| 2 · Más material | Metadatos de 30+ bloques, secciones web, huecos rellenados por sector, varias pantallas por idea | Una app de 3 pantallas y una web de 4 secciones a partir de una idea | Siguiente |
+| 3 · Calidad medible | 40 briefs, métricas, capturas de regresión, `lint` visible en la revisión | Tabla de métricas en cada PR | |
+| 4 · Más salidas | Tailwind, Compose, Flutter desde la misma pantalla | Cada stack exportado compila en CI | |
+| 5 · IA opcional | MCP, proponente con modelo, banco con juez | Gana al motor en comparación a ciegas | |
 
-- Ningún secreto en el repo. Ejecutar escaneo de secretos antes de cada versión.
-- El HTML/CSS que genera un modelo se sanea siempre antes de mostrarse, sin ejecutar JavaScript (como hoy).
-- La red del servidor MCP queda restringida a localhost salvo configuración explícita.
-- `CLAUDE.md` fija reglas: no inventar bloques, no tocar `web/index.html` sin ejecutar `tools/sync-tinta-entry.py`, correr las pruebas antes de cada commit.
+Las duraciones dependen de cuántos bloques se describan por semana; se fijan al cerrar cada fase.
 
-## 10. Hoja de ruta
-
-| Fase | Entregable | Criterio de salida |
-|---|---|---|
-| **0 · Cimientos** (1–2 semanas) · **en curso** | `ScreenSpec` y metadatos de IA por bloque en 30 bloques de mayor uso. `CLAUDE.md`. Skill `add-block`. Línea base con las recetas actuales | El esquema valida los 30 bloques y 5 pantallas hechas a mano |
-| **1 · IA con biblioteca** (2–3 semanas) | Servidor MCP con `library_*` y `screen_*`. Núcleo del agente con un proveedor. Skill `compose-screen`. Tres propuestas con "Por qué" en la interfaz | Esquema válido ≥ 98 %, alucinación 0 % en 40 briefs |
-| **2 · Banco de pruebas** (2 semanas) | `eval_run`, métricas automáticas, juez con rúbrica, `evals.yml` en CI, 40 briefs de oro | Tabla comparativa de al menos 3 modelos publicada en cada PR |
-| **3 · Aprendizaje** (3–4 semanas) | Registro de preferencias, `build-dataset`, destilación a modelo pequeño, seguimiento de experimentos | Modelo pequeño iguala al maestro en ≥ 90 % de las métricas |
-| **4 · Más salidas** (continuo) | Tailwind, Compose, Flutter. Importación desde Figma. Bloques propuestos con revisión. Preferencias (DPO) | Cada stack exportado compila en CI |
-
-Las duraciones son estimaciones para una persona con dedicación parcial. Se ajustan tras la fase 0.
-
-## 11. Riesgos
+## 9. Riesgos
 
 | Riesgo | Efecto | Respuesta |
 |---|---|---|
-| Catálogo sin `slots` ni `rules` | El modelo combina mal las piezas | Fase 0 antes que cualquier modelo |
-| Bloques inventados | Pantallas que no se pueden dibujar | Validación dura del `ref`; métrica con objetivo 0 |
-| Entrenar con datos malos | El modelo copia errores del maestro | Filtrar con reglas y juez; conjunto de evaluación congelado |
-| Coste de llamadas | Presupuesto descontrolado | Medir coste por pantalla desde la fase 2; modelo pequeño en la fase 3 |
-| Resultados genéricos | Pantallas correctas pero iguales | Métrica de variedad entre propuestas; ampliar la biblioteca con estilos distintos |
-| Sin conexión o sin clave | La app deja de servir | Recetas actuales como respaldo; la IA es opcional |
-| Dependencia de un proveedor | Bloqueo | Interfaz de proveedor única y banco de pruebas independiente |
+| Pocos bloques con metadatos | Propuestas parecidas entre ideas | Fase 2: describir los `lib-*` por módulos |
+| Reglas que se contradicen | Propuestas raras | Pruebas de cada regla y de ideas reales; capturas de regresión |
+| Afinidades subjetivas | Gusto de una sola persona | Revisarlas con los briefs de oro y con elecciones reales |
+| Resultados genéricos | Pantallas correctas pero iguales | Métrica de diversidad; variantes de estilo; más sectores |
+| Selectores de huecos que se rompen al editar un bloque | Textos en el sitio equivocado | `tests/composer-spec.cjs` falla al instante |
+| Gancho `__tintaInspect` | Superficie extra en la app | Solo existe bajo automatización (`navigator.webdriver`) y es de solo lectura |
+| IA que no mejora al motor | Coste sin beneficio | No se activa hasta ganar en comparación a ciegas |
 
-## 12. Primeros pasos concretos
+## 10. Decisiones abiertas
 
-Hecho:
+- Nombre definitivo del producto (hoy Estilos / Tinta).
+- Si se quiere repetir un mismo bloque en una pantalla (por ejemplo varias tarjetas de producto). Exige cambiar el formato de proyecto de Tinta.
+- Dónde viven las afinidades por sector y quién las revisa.
+- Prioridad entre secciones web y varias pantallas por idea.
+- Licencia del repositorio.
 
-- [x] `CLAUDE.md` con las reglas de §9.2.
-- [x] `ai/spec/screen-spec.schema.json` y `design-library/ai-metadata.schema.json`.
-- [x] Metadatos de IA de los 12 bloques de Tinta (`h-*`, `c-*`, `a-*`, `n-*`).
-- [x] 2 `ScreenSpec` de ejemplo (café y finanzas) y 10 briefs de oro.
-- [x] `ai/tools/validate-ai.cjs`, también en CI (`tests.yml`). Detecta bloques inventados, huecos no declarados, textos largos, conflictos y orden.
-- [x] Skills `add-block` y `compose-screen`.
-- [x] Gancho de solo lectura `window.__tintaInspect` en `web/js/crear.js`, activo solo bajo automatización (`navigator.webdriver`). Sin cambio de comportamiento para las personas usuarias.
-- [x] Plantillas de issue (Nuevo bloque, Brief fallido) y de PR.
+## 11. Siguientes pasos concretos
 
-Límites conocidos de los proyectos de Tinta, que condicionan el contrato:
-
-- Cada bloque aparece una sola vez por pantalla (el proyecto guarda `selected` sin repetidos). Por eso `max_per_screen` es 1 y `repeat > 1` se rechaza.
-- Un solo encabezado y una sola navegación (`choices`).
-- Los textos se guardan por posición de nodo de texto. Un título con salto de línea ocupa dos textos y un precio con decimales también; los huecos lo declaran con `own` y `parts`.
-- El tema oscuro de una `ScreenSpec` aún no se aplica al proyecto.
-
-Pendiente de la fase 0:
-
-- [x] Comprobación automática de que cada `selector` apunta a textos reales del bloque (`tests/ai-spec.cjs`). Encontró 7 huecos mal declarados en la primera pasada, ya corregidos.
-- [x] Convertidor `ScreenSpec → proyecto de Tinta` (`ai/tools/spec-to-tinta.cjs`, opciones `--out` y `--shot`). Las 2 pantallas de ejemplo se abren y se dibujan en Tinta.
-- [ ] Ampliar a 30 bloques piloto (módulos `app-screens`, `forms`, `cards`).
-- [ ] Ampliar a 40 briefs de oro y medir la línea base con las recetas por palabras actuales.
-- [ ] Crear las etiquetas y el tablero en GitHub.
-
-## 13. Decisiones abiertas
-
-- Nombre definitivo del producto (hoy: Estilos / Tinta / Estilos AI).
-- Modelo o modelos de partida para la fase 1 y presupuesto mensual.
-- Dónde se alojan los datos de entrenamiento y quién tiene acceso.
-- Si el Laboratorio es una ruta del mismo sitio o una app aparte.
-- Licencia del repositorio y de los datos derivados.
+1. Describir 18 bloques más (módulos `cards`, `forms`, `app-screens`) con la skill `add-block`.
+2. Que el motor rellene los huecos con los textos del sector y devuelva una `ScreenSpec` completa.
+3. Mostrar el «por qué» y los avisos de `lint` en la pantalla de revisión.
+4. Ampliar los briefs de oro a 40 y medir diversidad y encaje.
+5. Definir 4 secciones web mínimas (héroe, beneficios, precios, pie) y añadirlas al catálogo.

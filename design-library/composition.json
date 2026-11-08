@@ -1,0 +1,680 @@
+{
+ "schema_version": 1,
+ "note": "Metadatos de composición, aparte de catalog.json (que se genera con tools/build-tinta-catalog.cjs). Los usa el motor de Tinta (web/js/tinta-composer.js, sin IA) y cualquier otro proponente, humano o modelo. Por bloque: huecos editables (slots, por selector CSS dentro del HTML del bloque), reglas, atributos de diseño (tono, acento, peso visual, afinidad por sector 0-3) y guía de uso. Un hueco con parts ocupa varios textos de Tinta (por ejemplo un título con salto de línea): el valor se escribe en varias líneas separadas por \\n. Cada bloque aparece como máximo una vez por pantalla (los proyectos de Tinta guardan cada id una sola vez). when_to_use y avoid_when los escribe y revisa una persona.",
+ "sectors": {
+  "comida": {
+   "tones": [
+    "calido"
+   ]
+  },
+  "tienda": {
+   "tones": [
+    "calido",
+    "energico"
+   ]
+  },
+  "finanzas": {
+   "tones": [
+    "sobrio"
+   ]
+  },
+  "fitness": {
+   "tones": [
+    "energico"
+   ]
+  },
+  "viajes": {
+   "tones": [
+    "editorial",
+    "calido"
+   ]
+  },
+  "salud": {
+   "tones": [
+    "sobrio",
+    "calido"
+   ]
+  },
+  "musica": {
+   "tones": [
+    "energico",
+    "editorial"
+   ]
+  },
+  "educacion": {
+   "tones": [
+    "calido",
+    "sobrio"
+   ]
+  },
+  "default": {
+   "tones": [
+    "calido",
+    "sobrio"
+   ]
+  }
+ },
+ "blocks": [
+  {
+   "id": "h-search",
+   "design": {
+    "tones": [
+     "calido",
+     "energico"
+    ],
+    "accent": "neutro",
+    "weight": "medio",
+    "affinity": {
+     "comida": 3,
+     "tienda": 3,
+     "finanzas": 0,
+     "fitness": 2,
+     "viajes": 3,
+     "salud": 1,
+     "musica": 3,
+     "educacion": 2
+    }
+   },
+   "slots": [
+    {
+     "name": "greeting",
+     "kind": "text",
+     "selector": ".top > span",
+     "own": true,
+     "max": 40
+    },
+    {
+     "name": "headline",
+     "kind": "text",
+     "selector": "h1",
+     "own": true,
+     "parts": 2,
+     "max": 40,
+     "required": true
+    },
+    {
+     "name": "placeholder",
+     "kind": "text",
+     "selector": ".search span",
+     "max": 50
+    }
+   ],
+   "rules": {
+    "role": "header",
+    "position": "top",
+    "max_per_screen": 1,
+    "pairs_with": [
+     "n-soft",
+     "n-float",
+     "n-dark"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Inicio de apps de catálogo, tienda o contenido donde buscar es la acción principal.",
+    "avoid_when": "Pantallas de pago, formularios largos o paneles de datos."
+   }
+  },
+  {
+   "id": "h-minimal",
+   "design": {
+    "tones": [
+     "sobrio",
+     "editorial"
+    ],
+    "accent": "neutro",
+    "weight": "ligero",
+    "affinity": {
+     "comida": 1,
+     "tienda": 1,
+     "finanzas": 3,
+     "fitness": 1,
+     "viajes": 2,
+     "salud": 3,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [
+    {
+     "name": "eyebrow",
+     "kind": "text",
+     "selector": ".ey",
+     "max": 32
+    },
+    {
+     "name": "headline",
+     "kind": "text",
+     "selector": "h1",
+     "own": true,
+     "parts": 2,
+     "max": 40,
+     "required": true
+    },
+    {
+     "name": "headline_accent",
+     "kind": "text",
+     "selector": "h1 em",
+     "max": 20
+    },
+    {
+     "name": "subtitle",
+     "kind": "text",
+     "selector": "p",
+     "max": 60
+    }
+   ],
+   "rules": {
+    "role": "header",
+    "position": "top",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Cabecera sobria para finanzas, portafolios o apps donde importa más el mensaje que la búsqueda.",
+    "avoid_when": "Cuando el usuario debe buscar algo nada más abrir la pantalla."
+   }
+  },
+  {
+   "id": "c-coffee",
+   "design": {
+    "tones": [
+     "calido"
+    ],
+    "accent": "neutro",
+    "weight": "medio",
+    "affinity": {
+     "comida": 3,
+     "tienda": 2,
+     "finanzas": 0,
+     "fitness": 0,
+     "viajes": 1,
+     "salud": 0,
+     "musica": 1,
+     "educacion": 0
+    }
+   },
+   "slots": [
+    {
+     "name": "tag",
+     "kind": "text",
+     "selector": ".media > span",
+     "max": 24
+    },
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": ".details h2",
+     "max": 32,
+     "required": true
+    },
+    {
+     "name": "subtitle",
+     "kind": "text",
+     "selector": ".details p",
+     "max": 60
+    },
+    {
+     "name": "price",
+     "kind": "text",
+     "selector": ".details > b",
+     "own": true,
+     "max": 10
+    },
+    {
+     "name": "price_decimals",
+     "kind": "text",
+     "selector": ".details > b > span",
+     "max": 4
+    },
+    {
+     "name": "status",
+     "kind": "text",
+     "selector": ".bottom > span",
+     "max": 32
+    }
+   ],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Producto con imagen protagonista y precio visible: comida, bebidas, tienda.",
+    "avoid_when": "Datos numéricos o listas densas."
+   }
+  },
+  {
+   "id": "c-balance",
+   "design": {
+    "tones": [
+     "sobrio"
+    ],
+    "accent": "grafito",
+    "weight": "fuerte",
+    "affinity": {
+     "comida": 0,
+     "tienda": 1,
+     "finanzas": 3,
+     "fitness": 2,
+     "viajes": 0,
+     "salud": 2,
+     "musica": 0,
+     "educacion": 1
+    }
+   },
+   "slots": [
+    {
+     "name": "label",
+     "kind": "text",
+     "selector": ".top > span",
+     "max": 28
+    },
+    {
+     "name": "amount",
+     "kind": "text",
+     "selector": ".amount",
+     "own": true,
+     "max": 12,
+     "required": true
+    },
+    {
+     "name": "amount_decimals",
+     "kind": "text",
+     "selector": ".amount span",
+     "max": 4
+    },
+    {
+     "name": "trend",
+     "kind": "text",
+     "selector": ".trend b",
+     "max": 12
+    },
+    {
+     "name": "trend_note",
+     "kind": "text",
+     "selector": ".trend span",
+     "max": 20
+    }
+   ],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Un dato numérico protagonista con tendencia: saldo, ventas, progreso.",
+    "avoid_when": "Contenido editorial o de producto."
+   }
+  },
+  {
+   "id": "c-coral",
+   "design": {
+    "tones": [
+     "editorial",
+     "energico",
+     "calido"
+    ],
+    "accent": "coral",
+    "weight": "fuerte",
+    "affinity": {
+     "comida": 1,
+     "tienda": 2,
+     "finanzas": 0,
+     "fitness": 2,
+     "viajes": 3,
+     "salud": 1,
+     "musica": 3,
+     "educacion": 2
+    }
+   },
+   "slots": [
+    {
+     "name": "tag",
+     "kind": "text",
+     "selector": ".top > span",
+     "max": 28
+    },
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h2",
+     "own": true,
+     "parts": 2,
+     "max": 40,
+     "required": true
+    },
+    {
+     "name": "subtitle",
+     "kind": "text",
+     "selector": "p",
+     "max": 60
+    },
+    {
+     "name": "footer",
+     "kind": "text",
+     "selector": ".bottom > span",
+     "max": 36
+    }
+   ],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Pieza editorial destacada: colección, campaña, bienvenida.",
+    "avoid_when": "Pantallas donde ya hay otra tarjeta coral o un botón coral dominante."
+   }
+  },
+  {
+   "id": "c-summary",
+   "design": {
+    "tones": [
+     "sobrio",
+     "calido"
+    ],
+    "accent": "neutro",
+    "weight": "medio",
+    "affinity": {
+     "comida": 2,
+     "tienda": 3,
+     "finanzas": 2,
+     "fitness": 2,
+     "viajes": 1,
+     "salud": 2,
+     "musica": 0,
+     "educacion": 2
+    }
+   },
+   "slots": [
+    {
+     "name": "kicker",
+     "kind": "text",
+     "selector": ".head small",
+     "max": 28
+    },
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": ".head h2",
+     "max": 32,
+     "required": true
+    },
+    {
+     "name": "body",
+     "kind": "text",
+     "selector": ".content p",
+     "own": true,
+     "parts": 2,
+     "max": 60
+    },
+    {
+     "name": "total",
+     "kind": "text",
+     "selector": ".bottom b",
+     "own": true,
+     "max": 10
+    },
+    {
+     "name": "total_decimals",
+     "kind": "text",
+     "selector": ".bottom b span",
+     "max": 4
+    }
+   ],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Resumen de pedidos, actividad o carrito con un total.",
+    "avoid_when": "Pantallas sin cifras que resumir."
+   }
+  },
+  {
+   "id": "a-dark",
+   "design": {
+    "tones": [
+     "sobrio"
+    ],
+    "accent": "grafito",
+    "weight": "medio",
+    "affinity": {
+     "comida": 2,
+     "tienda": 2,
+     "finanzas": 3,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 2,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [
+    {
+     "name": "label",
+     "kind": "text",
+     "selector": ".action",
+     "max": 28,
+     "required": true
+    }
+   ],
+   "rules": {
+    "role": "actions",
+    "position": "body",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "a-coral"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Acción principal sobria sobre fondos claros.",
+    "avoid_when": "Si la pantalla ya tiene otra acción principal."
+   }
+  },
+  {
+   "id": "a-coral",
+   "design": {
+    "tones": [
+     "calido",
+     "energico"
+    ],
+    "accent": "coral",
+    "weight": "medio",
+    "affinity": {
+     "comida": 3,
+     "tienda": 2,
+     "finanzas": 0,
+     "fitness": 3,
+     "viajes": 3,
+     "salud": 1,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [
+    {
+     "name": "label",
+     "kind": "text",
+     "selector": ".action",
+     "max": 28,
+     "required": true
+    }
+   ],
+   "rules": {
+    "role": "actions",
+    "position": "body",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "a-dark"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Acción principal cálida y llamativa: pedir, crear, comprar.",
+    "avoid_when": "Pantallas con tarjeta coral dominante o tono muy serio."
+   }
+  },
+  {
+   "id": "a-soft",
+   "design": {
+    "tones": [
+     "sobrio",
+     "calido"
+    ],
+    "accent": "neutro",
+    "weight": "ligero",
+    "affinity": {
+     "comida": 1,
+     "tienda": 1,
+     "finanzas": 1,
+     "fitness": 1,
+     "viajes": 1,
+     "salud": 1,
+     "musica": 1,
+     "educacion": 1
+    }
+   },
+   "slots": [
+    {
+     "name": "label",
+     "kind": "text",
+     "selector": ".action > span:nth-of-type(2)",
+     "max": 32,
+     "required": true
+    }
+   ],
+   "rules": {
+    "role": "actions",
+    "position": "body",
+    "max_per_screen": 1,
+    "requires_any": [
+     "a-dark",
+     "a-coral"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Acción secundaria silenciosa junto a una principal.",
+    "avoid_when": "Como única acción de una pantalla que necesita decisión."
+   }
+  },
+  {
+   "id": "n-soft",
+   "design": {
+    "tones": [
+     "calido",
+     "sobrio"
+    ],
+    "accent": "neutro",
+    "weight": "ligero",
+    "affinity": {
+     "comida": 3,
+     "tienda": 2,
+     "finanzas": 1,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 3,
+     "musica": 2,
+     "educacion": 3
+    }
+   },
+   "slots": [
+    {
+     "name": "labels",
+     "kind": "textlist",
+     "selector": ".nav button span",
+     "max": 12,
+     "count": 4
+    }
+   ],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-float",
+     "n-dark"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Navegación de cuatro destinos sin acción central.",
+    "avoid_when": "Cuando hay una acción de crear que debe destacar."
+   }
+  },
+  {
+   "id": "n-float",
+   "design": {
+    "tones": [
+     "energico"
+    ],
+    "accent": "coral",
+    "weight": "medio",
+    "affinity": {
+     "comida": 2,
+     "tienda": 3,
+     "finanzas": 1,
+     "fitness": 3,
+     "viajes": 2,
+     "salud": 1,
+     "musica": 3,
+     "educacion": 1
+    }
+   },
+   "slots": [
+    {
+     "name": "labels",
+     "kind": "textlist",
+     "selector": ".nav button span",
+     "max": 12,
+     "count": 4
+    }
+   ],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-dark"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Navegación con acción central de crear o añadir.",
+    "avoid_when": "Apps de solo lectura."
+   }
+  },
+  {
+   "id": "n-dark",
+   "design": {
+    "tones": [
+     "sobrio"
+    ],
+    "accent": "grafito",
+    "weight": "medio",
+    "affinity": {
+     "comida": 0,
+     "tienda": 1,
+     "finanzas": 3,
+     "fitness": 2,
+     "viajes": 1,
+     "salud": 1,
+     "musica": 2,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Navegación compacta de solo iconos en pantallas oscuras o sobrias.",
+    "avoid_when": "Si los destinos necesitan texto para entenderse."
+   }
+  }
+ ]
+}

@@ -3,12 +3,12 @@
 // Usa el código real de la página (BY_ID, contentModel, normalizedDraft), así no
 // duplica cómo Tinta numera los textos de un bloque.
 //
-// Uso:  node ai/tools/spec-to-tinta.cjs <spec.json> [--out proyecto.json] [--shot captura.png]
+// Uso:  node composer/tools/spec-to-tinta.cjs <spec.json> [--out proyecto.json] [--shot captura.png]
 // Como módulo: convert(page, spec) con una página de Playwright abierta en crear.html.
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..', '..');
-const meta = JSON.parse(fs.readFileSync(path.join(root, 'design-library/ai-metadata.json'), 'utf8'));
+const meta = JSON.parse(fs.readFileSync(path.join(root, 'design-library/composition.json'), 'utf8'));
 const META = new Map(meta.blocks.map((b) => [b.id, b]));
 const STORE = 'estilos-tinta-prototype-v1';
 
@@ -131,7 +131,7 @@ async function main() {
   const args = process.argv.slice(2);
   const file = args.find((a) => !a.startsWith('--') && !['--out', '--shot'].includes(args[args.indexOf(a) - 1]));
   const opt = (k) => (args.includes(k) ? args[args.indexOf(k) + 1] : null);
-  if (!file) { console.error('Uso: node ai/tools/spec-to-tinta.cjs <spec.json> [--out proyecto.json] [--shot captura.png]'); process.exit(2); }
+  if (!file) { console.error('Uso: node composer/tools/spec-to-tinta.cjs <spec.json> [--out proyecto.json] [--shot captura.png]'); process.exit(2); }
   const spec = JSON.parse(fs.readFileSync(file, 'utf8'));
   const server = await serveWeb();
   const { chromium } = loadPlaywright();
