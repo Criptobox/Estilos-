@@ -110,3 +110,16 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .repeat-choice{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#74746a}
 .repeat-choice select{font:inherit;font-size:11px;padding:6px 8px;border:1px solid #dad8ce;border-radius:10px;background:#faf9f6;color:inherit}
 :root[data-theme=dark] .repeat-choice select{background:#252a22;border-color:#424a3a}
+
+/* Plantillas completas */
+.templates{margin:6px 0 26px}.templates-head h2{font-size:20px;letter-spacing:-.6px;margin:0 0 4px}.templates-head p{font-size:12px;color:#74746a;margin:0 0 14px}
+.template-row{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity}
+.template-card{flex:0 0 190px;scroll-snap-align:start;display:grid;gap:8px;align-content:start;background:linear-gradient(140deg,#faf9f6,#efeee8);border:1px solid #fff;box-shadow:var(--relief);border-radius:22px;padding:10px}
+.template-card h3{font-size:13px;margin:4px 4px 0}.template-card p{font-size:11px;color:#74746a;margin:0 4px;line-height:1.5}
+.template-card .button{width:100%;font-size:12px;padding:11px 10px}
+.template-frame{position:relative;width:100%;aspect-ratio:390/560;overflow:hidden;border-radius:16px;border:1px solid #deddd6;background:#f5f4ef}
+.template-screen{position:absolute;top:0;left:0;width:390px;height:560px;transform-origin:top left;pointer-events:none;overflow:hidden}
+.template-body{display:grid;gap:14px;padding:26px 16px 90px}
+.template-dock{position:absolute;left:0;right:0;bottom:0;padding:0 11px 12px}
+:root[data-theme=dark] .template-card{background:linear-gradient(140deg,#272c24,#20241e);border-color:#3e4439}
+:root[data-theme=dark] .template-frame{border-color:#3e4439}
