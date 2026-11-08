@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:estilos:screen-spec:v1",
+  "title": "ScreenSpec v1",
+  "description": "Contrato entre cualquier modelo y el renderizador. Solo usa bloques del catálogo.",
+  "type": "object",
+  "required": ["spec_version", "screen", "blocks", "rationale"],
+  "additionalProperties": false,
+  "properties": {
+    "spec_version": { "const": 1 },
+    "brief_id": { "type": "string" },
+    "screen": {
+      "type": "object",
+      "required": ["name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "role": { "enum": ["home", "detail", "list", "summary", "welcome", "profile", "other"] },
+        "viewport": { "enum": ["mobile"], "default": "mobile" }
+      }
+    },
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "theme": { "enum": ["light", "dark"] }
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["ref"],
+        "additionalProperties": false,
+        "properties": {
+          "ref": { "type": "string", "description": "id de un bloque de catalog.json." },
+          "slots": {
+            "type": "object",
+            "additionalProperties": { "oneOf": [ { "type": "string" }, { "type": "array", "items": { "type": "string" } } ] }
+          },
+          "repeat": { "type": "integer", "minimum": 1, "maximum": 6 }
+        }
+      }
+    },
+    "rationale": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["ref", "why"],
+        "additionalProperties": false,
+        "properties": { "ref": { "type": "string" }, "why": { "type": "string", "minLength": 10 } }
+      }
+    }
+  }
+}

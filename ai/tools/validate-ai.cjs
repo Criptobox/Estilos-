@@ -1,0 +1,132 @@
+#!/usr/bin/env node
+// Valida los metadatos de IA, los ScreenSpec de ejemplo y los briefs de oro.
+// Sin dependencias. Los *.schema.json describen el contrato; este script aplica
+// la parte estructural y las reglas semánticas que el esquema no puede expresar
+// (ids que existen, huecos declarados, reglas de composición).
+// Uso: node ai/tools/validate-ai.cjs
+const fs = require('fs');
+const path = require('path');
+const root = path.resolve(__dirname, '..', '..');
+const read = (p) => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'));
+const errors = [];
+const err = (where, msg) => errors.push(where + ': ' + msg);
+
+const catalog = read('design-library/catalog.json');
+const catalogIds = new Set(catalog.records.map((r) => r.id));
+const meta = read('design-library/ai-metadata.json');
+
+const ROLES = ['header', 'cards', 'actions', 'nav'];
+const POSITIONS = ['top', 'body', 'bottom'];
+const KINDS = ['text', 'textlist', 'color', 'image', 'link'];
+
+// 1. Metadatos de bloques
+const byId = new Map();
+if (meta.schema_version !== 1) err('ai-metadata', 'schema_version debe ser 1');
+for (const b of meta.blocks) {
+  const w = 'ai-metadata[' + b.id + ']';
+  if (byId.has(b.id)) err(w, 'id duplicado');
+  byId.set(b.id, b);
+  if (!catalogIds.has(b.id)) err(w, 'no existe en catalog.json');
+  if (!ROLES.includes(b.rules && b.rules.role)) err(w, 'rules.role inválido');
+  if (!POSITIONS.includes(b.rules && b.rules.position)) err(w, 'rules.position inválido');
+  if (!(b.rules && Number.isInteger(b.rules.max_per_screen) && b.rules.max_per_screen >= 1)) err(w, 'rules.max_per_screen inválido');
+  for (const k of ['pairs_with', 'conflicts_with']) {
+    for (const ref of (b.rules && b.rules[k]) || []) if (!catalogIds.has(ref)) err(w, k + ' apunta a un id inexistente: ' + ref);
+  }
+  for (const k of ['when_to_use', 'avoid_when']) {
+    if (!b.ai || typeof b.ai[k] !== 'string' || b.ai[k].length < 10) err(w, 'ai.' + k + ' requerido (mín. 10 caracteres)');
+  }
+  const names = new Set();
+  for (const s of b.slots || []) {
+    if (!/^[a-z][a-z0-9_]*$/.test(s.name || '')) err(w, 'nombre de hueco inválido: ' + s.name);
+    if (names.has(s.name)) err(w, 'hueco duplicado: ' + s.name);
+    names.add(s.name);
+    if (!KINDS.includes(s.kind)) err(w, 'kind inválido en ' + s.name);
+    if (!s.selector) err(w, 'selector requerido en ' + s.name);
+  }
+}
+
+// 2. ScreenSpec
+function checkSpec(spec, where) {
+  if (spec.spec_version !== 1) err(where, 'spec_version debe ser 1');
+  if (!spec.screen || !spec.screen.name) err(where, 'screen.name requerido');
+  if (!Array.isArray(spec.blocks) || !spec.blocks.length) { err(where, 'blocks vacío'); return; }
+  if (spec.blocks.length > 12) err(where, 'más de 12 bloques');
+  const counts = {};
+  const roleCount = {};
+  const used = new Set();
+  let lastPos = -1;
+  spec.blocks.forEach((blk, i) => {
+    const w = where + ' blocks[' + i + '] ' + blk.ref;
+    if (!catalogIds.has(blk.ref)) { err(w, 'bloque inexistente en el catálogo (alucinado)'); return; }
+    const m = byId.get(blk.ref);
+    if (!m) { err(w, 'sin metadatos de IA: aún no se puede usar en una ScreenSpec'); return; }
+    used.add(blk.ref);
+    const times = blk.repeat || 1;
+    counts[blk.ref] = (counts[blk.ref] || 0) + times;
+    roleCount[m.rules.role] = (roleCount[m.rules.role] || 0) + 1;
+    const pos = POSITIONS.indexOf(m.rules.position);
+    if (pos < lastPos) err(w, 'orden inválido: un bloque "' + m.rules.position + '" aparece después de otro que va más abajo');
+    lastPos = Math.max(lastPos, pos);
+    const slots = blk.slots || {};
+    const declared = new Map(m.slots.map((s) => [s.name, s]));
+    for (const [name, val] of Object.entries(slots)) {
+      const s = declared.get(name);
+      if (!s) { err(w, 'hueco no declarado: ' + name); continue; }
+      if (s.kind === 'textlist') {
+        if (!Array.isArray(val)) { err(w, name + ' debe ser lista'); continue; }
+        if (s.count && val.length !== s.count) err(w, name + ' debe tener ' + s.count + ' elementos');
+        val.forEach((t) => { if (s.max && String(t).length > s.max) err(w, name + ' excede ' + s.max + ' caracteres'); });
+      } else {
+        if (typeof val !== 'string') { err(w, name + ' debe ser texto'); continue; }
+        if (s.max && val.length > s.max) err(w, name + ' excede ' + s.max + ' caracteres (' + val.length + ')');
+        if (s.kind === 'color' && !/^#[0-9a-fA-F]{3,8}$/.test(val)) err(w, name + ' no es un color válido');
+      }
+    }
+    for (const s of m.slots) if (s.required && !(s.name in slots)) err(w, 'falta el hueco obligatorio: ' + s.name);
+  });
+  for (const [ref, n] of Object.entries(counts)) {
+    const max = byId.get(ref).rules.max_per_screen;
+    if (n > max) err(where, ref + ' aparece ' + n + ' veces (máximo ' + max + ')');
+  }
+  for (const ref of used) {
+    for (const c of byId.get(ref).rules.conflicts_with || []) if (used.has(c)) err(where, ref + ' no puede convivir con ' + c);
+  }
+  if ((roleCount.header || 0) > 1) err(where, 'más de un encabezado');
+  if ((roleCount.nav || 0) > 1) err(where, 'más de una barra de navegación');
+  if (!Array.isArray(spec.rationale) || !spec.rationale.length) err(where, 'rationale obligatorio');
+  else {
+    for (const r of spec.rationale) {
+      if (!used.has(r.ref)) err(where, 'rationale menciona un bloque que no está en la pantalla: ' + r.ref);
+      if (!r.why || r.why.length < 10) err(where, 'rationale de ' + r.ref + ' demasiado corto');
+    }
+    for (const ref of used) if (!spec.rationale.some((r) => r.ref === ref)) err(where, 'falta rationale para ' + ref);
+  }
+}
+const exDir = path.join(root, 'ai/spec/examples');
+const examples = fs.readdirSync(exDir).filter((f) => f.endsWith('.screen.json'));
+for (const f of examples) checkSpec(JSON.parse(fs.readFileSync(path.join(exDir, f), 'utf8')), 'ejemplo ' + f);
+
+// 3. Briefs de oro
+const briefsFile = path.join(root, 'ai/evals/briefs/briefs.jsonl');
+const briefIds = new Set();
+let briefs = 0;
+fs.readFileSync(briefsFile, 'utf8').split('\n').filter(Boolean).forEach((line, i) => {
+  const w = 'briefs.jsonl línea ' + (i + 1);
+  let b;
+  try { b = JSON.parse(line); } catch (e) { err(w, 'JSON inválido'); return; }
+  briefs++;
+  if (!b.id || briefIds.has(b.id)) err(w, 'id vacío o duplicado');
+  briefIds.add(b.id);
+  if (!b.sector) err(w, 'sector requerido');
+  if (!b.brief || b.brief.length < 20) err(w, 'brief demasiado corto');
+  if (!Array.isArray(b.screens) || !b.screens.length) err(w, 'screens requerido');
+  if (!Array.isArray(b.constraints)) err(w, 'constraints debe ser lista');
+});
+
+if (errors.length) {
+  console.error('✗ ' + errors.length + ' error(es):');
+  errors.forEach((e) => console.error('  - ' + e));
+  process.exit(1);
+}
+console.log('✓ ' + meta.blocks.length + ' bloques con metadatos, ' + examples.length + ' ScreenSpec de ejemplo, ' + briefs + ' briefs.');

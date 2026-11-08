@@ -1,0 +1,32 @@
+name: Nuevo bloque
+description: Proponer una pieza nueva para la biblioteca
+labels: ["bloque"]
+body:
+  - type: textarea
+    id: que
+    attributes:
+      label: Qué es y para qué sirve
+      description: Una o dos frases. Ejemplo: tarjeta de reserva con fecha y hora.
+    validations: { required: true }
+  - type: dropdown
+    id: rol
+    attributes:
+      label: Rol en la pantalla
+      options: [header, cards, actions, nav]
+    validations: { required: true }
+  - type: textarea
+    id: huecos
+    attributes:
+      label: Textos o elementos editables
+      description: Un elemento por línea, con su longitud máxima aproximada.
+    validations: { required: true }
+  - type: textarea
+    id: cuando
+    attributes:
+      label: Cuándo usarlo y cuándo evitarlo
+    validations: { required: true }
+  - type: textarea
+    id: referencia
+    attributes:
+      label: Referencia visual
+      description: Captura, enlace o HTML/CSS. Sin datos personales.

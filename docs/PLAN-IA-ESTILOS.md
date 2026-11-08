@@ -2,7 +2,7 @@
 
 IA especializada en código y diseño de web apps. Usa la biblioteca de Estilos como única fuente de piezas, arma pantallas completas con ellas y se mejora con el uso y con otros modelos.
 
-> Estado: propuesta de diseño. Nada de lo descrito aquí está implementado todavía. Parte de lo que ya existe en el repositorio (ver §1).
+> Estado: **fase 0 en curso.** Hecho: esquema de `ScreenSpec`, metadatos de IA de 12 bloques, 2 pantallas de ejemplo, 10 briefs, validador, `CLAUDE.md`, skills `add-block` y `compose-screen`, plantillas de GitHub y validación en CI (ver §10). Lo demás sigue siendo propuesta.
 
 ## 0. Idea en una frase
 
@@ -26,7 +26,13 @@ Tres decisiones que ordenan todo el proyecto:
 | Exportación HTML autónoma, proyectos JSON, PWA | `export.js`, `tinta-pwa.js` | Salida y persistencia |
 | Pruebas Playwright y CI | `tests/`, `.github/workflows/` | Base para el arnés de evaluación |
 
-Carencias que el plan debe cerrar: el catálogo describe las piezas pero no declara sus huecos ni sus reglas de composición, y no hay ningún modelo de lenguaje conectado.
+Carencias que el plan debe cerrar:
+
+- El catálogo describe las piezas pero no declaraba sus huecos ni sus reglas de composición. Se cierra con `design-library/ai-metadata.json` (12 bloques de Tinta hasta ahora).
+- No hay ningún modelo de lenguaje conectado.
+- **El módulo `web-sections` está vacío** (0 de 138 registros). Mientras no haya secciones web (héroes, precios, pie de página), la IA solo puede armar pantallas de app. Para cubrir "web app" completa hay que llenarlo, y es prioridad de la fase 1.
+- Los registros `lib-*` (126 de la biblioteca original) aún no tienen metadatos de IA. Se añaden por módulos, empezando por `app-screens`, `forms` y `cards`.
+- Hoy la composición de Tinta usa cuatro roles: `header`, `cards`, `actions`, `nav`. El esquema parte de ellos.
 
 ## 2. Arquitectura
 
@@ -42,7 +48,7 @@ Brief ─► Planificador ─► Recuperador ─► Compositor ─► Crítico �
 ### 2.1 Capas
 
 1. **Biblioteca** (`design-library/`): catálogo + índice de búsqueda semántica + tokens. Se amplía con `slots` y `rules` por bloque (§3).
-2. **Especificación** (`ai/spec/`): `screen-spec.schema.json`, `slots.schema.json`. Una sola definición compartida por agente, renderizador y pruebas.
+2. **Especificación** (`ai/spec/`): `ai/spec/screen-spec.schema.json` y `design-library/ai-metadata.schema.json`. Una sola definición compartida por agente, renderizador y pruebas.
 3. **Núcleo del agente** (`ai/agent/`): planificador, recuperador, compositor, crítico. Cada uno es una función pura con entrada y salida tipadas, para poder probarlos por separado.
 4. **Proveedores** (`ai/providers/`): adaptador por modelo (Claude, otros APIs compatibles, modelo local). Misma interfaz: `complete(messages, tools, schema) → ScreenSpec`.
 5. **Conector MCP** (`ai/mcp-server/`): expone la biblioteca y el renderizador como herramientas a cualquier cliente.
@@ -61,25 +67,23 @@ Brief ─► Planificador ─► Recuperador ─► Compositor ─► Crítico �
 
 ## 3. Contratos de datos
 
-### 3.1 Ampliación del bloque (catálogo v2)
+### 3.1 Metadatos de IA por bloque
 
-Cada registro del catálogo gana dos campos. Se hace de forma incremental, empezando por los módulos de más uso: `app-screens`, `web-sections`, `cards`, `buttons`, `forms`, `navigation`.
+`catalog.json` se genera con `tools/build-tinta-catalog.cjs`, así que los huecos y reglas viven en un archivo aparte, `design-library/ai-metadata.json` (esquema en `ai-metadata.schema.json`), unido al catálogo por `id`. Un `slot` se localiza con un selector CSS dentro del HTML del bloque. Se llena de forma incremental, empezando por los bloques de Tinta.
 
 ```jsonc
 {
   "id": "h-search",
   "slots": [
-    { "name": "title",       "kind": "text",  "max": 40, "required": true },
-    { "name": "placeholder", "kind": "text",  "max": 60 },
-    { "name": "accent",      "kind": "color", "token": "color.accent" }
+    { "name": "headline",    "kind": "text", "selector": "h1",             "max": 40, "required": true },
+    { "name": "placeholder", "kind": "text", "selector": ".search span",   "max": 50 }
   ],
   "rules": {
-    "role": "header",                // función en la pantalla
-    "position": "top",               // dónde puede ir
+    "role": "header",                // header | cards | actions | nav
+    "position": "top",               // top | body | bottom
     "max_per_screen": 1,
-    "pairs_with": ["tinta.nav.tabs"],
-    "conflicts_with": ["tinta.header.hero"],
-    "min_touch_target_px": 44
+    "pairs_with": ["n-soft", "n-float", "n-dark"],
+    "conflicts_with": []
   },
   "ai": {
     "when_to_use": "Inicio de apps de catálogo o contenido donde buscar es la acción principal.",
@@ -99,9 +103,9 @@ Cada registro del catálogo gana dos campos. Se hace de forma incremental, empez
   "screen": { "name": "Inicio", "role": "home", "viewport": "mobile" },
   "tokens": { "theme": "light", "accent": "#e8664a", "radius": "soft" },
   "blocks": [
-    { "ref": "h-search", "slots": { "title": "Buenos días, Ana", "placeholder": "Buscar café" } },
-    { "ref": "tinta.card.product", "slots": { "title": "Flat white", "price": "$3.80" }, "repeat": 4 },
-    { "ref": "tinta.nav.tabs", "slots": {} }
+    { "ref": "h-search", "slots": { "headline": "Tu café, listo antes de llegar.", "placeholder": "Buscar café" } },
+    { "ref": "c-coffee", "slots": { "title": "Flat white", "price": "$3.80" }, "repeat": 4 },
+    { "ref": "n-soft", "slots": { "labels": ["Inicio", "Menú", "Pedidos", "Perfil"] } }
   ],
   "rationale": [
     { "ref": "h-search", "why": "La búsqueda es la acción más frecuente en un catálogo." }
@@ -226,9 +230,10 @@ La versión visual de este diseño está en el artefacto "Estilos AI" que acompa
 ```
 estilos-/
 ├─ web/                     (app actual, sin cambios de ruta)
-├─ design-library/          (catálogo v2 con slots y rules)
+├─ design-library/          (catálogo + ai-metadata.json con slots y rules)
 ├─ ai/
-│  ├─ spec/                 screen-spec.schema.json, slots.schema.json
+│  ├─ spec/                 screen-spec.schema.json, examples/
+│  ├─ tools/                validate-ai.cjs
 │  ├─ agent/                planner, retriever, composer, critic
 │  ├─ providers/            anthropic, openai-compatible, local
 │  ├─ mcp-server/           herramientas de §5
@@ -249,7 +254,7 @@ estilos-/
 
 ### 9.1 Automatización
 
-- **`tests.yml`** (existe): se amplía con validación del catálogo v2 y de los `ScreenSpec` de ejemplo.
+- **`tests.yml`** (existe): se amplía con validación de los metadatos de IA, los `ScreenSpec` de ejemplo y los briefs (ya activa).
 - **`evals.yml`** (nuevo): en cada PR que toque `ai/` o `design-library/` corre las métricas automáticas con un conjunto pequeño y comenta la tabla en el PR. El conjunto completo corre bajo demanda con una etiqueta.
 - **`dataset-nightly.yml`** (nuevo, fase 3): construye el conjunto de entrenamiento desde ejecuciones aceptadas y lo sube al almacenamiento de datos.
 - **Plantillas de issue**: "Nuevo bloque" (con campos de `slots` y `rules`), "Brief fallido" (el brief, lo que salió, lo que se esperaba), "Idea de modelo".
@@ -268,7 +273,7 @@ estilos-/
 
 | Fase | Entregable | Criterio de salida |
 |---|---|---|
-| **0 · Cimientos** (1–2 semanas) | `ScreenSpec` y esquema de `slots`. Catálogo v2 en 30 bloques de mayor uso. `CLAUDE.md`. Skill `add-block`. Línea base con las recetas actuales | El esquema valida los 30 bloques y 5 pantallas hechas a mano |
+| **0 · Cimientos** (1–2 semanas) · **en curso** | `ScreenSpec` y metadatos de IA por bloque en 30 bloques de mayor uso. `CLAUDE.md`. Skill `add-block`. Línea base con las recetas actuales | El esquema valida los 30 bloques y 5 pantallas hechas a mano |
 | **1 · IA con biblioteca** (2–3 semanas) | Servidor MCP con `library_*` y `screen_*`. Núcleo del agente con un proveedor. Skill `compose-screen`. Tres propuestas con "Por qué" en la interfaz | Esquema válido ≥ 98 %, alucinación 0 % en 40 briefs |
 | **2 · Banco de pruebas** (2 semanas) | `eval_run`, métricas automáticas, juez con rúbrica, `evals.yml` en CI, 40 briefs de oro | Tabla comparativa de al menos 3 modelos publicada en cada PR |
 | **3 · Aprendizaje** (3–4 semanas) | Registro de preferencias, `build-dataset`, destilación a modelo pequeño, seguimiento de experimentos | Modelo pequeño iguala al maestro en ≥ 90 % de las métricas |
@@ -290,12 +295,23 @@ Las duraciones son estimaciones para una persona con dedicación parcial. Se aju
 
 ## 12. Primeros pasos concretos
 
-1. Crear `CLAUDE.md` con las reglas de §9.2.
-2. Escribir `ai/spec/screen-spec.schema.json` y `slots.schema.json`.
-3. Elegir los 30 bloques piloto y describir sus `slots` y `rules` (usar la skill `add-block` en cuanto exista).
-4. Armar a mano 5 pantallas como `ScreenSpec` y comprobar que se renderizan igual que hoy.
-5. Abrir los issues de la fase 0 en GitHub con las etiquetas de §9.1.
-6. Escribir los primeros 10 briefs de oro.
+Hecho:
+
+- [x] `CLAUDE.md` con las reglas de §9.2.
+- [x] `ai/spec/screen-spec.schema.json` y `design-library/ai-metadata.schema.json`.
+- [x] Metadatos de IA de los 12 bloques de Tinta (`h-*`, `c-*`, `a-*`, `n-*`).
+- [x] 2 `ScreenSpec` de ejemplo (café y finanzas) y 10 briefs de oro.
+- [x] `ai/tools/validate-ai.cjs`, también en CI (`tests.yml`). Detecta bloques inventados, huecos no declarados, textos largos, conflictos y orden.
+- [x] Skills `add-block` y `compose-screen`.
+- [x] Plantillas de issue (Nuevo bloque, Brief fallido) y de PR.
+
+Pendiente de la fase 0:
+
+- [ ] Comprobar que cada `selector` de los huecos existe en el HTML real del bloque (hoy se escribieron leyendo `crear.js`, sin prueba automática).
+- [ ] Convertidor `ScreenSpec → proyecto de Tinta`, para ver las pantallas de ejemplo renderizadas.
+- [ ] Ampliar a 30 bloques piloto (módulos `app-screens`, `forms`, `cards`).
+- [ ] Ampliar a 40 briefs de oro y medir la línea base con las recetas por palabras actuales.
+- [ ] Crear las etiquetas y el tablero en GitHub.
 
 ## 13. Decisiones abiertas
 

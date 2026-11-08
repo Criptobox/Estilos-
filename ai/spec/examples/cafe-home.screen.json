@@ -1,0 +1,18 @@
+{
+  "spec_version": 1,
+  "brief_id": "cafe-pedidos",
+  "screen": { "name": "Inicio", "role": "home", "viewport": "mobile" },
+  "tokens": { "theme": "light" },
+  "blocks": [
+    { "ref": "h-search", "slots": { "greeting": "Buenos días, Ana", "headline": "Tu café, listo antes de llegar.", "placeholder": "Buscar café o snack" } },
+    { "ref": "c-coffee", "slots": { "tag": "HECHO CON CALMA", "title": "Flat white", "subtitle": "Doble espresso y leche cremosa.", "price": "$3.80", "status": "● Listo en 5 min" } },
+    { "ref": "a-coral", "slots": { "label": "Pedir ahora" } },
+    { "ref": "n-soft", "slots": { "labels": ["Inicio", "Menú", "Pedidos", "Perfil"] } }
+  ],
+  "rationale": [
+    { "ref": "h-search", "why": "En una cafetería la búsqueda del producto es la acción más frecuente." },
+    { "ref": "c-coffee", "why": "Muestra el producto con su precio sin abrir el detalle." },
+    { "ref": "a-coral", "why": "El color cálido empuja la acción principal: pedir." },
+    { "ref": "n-soft", "why": "Cuatro destinos sin acción central, porque pedir ya está en pantalla." }
+  ]
+}

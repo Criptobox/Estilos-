@@ -1,0 +1,30 @@
+name: Brief fallido
+description: La IA armó una pantalla que no sirve
+labels: ["agente", "evals"]
+body:
+  - type: textarea
+    id: brief
+    attributes:
+      label: Brief que escribiste
+    validations: { required: true }
+  - type: textarea
+    id: salio
+    attributes:
+      label: Qué salió
+      description: Pega la ScreenSpec o describe la pantalla.
+    validations: { required: true }
+  - type: textarea
+    id: esperaba
+    attributes:
+      label: Qué esperabas
+    validations: { required: true }
+  - type: checkboxes
+    id: tipo
+    attributes:
+      label: Tipo de fallo
+      options:
+        - label: Bloque que no existe
+        - label: Texto cortado o demasiado largo
+        - label: Mala combinación de bloques
+        - label: Contraste o accesibilidad
+        - label: Resultado genérico
