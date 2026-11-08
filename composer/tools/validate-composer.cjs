@@ -19,7 +19,8 @@ const ROLES = ['header', 'cards', 'actions', 'nav'];
 const POSITIONS = ['top', 'body', 'bottom'];
 const KINDS = ['text', 'textlist', 'color', 'image', 'link'];
 const TONES = ['calido', 'sobrio', 'energico', 'editorial'];
-const ACCENTS = ['coral', 'grafito', 'neutro'];
+const ACCENTS = ['coral', 'azul', 'violeta', 'grafito', 'neutro'];
+const FAMILIES = ['tinta', 'biblioteca'];
 const WEIGHTS = ['ligero', 'medio', 'fuerte'];
 const SECTOR_IDS = ['comida', 'tienda', 'finanzas', 'fitness', 'viajes', 'salud', 'musica', 'educacion'];
 for (const id of SECTOR_IDS.concat('default')) {
@@ -48,6 +49,7 @@ for (const b of meta.blocks) {
   if (!Array.isArray(d.tones) || !d.tones.length || d.tones.some((t) => !TONES.includes(t))) err(w, 'design.tones inválido');
   if (!ACCENTS.includes(d.accent)) err(w, 'design.accent inválido');
   if (!WEIGHTS.includes(d.weight)) err(w, 'design.weight inválido');
+  if (!FAMILIES.includes(d.family)) err(w, 'design.family inválido');
   for (const sec of SECTOR_IDS) {
     const v = d.affinity && d.affinity[sec];
     if (!Number.isInteger(v) || v < 0 || v > 3) err(w, 'design.affinity.' + sec + ' debe ser un entero de 0 a 3');

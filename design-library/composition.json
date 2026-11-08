@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "note": "Metadatos de composición, aparte de catalog.json (que se genera con tools/build-tinta-catalog.cjs). Los usa el motor de Tinta (web/js/tinta-composer.js, sin IA) y cualquier otro proponente, humano o modelo. Por bloque: huecos editables (slots, por selector CSS dentro del HTML del bloque), reglas, atributos de diseño (tono, acento, peso visual, afinidad por sector 0-3) y guía de uso. Un hueco con parts ocupa varios textos de Tinta (por ejemplo un título con salto de línea): el valor se escribe en varias líneas separadas por \\n. Cada bloque aparece como máximo una vez por pantalla (los proyectos de Tinta guardan cada id una sola vez). when_to_use y avoid_when los escribe y revisa una persona.",
+ "note": "Metadatos de composición, aparte de catalog.json (que se genera con tools/build-tinta-catalog.cjs). Los usa el motor de Tinta (web/js/tinta-composer.js, sin IA) y cualquier otro proponente, humano o modelo. Por bloque: huecos editables (slots, por selector CSS dentro del HTML del bloque), reglas, atributos de diseño (tono, acento, peso visual, afinidad por sector 0-3) y guía de uso. Un hueco con parts ocupa varios textos de Tinta (por ejemplo un título con salto de línea): el valor se escribe en varias líneas separadas por \\n. Cada bloque aparece como máximo una vez por pantalla (los proyectos de Tinta guardan cada id una sola vez). when_to_use y avoid_when los escribe y revisa una persona. Cada bloque declara su familia visual (tinta o biblioteca) y su color de acento: el motor evita mezclar familias y más de un color de acento por pantalla. No se describen los bloques que son demostraciones de estados (por ejemplo lib-bot-1) porque no sirven como pieza de una pantalla real.",
  "sectors": {
   "comida": {
    "tones": [
@@ -73,7 +73,8 @@
      "salud": 1,
      "musica": 3,
      "educacion": 2
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -132,7 +133,8 @@
      "salud": 3,
      "musica": 2,
      "educacion": 2
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -190,7 +192,8 @@
      "salud": 0,
      "musica": 1,
      "educacion": 0
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -259,7 +262,8 @@
      "salud": 2,
      "musica": 0,
      "educacion": 1
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -324,7 +328,8 @@
      "salud": 1,
      "musica": 3,
      "educacion": 2
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -383,7 +388,8 @@
      "salud": 2,
      "musica": 0,
      "educacion": 2
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -448,7 +454,8 @@
      "salud": 2,
      "musica": 2,
      "educacion": 2
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -464,7 +471,9 @@
     "position": "body",
     "max_per_screen": 1,
     "conflicts_with": [
-     "a-coral"
+     "a-coral",
+     "lib-bot-2",
+     "lib-bot-3"
     ]
    },
    "guide": {
@@ -490,7 +499,8 @@
      "salud": 1,
      "musica": 2,
      "educacion": 2
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -506,7 +516,9 @@
     "position": "body",
     "max_per_screen": 1,
     "conflicts_with": [
-     "a-dark"
+     "a-dark",
+     "lib-bot-2",
+     "lib-bot-3"
     ]
    },
    "guide": {
@@ -532,7 +544,8 @@
      "salud": 1,
      "musica": 1,
      "educacion": 1
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -549,7 +562,9 @@
     "max_per_screen": 1,
     "requires_any": [
      "a-dark",
-     "a-coral"
+     "a-coral",
+     "lib-bot-2",
+     "lib-bot-3"
     ]
    },
    "guide": {
@@ -575,7 +590,8 @@
      "salud": 3,
      "musica": 2,
      "educacion": 3
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -592,7 +608,16 @@
     "max_per_screen": 1,
     "conflicts_with": [
      "n-float",
-     "n-dark"
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
     ]
    },
    "guide": {
@@ -617,7 +642,8 @@
      "salud": 1,
      "musica": 3,
      "educacion": 1
-    }
+    },
+    "family": "tinta"
    },
    "slots": [
     {
@@ -634,7 +660,16 @@
     "max_per_screen": 1,
     "conflicts_with": [
      "n-soft",
-     "n-dark"
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
     ]
    },
    "guide": {
@@ -659,6 +694,573 @@
      "salud": 1,
      "musica": 2,
      "educacion": 1
+    },
+    "family": "tinta"
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Navegación compacta de solo iconos en pantallas oscuras o sobrias.",
+    "avoid_when": "Si los destinos necesitan texto para entenderse."
+   }
+  },
+  {
+   "id": "lib-enc-1",
+   "design": {
+    "tones": [
+     "calido"
+    ],
+    "accent": "coral",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 2,
+     "tienda": 2,
+     "finanzas": 1,
+     "fitness": 3,
+     "viajes": 1,
+     "salud": 2,
+     "musica": 2,
+     "educacion": 3
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "header",
+    "position": "top",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Saludo cercano con avatar y avisos: apps de uso diario, perfil y progreso.",
+    "avoid_when": "Pantallas donde buscar es lo primero o donde importa más el mensaje que la persona."
+   }
+  },
+  {
+   "id": "lib-enc-3",
+   "design": {
+    "tones": [
+     "calido",
+     "energico"
+    ],
+    "accent": "coral",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 3,
+     "tienda": 2,
+     "finanzas": 0,
+     "fitness": 0,
+     "viajes": 3,
+     "salud": 1,
+     "musica": 0,
+     "educacion": 0
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "header",
+    "position": "top",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Ubicación y buscador: entregas a domicilio, tiendas cercanas, reservas por zona.",
+    "avoid_when": "Apps que no dependen del lugar, como finanzas o música."
+   }
+  },
+  {
+   "id": "lib-enc-4",
+   "design": {
+    "tones": [
+     "sobrio"
+    ],
+    "accent": "azul",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 2,
+     "finanzas": 1,
+     "fitness": 1,
+     "viajes": 2,
+     "salud": 1,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "header",
+    "position": "top",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Título de sección con enlace «Ver todo»: catálogos y listas largas.",
+    "avoid_when": "Pantallas de una sola acción o de formulario."
+   }
+  },
+  {
+   "id": "lib-tar-1",
+   "design": {
+    "tones": [
+     "sobrio",
+     "calido"
+    ],
+    "accent": "azul",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 3,
+     "finanzas": 0,
+     "fitness": 0,
+     "viajes": 0,
+     "salud": 0,
+     "musica": 1,
+     "educacion": 0
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Producto claro con foto, precio y botón de añadir al carrito.",
+    "avoid_when": "Apps sin catálogo de productos."
+   }
+  },
+  {
+   "id": "lib-tar-2",
+   "design": {
+    "tones": [
+     "editorial",
+     "energico"
+    ],
+    "accent": "neutro",
+    "weight": "fuerte",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 1,
+     "finanzas": 0,
+     "fitness": 1,
+     "viajes": 3,
+     "salud": 0,
+     "musica": 1,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Foto grande con título encima: destinos, experiencias, contenido visual.",
+    "avoid_when": "Datos numéricos o pantallas sobrias."
+   }
+  },
+  {
+   "id": "lib-tar-3",
+   "design": {
+    "tones": [
+     "sobrio",
+     "editorial"
+    ],
+    "accent": "violeta",
+    "weight": "fuerte",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 0,
+     "tienda": 1,
+     "finanzas": 2,
+     "fitness": 1,
+     "viajes": 0,
+     "salud": 0,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Plan o suscripción premium sobre fondo oscuro con lista de beneficios.",
+    "avoid_when": "Pantallas cálidas o de uso cotidiano sin planes de pago."
+   }
+  },
+  {
+   "id": "lib-tar-4",
+   "design": {
+    "tones": [
+     "calido",
+     "editorial"
+    ],
+    "accent": "violeta",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 1,
+     "finanzas": 0,
+     "fitness": 1,
+     "viajes": 1,
+     "salud": 1,
+     "musica": 1,
+     "educacion": 3
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Categoría o curso con ilustración y conteo de recursos.",
+    "avoid_when": "Apps de datos o de producto físico."
+   }
+  },
+  {
+   "id": "lib-tar-5",
+   "design": {
+    "tones": [
+     "sobrio"
+    ],
+    "accent": "neutro",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 1,
+     "finanzas": 2,
+     "fitness": 1,
+     "viajes": 0,
+     "salud": 1,
+     "musica": 1,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Historial en filas con icono, título y fecha: movimientos, conversaciones, actividad.",
+    "avoid_when": "Pantallas que necesitan una pieza visual protagonista."
+   }
+  },
+  {
+   "id": "lib-tar-6",
+   "design": {
+    "tones": [
+     "calido"
+    ],
+    "accent": "coral",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 3,
+     "tienda": 1,
+     "finanzas": 0,
+     "fitness": 0,
+     "viajes": 0,
+     "salud": 0,
+     "musica": 0,
+     "educacion": 0
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Plato con foto, valoración, tiempo y precio.",
+    "avoid_when": "Cualquier app que no venda comida."
+   }
+  },
+  {
+   "id": "lib-tar-11",
+   "design": {
+    "tones": [
+     "energico",
+     "calido"
+    ],
+    "accent": "coral",
+    "weight": "fuerte",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 2,
+     "finanzas": 1,
+     "fitness": 2,
+     "viajes": 1,
+     "salud": 0,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Promoción o mejora de plan con un beneficio claro y un botón.",
+    "avoid_when": "Pantallas que ya tienen otra pieza destacada."
+   }
+  },
+  {
+   "id": "lib-tar-19",
+   "design": {
+    "tones": [
+     "calido",
+     "sobrio"
+    ],
+    "accent": "neutro",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 2,
+     "tienda": 2,
+     "finanzas": 0,
+     "fitness": 1,
+     "viajes": 2,
+     "salud": 2,
+     "musica": 1,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Reseña de cliente con estrellas: prueba social junto a un producto o servicio.",
+    "avoid_when": "Pantallas de datos o de uso interno."
+   }
+  },
+  {
+   "id": "lib-tar-20",
+   "design": {
+    "tones": [
+     "energico",
+     "editorial"
+    ],
+    "accent": "violeta",
+    "weight": "fuerte",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 0,
+     "tienda": 1,
+     "finanzas": 0,
+     "fitness": 1,
+     "viajes": 2,
+     "salud": 0,
+     "musica": 3,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Entrada de evento con fecha, lugar y código.",
+    "avoid_when": "Apps sin eventos ni reservas con entrada."
+   }
+  },
+  {
+   "id": "lib-tar-21",
+   "design": {
+    "tones": [
+     "energico"
+    ],
+    "accent": "violeta",
+    "weight": "fuerte",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 0,
+     "tienda": 0,
+     "finanzas": 0,
+     "fitness": 1,
+     "viajes": 0,
+     "salud": 0,
+     "musica": 3,
+     "educacion": 0
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1
+   },
+   "guide": {
+    "when_to_use": "Reproductor con portada, progreso y controles.",
+    "avoid_when": "Apps que no reproducen audio."
+   }
+  },
+  {
+   "id": "lib-bot-2",
+   "design": {
+    "tones": [
+     "calido",
+     "energico"
+    ],
+    "accent": "coral",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 3,
+     "tienda": 2,
+     "finanzas": 0,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 1,
+     "musica": 1,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "actions",
+    "position": "body",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "a-dark",
+     "a-coral",
+     "lib-bot-3"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Acción principal naranja en píldora: pedir, empezar, reservar.",
+    "avoid_when": "Tonos serios o pantallas con otro acento de color."
+   }
+  },
+  {
+   "id": "lib-bot-3",
+   "design": {
+    "tones": [
+     "energico"
+    ],
+    "accent": "azul",
+    "weight": "fuerte",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 2,
+     "finanzas": 1,
+     "fitness": 2,
+     "viajes": 1,
+     "salud": 1,
+     "musica": 2,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "actions",
+    "position": "body",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "a-dark",
+     "a-coral",
+     "lib-bot-2"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Acción principal azul brillante con resplandor: desbloquear, comprar.",
+    "avoid_when": "Pantallas sobrias o con varias piezas pesadas."
+   }
+  },
+  {
+   "id": "lib-bot-8",
+   "design": {
+    "tones": [
+     "sobrio"
+    ],
+    "accent": "azul",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 1,
+     "finanzas": 1,
+     "fitness": 1,
+     "viajes": 1,
+     "salud": 1,
+     "musica": 1,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "actions",
+    "position": "body",
+    "max_per_screen": 1,
+    "requires_any": [
+     "a-dark",
+     "a-coral",
+     "lib-bot-2",
+     "lib-bot-3"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Acción secundaria con borde, para cancelar o guardar junto a la principal.",
+    "avoid_when": "Como única acción de la pantalla."
+   }
+  },
+  {
+   "id": "lib-bar-1",
+   "design": {
+    "tones": [
+     "sobrio",
+     "energico"
+    ],
+    "accent": "azul",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 2,
+     "tienda": 2,
+     "finanzas": 1,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 2,
+     "musica": 2,
+     "educacion": 2
     }
    },
    "slots": [],
@@ -668,12 +1270,379 @@
     "max_per_screen": 1,
     "conflicts_with": [
      "n-soft",
-     "n-float"
+     "n-float",
+     "n-dark",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
     ]
    },
    "guide": {
-    "when_to_use": "Navegación compacta de solo iconos en pantallas oscuras o sobrias.",
-    "avoid_when": "Si los destinos necesitan texto para entenderse."
+    "when_to_use": "Barra en píldora con un botón de acción aparte: crear, añadir, chatear.",
+    "avoid_when": "Apps de solo lectura."
+   }
+  },
+  {
+   "id": "lib-bar-2",
+   "design": {
+    "tones": [
+     "sobrio"
+    ],
+    "accent": "neutro",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 2,
+     "tienda": 2,
+     "finanzas": 2,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 2,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Barra mínima de iconos de línea, sin etiquetas.",
+    "avoid_when": "Cuando los destinos necesitan texto para entenderse."
+   }
+  },
+  {
+   "id": "lib-bar-3",
+   "design": {
+    "tones": [
+     "energico",
+     "editorial"
+    ],
+    "accent": "violeta",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 1,
+     "finanzas": 1,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 1,
+     "musica": 3,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Barra con botón central en degradado: intercambiar, reproducir, escanear.",
+    "avoid_when": "Pantallas con otro acento de color."
+   }
+  },
+  {
+   "id": "lib-bar-5",
+   "design": {
+    "tones": [
+     "energico"
+    ],
+    "accent": "azul",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 1,
+     "tienda": 2,
+     "finanzas": 1,
+     "fitness": 2,
+     "viajes": 1,
+     "salud": 1,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Barra con botón central elevado en azul claro.",
+    "avoid_when": "Pantallas con acento coral."
+   }
+  },
+  {
+   "id": "lib-bar-6",
+   "design": {
+    "tones": [
+     "sobrio",
+     "editorial"
+    ],
+    "accent": "violeta",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 0,
+     "tienda": 1,
+     "finanzas": 2,
+     "fitness": 1,
+     "viajes": 1,
+     "salud": 1,
+     "musica": 2,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Barra oscura de tres destinos con el activo en píldora violeta.",
+    "avoid_when": "Apps con más de tres destinos principales."
+   }
+  },
+  {
+   "id": "lib-bar-7",
+   "design": {
+    "tones": [
+     "energico",
+     "editorial"
+    ],
+    "accent": "violeta",
+    "weight": "fuerte",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 0,
+     "tienda": 1,
+     "finanzas": 0,
+     "fitness": 2,
+     "viajes": 1,
+     "salud": 0,
+     "musica": 2,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-9",
+     "lib-bar-10",
+     "lib-bar-12"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Barra violeta con muesca y botón blanco central.",
+    "avoid_when": "Pantallas con otro acento de color o con una tarjeta pesada."
+   }
+  },
+  {
+   "id": "lib-bar-9",
+   "design": {
+    "tones": [
+     "sobrio",
+     "energico"
+    ],
+    "accent": "violeta",
+    "weight": "medio",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 0,
+     "tienda": 1,
+     "finanzas": 1,
+     "fitness": 2,
+     "viajes": 1,
+     "salud": 0,
+     "musica": 3,
+     "educacion": 1
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-10",
+     "lib-bar-12"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Barra oscura con el destino activo en círculo violeta con resplandor.",
+    "avoid_when": "Pantallas claras y cálidas."
+   }
+  },
+  {
+   "id": "lib-bar-10",
+   "design": {
+    "tones": [
+     "sobrio",
+     "calido"
+    ],
+    "accent": "grafito",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 2,
+     "tienda": 2,
+     "finanzas": 2,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 2,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-12"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Barra en píldora blanca de cuatro destinos con etiqueta y el activo en negro.",
+    "avoid_when": "Apps con más de cuatro destinos."
+   }
+  },
+  {
+   "id": "lib-bar-12",
+   "design": {
+    "tones": [
+     "sobrio",
+     "calido"
+    ],
+    "accent": "azul",
+    "weight": "ligero",
+    "family": "biblioteca",
+    "affinity": {
+     "comida": 2,
+     "tienda": 2,
+     "finanzas": 2,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 3,
+     "musica": 2,
+     "educacion": 2
+    }
+   },
+   "slots": [],
+   "rules": {
+    "role": "nav",
+    "position": "bottom",
+    "max_per_screen": 1,
+    "conflicts_with": [
+     "n-soft",
+     "n-float",
+     "n-dark",
+     "lib-bar-1",
+     "lib-bar-2",
+     "lib-bar-3",
+     "lib-bar-5",
+     "lib-bar-6",
+     "lib-bar-7",
+     "lib-bar-9",
+     "lib-bar-10"
+    ]
+   },
+   "guide": {
+    "when_to_use": "Barra blanca con un punto bajo el destino activo.",
+    "avoid_when": "Cuando el destino central debe destacar."
    }
   }
  ]

@@ -2,7 +2,7 @@
 
 Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación hacen el trabajo, de forma local, rápida y repetible. Una IA puede sumarse después como un proponente más, opcional, que pasa por las mismas reglas.
 
-> Estado: **versión 12.9.** El motor local compone tres propuestas por idea y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
+> Estado: **versión 12.10.** El motor local compone tres propuestas por idea, con piezas de Tinta y de la biblioteca original, y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
 
 ## 0. Principios
 
@@ -18,7 +18,7 @@ Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación ha
 | Catálogo de 138 recursos en 26 módulos | `design-library/catalog.json` | Existe |
 | Motor de render y edición de textos, color, botones y tarjetas | `web/js/tinta-*.js`, `crear.js` | Existe |
 | Detector de sector y textos por sector (8 sectores) | `web/js/tinta-sectors.js` | Existe |
-| **Metadatos de composición** de 12 bloques de Tinta: huecos, reglas, tono, acento, peso visual y afinidad por sector | `design-library/composition.json` | Nuevo (12.9) |
+| **Metadatos de composición** de 37 bloques (12 de Tinta y 25 de la biblioteca original): familia visual, tono, acento, peso, afinidad por sector, reglas y huecos | `design-library/composition.json` | Nuevo (12.9, ampliado en 12.10) |
 | **Motor de composición**: tres propuestas distintas, puntuación, `lint` | `web/js/tinta-composer.js` | Nuevo (12.9) |
 | **Otra propuesta** en la pantalla de bloques | `web/js/crear.js`, `crear.html` | Nuevo (12.9) |
 | Contrato `ScreenSpec` y convertidor a proyecto de Tinta | `composer/spec/`, `composer/tools/spec-to-tinta.cjs` | Nuevo |
@@ -28,7 +28,7 @@ Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación ha
 
 Límites de hoy, a la vista:
 
-- Solo 12 bloques tienen metadatos de composición. Los 126 `lib-*` aún no entran en las propuestas.
+- 37 bloques tienen metadatos de composición. Faltan unos 100 de la biblioteca original: muchos son contenido muy específico (chat, tarea Kanban, perfil) y algunos son demostraciones de estados que no sirven como pieza de pantalla (`lib-bot-1`), por lo que no se describen. Los 25 de la biblioteca ya descritos solo declaran huecos vacíos, así que no aceptan textos desde una `ScreenSpec` todavía.
 - **El módulo `web-sections` está vacío** (0 de 138). Sin héroes, precios ni pies de página, Tinta compone pantallas de app, no sitios web.
 - Tinta compone con cuatro roles (`header`, `cards`, `actions`, `nav`) y cada bloque aparece una sola vez por pantalla.
 - El motor propone qué bloques usar. Los textos los pone el botón existente «Adaptar textos a la idea». Todavía no rellena los huecos por sí mismo.
@@ -43,17 +43,18 @@ Idea ─► Sector ─► Candidatos ─► Reglas de diseño ─► Puntuación
 ```
 
 1. **Sector.** `TintaSectors.detect` lee la idea. Sin sector, cada bloque vale por su versatilidad media.
-2. **Candidatos.** Todas las combinaciones válidas de encabezado × tarjetas (una o dos) × acción principal (con o sin acción suave) × navegación. Son unas 240 y se evalúan en milisegundos.
+2. **Candidatos.** Dentro de cada estilo visual, todas las combinaciones válidas de encabezado × tarjetas (una, o dos de las mejor valoradas) × acción principal (con o sin acción suave) × navegación. Son unas diez mil y se evalúan en menos de 100 ms.
 3. **Reglas de diseño** (`lint`, también disponible para pantallas armadas a mano):
    - una acción principal clara y sin dos que compitan;
-   - un solo acento coral (dos penalizan poco, tres mucho);
+   - un solo estilo visual por pantalla (Tinta o biblioteca original, nunca mezclados);
+   - una sola gama de color de acento: cálido (coral) o frío (azul y violeta); un tema de un solo color no avisa, pero el mismo color en tres bloques con uno muy pesado sí;
    - no dos bloques muy pesados a la vez;
    - no más de dos tarjetas;
    - la acción suave necesita una principal al lado;
    - aviso si un bloque no suele encajar con el sector;
    - aviso si falta encabezado, navegación o acción principal.
 4. **Puntuación.** Encaje de cada bloque con el sector (0 a 3), coherencia de tono, pares que se llevan bien, y una penalización por pantallas largas.
-5. **Selección.** Se toman primero las pantallas sin avisos. Cada propuesta debe cambiar al menos dos roles respecto a las anteriores, así las tres son realmente distintas.
+5. **Selección.** Se toman primero las pantallas sin avisos. Cada propuesta debe cambiar al menos dos roles respecto a las anteriores. La última se reserva para el otro estilo visual, si hay una pieza sólida (encaje 2 o más en todos los bloques) a menos de 4 puntos de la mejor.
 6. **Salida.** Tres propuestas con nombre («La más acertada», «Variante: otra acción y otra navegación»), tono, puntuación y el porqué de cada bloque, sacado de su ficha.
 
 Es determinista: la misma idea da siempre las mismas propuestas. Eso permite probarlo y comparar versiones.
@@ -108,7 +109,7 @@ Límites de los proyectos de Tinta que condicionan el contrato: cada bloque una 
 
 El motor se mide igual que se medirá cualquier otro proponente.
 
-**Hoy (pruebas automáticas, 100 comprobaciones):**
+**Hoy (pruebas automáticas, 129 comprobaciones):**
 - Tres propuestas distintas para 10 ideas de prueba, incluida una vacía.
 - Cada propuesta cubre encabezado, tarjeta, acción y navegación, y no tiene avisos de diseño.
 - Determinismo: misma idea, mismas propuestas.
@@ -209,7 +210,7 @@ Las duraciones dependen de cuántos bloques se describan por semana; se fijan al
 
 ## 11. Siguientes pasos concretos
 
-1. Describir 18 bloques más (módulos `cards`, `forms`, `app-screens`) con la skill `add-block`.
+1. Describir con huecos los 25 bloques de la biblioteca original ya incluidos, y añadir los que falten de `forms` y `app-screens`, con la skill `add-block`.
 2. Que el motor rellene los huecos con los textos del sector y devuelva una `ScreenSpec` completa.
 3. Mostrar el «por qué» y los avisos de `lint` en la pantalla de revisión.
 4. Ampliar los briefs de oro a 40 y medir diversidad y encaje.

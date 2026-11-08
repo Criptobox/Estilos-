@@ -168,6 +168,7 @@
             "tones",
             "accent",
             "weight",
+            "family",
             "affinity"
           ],
           "additionalProperties": false,
@@ -182,6 +183,8 @@
             "accent": {
               "enum": [
                 "coral",
+                "azul",
+                "violeta",
                 "grafito",
                 "neutro"
               ]
@@ -201,6 +204,13 @@
                 "minimum": 0,
                 "maximum": 3
               }
+            },
+            "family": {
+              "enum": [
+                "tinta",
+                "biblioteca"
+              ],
+              "description": "Estilo visual. Mezclar familias en una pantalla se penaliza."
             }
           }
         },
