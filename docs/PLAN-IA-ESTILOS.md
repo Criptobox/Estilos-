@@ -303,12 +303,20 @@ Hecho:
 - [x] 2 `ScreenSpec` de ejemplo (café y finanzas) y 10 briefs de oro.
 - [x] `ai/tools/validate-ai.cjs`, también en CI (`tests.yml`). Detecta bloques inventados, huecos no declarados, textos largos, conflictos y orden.
 - [x] Skills `add-block` y `compose-screen`.
+- [x] Gancho de solo lectura `window.__tintaInspect` en `web/js/crear.js`, activo solo bajo automatización (`navigator.webdriver`). Sin cambio de comportamiento para las personas usuarias.
 - [x] Plantillas de issue (Nuevo bloque, Brief fallido) y de PR.
+
+Límites conocidos de los proyectos de Tinta, que condicionan el contrato:
+
+- Cada bloque aparece una sola vez por pantalla (el proyecto guarda `selected` sin repetidos). Por eso `max_per_screen` es 1 y `repeat > 1` se rechaza.
+- Un solo encabezado y una sola navegación (`choices`).
+- Los textos se guardan por posición de nodo de texto. Un título con salto de línea ocupa dos textos y un precio con decimales también; los huecos lo declaran con `own` y `parts`.
+- El tema oscuro de una `ScreenSpec` aún no se aplica al proyecto.
 
 Pendiente de la fase 0:
 
-- [ ] Comprobar que cada `selector` de los huecos existe en el HTML real del bloque (hoy se escribieron leyendo `crear.js`, sin prueba automática).
-- [ ] Convertidor `ScreenSpec → proyecto de Tinta`, para ver las pantallas de ejemplo renderizadas.
+- [x] Comprobación automática de que cada `selector` apunta a textos reales del bloque (`tests/ai-spec.cjs`). Encontró 7 huecos mal declarados en la primera pasada, ya corregidos.
+- [x] Convertidor `ScreenSpec → proyecto de Tinta` (`ai/tools/spec-to-tinta.cjs`, opciones `--out` y `--shot`). Las 2 pantallas de ejemplo se abren y se dibujan en Tinta.
 - [ ] Ampliar a 30 bloques piloto (módulos `app-screens`, `forms`, `cards`).
 - [ ] Ampliar a 40 briefs de oro y medir la línea base con las recetas por palabras actuales.
 - [ ] Crear las etiquetas y el tablero en GitHub.

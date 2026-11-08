@@ -17,7 +17,7 @@ Deja un bloque listo para que la IA lo use: ficha en el catálogo, huecos, regla
    - `max` de caracteres según el espacio real del diseño. `required: true` solo para lo que el bloque no puede mostrar vacío.
 4. **Declarar las reglas**: `role`, `position` (`top`, `body`, `bottom`), `max_per_screen`, y `pairs_with` / `conflicts_with` con ids reales.
 5. **Escribir `ai.when_to_use` y `ai.avoid_when`** en español, concretos, una frase cada uno. Los revisa una persona antes del PR.
-6. **Validar:** `node ai/tools/validate-ai.cjs`. Debe terminar con ✓.
+6. **Validar:** `node ai/tools/validate-ai.cjs` debe terminar con ✓, y `node tests/run-all.cjs ai-spec` debe pasar: comprueba que cada selector apunta a textos reales. Si un hueco "corresponde a N textos", Tinta numera los textos nodo a nodo: usa `own: true` y `parts: N` (título con salto de línea) o separa en dos huecos (precio y decimales).
 7. **Revisar accesibilidad** del bloque: contraste AA, tamaño táctil de 44 px en botones, etiquetas en los botones sin texto.
 8. **Cerrar:** entrada en el changelog, subir `version.json` y abrir PR. Usa la plantilla del PR.
 

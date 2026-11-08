@@ -4,8 +4,8 @@
   "screen": { "name": "Inicio", "role": "home", "viewport": "mobile" },
   "tokens": { "theme": "light" },
   "blocks": [
-    { "ref": "h-search", "slots": { "greeting": "Buenos días, Ana", "headline": "Tu café, listo antes de llegar.", "placeholder": "Buscar café o snack" } },
-    { "ref": "c-coffee", "slots": { "tag": "HECHO CON CALMA", "title": "Flat white", "subtitle": "Doble espresso y leche cremosa.", "price": "$3.80", "status": "● Listo en 5 min" } },
+    { "ref": "h-search", "slots": { "greeting": "Buenos días, Ana", "headline": "Tu café,\nlisto antes de llegar.", "placeholder": "Buscar café o snack" } },
+    { "ref": "c-coffee", "slots": { "tag": "HECHO CON CALMA", "title": "Flat white", "subtitle": "Doble espresso y leche cremosa.", "price": "$3", "price_decimals": ".80", "status": "● Listo en 5 min" } },
     { "ref": "a-coral", "slots": { "label": "Pedir ahora" } },
     { "ref": "n-soft", "slots": { "labels": ["Inicio", "Menú", "Pedidos", "Perfil"] } }
   ],

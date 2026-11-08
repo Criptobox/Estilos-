@@ -43,6 +43,7 @@ for (const b of meta.blocks) {
     names.add(s.name);
     if (!KINDS.includes(s.kind)) err(w, 'kind inválido en ' + s.name);
     if (!s.selector) err(w, 'selector requerido en ' + s.name);
+    if (s.parts !== undefined && !(Number.isInteger(s.parts) && s.parts >= 2)) err(w, 'parts debe ser un entero ≥ 2 en ' + s.name);
   }
 }
 
@@ -62,6 +63,7 @@ function checkSpec(spec, where) {
     const m = byId.get(blk.ref);
     if (!m) { err(w, 'sin metadatos de IA: aún no se puede usar en una ScreenSpec'); return; }
     used.add(blk.ref);
+    if (blk.repeat && blk.repeat > 1) err(w, 'repeat > 1 aún no se puede guardar en un proyecto de Tinta (cada bloque aparece una vez)');
     const times = blk.repeat || 1;
     counts[blk.ref] = (counts[blk.ref] || 0) + times;
     roleCount[m.rules.role] = (roleCount[m.rules.role] || 0) + 1;
@@ -79,7 +81,9 @@ function checkSpec(spec, where) {
         val.forEach((t) => { if (s.max && String(t).length > s.max) err(w, name + ' excede ' + s.max + ' caracteres'); });
       } else {
         if (typeof val !== 'string') { err(w, name + ' debe ser texto'); continue; }
-        if (s.max && val.length > s.max) err(w, name + ' excede ' + s.max + ' caracteres (' + val.length + ')');
+        const lines = val.split('\n');
+        if (lines.length > (s.parts || 1)) err(w, name + ' tiene ' + lines.length + ' líneas y el hueco admite ' + (s.parts || 1));
+        if (s.max && val.replace(/\n/g, '').length > s.max) err(w, name + ' excede ' + s.max + ' caracteres (' + val.replace(/\n/g, '').length + ')');
         if (s.kind === 'color' && !/^#[0-9a-fA-F]{3,8}$/.test(val)) err(w, name + ' no es un color válido');
       }
     }

@@ -20,6 +20,8 @@
         "selector": { "type": "string", "minLength": 1, "description": "Selector CSS dentro del HTML del bloque." },
         "max": { "type": "integer", "minimum": 1, "description": "Longitud máxima por texto." },
         "count": { "type": "integer", "minimum": 1, "description": "Elementos esperados en un textlist." },
+        "parts": { "type": "integer", "minimum": 2, "description": "Textos de Tinta que ocupa el hueco; el valor se escribe en líneas separadas por \\n." },
+        "own": { "type": "boolean", "description": "Solo el texto directo del elemento, sin el de sus hijos." },
         "required": { "type": "boolean" }
       }
     },

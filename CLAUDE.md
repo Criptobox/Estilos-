@@ -10,7 +10,8 @@ Biblioteca UI y constructor visual (Tinta) que se está ampliando con una IA que
 4. **El HTML/CSS de un modelo se sanea siempre** y nunca ejecuta JavaScript.
 5. **Sin secretos en el repositorio.** Claves en secretos de GitHub Actions o variables locales.
 6. **El conjunto de evaluación (`ai/evals/`) nunca se usa para entrenar.**
-7. Cambiar un esquema de `ai/spec/` o `design-library/*.schema.json` obliga a subir su versión y a actualizar `ai/tools/validate-ai.cjs`.
+7. `window.__tintaInspect` es solo para pruebas y herramientas: no lo uses desde código de la app.
+8. Cambiar un esquema de `ai/spec/` o `design-library/*.schema.json` obliga a subir su versión y a actualizar `ai/tools/validate-ai.cjs`.
 
 ## Comprobar antes de cada commit
 
@@ -18,7 +19,7 @@ Biblioteca UI y constructor visual (Tinta) que se está ampliando con una IA que
 node ai/tools/validate-ai.cjs          # metadatos de IA, ScreenSpec de ejemplo, briefs
 python tools/sync-tinta-entry.py --check
 for f in web/js/*.js web/sw.js; do node --check "$f"; done
-cd tests && npm test                   # Playwright (necesita npm ci y chromium)
+cd tests && npm test                   # Playwright (necesita npm ci y chromium); incluye ai-spec.cjs
 ```
 
 ## Mapa rápido
@@ -27,6 +28,7 @@ cd tests && npm test                   # Playwright (necesita npm ci y chromium)
 - `web/js/tinta-library.js`, `tinta-catalog.js`: biblioteca y render.
 - `design-library/`: catálogo, esquema y metadatos de IA.
 - `ai/spec/`: esquema de `ScreenSpec` y ejemplos.
+- `ai/tools/`: `validate-ai.cjs` (validación sin navegador) y `spec-to-tinta.cjs` (convierte una pantalla a proyecto de Tinta y la dibuja).
 - `ai/evals/briefs/`: briefs de oro (JSONL).
 - `.claude/skills/`: procedimientos repetibles (`add-block`, `compose-screen`).
 

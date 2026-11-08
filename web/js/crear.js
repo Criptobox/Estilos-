@@ -172,4 +172,6 @@ document.addEventListener('keydown',ev=>{if(!(ev.ctrlKey||ev.metaKey)||ev.altKey
 window.estilosBack=function(){const open=document.querySelectorAll('dialog[open]');if(open.length){open[open.length-1].close();return true;}const menu=$('siteMenu');if(menu&&!menu.hidden){menu.hidden=true;const b=document.querySelector('.menu-button');if(b)b.setAttribute('aria-expanded','false');return true;}if(state.page&&state.page!=='home'){go('home');return true;}return false;};
 
 load();resetDraftHistory();$('idea').value=state.brief;renderPage(({idea:'home',bloques:'explore',pantalla:'review'})[location.hash.slice(1)]||'home',false);
+/* Gancho de solo lectura para pruebas y herramientas (ai/tools): solo existe bajo automatización. */
+if(navigator.webdriver)window.__tintaInspect=Object.freeze({byId:BY_ID,contentModel,normalizedDraft});
 })();
