@@ -49,23 +49,32 @@
      (insignias, pasos) o una etiqueta de navegación corta. */
   function fill(sectorId, fields, opts) {
     const s = SECTORS.find(x => x.id === sectorId); if (!s) return null;
-    const c = { t: (opts && opts.offset) || 0, a: 0, n: 0, h: 0, x: 0, v: 0, p: 0 };
+    const o = (opts && opts.offset) || 0, c = { t: o, a: o, n: o, h: o, x: o, v: o, p: o };
     const pick = (pool, key, orig) => {
       const max = Math.max(14, Math.round(orig.length * 1.8));
       for (let i = 0; i < pool.length; i++) { const v = pool[(c[key] + i) % pool.length]; if (v.length <= max) { c[key] += i + 1; return v; } }
       c[key]++; return pool.slice().sort((a, b) => a.length - b.length)[0];
     };
-    return fields.map(f => {
-      const v = String(f.value || '').trim();
-      if (!v || v.length <= 2 || /^[^\p{L}\p{N}]+$/u.test(v)) return null;
-      if (f.label === 'Placeholder') return pick(s.placeholders, 'p', v);
-      if (isNumeric(v)) return pick(s.numbers, 'v', v);
-      if (f.label === 'Acción') return v.length <= 8 && !/\s/.test(v) ? null : pick(s.actions, 'a', v);
-      if (f.label === 'Título') return pick(s.titles, 't', v);
-      if (f.label === 'Nota') return pick(s.notes, 'n', v);
-      if (f.label === 'Destacado') return pick(s.highlights, 'h', v);
-      return v.length < 6 ? null : pick(s.texts, 'x', v);
-    });
+    const out = [];
+    for (let i = 0; i < fields.length; i++) {
+      const f = fields[i], v = String(f.value || '').trim(), next = fields[i + 1] ? String(fields[i + 1].value || '').trim() : '';
+      if (out.length > i) continue;                                  /* ya resuelto como cola de un precio */
+      /* Precio partido en dos textos («$4» + «.50»): se rellena como un solo precio. */
+      if (/^[$€£]?\d+$/.test(v) && /^[.,]\d{1,2}$/.test(next)) {
+        const price = pick([...new Set(s.numbers.filter(x => /^[$€£]\d+[.,]\d{2}$/.test(x)).concat(['$4.50', '$6.90', '$9.00', '$12.50']))], 'v', '$00.00'), m = /^([$€£]?\d+)([.,]\d{2})$/.exec(price);
+        out[i] = m[1]; out[i + 1] = m[2]; continue;
+      }
+      if (!v || v.length <= 2 || /^[^\p{L}\p{N}]+$/u.test(v)) { out[i] = null; continue; }
+      if (/^[.,]\d{1,2}$/.test(v)) { out[i] = null; continue; }    /* cola decimal suelta: se conserva */
+      if (f.label === 'Placeholder') out[i] = pick(s.placeholders, 'p', v);
+      else if (isNumeric(v)) out[i] = pick(s.numbers, 'v', v);
+      else if (f.label === 'Acción') out[i] = v.length <= 8 && !/\s/.test(v) ? null : pick(s.actions, 'a', v);
+      else if (f.label === 'Título') out[i] = pick(s.titles, 't', v);
+      else if (f.label === 'Nota') out[i] = pick(s.notes, 'n', v);
+      else if (f.label === 'Destacado') out[i] = pick(s.highlights, 'h', v);
+      else out[i] = v.length < 6 ? null : pick(s.texts, 'x', v);
+    }
+    return out;
   }
   root.TintaSectors = { SECTORS, detect, fill, norm };
   if (typeof module !== 'undefined') module.exports = root.TintaSectors;

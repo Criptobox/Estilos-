@@ -105,3 +105,8 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .share-box input{width:100%;font:12px/1.4 ui-monospace,monospace;padding:10px 12px;border:1px solid #dad8ce;border-radius:12px;background:#faf9f6;color:inherit}
 .share-box p{font-size:11px;color:#74746a;margin:0}
 :root[data-theme=dark] .share-box input{background:#252a22;border-color:#424a3a}
+
+/* Copias de tarjeta */
+.repeat-choice{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#74746a}
+.repeat-choice select{font:inherit;font-size:11px;padding:6px 8px;border:1px solid #dad8ce;border-radius:10px;background:#faf9f6;color:inherit}
+:root[data-theme=dark] .repeat-choice select{background:#252a22;border-color:#424a3a}

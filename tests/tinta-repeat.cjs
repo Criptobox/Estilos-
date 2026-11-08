@@ -1,0 +1,37 @@
+/* Tarjeta como estilo: copias con contenido distinto del sector, en vista previa, exportación, historial y enlace. */
+const { chromium } = require('playwright'); const assert = require('node:assert/strict'); const fs = require('node:fs'), path = require('node:path'); const T = require('../web/js/tinta-sectors.js');
+let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
+const a = T.fill('comida', [{ label: 'Título', value: 'Producto' }, { label: 'Destacado', value: '$12' }], { offset: 0 }), b = T.fill('comida', [{ label: 'Título', value: 'Producto' }, { label: 'Destacado', value: '$12' }], { offset: 2 });
+ok(a[0] !== b[0] && a[1] !== b[1], 'el desfase da contenido distinto en títulos y cifras');
+const pairs = [0, 2, 4, 6].map(o => T.fill('comida', [{ label: 'Destacado', value: '$4' }, { label: 'Nota', value: '.50' }], { offset: o }));
+ok(pairs.every(p => /^\$\d+$/.test(p[0]) && /^\.\d{2}$/.test(p[1])) && new Set(pairs.map(p => p.join(''))).size === 4, 'un precio partido («$4» + «.50») se rellena como un solo precio, distinto en cada copia');
+ok(T.fill('comida', [{ label: 'Nota', value: '.50' }])[0] === null, 'una cola decimal suelta se conserva');
+(async () => {
+  const br = await chromium.launch(), ctx = await br.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
+  await pg.goto('http://127.0.0.1:8080/index.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('.gallery-item');
+  await pg.click('#reviewSelection'); await pg.waitForSelector('#review', { state: 'visible' });
+  const cardId = await pg.evaluate(() => document.querySelector('select[data-repeat]').dataset.repeat);
+  const hosts = () => pg.locator('#phoneContent .component-host').count();
+  const texts = () => pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.textContent.replace(/\s+/g, ' ').trim()));
+  const before = await hosts(); ok(await pg.locator('select[data-repeat]').count() >= 1 && await pg.locator('select[data-repeat] option').count() === 6, 'cada tarjeta ofrece de 1 a 6 copias');
+  ok(await pg.locator('.selection-row:has(select[data-repeat]) [data-act=edit-text]').count() >= 1, 'convive con la edición de textos');
+  await pg.selectOption(`select[data-repeat="${cardId}"]`, '4');
+  ok(await hosts() === before + 3, 'la vista previa muestra 4 copias');
+  const t = (await texts()), cardTexts = t.slice(-4 - 1);
+  ok(new Set(t.filter((x, i) => t.indexOf(x) === i)).size === t.length, 'ninguna copia repite el mismo contenido');
+  ok(/\$|café|Capuchino|Croissant|menú|pedido/i.test(t.join(' ')), 'el contenido sale del sector de la idea');
+  ok(await pg.evaluate(k => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).repeat[k], cardId) === 4, 'se guarda en el borrador');
+  await pg.click('#composeButton'); const dl = pg.waitForEvent('download'); await pg.click('[data-act=export]'); const file = path.join(require('node:os').tmpdir(), 'rep-export-' + Date.now() + '.html'); await (await dl).saveAs(file);
+  const html = fs.readFileSync(file, 'utf8'); const blocks = (html.match(/<estilos-block/g) || []).length; ok(blocks === (await hosts()) + 1, 'la exportación incluye las 4 copias (más la barra inferior)'); fs.unlinkSync(file);
+  await pg.keyboard.press('Control+z'); ok(await hosts() === before, 'Ctrl+Z vuelve a una sola tarjeta');
+  await pg.keyboard.press('Control+Shift+z'); ok(await hosts() === before + 3, 'Ctrl+Shift+Z la rehace');
+  await pg.click('[data-act=share-link]'); const link = await pg.inputValue('#shareLink');
+  const rx = await ctx.newPage(); await rx.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.clear(); } }); await rx.goto(link); await rx.waitForSelector('#projectsDialog[open]'); await rx.waitForTimeout(300);
+  ok(await rx.evaluate(k => JSON.parse(localStorage.getItem('estilos-tinta-projects-v1'))[0].draft.repeat[k], cardId) === 4, 'el enlace compartido conserva las copias');
+  await pg.evaluate(() => { const e = document.getElementById('idea'); e.value = 'algo diferente'; e.dispatchEvent(new Event('input', { bubbles: true })); });
+  await pg.selectOption(`select[data-repeat="${cardId}"]`, '3'); await pg.waitForSelector('#toast.on');
+  ok(/Cuéntame tu idea/.test(await pg.locator('#toast').textContent()) && await pg.locator(`select[data-repeat="${cardId}"]`).inputValue() === '1', 'sin sector no inventa contenido: pide la idea y no cambia nada');
+  const m = await br.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#pantalla'); await m.waitForTimeout(300);
+  ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
+  ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await br.close(); console.log(`${n} comprobaciones de copias de tarjeta correctas.`);
+})().catch(e => { console.error(e); process.exit(1); });
