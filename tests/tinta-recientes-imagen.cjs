@@ -17,7 +17,7 @@ ok(I.slug('Producto con aire!') === 'producto-con-aire' && I.slug('') === 'disen
   ok(await pg.locator('#recentCount').textContent() === '2', 'abrir un diseño lo añade a recientes');
   const stored = await pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-recent'))); ok(stored[0] === 'tar-5' && stored.includes('tar-2') && stored.includes('solo-clasica'), 'se guarda en formato clásico y conserva ids que Tinta no conoce');
   // Descargas
-  ok(await pg.locator('.detail-downloads').isVisible(), 'los botones de imagen están a la vista en el detalle');
+  ok(await pg.locator('[aria-label="Descargar como imagen"]').isVisible(), 'los botones de imagen están a la vista en el detalle');
   const svgDl = pg.waitForEvent('download'); await pg.click('[data-act=download-svg]'); const d1 = await svgDl; ok(/\.svg$/.test(d1.suggestedFilename()), 'descarga SVG con nombre .svg');
   const f1 = path.join(os.tmpdir(), 'ri-' + Date.now() + '.svg'); await d1.saveAs(f1); const svgText = fs.readFileSync(f1, 'utf8'); fs.unlinkSync(f1);
   ok(svgText.startsWith('<svg') && svgText.includes('foreignObject') && !/<script|onclick/i.test(svgText), 'el SVG descargado es un componente real y limpio');

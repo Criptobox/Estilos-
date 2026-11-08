@@ -1,0 +1,65 @@
+/* Mis estilos: datos y almacén (compatible con la biblioteca clásica), editor, editar, borrar, usar como base y saneamiento. */
+const { chromium } = require('playwright'); const assert = require('node:assert/strict'); let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
+const store = new Map(); global.localStorage = { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, String(v)), removeItem: k => store.delete(k) };
+const M = require('../web/js/tinta-mystyles.js'); const D = { 'card.a': 1, 'card.b': 1, 'btn.x': 1, 'head.t': 1 };
+ok(JSON.stringify(M.colors('#abc, FF0000 zz #12345678 #00ff00')) === '["#aabbcc","#ff0000","#00ff00"]' && M.colors('1,2,3,4,5,6,7,8').length === 0, 'colors: expande #abc, añade #, descarta lo inválido');
+ok(M.colors('#111111,#222222,#333333,#444444,#555555,#666666,#777777').length === 6, 'máximo 6 colores');
+ok(M.normalize({ name: '', tab: 'Tarjetas', colors: '#fff' }).error && M.normalize({ name: 'a', tab: 'Nada', colors: '#fff' }).error && M.normalize({ name: 'a', tab: 'Tarjetas', colors: 'x' }).error && M.normalize(null).error, 'normalize rechaza nombre vacío, categoría desconocida y sin colores');
+ok(M.normalize({ name: 'a', tab: 'Tarjetas', colors: '#fff', v: 'btn.x' }, D).error && !M.normalize({ name: 'a', tab: 'Tarjetas', colors: '#fff', v: 'card.a' }, D).error, 'el diseño base debe ser de la categoría');
+const e = M.normalize({ name: '  Mi tarjeta  ', tab: 'Tarjetas', colors: '#fff', radius: '999', mode: 'otro', code: 'x'.repeat(5000), id: '<b>' }).entry;
+ok(e.name === 'Mi tarjeta' && e.radius === '16' && e.mode === 'light' && e.code.length === 4000 && e.id === 'b' && e.colors[0] === '#ffffff', 'normaliza nombre, radio, modo, código e id');
+ok(JSON.stringify(M.variants('Tarjetas', D)) === '["card.a","card.b"]' && M.variants('Nada', D).length === 0, 'variants lista los diseños base de la categoría');
+store.set('estilos-user-v2', JSON.stringify({ added: [], edits: { 'tar-1': { name: 'X' } }, deleted: ['tar-2'], otra: 1 }));
+const s1 = M.save({ name: 'Uno', tab: 'Botones', colors: '#ff0000' }, D); ok(s1.entry && !s1.updated, 'save crea un estilo');
+const u1 = JSON.parse(store.get('estilos-user-v2')); ok(u1.added.length === 1 && u1.edits['tar-1'].name === 'X' && u1.deleted[0] === 'tar-2' && u1.otra === 1, 'conserva edits, deleted y otras claves de la clásica');
+const s2 = M.save({ id: s1.entry.id, name: 'Uno bis', tab: 'Botones', colors: '#00ff00' }, D); ok(s2.updated && JSON.parse(store.get('estilos-user-v2')).added.length === 1 && JSON.parse(store.get('estilos-user-v2')).added[0].name === 'Uno bis', 'save con el mismo id actualiza');
+store.set('estilos-favs-v1', JSON.stringify([s1.entry.id, 'tar-9'])); store.set('estilos-recent', JSON.stringify(['tar-9', s1.entry.id]));
+ok(M.remove(s1.entry.id).removed === s1.entry.id && JSON.parse(store.get('estilos-user-v2')).added.length === 0, 'remove elimina el estilo');
+ok(JSON.stringify(JSON.parse(store.get('estilos-favs-v1'))) === '["tar-9"]' && JSON.stringify(JSON.parse(store.get('estilos-recent'))) === '["tar-9"]', 'y lo quita de favoritos y recientes');
+ok(M.remove('tar-1').error && M.remove('noexiste').error, 'no se puede borrar lo que no es tuyo');
+store.set('estilos-user-v2', JSON.stringify({ added: Array.from({ length: M.MAX_MINE }, (_, i) => ({ id: 'u' + i, name: 'n', tab: 'Tarjetas', colors: ['#ffffff'] })) }));
+ok(M.save({ name: 'uno más', tab: 'Tarjetas', colors: '#fff' }).error, 'límite de estilos propios');
+store.set('estilos-user-v2', '{roto'); ok(M.read().added.length === 0 && !M.save({ name: 'a', tab: 'Tarjetas', colors: '#fff' }).error, 'un almacén corrupto no rompe: se parte de cero');
+(async () => {
+  const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
+  const user = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-user-v2') || '{"added":[]}'));
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.gallery-item');
+  const before = await pg.locator('.gallery-item').count();
+  await pg.click('[data-act=new-mystyle]'); await pg.waitForSelector('#styleDialog[open]');
+  ok(await pg.locator('#msTab option').count() >= 8 && await pg.locator('#msVariant option').count() > 1, 'el editor ofrece categorías y diseños base');
+  ok(await pg.evaluate(() => !!document.getElementById('stylePreview').shadowRoot && document.getElementById('stylePreview').shadowRoot.textContent.trim().length > 0), 'la vista previa se dibuja en vivo');
+  await pg.fill('#msName', ''); await pg.click('#styleSave'); ok(/nombre/i.test(await pg.locator('#styleMessage').textContent()) && (await user()).added.length === 0, 'sin nombre no guarda y lo explica');
+  await pg.selectOption('#msTab', 'Botones'); ok(await pg.evaluate(() => [...document.querySelectorAll('#msVariant option')].slice(1).every(o => o.value.startsWith('btn.'))), 'al cambiar de categoría cambian los diseños base');
+  await pg.fill('#msName', 'Mi botón <b>x</b>'); await pg.selectOption('#msVariant', { index: 1 }); await pg.fill('#msColors', '#123abc, ff8800'); await pg.fill('#msRadius', '24');
+  const w1 = pg.waitForNavigation({ waitUntil: 'load' }); await pg.click('#styleSave'); await w1; await pg.waitForSelector('.gallery-item');
+  ok((await user()).added.length === 1 && (await user()).added[0].tab === 'Botones' && (await user()).added[0].colors[1] === '#ff8800', 'guarda en el almacén clásico con colores normalizados');
+  ok(await pg.locator('#catalogSource').inputValue() === 'mine' && await pg.locator('.gallery-item').count() === 1, 'tras guardar muestra «Mis estilos» con el nuevo');
+  ok((await pg.locator('.gallery-item h2').textContent()) === 'Mi botón <b>x</b>' && !(await pg.locator('.gallery-item h2 b').count()), 'el nombre se muestra como texto, no como HTML');
+  await pg.click('.gallery-item .preview-open'); await pg.waitForSelector('#detailDialog[open]');
+  ok(await pg.locator('#editStyle').isVisible() && await pg.locator('#deleteStyle').isVisible() && await pg.locator('#cloneStyle').isVisible(), 'un estilo propio ofrece editar, eliminar y usar como base');
+  await pg.click('#editStyle'); await pg.waitForSelector('#styleDialog[open]'); ok(await pg.locator('#msName').inputValue() === 'Mi botón <b>x</b>' && await pg.locator('#msRadius').inputValue() === '24', 'editar abre el formulario con sus datos');
+  await pg.fill('#msName', 'Botón renombrado'); const w2 = pg.waitForNavigation({ waitUntil: 'load' }); await pg.click('#styleSave'); await w2; await pg.waitForSelector('.gallery-item');
+  ok((await user()).added.length === 1 && (await user()).added[0].name === 'Botón renombrado', 'editar actualiza el mismo estilo (sin duplicar)');
+  // Código propio: se sanea.
+  await pg.click('[data-act=new-mystyle]'); await pg.waitForSelector('#styleDialog[open]'); await pg.fill('#msName', 'Con código'); await pg.fill('#msCode', '<button onclick="window.__pwn=1" style="background:red">hola</button><script>window.__pwn=2</script><img src=x onerror="window.__pwn=3">');
+  ok(await pg.evaluate(() => { const h = document.getElementById('stylePreview').shadowRoot.innerHTML; return !/<script|onclick|onerror/i.test(h) && /hola/.test(h); }), 'el código propio se sanea en la vista previa: sin scripts ni manejadores');
+  const w3 = pg.waitForNavigation({ waitUntil: 'load' }); await pg.click('#styleSave'); await w3; await pg.waitForSelector('.gallery-item'); await pg.waitForTimeout(300);
+  ok(!(await pg.evaluate(() => window.__pwn)) && await pg.evaluate(() => ![...document.querySelectorAll('.gallery-item .component-host')].some(h => /<script|onclick|onerror/i.test(h.shadowRoot.innerHTML))), 'en la biblioteca tampoco se ejecuta ni se conserva código peligroso');
+  // Usar como base desde un diseño de la biblioteca (sin editar/eliminar).
+  await pg.selectOption('#catalogSource', 'library'); await pg.click('.gallery-item .preview-open'); await pg.waitForSelector('#detailDialog[open]');
+  ok(await pg.locator('#cloneStyle').isVisible() && !(await pg.locator('#editStyle').isVisible()) && !(await pg.locator('#deleteStyle').isVisible()), 'un diseño de la biblioteca solo ofrece usarlo como base');
+  await pg.click('#cloneStyle'); await pg.waitForSelector('#styleDialog[open]'); ok(/\(mío\)$/.test(await pg.locator('#msName').inputValue()), 'usar como base rellena el formulario con «(mío)»');
+  const w4 = pg.waitForNavigation({ waitUntil: 'load' }); await pg.click('#styleSave'); await w4; await pg.waitForSelector('.gallery-item');
+  ok((await user()).added.length === 3 && await pg.locator('.gallery-item').count() === 3, 'la copia se guarda como estilo nuevo y propio');
+  // Favoritos y borrado en dos pasos.
+  await pg.locator('.gallery-item .fav-button').first().click();
+  await pg.click('.gallery-item .preview-open'); await pg.waitForSelector('#detailDialog[open]'); const targetName = await pg.locator('#detailTitle').textContent();
+  await pg.click('#deleteStyle'); ok(/¿Seguro\?/.test(await pg.locator('#deleteStyle').textContent()) && (await user()).added.length === 3, 'eliminar pide confirmar con una segunda pulsación (sin diálogos nativos)');
+  const w5 = pg.waitForNavigation({ waitUntil: 'load' }); await pg.click('#deleteStyle'); await w5; await pg.waitForSelector('#explore:not([hidden])');
+  ok((await user()).added.length === 2 && !(await user()).added.some(x => x.name === targetName), 'elimina solo ese estilo');
+  ok(JSON.parse(await pg.evaluate(() => localStorage.getItem('estilos-favs-v1') || '[]')).length === 0, 'y lo quita de favoritos');
+  ok((await pg.evaluate(() => TINTA_LIBRARY.some(b => b.mine))) && (await pg.evaluate(() => TINTA_LIBRARY.filter(b => b.mine).length)) === 2, 'el catálogo refleja los estilos propios restantes');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques'); await m.waitForSelector('.gallery-item'); await m.evaluate(() => document.querySelector('[data-act=new-mystyle]').click()); await m.waitForSelector('#styleDialog[open]');
+  ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth) && await m.evaluate(() => { const r = document.getElementById('styleDialog').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }), 'el editor cabe en móvil');
+  ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de Mis estilos correctas.`);
+})().catch(e => { console.error(e); process.exit(1); });

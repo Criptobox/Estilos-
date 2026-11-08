@@ -141,3 +141,15 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .palette-card h3{font-size:13px;margin:2px 4px 0}.palette-card p{font-size:11px;color:#74746a;margin:0 4px 4px}.palette-card .button{width:100%;font-size:12px;padding:11px 10px}.palette-card.on{border-color:#ff704b}
 .palette-strip{display:flex;height:64px;border-radius:14px;overflow:hidden;border:1px solid #deddd6}.palette-strip i{flex:1}.palette-strip i:first-child{flex:1.6}
 :root[data-theme=dark] .palette-card{background:linear-gradient(140deg,#272c24,#20241e);border-color:#3e4439}
+
+/* Mis estilos */
+#styleDialog{width:min(620px,calc(100% - 30px))}
+.style-preview{min-height:120px;border-radius:20px;border:1px solid #deddd6;background:#f5f4ef;padding:18px;margin:6px 0 14px;display:grid;align-items:center;overflow:hidden}
+.style-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.style-fields label{display:grid;gap:6px;font-size:11px;color:#74746a;min-width:0}
+.style-fields label:nth-child(1),.style-fields label:nth-child(4),.style-fields label:nth-child(n+7){grid-column:1/-1}
+.style-fields input,.style-fields select,.style-fields textarea{width:100%;font:13px/1.4 inherit;padding:10px 12px;border:1px solid #dad8ce;border-radius:12px;background:#faf9f6;color:inherit}
+.style-fields textarea#msCode{font:12px/1.5 ui-monospace,monospace}
+#styleForm footer{display:grid;gap:12px;margin-top:10px}#styleMessage{min-height:1.2em;color:#cc5735}
+@media(max-width:520px){.style-fields{grid-template-columns:1fr}}
+:root[data-theme=dark] .style-preview{background:#191c18;border-color:#3e4439}
+:root[data-theme=dark] .style-fields input,:root[data-theme=dark] .style-fields select,:root[data-theme=dark] .style-fields textarea{background:#252a22;border-color:#424a3a}

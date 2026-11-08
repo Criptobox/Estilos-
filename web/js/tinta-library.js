@@ -19,10 +19,17 @@ const TINTA_LIBRARY = (() => {
     css=css.replace(/\b(?:body|html)(?=\s*[{,.#:\[])/g,':host').replace(/@import\s+[^;]+;/gi,'');
     return {html:doc.body.innerHTML,css};
   }
-  return rows.filter(e=>e&&typeof e.name==='string'&&typeof e.tab==='string').map(raw=>{
+  const SEED_IDS=new Set(SEED.map(e=>e.id)),mineIds=new Set((Array.isArray(user.added)?user.added:[]).filter(e=>e&&typeof e.id==='string'&&!SEED_IDS.has(e.id)).map(e=>e.id));
+  /* Una ficha (propia o de la biblioteca) → entrada normalizada + partes que se dibujan (HTML + CSS). */
+  function build(raw){
     const entry={...raw,name:raw.name.slice(0,80),desc:String(raw.desc||'').slice(0,400),colors:(Array.isArray(raw.colors)?raw.colors:['#888888']).slice(0,6).map(c=>safeColor(c)),radius:/^\d{1,2}%?$/.test(String(raw.radius))?String(raw.radius):'16',mode:raw.mode==='dark'?'dark':'light',v:typeof raw.v==='string'&&D[raw.v]?raw.v:''};
     const custom=typeof raw.code==='string'&&raw.code.trim();
     const parts=custom?cleanCode(raw.code):designParts(entry);
-    return {id:'lib-'+safeId(raw.id),role:roles[entry.tab]||'widgets',source:'library',name:entry.name,desc:entry.desc,color:entry.colors[0]||'#e5e1d5',glyph:entry.tab==='Botones'?'→':entry.tab==='Tarjetas'?'▤':'▦',html:parts.html,css:parts.css,base:SHADOW_BASE,libraryId:raw.id,reference:entry.ref,properties:{colors:entry.colors,radius:entry.radius,mode:entry.mode},variant:custom?'custom':variantOf(entry)};
+    return {entry,custom,parts};
+  }
+  window.TintaLibraryTools={preview:raw=>build(raw).parts};
+  return rows.filter(e=>e&&typeof e.name==='string'&&typeof e.tab==='string').map(raw=>{
+    const {entry,custom,parts}=build(raw);
+    return {id:'lib-'+safeId(raw.id),role:roles[entry.tab]||'widgets',source:'library',name:entry.name,desc:entry.desc,color:entry.colors[0]||'#e5e1d5',glyph:entry.tab==='Botones'?'→':entry.tab==='Tarjetas'?'▤':'▦',html:parts.html,css:parts.css,base:SHADOW_BASE,libraryId:raw.id,reference:entry.ref,properties:{colors:entry.colors,radius:entry.radius,mode:entry.mode},variant:custom?'custom':variantOf(entry),mine:mineIds.has(raw.id),raw};
   });
 })();
