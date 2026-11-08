@@ -153,3 +153,11 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 @media(max-width:520px){.style-fields{grid-template-columns:1fr}}
 :root[data-theme=dark] .style-preview{background:#191c18;border-color:#3e4439}
 :root[data-theme=dark] .style-fields input,:root[data-theme=dark] .style-fields select,:root[data-theme=dark] .style-fields textarea{background:#252a22;border-color:#424a3a}
+
+/* Todas las pantallas */
+.multi-toggle{display:flex;gap:12px;align-items:flex-start;margin:14px 0 0;padding:14px;border:1px solid #deddd6;border-radius:18px;background:#faf9f6;cursor:pointer}
+.multi-toggle input{margin-top:3px;width:18px;height:18px;accent-color:#ff704b;flex:none}.multi-toggle b{display:block;font-size:13px}.multi-toggle small{display:block;font-size:11px;color:#74746a;line-height:1.5;margin-top:3px}
+.screen-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 12px}.screen-tabs button{font:inherit;font-size:12px;padding:8px 14px;border-radius:999px;border:1px solid #dad8ce;background:#faf9f6;color:#74746a;cursor:pointer}
+.screen-tabs button[aria-pressed=true]{background:#242422;color:#fff;border-color:#242422}
+:root[data-theme=dark] .multi-toggle,:root[data-theme=dark] .screen-tabs button{background:#252a22;border-color:#424a3a}
+:root[data-theme=dark] .screen-tabs button[aria-pressed=true]{background:#edeee7;color:#191c18}

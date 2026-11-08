@@ -3,10 +3,10 @@
   "entrada": "web/index.html",
   "interfaz": "Tinta actual con estilos e historial",
   "archivos_sha256": {
-    "web/index.html": "05fc3139003d5348f7225918eaa09bc9a4d7cc511703f13653206fbab2e8e53f",
-    "web/crear.html": "05fc3139003d5348f7225918eaa09bc9a4d7cc511703f13653206fbab2e8e53f",
-    "web/sw.js": "bf58b1ff648311de8cef25241935287f61d85e9b393acf68691e2d5e7f5cf024",
-    "web/js/crear.js": "60ac3d8372e221de3b8508e4999bd09bf6d746bcf2337df1713672a01c04858a",
-    "web/js/tinta-history.js": "fab5c8571134191f5371967efc3f0158fd3cd71929af608ae263183896f88737"
+    "web/index.html": "7a28c7ea73545ba3b34f290d1653c7f664fc74a477a8b02d1b053b8b213359cd",
+    "web/crear.html": "7a28c7ea73545ba3b34f290d1653c7f664fc74a477a8b02d1b053b8b213359cd",
+    "web/sw.js": "976bcf18a87dc53c0d612ca876698913d762c1e1f7036588d2dd2fa29aead38e",
+    "web/js/crear.js": "f887b10cb5607e113994530ea9a8c83fe0e67184de35b2ea18ad918cc7c1fc6e",
+    "web/js/tinta-history.js": "0de03910f863e7e3e30e3534225a8d93ba9bef82f3c8d5f7ea718ad606954326"
   }
 }
