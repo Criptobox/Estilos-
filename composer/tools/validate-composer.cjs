@@ -68,6 +68,39 @@ for (const b of meta.blocks) {
   }
 }
 
+// 1b. Copia por sector: cada valor debe caber en su hueco
+const copy = read('design-library/copy.json');
+const copyGroupOf = new Map();
+for (const [g, ids] of Object.entries(copy.groups)) for (const id of ids) {
+  if (!byId.has(id)) err('copy', 'el grupo ' + g + ' apunta a un bloque sin metadatos: ' + id);
+  copyGroupOf.set(id, g);
+}
+for (const [sec, groups] of Object.entries(copy.sectors)) {
+  if (!SECTOR_IDS.includes(sec)) err('copy', 'sector desconocido: ' + sec);
+  for (const [g, values] of Object.entries(groups)) {
+    const ids = copy.groups[g];
+    if (!ids) { err('copy[' + sec + ']', 'grupo desconocido: ' + g); continue; }
+    for (const id of ids) {
+      const declared = new Map((byId.get(id) ? byId.get(id).slots : []).map((s) => [s.name, s]));
+      for (const [name, val] of Object.entries(values)) {
+        const s = declared.get(name);
+        const w = 'copy[' + sec + '/' + g + '→' + id + '].' + name;
+        if (!s) { err(w, 'hueco no declarado'); continue; }
+        if (s.kind === 'textlist') {
+          if (!Array.isArray(val) || (s.count && val.length !== s.count)) { err(w, 'debe ser una lista de ' + s.count); continue; }
+          val.forEach((x) => { if (s.max && x.length > s.max) err(w, '«' + x + '» excede ' + s.max + ' caracteres'); });
+        } else {
+          if (typeof val !== 'string') { err(w, 'debe ser texto'); continue; }
+          const lines = val.split('\n');
+          if (lines.length !== (s.parts || 1)) err(w, 'tiene ' + lines.length + ' líneas y el hueco admite ' + (s.parts || 1));
+          if (s.max && val.replace(/\n/g, '').length > s.max) err(w, '«' + val + '» excede ' + s.max + ' caracteres');
+        }
+      }
+    }
+  }
+  for (const g of Object.keys(copy.groups)) if (!groups[g]) err('copy[' + sec + ']', 'falta el grupo ' + g);
+}
+
 // 2. ScreenSpec
 function checkSpec(spec, where) {
   if (spec.spec_version !== 1) err(where, 'spec_version debe ser 1');

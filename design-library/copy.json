@@ -1,0 +1,618 @@
+{
+ "schema_version": 1,
+ "note": "Copia por sector para las secciones web. Se aplica a los bloques recién propuestos si la persona no los ha editado. Las cifras, precios, nombres y opiniones son ejemplos para sustituir, no datos reales. Cada valor respeta el máximo, el número de partes y el número de elementos de su hueco en composition.json (lo comprueba composer/tools/validate-composer.cjs).",
+ "groups": {
+  "hero": [
+   "w-hero"
+  ],
+  "hero-split": [
+   "w-hero-split"
+  ],
+  "benefits": [
+   "w-benefits"
+  ],
+  "pricing": [
+   "w-pricing"
+  ],
+  "testimonial": [
+   "w-testimonial"
+  ],
+  "stats": [
+   "w-stats"
+  ],
+  "cta": [
+   "w-cta-dark",
+   "w-cta-coral"
+  ],
+  "footer": [
+   "w-footer",
+   "w-footer-dark"
+  ]
+ },
+ "sectors": {
+  "comida": {
+   "hero": {
+    "eyebrow": "CAFÉ DE BARRIO · ABIERTO HOY",
+    "headline": "Tu café,\nlisto para",
+    "headline_accent": "llevar.",
+    "subtitle": "Pide en segundos, recógelo caliente y sigue con tu día.",
+    "chips": [
+     "Sin filas",
+     "Recién hecho",
+     "Para llevar"
+    ]
+   },
+   "hero-split": {
+    "eyebrow": "PIDE Y RECOGE",
+    "headline": "Menos fila,\nmás café.",
+    "subtitle": "Elige, paga y recoge sin esperas."
+   },
+   "benefits": {
+    "title": "Por qué venir",
+    "benefit_titles": [
+     "Rápido",
+     "Fresco",
+     "Cercano"
+    ],
+    "benefit_texts": [
+     "Tu pedido listo en pocos minutos.",
+     "Ingredientes de cada día, hechos al momento.",
+     "Un equipo que te conoce por tu nombre."
+    ]
+   },
+   "pricing": {
+    "tag": "MÁS PEDIDO",
+    "title": "Combo desayuno",
+    "price": "$6",
+    "price_period": "/combo",
+    "features": [
+     "Café a elegir y bollería",
+     "Sin esperas en barra",
+     "Repite cuando quieras"
+    ],
+    "button_label": "Pedir combo"
+   },
+   "testimonial": {
+    "quote": "Llego, digo mi nombre y el café ya está listo.",
+    "initial": "L",
+    "name": "Lucía Mena",
+    "role": "Vecina del barrio"
+   },
+   "stats": {
+    "values": [
+     "4.8",
+     "5 min",
+     "300+"
+    ],
+    "labels": [
+     "valoración media",
+     "tiempo medio de pedido",
+     "pedidos cada semana"
+    ]
+   },
+   "cta": {
+    "title": "Pide tu primer café",
+    "text": "Hoy, con envío gratis.",
+    "label": "Pedir ahora"
+   },
+   "footer": {
+    "links": [
+     "Inicio",
+     "Menú",
+     "Contacto"
+    ]
+   }
+  },
+  "tienda": {
+   "hero": {
+    "eyebrow": "NUEVA COLECCIÓN · TEMPORADA",
+    "headline": "Estilo de diario,\nlisto para",
+    "headline_accent": "estrenar.",
+    "subtitle": "Descubre lo nuevo, elige tu talla y recíbelo en casa.",
+    "chips": [
+     "Envío rápido",
+     "Cambios gratis",
+     "Pago seguro"
+    ]
+   },
+   "hero-split": {
+    "eyebrow": "NUEVA COLECCIÓN",
+    "headline": "Lo que buscas,\na un toque.",
+    "subtitle": "Elige, compra y recíbelo donde estés."
+   },
+   "benefits": {
+    "title": "Comprar aquí",
+    "benefit_titles": [
+     "Envío ágil",
+     "Cambios fáciles",
+     "Pago seguro"
+    ],
+    "benefit_texts": [
+     "Recibe tu pedido en pocos días.",
+     "30 días para cambiarlo sin explicaciones.",
+     "Pagas como prefieras, con tus datos a salvo."
+    ]
+   },
+   "pricing": {
+    "tag": "MÁS VENDIDO",
+    "title": "Pack básicos",
+    "price": "$39",
+    "price_period": "/pack",
+    "features": [
+     "Tres prendas esenciales",
+     "Envío incluido",
+     "Cambio gratis en 30 días"
+    ],
+    "button_label": "Comprar pack"
+   },
+   "testimonial": {
+    "quote": "Me llegó en dos días y me quedó perfecto.",
+    "initial": "M",
+    "name": "Marta Ruiz",
+    "role": "Clienta desde 2024"
+   },
+   "stats": {
+    "values": [
+     "12 mil",
+     "4.7",
+     "48 h"
+    ],
+    "labels": [
+     "pedidos entregados",
+     "valoración media",
+     "entrega media"
+    ]
+   },
+   "cta": {
+    "title": "Estrena algo nuevo",
+    "text": "Envío gratis en tu primera compra.",
+    "label": "Ver colección"
+   },
+   "footer": {
+    "links": [
+     "Inicio",
+     "Catálogo",
+     "Contacto"
+    ]
+   }
+  },
+  "finanzas": {
+   "hero": {
+    "eyebrow": "TU DINERO, CLARO",
+    "headline": "Tus cuentas,\nsiempre",
+    "headline_accent": "claras.",
+    "subtitle": "Controla gastos, ahorra con metas y ve tu mes de un vistazo.",
+    "chips": [
+     "Sin letra chica",
+     "Metas de ahorro",
+     "Avisos útiles"
+    ]
+   },
+   "hero-split": {
+    "eyebrow": "AHORRO SIN ESFUERZO",
+    "headline": "Tu dinero,\nbajo control.",
+    "subtitle": "Gastos, metas y movimientos en un solo lugar."
+   },
+   "benefits": {
+    "title": "Por qué confiar",
+    "benefit_titles": [
+     "Claro",
+     "Seguro",
+     "Útil"
+    ],
+    "benefit_texts": [
+     "Ves a dónde va cada peso, sin tablas.",
+     "Tus datos protegidos y bajo tu control.",
+     "Avisos a tiempo para no pasarte del mes."
+    ]
+   },
+   "pricing": {
+    "tag": "RECOMENDADO",
+    "title": "Plan personal",
+    "price": "$4",
+    "price_period": "/mes",
+    "features": [
+     "Cuentas y tarjetas sin límite",
+     "Metas de ahorro",
+     "Soporte en español"
+    ],
+    "button_label": "Probar gratis"
+   },
+   "testimonial": {
+    "quote": "Por fin sé cuánto puedo gastar sin preocuparme.",
+    "initial": "D",
+    "name": "Diego Salas",
+    "role": "Diseñador freelance"
+   },
+   "stats": {
+    "values": [
+     "8 mil",
+     "4.8",
+     "24 h"
+    ],
+    "labels": [
+     "personas ahorrando",
+     "valoración media",
+     "respuesta de soporte"
+    ]
+   },
+   "cta": {
+    "title": "Empieza a ahorrar hoy",
+    "text": "Crea tu cuenta gratis en un minuto.",
+    "label": "Crear mi cuenta"
+   },
+   "footer": {
+    "links": [
+     "Inicio",
+     "Planes",
+     "Ayuda"
+    ]
+   }
+  },
+  "fitness": {
+   "hero": {
+    "eyebrow": "ENTRENA A TU RITMO",
+    "headline": "Tu mejor versión,\nempieza",
+    "headline_accent": "hoy.",
+    "subtitle": "Clases, rutinas y seguimiento para que no pares.",
+    "chips": [
+     "Clases en vivo",
+     "Rutinas guiadas",
+     "Tu progreso"
+    ]
+   },
+   "hero-split": {
+    "eyebrow": "MUÉVETE MÁS",
+    "headline": "Menos excusas,\nmás fuerza.",
+    "subtitle": "Reserva tu clase y entrena con apoyo."
+   },
+   "benefits": {
+    "title": "Entrena con ventaja",
+    "benefit_titles": [
+     "Flexible",
+     "Guiado",
+     "Constante"
+    ],
+    "benefit_texts": [
+     "Clases a todas horas, tú eliges cuándo.",
+     "Rutinas pensadas para tu nivel.",
+     "Tu progreso a la vista, semana a semana."
+    ]
+   },
+   "pricing": {
+    "tag": "MÁS ELEGIDO",
+    "title": "Plan mensual",
+    "price": "$29",
+    "price_period": "/mes",
+    "features": [
+     "Clases ilimitadas",
+     "Rutinas a tu medida",
+     "Cancela cuando quieras"
+    ],
+    "button_label": "Empezar ahora"
+   },
+   "testimonial": {
+    "quote": "Llevo tres meses sin faltar. Las clases vuelan.",
+    "initial": "C",
+    "name": "Carlos Vera",
+    "role": "Socio desde enero"
+   },
+   "stats": {
+    "values": [
+     "40+",
+     "4.9",
+     "7 días"
+    ],
+    "labels": [
+     "clases por semana",
+     "valoración media",
+     "abierto cada semana"
+    ]
+   },
+   "cta": {
+    "title": "Tu primera clase es gratis",
+    "text": "Reserva hoy y ven a probar.",
+    "label": "Reservar clase"
+   },
+   "footer": {
+    "links": [
+     "Inicio",
+     "Clases",
+     "Contacto"
+    ]
+   }
+  },
+  "viajes": {
+   "hero": {
+    "eyebrow": "ESCAPADAS DE FIN DE SEMANA",
+    "headline": "Tu próximo viaje,\nmás",
+    "headline_accent": "cerca.",
+    "subtitle": "Destinos elegidos, reservas claras y cancelación flexible.",
+    "chips": [
+     "Cancela gratis",
+     "Sin sorpresas",
+     "Ayuda 24 h"
+    ]
+   },
+   "hero-split": {
+    "eyebrow": "VIAJA CON CALMA",
+    "headline": "Elige destino,\nnosotros el resto.",
+    "subtitle": "Planifica en minutos, viaja sin prisas."
+   },
+   "benefits": {
+    "title": "Viaja tranquilo",
+    "benefit_titles": [
+     "Flexible",
+     "Claro",
+     "Cercano"
+    ],
+    "benefit_texts": [
+     "Cambia o cancela sin penalización.",
+     "Precio final desde el primer momento.",
+     "Ayuda de personas reales durante tu viaje."
+    ]
+   },
+   "pricing": {
+    "tag": "DESDE",
+    "title": "Escapada de 3 noches",
+    "price": "$89",
+    "price_period": "/pers.",
+    "features": [
+     "Alojamiento incluido",
+     "Cancelación gratuita",
+     "Guía del destino"
+    ],
+    "button_label": "Reservar"
+   },
+   "testimonial": {
+    "quote": "Planeamos todo en una tarde y el viaje salió perfecto.",
+    "initial": "N",
+    "name": "Nora y Pablo",
+    "role": "Viajeros frecuentes"
+   },
+   "stats": {
+    "values": [
+     "60+",
+     "4.9",
+     "24 h"
+    ],
+    "labels": [
+     "destinos disponibles",
+     "valoración media",
+     "ayuda en viaje"
+    ]
+   },
+   "cta": {
+    "title": "Elige tu próxima escapada",
+    "text": "Reserva hoy y cancela gratis.",
+    "label": "Ver destinos"
+   },
+   "footer": {
+    "links": [
+     "Inicio",
+     "Destinos",
+     "Contacto"
+    ]
+   }
+  },
+  "salud": {
+   "hero": {
+    "eyebrow": "TU SALUD, EN BUENAS MANOS",
+    "headline": "Cuidarte,\nsin",
+    "headline_accent": "esperas.",
+    "subtitle": "Reserva tu cita en minutos y lleva tu historial contigo.",
+    "chips": [
+     "Citas rápidas",
+     "Datos privados",
+     "Equipo cercano"
+    ]
+   },
+   "hero-split": {
+    "eyebrow": "ATENCIÓN CERCANA",
+    "headline": "Tu cita,\nsin complicaciones.",
+    "subtitle": "Elige especialista, día y hora."
+   },
+   "benefits": {
+    "title": "Por qué elegirnos",
+    "benefit_titles": [
+     "Rápido",
+     "Privado",
+     "Cercano"
+    ],
+    "benefit_texts": [
+     "Cita en pocos minutos, sin llamadas.",
+     "Tu información, solo para ti y tu médico.",
+     "Un equipo que te escucha y te explica."
+    ]
+   },
+   "pricing": {
+    "tag": "CONSULTA",
+    "title": "Primera visita",
+    "price": "$35",
+    "price_period": "/cita",
+    "features": [
+     "Valoración completa",
+     "Plan de seguimiento",
+     "Resultados en tu móvil"
+    ],
+    "button_label": "Pedir cita"
+   },
+   "testimonial": {
+    "quote": "Me explicaron todo con calma y sin prisas.",
+    "initial": "R",
+    "name": "Rosa Ibáñez",
+    "role": "Paciente"
+   },
+   "stats": {
+    "values": [
+     "15",
+     "4.9",
+     "24 h"
+    ],
+    "labels": [
+     "especialistas",
+     "valoración media",
+     "para tu primera cita"
+    ]
+   },
+   "cta": {
+    "title": "Agenda tu cita",
+    "text": "Elige día y hora en un minuto.",
+    "label": "Pedir cita"
+   },
+   "footer": {
+    "links": [
+     "Inicio",
+     "Servicios",
+     "Citas"
+    ]
+   }
+  },
+  "musica": {
+   "hero": {
+    "eyebrow": "ESCUCHA, SIENTE, REPITE",
+    "headline": "Tu música,\nsiempre",
+    "headline_accent": "contigo.",
+    "subtitle": "Descubre artistas, guarda tus listas y no te pierdas un directo.",
+    "chips": [
+     "Lanzamientos",
+     "En vivo",
+     "Tus listas"
+    ]
+   },
+   "hero-split": {
+    "eyebrow": "NUEVO ÁLBUM",
+    "headline": "Dale play\na tu día.",
+    "subtitle": "Escucha, comparte y descubre."
+   },
+   "benefits": {
+    "title": "Para escuchar más",
+    "benefit_titles": [
+     "Descubre",
+     "Guarda",
+     "Comparte"
+    ],
+    "benefit_texts": [
+     "Artistas nuevos elegidos para ti.",
+     "Tus listas siempre a mano.",
+     "Envía una canción y escuchad juntos."
+    ]
+   },
+   "pricing": {
+    "tag": "POPULAR",
+    "title": "Plan sin anuncios",
+    "price": "$9",
+    "price_period": "/mes",
+    "features": [
+     "Sin anuncios",
+     "Escucha sin conexión",
+     "Calidad alta"
+    ],
+    "button_label": "Probar un mes"
+   },
+   "testimonial": {
+    "quote": "Descubrí tres bandas nuevas la primera semana.",
+    "initial": "I",
+    "name": "Iván Rey",
+    "role": "Oyente diario"
+   },
+   "stats": {
+    "values": [
+     "1 M",
+     "4.8",
+     "30 d"
+    ],
+    "labels": [
+     "canciones disponibles",
+     "valoración media",
+     "para probar gratis"
+    ]
+   },
+   "cta": {
+    "title": "Dale play ahora",
+    "text": "Prueba un mes sin coste.",
+    "label": "Empezar gratis"
+   },
+   "footer": {
+    "links": [
+     "Inicio",
+     "Música",
+     "Eventos"
+    ]
+   }
+  },
+  "educacion": {
+   "hero": {
+    "eyebrow": "APRENDE A TU RITMO",
+    "headline": "Aprender algo nuevo,\nes más",
+    "headline_accent": "fácil.",
+    "subtitle": "Lecciones cortas, claras y con seguimiento para que avances.",
+    "chips": [
+     "Lecciones cortas",
+     "A tu ritmo",
+     "Con certificado"
+    ]
+   },
+   "hero-split": {
+    "eyebrow": "CURSOS EN LÍNEA",
+    "headline": "Un poco cada día,\nmucho al final.",
+    "subtitle": "Lecciones cortas con seguimiento."
+   },
+   "benefits": {
+    "title": "Aprende mejor",
+    "benefit_titles": [
+     "Breve",
+     "Guiado",
+     "Constante"
+    ],
+    "benefit_texts": [
+     "Lecciones de pocos minutos, sin presión.",
+     "Un camino claro de principio a fin.",
+     "Tu avance a la vista para seguir motivado."
+    ]
+   },
+   "pricing": {
+    "tag": "MÁS ELEGIDO",
+    "title": "Curso completo",
+    "price": "$49",
+    "price_period": "/curso",
+    "features": [
+     "Todas las lecciones",
+     "Ejercicios con corrección",
+     "Certificado al terminar"
+    ],
+    "button_label": "Inscribirme"
+   },
+   "testimonial": {
+    "quote": "Veinte minutos al día y ya me defiendo.",
+    "initial": "S",
+    "name": "Sara León",
+    "role": "Alumna de inglés"
+   },
+   "stats": {
+    "values": [
+     "5 mil",
+     "4.8",
+     "20 min"
+    ],
+    "labels": [
+     "alumnas y alumnos",
+     "valoración media",
+     "por lección"
+    ]
+   },
+   "cta": {
+    "title": "Empieza tu primera lección",
+    "text": "Es gratis y no necesitas tarjeta.",
+    "label": "Empezar ahora"
+   },
+   "footer": {
+    "links": [
+     "Inicio",
+     "Cursos",
+     "Ayuda"
+    ]
+   }
+  }
+ }
+}

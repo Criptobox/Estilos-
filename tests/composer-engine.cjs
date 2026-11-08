@@ -24,6 +24,13 @@ for (const b of briefs) { const r = c.compose({ brief: b }); const web = r.kind 
 ok(c.compose({ brief: 'Una página web para mi cafetería' }).sector === 'comida', 'la página web conserva el sector');
 ok(c.compose({ brief: 'Una página web para mi cafetería' }).proposals.every(p => p.blocks.some(id => id.startsWith('w-hero')) && p.blocks.some(id => id.startsWith('w-cta')) && p.blocks.some(id => id.startsWith('w-footer'))), 'cada página tiene portada, llamada final y pie');
 ok(c.compose({ brief: 'Una app para mi cafetería', kind: 'web' }).kind === 'web', 'permite forzar el tipo');
+const webIds = Data.blocks.filter(b => b.kind === 'web').map(b => b.id), appIds = Data.blocks.filter(b => b.kind === 'app').map(b => b.id);
+for (const sec of Object.keys(Data.sectors).filter(x => x !== 'default')) {
+  ok(webIds.every(id => c.copyFor(sec, id) && Object.keys(c.copyFor(sec, id)).length > 0), `copia para todas las secciones web en ${sec}`);
+  ok(webIds.every(id => Object.keys(c.copyFor(sec, id)).every(k => c.slotsOf(id).some(sl => sl.name === k))), `la copia de ${sec} solo usa huecos declarados`);
+}
+ok(appIds.every(id => c.copyFor('comida', id) === null) && webIds.every(id => c.copyFor(null, id) === null) && c.copyFor('comida', 'nada') === null, 'sin copia para apps, sin sector ni bloques desconocidos');
+ok(c.slotsOf('w-hero').length > 0 && c.slotsOf('nada').length === 0, 'slotsOf devuelve los huecos del bloque');
 const first = b => c.compose({ brief: b }).proposals[0].blocks.join();
 ok(first('Una app para mi cafetería') === 'h-search,c-coffee,a-coral,n-soft', 'cafetería: búsqueda, producto, acción cálida y navegación esencial');
 ok(first('Mis finanzas personales') === 'h-minimal,c-balance,a-dark,n-dark', 'finanzas: cabecera sobria, balance y acción en grafito');
@@ -61,8 +68,18 @@ ok(fs.readFileSync(path.join(__dirname, '..', 'web', 'js', 'tinta-composition-da
   await w.click('#reviewSelection'); await w.waitForSelector('#phoneContent .component-host'); ok(await w.locator('#phoneContent .component-host').count() >= 3, 'la página web se dibuja en la vista previa');
   const w2 = await b.newPage({ viewport: { width: 1100, height: 900 } }); w2.on('pageerror', e => errors.push(e.message));
   await w2.goto('http://127.0.0.1:8080/crear.html'); await w2.fill('#idea', 'Una página web para mi cafetería'); await w2.locator('#briefForm [type=submit]').click(); await w2.waitForSelector('.gallery-item');
-  await w2.click('#reviewSelection'); await w2.waitForSelector('#phoneContent .component-host'); await w2.click('[data-act=adapt-text]');
-  ok(/nada que adaptar|No hay bloques/.test(await w2.locator('#toast').textContent()) && (await w2.evaluate(() => Object.keys(JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).content || {}).length)) === 0, '«Adaptar textos» no toca las secciones web');
+  const draftOf = pg2 => pg2.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
+  const d1 = await draftOf(w2); ok(d1.selected.some(id => id.startsWith('w-')) && d1.selected.every(id => id.startsWith('w-')), 'idea escrita a mano: página web con piezas web');
+  ok(d1.selected.filter(id => id !== d1.choices.nav).some(id => d1.content[id]), 'la propuesta llega con textos del sector');
+  await w2.click('#reviewSelection'); await w2.waitForSelector('#phoneContent .component-host');
+  const shown2 = await w2.evaluate(() => [...document.querySelectorAll('#review .component-host')].map(h => h.shadowRoot.textContent.replace(/\s+/g, ' ')).join(' | '));
+  ok(Data.copy.comida['w-cta-coral'].title && (shown2.includes(Data.copy.comida['w-cta-coral'].title) || shown2.includes(Data.copy.comida['w-cta-dark'].title)), 'la vista previa muestra la llamada final de cafetería: ' + shown2.slice(0, 160));
+  ok(!/marca\b.*Tu idea/.test(shown2) && /café|Café|pedido|Pide|Pedir/.test(shown2), 'los textos son de cafetería y no los genéricos');
+  await w2.click('[data-act=adapt-text]'); const d2 = await draftOf(w2);
+  ok(/respetan|nada que adaptar|No hay bloques/.test(await w2.locator('#toast').textContent()) && JSON.stringify(d2.content) === JSON.stringify(d1.content), '«Adaptar textos» no pisa la copia de las secciones web');
+  await w2.evaluate(() => { location.hash = '#bloques'; }); await w2.waitForSelector('#nextProposal'); await w2.click('#nextProposal'); const d3 = await draftOf(w2);
+  ok(Object.keys(d3.content).every(id => d3.selected.includes(id)), 'al cambiar de propuesta no quedan textos de bloques que ya no están');
+  ok(d3.selected.some(id => d3.content[id]), 'la nueva propuesta también lleva textos del sector');
   const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/crear.html'); await m.click('[data-idea=finanzas]'); await m.locator('#briefForm [type=submit]').click(); await m.waitForSelector('.gallery-item');
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
   const keep = await b.newPage(); await keep.goto('http://127.0.0.1:8080/crear.html'); await keep.evaluate(() => localStorage.setItem('estilos-tinta-prototype-v1', JSON.stringify({ selected: ['c-coral'] }))); await keep.reload();

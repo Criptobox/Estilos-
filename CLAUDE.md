@@ -28,8 +28,9 @@ cd tests && npm test                   # Playwright (necesita npm ci y chromium)
 - `web/js/crear.js`: definiciones de los bloques de Tinta (`id`, `role`, `html`, `css`) y recetas por palabras.
 - `web/js/tinta-library.js`, `tinta-catalog.js`: biblioteca y render.
 - `web/js/tinta-composer.js`: motor de composición (propuestas, reglas de diseño, `lint`). Puro y determinista. `tinta-sectors.js` detecta el sector.
-- `tools/build-composition-data.cjs`: genera los datos del motor desde `composition.json`.
-- `design-library/`: catálogo, esquemas y metadatos de composición (`composition.json`).
+- `web/js/tinta-slots.js`: traduce los huecos de un bloque a los textos de Tinta (lo usan la app y `spec-to-tinta`).
+- `tools/build-composition-data.cjs`: genera los datos del motor desde `composition.json` y `copy.json`.
+- `design-library/`: catálogo, esquemas, metadatos de composición (`composition.json`) y copia por sector (`copy.json`, validada contra los huecos).
 - `composer/spec/`: esquema de `ScreenSpec` y ejemplos.
 - `composer/tools/`: `validate-composer.cjs` (validación sin navegador) y `spec-to-tinta.cjs` (convierte una pantalla a proyecto de Tinta y la dibuja).
 - `composer/evals/briefs/`: briefs de oro (JSONL).

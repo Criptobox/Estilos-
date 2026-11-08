@@ -169,7 +169,10 @@
     }
 
     function lint(ids, sectorId) { return review(ids, sectorId || null).issues; }
-    return { compose, lint, sectorOf, blockIds: () => data.blocks.map(b => b.id) };
+    // Copia del sector para un bloque ({hueco: valor}) y sus huecos; null si no hay copia.
+    const copyFor = (sector, id) => (sector && data.copy && data.copy[sector] && data.copy[sector][id]) || null;
+    const slotsOf = id => (BY_ID.get(id) ? BY_ID.get(id).slots : []);
+    return { compose, lint, sectorOf, copyFor, slotsOf, blockIds: () => data.blocks.map(b => b.id) };
   }
 
   const api = { create, kindOf, ROLE_ORDER };
