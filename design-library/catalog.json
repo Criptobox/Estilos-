@@ -1261,6 +1261,903 @@
       "family_primary_id": "n-dark"
     },
     {
+      "id": "w-hero",
+      "legacy_id": null,
+      "name": "Héroe centrado",
+      "slug": "heroe-centrado",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Marca, titular grande y tres razones breves para quedarse.",
+      "family": "tinta.web.hero",
+      "variant_id": "w-hero",
+      "variants": [
+        "w-hero",
+        "w-hero-split"
+      ],
+      "tags": [
+        "web-sections",
+        "Encabezados",
+        "header",
+        "tinta.web.hero",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e9e5da",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-hero"
+    },
+    {
+      "id": "w-hero-split",
+      "legacy_id": null,
+      "name": "Héroe con figura",
+      "slug": "heroe-con-figura",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Titular a la izquierda y una figura de color que da peso a la portada.",
+      "family": "tinta.web.hero",
+      "variant_id": "w-hero-split",
+      "variants": [
+        "w-hero",
+        "w-hero-split"
+      ],
+      "tags": [
+        "web-sections",
+        "Encabezados",
+        "header",
+        "tinta.web.hero",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f2ddd2",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-hero"
+    },
+    {
+      "id": "w-benefits",
+      "legacy_id": null,
+      "name": "Beneficios en lista",
+      "slug": "beneficios-en-lista",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Tres razones para elegirte, cada una con su icono.",
+      "family": "tinta.web.benefits",
+      "variant_id": "w-benefits",
+      "variants": [
+        "w-benefits"
+      ],
+      "tags": [
+        "web-sections",
+        "Tarjetas",
+        "cards",
+        "tinta.web.benefits",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f4f3ed",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-benefits"
+    },
+    {
+      "id": "w-pricing",
+      "legacy_id": null,
+      "name": "Plan de precios",
+      "slug": "plan-de-precios",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Un plan con su precio, tres ventajas y un botón para elegirlo.",
+      "family": "tinta.web.pricing",
+      "variant_id": "w-pricing",
+      "variants": [
+        "w-pricing"
+      ],
+      "tags": [
+        "web-sections",
+        "Tarjetas",
+        "cards",
+        "tinta.web.pricing",
+        "gradient",
+        "elevated",
+        "pricing"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e8e5da",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-pricing"
+    },
+    {
+      "id": "w-testimonial",
+      "legacy_id": null,
+      "name": "Testimonio",
+      "slug": "testimonio",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Una opinión real con estrellas, nombre y oficio.",
+      "family": "tinta.web.testimonial",
+      "variant_id": "w-testimonial",
+      "variants": [
+        "w-testimonial"
+      ],
+      "tags": [
+        "web-sections",
+        "Tarjetas",
+        "cards",
+        "tinta.web.testimonial",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f7efe3",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-testimonial"
+    },
+    {
+      "id": "w-stats",
+      "legacy_id": null,
+      "name": "Cifras clave",
+      "slug": "cifras-clave",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Tres números que dan confianza de un vistazo.",
+      "family": "tinta.web.stats",
+      "variant_id": "w-stats",
+      "variants": [
+        "w-stats"
+      ],
+      "tags": [
+        "web-sections",
+        "Tarjetas",
+        "cards",
+        "tinta.web.stats",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#35362f",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-stats"
+    },
+    {
+      "id": "w-cta-dark",
+      "legacy_id": null,
+      "name": "Llamada final en grafito",
+      "slug": "llamada-final-en-grafito",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Cierre de la página con un titular y un botón de acción.",
+      "family": "tinta.web.cta",
+      "variant_id": "w-cta-dark",
+      "variants": [
+        "w-cta-dark",
+        "w-cta-coral"
+      ],
+      "tags": [
+        "web-sections",
+        "Botones",
+        "actions",
+        "tinta.web.cta",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#30312c",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-cta-dark"
+    },
+    {
+      "id": "w-cta-coral",
+      "legacy_id": null,
+      "name": "Llamada final coral",
+      "slug": "llamada-final-coral",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Cierre cálido de la página con titular y botón en grafito.",
+      "family": "tinta.web.cta",
+      "variant_id": "w-cta-coral",
+      "variants": [
+        "w-cta-dark",
+        "w-cta-coral"
+      ],
+      "tags": [
+        "web-sections",
+        "Botones",
+        "actions",
+        "tinta.web.cta",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ff8a61",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-cta-dark"
+    },
+    {
+      "id": "w-footer",
+      "legacy_id": null,
+      "name": "Pie de página claro",
+      "slug": "pie-de-pagina-claro",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Marca, tres enlaces y el aviso legal en una franja suave.",
+      "family": "tinta.web.footer",
+      "variant_id": "w-footer",
+      "variants": [
+        "w-footer",
+        "w-footer-dark"
+      ],
+      "tags": [
+        "web-sections",
+        "Barras inferiores",
+        "nav",
+        "tinta.web.footer",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ece9df",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-footer"
+    },
+    {
+      "id": "w-footer-dark",
+      "legacy_id": null,
+      "name": "Pie de página en grafito",
+      "slug": "pie-de-pagina-en-grafito",
+      "module": "web-sections",
+      "module_number": "12",
+      "module_name": "Secciones web",
+      "subcategory": "Secciones web",
+      "type": "component",
+      "description": "Pie oscuro y compacto para cerrar páginas sobrias.",
+      "family": "tinta.web.footer",
+      "variant_id": "w-footer-dark",
+      "variants": [
+        "w-footer",
+        "w-footer-dark"
+      ],
+      "tags": [
+        "web-sections",
+        "Barras inferiores",
+        "nav",
+        "tinta.web.footer",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#35362f",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-footer"
+    },
+    {
       "id": "lib-chat-1",
       "legacy_id": "chat-1",
       "name": "Burbujas claras con avatar",

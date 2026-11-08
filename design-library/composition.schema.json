@@ -169,6 +169,7 @@
             "accent",
             "weight",
             "family",
+            "kind",
             "affinity"
           ],
           "additionalProperties": false,
@@ -211,6 +212,13 @@
                 "biblioteca"
               ],
               "description": "Estilo visual. Mezclar familias en una pantalla se penaliza."
+            },
+            "kind": {
+              "enum": [
+                "app",
+                "web"
+              ],
+              "description": "Tipo de pantalla para el que sirve la pieza."
             }
           }
         },

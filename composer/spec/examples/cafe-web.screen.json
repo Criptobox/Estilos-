@@ -1,0 +1,69 @@
+{
+  "spec_version": 1,
+  "brief_id": "cafe-web",
+  "screen": {
+    "name": "Página de la cafetería",
+    "role": "home",
+    "viewport": "mobile"
+  },
+  "tokens": {
+    "theme": "light"
+  },
+  "blocks": [
+    {
+      "ref": "w-hero-split",
+      "slots": {
+        "eyebrow": "CAFÉ DE BARRIO",
+        "headline": "Tu café,\nsin esperas.",
+        "subtitle": "Pide en segundos y recógelo caliente."
+      }
+    },
+    {
+      "ref": "w-testimonial",
+      "slots": {
+        "quote": "Llego, digo mi nombre y el café ya está listo.",
+        "initial": "L",
+        "name": "Lucía Mena",
+        "role": "Vecina del barrio"
+      }
+    },
+    {
+      "ref": "w-cta-coral",
+      "slots": {
+        "title": "Pide tu primer café",
+        "text": "Hoy, con envío gratis.",
+        "label": "Pedir ahora"
+      }
+    },
+    {
+      "ref": "w-footer",
+      "slots": {
+        "brand": "Café Norte",
+        "links": [
+          "Inicio",
+          "Menú",
+          "Contacto"
+        ],
+        "legal": "© 2026 Café Norte. Todos los derechos reservados."
+      }
+    }
+  ],
+  "rationale": [
+    {
+      "ref": "w-hero-split",
+      "why": "La figura de color da carácter a una marca de barrio y el titular promete lo que importa: rapidez."
+    },
+    {
+      "ref": "w-testimonial",
+      "why": "Una opinión de una vecina da confianza antes de pedir la acción."
+    },
+    {
+      "ref": "w-cta-coral",
+      "why": "El cierre cálido invita a pedir, que es la acción de un café."
+    },
+    {
+      "ref": "w-footer",
+      "why": "Pie claro con tres enlaces, a juego con el tono cálido de la página."
+    }
+  ]
+}

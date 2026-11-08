@@ -39,5 +39,6 @@ cd tests && npm test                   # Playwright (necesita npm ci y chromium)
 
 - Textos de interfaz en español, sin jerga ("pantalla" y "bloque", no "spec" ni "slot").
 - Cada cambio de producto lleva su `docs/CHANGELOG-x.y.md` y sube `version.json`.
-- Roles de composición actuales: `header`, `cards`, `actions`, `nav`.
+- Roles de composición actuales: `header`, `cards`, `actions`, `nav`. Cada bloque es de tipo `app` o `web` (`design.kind`); las secciones web usan los mismos roles (héroe = encabezado, pie = barra inferior).
+- Un bloque nuevo de Tinta lleva en `crear.js` `catalogModule` y `subcategory` si no es del módulo que le corresponde por su rol, y `adapt:false` si «Adaptar textos» no debe tocarlo.
 - Un cambio en las reglas o datos del motor se acompaña de una prueba en `tests/composer-engine.cjs`. El motor no usa azar: mismas entradas, mismas propuestas.

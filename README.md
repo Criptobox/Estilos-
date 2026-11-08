@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 40`, `versionName 12.10`.
+- Android: `versionCode 41`, `versionName 12.11`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar

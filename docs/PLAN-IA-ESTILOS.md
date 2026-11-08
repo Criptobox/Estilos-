@@ -2,7 +2,7 @@
 
 Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación hacen el trabajo, de forma local, rápida y repetible. Una IA puede sumarse después como un proponente más, opcional, que pasa por las mismas reglas.
 
-> Estado: **versión 12.10.** El motor local compone tres propuestas por idea, con piezas de Tinta y de la biblioteca original, y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
+> Estado: **versión 12.11.** El motor local compone tres propuestas por idea, para apps y para páginas web, con piezas de Tinta y de la biblioteca original, y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
 
 ## 0. Principios
 
@@ -18,7 +18,7 @@ Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación ha
 | Catálogo de 138 recursos en 26 módulos | `design-library/catalog.json` | Existe |
 | Motor de render y edición de textos, color, botones y tarjetas | `web/js/tinta-*.js`, `crear.js` | Existe |
 | Detector de sector y textos por sector (8 sectores) | `web/js/tinta-sectors.js` | Existe |
-| **Metadatos de composición** de 37 bloques (12 de Tinta y 25 de la biblioteca original): familia visual, tono, acento, peso, afinidad por sector, reglas y huecos | `design-library/composition.json` | Nuevo (12.9, ampliado en 12.10) |
+| **Metadatos de composición** de 47 bloques (12 de Tinta, 25 de la biblioteca original y 10 secciones web): tipo, familia visual, tono, acento, peso, afinidad por sector, reglas y huecos | `design-library/composition.json` | Nuevo (12.9, ampliado en 12.10 y 12.11) |
 | **Motor de composición**: tres propuestas distintas, puntuación, `lint` | `web/js/tinta-composer.js` | Nuevo (12.9) |
 | **Otra propuesta** en la pantalla de bloques | `web/js/crear.js`, `crear.html` | Nuevo (12.9) |
 | Contrato `ScreenSpec` y convertidor a proyecto de Tinta | `composer/spec/`, `composer/tools/spec-to-tinta.cjs` | Nuevo |
@@ -29,9 +29,9 @@ Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación ha
 Límites de hoy, a la vista:
 
 - 37 bloques tienen metadatos de composición. Faltan unos 100 de la biblioteca original: muchos son contenido muy específico (chat, tarea Kanban, perfil) y algunos son demostraciones de estados que no sirven como pieza de pantalla (`lib-bot-1`), por lo que no se describen. Los 25 de la biblioteca ya descritos solo declaran huecos vacíos, así que no aceptan textos desde una `ScreenSpec` todavía.
-- **El módulo `web-sections` está vacío** (0 de 138). Sin héroes, precios ni pies de página, Tinta compone pantallas de app, no sitios web.
+- **Secciones web: 10 piezas** (héroes, beneficios, precios, testimonio, cifras, llamadas finales y pies) en `web-sections`. Tinta ya compone páginas de una columna. Faltan secciones habituales: preguntas frecuentes, galería, contacto, equipo, y una barra de navegación superior.
 - Tinta compone con cuatro roles (`header`, `cards`, `actions`, `nav`) y cada bloque aparece una sola vez por pantalla.
-- El motor propone qué bloques usar. Los textos los pone el botón existente «Adaptar textos a la idea». Todavía no rellena los huecos por sí mismo.
+- El motor propone qué bloques usar. Los textos de apps los pone el botón «Adaptar textos a la idea». Las secciones web quedan con textos neutros porque aún no tienen copia por sector, y ese botón no las toca. Todavía no se rellenan los huecos solos.
 - Hay una sola pantalla por idea. Una app necesita varias (inicio, detalle, carrito).
 
 ## 2. Cómo compone el motor
@@ -42,10 +42,12 @@ Idea ─► Sector ─► Candidatos ─► Reglas de diseño ─► Puntuación
                    combinaciones)                      tono, pares)   entre sí)               y avisos)
 ```
 
+0. **Tipo de pantalla.** La idea decide si es una app o una página web (`kindOf`). Cada tipo usa solo sus piezas.
 1. **Sector.** `TintaSectors.detect` lee la idea. Sin sector, cada bloque vale por su versatilidad media.
 2. **Candidatos.** Dentro de cada estilo visual, todas las combinaciones válidas de encabezado × tarjetas (una, o dos de las mejor valoradas) × acción principal (con o sin acción suave) × navegación. Son unas diez mil y se evalúan en menos de 100 ms.
 3. **Reglas de diseño** (`lint`, también disponible para pantallas armadas a mano):
    - una acción principal clara y sin dos que compitan;
+   - nunca piezas de app y de página web en la misma pantalla;
    - un solo estilo visual por pantalla (Tinta o biblioteca original, nunca mezclados);
    - una sola gama de color de acento: cálido (coral) o frío (azul y violeta); un tema de un solo color no avisa, pero el mismo color en tres bloques con uno muy pesado sí;
    - no dos bloques muy pesados a la vez;
@@ -64,7 +66,7 @@ Es determinista: la misma idea da siempre las mismas propuestas. Eso permite pro
 | Palanca | Qué se hace | Efecto |
 |---|---|---|
 | Más bloques con metadatos | Describir los `lib-*` con la skill `add-block` (tono, acento, peso, afinidad, huecos) | Más variedad y propuestas menos repetidas |
-| Secciones web | Llenar `web-sections`: héroe, beneficios, precios, testimonios, pie | Tinta pasa de pantallas de app a sitios completos |
+| Más secciones web | Preguntas frecuentes, galería, contacto, equipo, navegación superior y copia propia por sector | Páginas más completas y con textos de su sector |
 | Varias pantallas por idea | Recetas por tipo de pantalla (inicio, detalle, carrito, perfil) con las plantillas `app-screens` | Una app entera, no una sola vista |
 | Huecos con textos por sector | Los bancos de texto de `tinta-sectors.js` rellenan los huecos de cada bloque | La propuesta sale lista, sin pasar por «Adaptar textos» |
 | Revisión visible | Mostrar los avisos de `lint` en la pantalla de revisión, con un arreglo sugerido | Quien arma a mano también aprende de las reglas |
@@ -109,7 +111,7 @@ Límites de los proyectos de Tinta que condicionan el contrato: cada bloque una 
 
 El motor se mide igual que se medirá cualquier otro proponente.
 
-**Hoy (pruebas automáticas, 129 comprobaciones):**
+**Hoy (pruebas automáticas, 203 comprobaciones):**
 - Tres propuestas distintas para 10 ideas de prueba, incluida una vacía.
 - Cada propuesta cubre encabezado, tarjeta, acción y navegación, y no tiene avisos de diseño.
 - Determinismo: misma idea, mismas propuestas.
@@ -181,7 +183,7 @@ CI (`tests.yml`) verifica los datos de composición generados, valida los metada
 |---|---|---|---|
 | 0 · Cimientos | Contratos, validador, briefs, skills, plantillas | El esquema valida bloques y pantallas de ejemplo | Hecho |
 | 1 · Motor | Metadatos de composición, `TintaComposer`, tres propuestas, «Otra propuesta» | Propuestas distintas y sin avisos para 10 ideas | **Hecho en 12.9** |
-| 2 · Más material | Metadatos de 30+ bloques, secciones web, huecos rellenados por sector, varias pantallas por idea | Una app de 3 pantallas y una web de 4 secciones a partir de una idea | Siguiente |
+| 2 · Más material | Secciones web (**hecho en 12.11**), huecos rellenados por sector, varias pantallas por idea, huecos de los bloques de la biblioteca | Una app de 3 pantallas y una web completa a partir de una idea | En curso |
 | 3 · Calidad medible | 40 briefs, métricas, capturas de regresión, `lint` visible en la revisión | Tabla de métricas en cada PR | |
 | 4 · Más salidas | Tailwind, Compose, Flutter desde la misma pantalla | Cada stack exportado compila en CI | |
 | 5 · IA opcional | MCP, proponente con modelo, banco con juez | Gana al motor en comparación a ciegas | |
@@ -214,4 +216,4 @@ Las duraciones dependen de cuántos bloques se describan por semana; se fijan al
 2. Que el motor rellene los huecos con los textos del sector y devuelva una `ScreenSpec` completa.
 3. Mostrar el «por qué» y los avisos de `lint` en la pantalla de revisión.
 4. Ampliar los briefs de oro a 40 y medir diversidad y encaje.
-5. Definir 4 secciones web mínimas (héroe, beneficios, precios, pie) y añadirlas al catálogo.
+5. Copia por sector para las secciones web (titular, beneficios, precio, testimonio, llamada final) y que «Ayúdame a empezar» la aplique.

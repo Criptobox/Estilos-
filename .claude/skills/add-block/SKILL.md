@@ -9,9 +9,9 @@ Deja un bloque listo para que el motor de Tinta lo use: ficha en el catálogo, h
 
 ## Pasos
 
-1. **Localizar el bloque.** Si es nuevo, defínelo en `web/js/crear.js` con `id`, `role` (`header`, `cards`, `actions` o `nav`), `html` y `css`. Si ya existe, busca su definición ahí.
+1. **Localizar el bloque.** Si es nuevo, defínelo en `web/js/crear.js` con `id`, `role` (`header`, `cards`, `actions` o `nav`), `html` y `css`. Para una sección web añade `catalogModule:'web-sections'`, `subcategory:'Secciones web'` y, si sus textos genéricos no deben pasar por «Adaptar textos», `adapt:false`; registra su familia en `newFamilies` de `web/js/tinta-catalog.js`. Pon `text-align:left` en su raíz: la galería centra el texto. Míralo renderizado antes de describirlo. Si ya existe, busca su definición ahí.
 2. **Regenerar el catálogo** con `node tools/build-tinta-catalog.cjs`. No edites `catalog.json` a mano.
-3. **Declarar los atributos de diseño** en `design-library/composition.json`, bloque `design`: `tones` (calido, sobrio, energico, editorial), `accent` (coral, grafito, neutro), `weight` (ligero, medio, fuerte) y `affinity` de 0 a 3 para cada uno de los 8 sectores. Son las que usa el motor de Tinta para decidir cuándo proponer el bloque, así que sé honesto: 0 es «no encaja».
+3. **Declarar los atributos de diseño** en `design-library/composition.json`, bloque `design`: `tones` (calido, sobrio, energico, editorial), `accent` (coral, azul, violeta, grafito, neutro), `weight` (ligero, medio, fuerte), `family` (`tinta` o `biblioteca`: el estilo visual, que no se mezcla) y `kind` (`app` o `web`: no se mezclan en una pantalla) y `affinity` de 0 a 3 para cada uno de los 8 sectores. Son las que usa el motor de Tinta para decidir cuándo proponer el bloque, así que sé honesto: 0 es «no encaja».
 3b. **Declarar los huecos** en el mismo archivo:
    - Un hueco por cada texto, color, imagen o enlace editable.
    - `selector` CSS que apunte al elemento dentro del HTML del bloque. Comprueba que existe leyendo el `html` del bloque.

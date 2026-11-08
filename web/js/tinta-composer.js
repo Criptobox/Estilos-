@@ -11,6 +11,10 @@
   const CHROMA = Object.keys(TEMP);
   const SECTOR_NAMES = { comida: 'comida y café', tienda: 'tiendas', finanzas: 'finanzas', fitness: 'fitness', viajes: 'viajes', salud: 'salud', musica: 'música', educacion: 'educación' };
 
+  const norm = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  // «Una página web», «landing», «sitio»…: la idea pide piezas de página y no de app.
+  function kindOf(brief) { return /\b(web|landing|sitio|pagina|portafolio|portfolio)\b/.test(norm(brief)) ? 'web' : 'app'; }
+
   function create(data, detect) {
     const BY_ID = new Map(data.blocks.map(b => [b.id, b]));
     const byRole = r => data.blocks.filter(b => b.role === r);
@@ -45,6 +49,7 @@
         const withHue = blocks.filter(b => b.accent === h);
         if (withHue.length >= 3 && withHue.some(b => b.weight === 'fuerte')) warn('acento', `El ${h} aparece en ${withHue.length} bloques y uno de ellos es muy pesado: el color manda demasiado.`, 2);
       }
+      if (new Set(blocks.map(b => b.kind)).size > 1) warn('mezcla-de-tipos', 'Mezcla piezas de app y de página web: una pantalla es de uno u otro tipo.', 5);
       if (new Set(blocks.map(b => b.family)).size > 1) warn('mezcla-de-estilos', 'Mezcla bloques de Tinta y de la biblioteca original: se ven como dos apps distintas.', 3);
       const cards = blocks.filter(b => b.role === 'cards').length;
       if (cards > 2) warn('tarjetas', 'Más de dos tarjetas alargan la pantalla sin aportar jerarquía.', 2 * (cards - 2));
@@ -69,10 +74,10 @@
     const byAffinity = sector => (a, b) => aff(b, sector) - aff(a, sector) || a.id.localeCompare(b.id);
 
     // Cada pantalla se arma dentro de una sola familia visual; las dos mezclas posibles se descartan de entrada.
-    function candidates(sector) {
+    function candidates(sector, kind) {
       const out = [];
       for (const fam of FAMILIES) {
-        const inFam = r => byRole(r).filter(b => b.family === fam).sort(byAffinity(sector));
+        const inFam = r => byRole(r).filter(b => b.family === fam && b.kind === kind).sort(byAffinity(sector));
         const heads = inFam('header'), navs = inFam('nav'), cards = inFam('cards');
         const mains = inFam('actions').filter(b => !b.requires_any.length), softs = inFam('actions').filter(b => b.requires_any.length);
         const top = cards.slice(0, 7);
@@ -150,11 +155,12 @@
     function compose(opts) {
       const o = opts || {};
       const sector = sectorOf(o.brief, o.sector);
+      const kind = o.kind || kindOf(o.brief);
       const count = o.count || 3;
-      const chosen = pick(candidates(sector), count, sector);
+      const chosen = pick(candidates(sector, kind), count, sector);
       const first = chosen.length ? chosen[0].blocks : null;
       return {
-        sector,
+        sector, kind,
         proposals: chosen.map((c, i) => {
           const order = ROLE_ORDER.flatMap(r => c.blocks.filter(id => BY_ID.get(id).role === r));
           return { id: 'p' + (i + 1), label: labelFor(i, order, first), tone: tone(order), blocks: order, score: Math.round(c.score * 10) / 10, why: why(order, sector), issues: c.issues };
@@ -166,7 +172,7 @@
     return { compose, lint, sectorOf, blockIds: () => data.blocks.map(b => b.id) };
   }
 
-  const api = { create, ROLE_ORDER };
+  const api = { create, kindOf, ROLE_ORDER };
   root.TintaComposer = api;
   if (typeof module !== 'undefined') module.exports = api;
 })(typeof window !== 'undefined' ? window : globalThis);

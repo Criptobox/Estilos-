@@ -21,6 +21,7 @@ const KINDS = ['text', 'textlist', 'color', 'image', 'link'];
 const TONES = ['calido', 'sobrio', 'energico', 'editorial'];
 const ACCENTS = ['coral', 'azul', 'violeta', 'grafito', 'neutro'];
 const FAMILIES = ['tinta', 'biblioteca'];
+const SCREEN_KINDS = ['app', 'web'];
 const WEIGHTS = ['ligero', 'medio', 'fuerte'];
 const SECTOR_IDS = ['comida', 'tienda', 'finanzas', 'fitness', 'viajes', 'salud', 'musica', 'educacion'];
 for (const id of SECTOR_IDS.concat('default')) {
@@ -50,6 +51,7 @@ for (const b of meta.blocks) {
   if (!ACCENTS.includes(d.accent)) err(w, 'design.accent inválido');
   if (!WEIGHTS.includes(d.weight)) err(w, 'design.weight inválido');
   if (!FAMILIES.includes(d.family)) err(w, 'design.family inválido');
+  if (!SCREEN_KINDS.includes(d.kind)) err(w, 'design.kind inválido');
   for (const sec of SECTOR_IDS) {
     const v = d.affinity && d.affinity[sec];
     if (!Number.isInteger(v) || v < 0 || v > 3) err(w, 'design.affinity.' + sec + ' debe ser un entero de 0 a 3');
@@ -119,6 +121,7 @@ function checkSpec(spec, where) {
     const need = byId.get(ref).rules.requires_any;
     if (need && !need.some((r) => used.has(r))) err(where, ref + ' necesita que haya también uno de: ' + need.join(', '));
   }
+  if (new Set([...used].map((r) => byId.get(r).design.kind)).size > 1) err(where, 'mezcla piezas de app y de página web');
   if ((roleCount.header || 0) > 1) err(where, 'más de un encabezado');
   if ((roleCount.nav || 0) > 1) err(where, 'más de una barra de navegación');
   if (!Array.isArray(spec.rationale) || !spec.rationale.length) err(where, 'rationale obligatorio');

@@ -3,7 +3,7 @@ const { chromium } = require('playwright'); const assert = require('node:assert/
 const Data = require('../web/js/tinta-composition-data.js'), Sectors = require('../web/js/tinta-sectors.js'), Composer = require('../web/js/tinta-composer.js');
 let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
 const c = Composer.create(Data, Sectors.detect), ids = new Set(Data.blocks.map(b => b.id)), role = id => Data.blocks.find(b => b.id === id).role;
-const briefs = ['Una app para mi cafetería', 'Mis finanzas personales', 'Una tienda de ropa', 'App de gimnasio', 'Viajes de fin de semana', 'clínica y citas', 'curso de inglés', 'música y podcast', 'algo diferente', ''];
+const briefs = ['Una app para mi cafetería', 'Mis finanzas personales', 'Una tienda de ropa', 'App de gimnasio', 'Viajes de fin de semana', 'clínica y citas', 'curso de inglés', 'música y podcast', 'algo diferente', '', 'Una página web para mi cafetería', 'landing de mi gimnasio', 'sitio web de finanzas personales', 'Una web para mi clínica', 'Una página web'];
 for (const b of briefs) {
   const r = c.compose({ brief: b }), ps = r.proposals;
   ok(ps.length === 3, `tres propuestas para «${b}»`);
@@ -18,6 +18,12 @@ for (const b of briefs) {
   ok(ps.every(p => new Set(p.blocks.map(id => Data.blocks.find(x => x.id === id).family)).size === 1), 'cada propuesta usa un solo estilo visual');
   ok(ps.filter(p => fam(p) !== fam(ps[0])).length <= 1, 'como mucho una propuesta de otro estilo visual');
 }
+ok(['Una página web para mi negocio', 'landing de yoga', 'Mi sitio web', 'Portafolio de fotos', 'una pagina web'].every(b => Composer.kindOf(b) === 'web'), 'detecta ideas de página web');
+ok(['Una app para mi cafetería', 'Mis finanzas', 'Una tienda de ropa', '', 'una webcam'].every(b => Composer.kindOf(b) === 'app'), 'el resto de ideas son de app (y «webcam» no es web)');
+for (const b of briefs) { const r = c.compose({ brief: b }); const web = r.kind === 'web'; ok(r.proposals.every(p => p.blocks.every(id => id.startsWith('w-') === web)), `«${b}»: ${web ? 'solo piezas web' : 'solo piezas de app'}`); }
+ok(c.compose({ brief: 'Una página web para mi cafetería' }).sector === 'comida', 'la página web conserva el sector');
+ok(c.compose({ brief: 'Una página web para mi cafetería' }).proposals.every(p => p.blocks.some(id => id.startsWith('w-hero')) && p.blocks.some(id => id.startsWith('w-cta')) && p.blocks.some(id => id.startsWith('w-footer'))), 'cada página tiene portada, llamada final y pie');
+ok(c.compose({ brief: 'Una app para mi cafetería', kind: 'web' }).kind === 'web', 'permite forzar el tipo');
 const first = b => c.compose({ brief: b }).proposals[0].blocks.join();
 ok(first('Una app para mi cafetería') === 'h-search,c-coffee,a-coral,n-soft', 'cafetería: búsqueda, producto, acción cálida y navegación esencial');
 ok(first('Mis finanzas personales') === 'h-minimal,c-balance,a-dark,n-dark', 'finanzas: cabecera sobria, balance y acción en grafito');
@@ -33,6 +39,7 @@ ok(!lint(['lib-enc-3', 'lib-tar-6', 'lib-bot-2', 'lib-bar-10']).includes('acento
 ok(lint(['lib-enc-3', 'lib-tar-1', 'lib-bot-2', 'lib-bar-10']).includes('mezcla-de-colores'), 'detecta acentos cálidos y fríos juntos');
 ok(!lint(['lib-enc-4', 'lib-tar-21', 'lib-bot-3', 'lib-bar-9']).includes('mezcla-de-colores'), 'azul y violeta forman una gama fría y no avisan');
 ok(lint(['h-search', 'c-coffee', 'lib-bot-2', 'n-soft']).includes('mezcla-de-estilos'), 'detecta mezcla de Tinta y biblioteca original');
+ok(lint(['w-hero', 'c-coffee', 'w-cta-dark', 'w-footer']).includes('mezcla-de-tipos'), 'detecta mezcla de piezas de app y de página web');
 ok(lint(['h-minimal', 'c-balance', 'c-coral', 'a-dark', 'n-soft']).includes('peso'), 'detecta dos bloques muy pesados');
 ok(lint(['h-search', 'c-summary', 'a-soft', 'n-soft']).includes('requiere'), 'la acción suave necesita una principal');
 ok(lint(['h-search', 'c-balance', 'a-dark', 'n-soft'], 'comida').includes('no-encaja'), 'avisa de bloques que no encajan con el sector');
@@ -48,6 +55,14 @@ ok(fs.readFileSync(path.join(__dirname, '..', 'web', 'js', 'tinta-composition-da
   await pg.click('#nextProposal'); const second = await sel(); ok(second !== 'h-search,c-coffee,a-coral,n-soft' && second.split(',').length >= 4, 'otra propuesta cambia los bloques sugeridos');
   ok(/Propuesta 2 de 3/.test(await pg.locator('#exploreNote').textContent()), 'la nota indica la propuesta 2');
   await pg.click('#nextProposal'); await pg.click('#nextProposal'); ok(await sel() === 'h-search,c-coffee,a-coral,n-soft', 'tras la tercera vuelve a la primera');
+  const w = await b.newPage({ viewport: { width: 1100, height: 900 } }); w.on('pageerror', e => errors.push(e.message));
+  await w.goto('http://127.0.0.1:8080/crear.html'); await w.click('[data-idea=web]'); await w.locator('#briefForm [type=submit]').click(); await w.waitForSelector('.gallery-item');
+  const ws = (await w.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).selected)); ok(ws.length >= 4 && ws.every(id => id.startsWith('w-')), 'la idea rápida «Una página web» arma una página con piezas web: ' + ws.join());
+  await w.click('#reviewSelection'); await w.waitForSelector('#phoneContent .component-host'); ok(await w.locator('#phoneContent .component-host').count() >= 3, 'la página web se dibuja en la vista previa');
+  const w2 = await b.newPage({ viewport: { width: 1100, height: 900 } }); w2.on('pageerror', e => errors.push(e.message));
+  await w2.goto('http://127.0.0.1:8080/crear.html'); await w2.fill('#idea', 'Una página web para mi cafetería'); await w2.locator('#briefForm [type=submit]').click(); await w2.waitForSelector('.gallery-item');
+  await w2.click('#reviewSelection'); await w2.waitForSelector('#phoneContent .component-host'); await w2.click('[data-act=adapt-text]');
+  ok(/nada que adaptar|No hay bloques/.test(await w2.locator('#toast').textContent()) && (await w2.evaluate(() => Object.keys(JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).content || {}).length)) === 0, '«Adaptar textos» no toca las secciones web');
   const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/crear.html'); await m.click('[data-idea=finanzas]'); await m.locator('#briefForm [type=submit]').click(); await m.waitForSelector('.gallery-item');
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
   const keep = await b.newPage(); await keep.goto('http://127.0.0.1:8080/crear.html'); await keep.evaluate(() => localStorage.setItem('estilos-tinta-prototype-v1', JSON.stringify({ selected: ['c-coral'] }))); await keep.reload();
