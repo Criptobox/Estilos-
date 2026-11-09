@@ -2,7 +2,7 @@
 
 Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación hacen el trabajo, de forma local, rápida y repetible. Una IA puede sumarse después como un proponente más, opcional, que pasa por las mismas reglas.
 
-> Estado: **versión 12.13.** El motor local compone tres propuestas por idea, para apps y para páginas web, con piezas de Tinta y de la biblioteca original, y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
+> Estado: **versión 12.14.** El motor local compone tres propuestas por idea, para apps y para páginas web, con piezas de Tinta y de la biblioteca original, y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
 
 ## 0. Principios
 
@@ -31,7 +31,7 @@ Límites de hoy, a la vista:
 - 37 bloques tienen metadatos de composición. Faltan unos 100 de la biblioteca original: muchos son contenido muy específico (chat, tarea Kanban, perfil) y algunos son demostraciones de estados que no sirven como pieza de pantalla (`lib-bot-1`), por lo que no se describen. Los 25 de la biblioteca ya descritos solo declaran huecos vacíos, así que no aceptan textos desde una `ScreenSpec` todavía.
 - **Secciones web: 14 piezas** (héroes, beneficios, precios, testimonio, cifras, preguntas, galería, equipo, contacto, llamadas finales y pies) en `web-sections`. Tinta compone páginas de una columna con hasta tres secciones ordenadas. Faltan una barra de navegación superior, secciones con fotos reales (la galería usa piezas de color) y bloques como mapa o formulario de contacto.
 - Tinta compone con cuatro roles (`header`, `cards`, `actions`, `nav`) y cada bloque aparece una sola vez por pantalla.
-- El motor propone qué bloques usar. Las páginas web llegan con textos de su sector (`design-library/copy.json`, 8 sectores). Las apps siguen usando el botón «Adaptar textos a la idea»; sus huecos aún no se rellenan solos, y los 25 bloques de la biblioteca original no declaran huecos.
+- El motor propone qué bloques usar y los deja con textos de su sector (`design-library/copy.json`, 8 sectores) para las páginas web y los 11 bloques de app de Tinta con huecos. Los 25 bloques de la biblioteca original no declaran huecos: conservan sus textos y para ellos sigue el botón «Adaptar textos a la idea».
 - Hay una sola pantalla por idea. Una app necesita varias (inicio, detalle, carrito).
 
 ## 2. Cómo compone el motor
@@ -67,7 +67,6 @@ Es determinista: la misma idea da siempre las mismas propuestas. Eso permite pro
 |---|---|---|
 | Más bloques con metadatos | Describir los `lib-*` con la skill `add-block` (tono, acento, peso, afinidad, huecos) | Más variedad y propuestas menos repetidas |
 | Más secciones web | Navegación superior, formulario de contacto, mapa, secciones con fotos | Páginas más completas |
-| Copia por sector para apps | Que las apps también lleguen con textos del sector, por huecos y no por el botón genérico | Una app lista al pulsar «Ayúdame a empezar» |
 | Varias pantallas por idea | Recetas por tipo de pantalla (inicio, detalle, carrito, perfil) con las plantillas `app-screens` | Una app entera, no una sola vista |
 | Huecos con textos por sector | Los bancos de texto de `tinta-sectors.js` rellenan los huecos de cada bloque | La propuesta sale lista, sin pasar por «Adaptar textos» |
 | Revisión visible | Mostrar los avisos de `lint` en la pantalla de revisión, con un arreglo sugerido | Quien arma a mano también aprende de las reglas |
@@ -112,7 +111,7 @@ Límites de los proyectos de Tinta que condicionan el contrato: cada bloque una 
 
 El motor se mide igual que se medirá cualquier otro proponente.
 
-**Hoy (pruebas automáticas, más de 250 comprobaciones del motor):**
+**Hoy (pruebas automáticas, 251 comprobaciones del motor):**
 - Tres propuestas distintas para 10 ideas de prueba, incluida una vacía.
 - Cada propuesta cubre encabezado, tarjeta, acción y navegación, y no tiene avisos de diseño.
 - Determinismo: misma idea, mismas propuestas.
@@ -184,7 +183,7 @@ CI (`tests.yml`) verifica los datos de composición generados, valida los metada
 |---|---|---|---|
 | 0 · Cimientos | Contratos, validador, briefs, skills, plantillas | El esquema valida bloques y pantallas de ejemplo | Hecho |
 | 1 · Motor | Metadatos de composición, `TintaComposer`, tres propuestas, «Otra propuesta» | Propuestas distintas y sin avisos para 10 ideas | **Hecho en 12.9** |
-| 2 · Más material | Secciones web (**hecho en 12.11**), copia por sector para páginas (**hecho en 12.12**), copia para apps, varias pantallas por idea, huecos de los bloques de la biblioteca | Una app de 3 pantallas y una web completa a partir de una idea | En curso |
+| 2 · Más material | Secciones web (**hecho en 12.11**), copia por sector para páginas (**hecho en 12.12**), copia para apps (**hecho en 12.14**), varias pantallas por idea, huecos de los bloques de la biblioteca | Una app de 3 pantallas y una web completa a partir de una idea | En curso |
 | 3 · Calidad medible | 40 briefs, métricas, capturas de regresión, `lint` visible en la revisión | Tabla de métricas en cada PR | |
 | 4 · Más salidas | Tailwind, Compose, Flutter desde la misma pantalla | Cada stack exportado compila en CI | |
 | 5 · IA opcional | MCP, proponente con modelo, banco con juez | Gana al motor en comparación a ciegas | |
@@ -218,4 +217,4 @@ Las duraciones dependen de cuántos bloques se describan por semana; se fijan al
 3. Mostrar el «por qué» y los avisos de `lint` en la pantalla de revisión.
 4. Ampliar los briefs de oro a 40 y medir diversidad y encaje.
 5. Varias pantallas por idea: una app de inicio, detalle y carrito, y una página con más secciones.
-6. Copia por sector y huecos para las apps, con el mismo mecanismo que las páginas.
+6. Huecos y copia por sector para los 25 bloques de la biblioteca original.

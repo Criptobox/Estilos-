@@ -36,7 +36,13 @@ for (const sec of Object.keys(Data.sectors).filter(x => x !== 'default')) {
   ok(webIds.every(id => c.copyFor(sec, id) && Object.keys(c.copyFor(sec, id)).length > 0), `copia para todas las secciones web en ${sec}`);
   ok(webIds.every(id => Object.keys(c.copyFor(sec, id)).every(k => c.slotsOf(id).some(sl => sl.name === k))), `la copia de ${sec} solo usa huecos declarados`);
 }
-ok(appIds.every(id => c.copyFor('comida', id) === null) && webIds.every(id => c.copyFor(null, id) === null) && c.copyFor('comida', 'nada') === null, 'sin copia para apps, sin sector ni bloques desconocidos');
+const slotted = Data.blocks.filter(b => b.kind === 'app' && b.slots.length);
+for (const sec of Object.keys(Data.sectors).filter(x => x !== 'default')) {
+  ok(slotted.filter(b => b.affinity[sec] >= 1).every(b => c.copyFor(sec, b.id)), `copia de app para todos los bloques que encajan con ${sec}`);
+  ok(slotted.every(b => !c.copyFor(sec, b.id) || Object.keys(c.copyFor(sec, b.id)).every(k => b.slots.some(sl => sl.name === k))), `la copia de app de ${sec} solo usa huecos declarados`);
+}
+ok(Data.blocks.filter(b => b.family === 'biblioteca').every(b => c.copyFor('comida', b.id) === null), 'los bloques de la biblioteca original no tienen copia (no declaran huecos)');
+ok(Data.blocks.every(b => c.copyFor(null, b.id) === null) && c.copyFor('comida', 'nada') === null, 'sin sector o con un bloque desconocido no hay copia');
 ok(c.slotsOf('w-hero').length > 0 && c.slotsOf('nada').length === 0, 'slotsOf devuelve los huecos del bloque');
 const first = b => c.compose({ brief: b }).proposals[0].blocks.join();
 ok(first('Una app para mi cafetería') === 'h-search,c-coffee,a-coral,n-soft', 'cafetería: búsqueda, producto, acción cálida y navegación esencial');

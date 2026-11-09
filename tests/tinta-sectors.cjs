@@ -15,6 +15,10 @@ ok(T.SECTORS.every(s => T.fill(s.id, [{ label: 'Título', value: 'Un título med
   const st = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).content || {});
   const preview = () => pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.textContent.replace(/\\s+/g, ' ')).join('|'));
   const setIdea = v => pg.evaluate(v => { const e = document.getElementById('idea'); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); }, v);
+  // «Ayúdame a empezar» ya trae textos del sector: aquí se parte de bloques sin editar para probar el botón «Adaptar textos».
+  ok(Object.keys(await st()).length > 0, 'la propuesta llega con textos del sector');
+  for (const id of Object.keys(await st())) { await pg.click(`[data-act=edit-text][data-id=${id}]`); await pg.click('[data-act=reset-text]'); }
+  ok(Object.keys(await st()).length === 0, 'restaurar deja los bloques sin editar');
   const html0 = await preview();
   await pg.click('[data-act=adapt-text]');
   const content = Object.keys(await st()); ok(content.length > 0, 'guarda textos en los bloques elegidos');

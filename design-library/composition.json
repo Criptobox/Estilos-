@@ -86,6 +86,12 @@
      "max": 40
     },
     {
+     "name": "tagline",
+     "kind": "text",
+     "selector": ".top b",
+     "max": 40
+    },
+    {
      "name": "headline",
      "kind": "text",
      "selector": "h1",
@@ -301,6 +307,12 @@
      "kind": "text",
      "selector": ".trend span",
      "max": 20
+    },
+    {
+     "name": "note",
+     "kind": "text",
+     "selector": ".foot span",
+     "max": 32
     }
    ],
    "rules": {
@@ -431,6 +443,12 @@
      "kind": "text",
      "selector": ".bottom b span",
      "max": 4
+    },
+    {
+     "name": "button_label",
+     "kind": "text",
+     "selector": ".bottom button",
+     "max": 18
     }
    ],
    "rules": {

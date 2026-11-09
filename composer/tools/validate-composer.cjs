@@ -98,7 +98,10 @@ for (const [sec, groups] of Object.entries(copy.sectors)) {
       }
     }
   }
-  for (const g of Object.keys(copy.groups)) if (!groups[g]) err('copy[' + sec + ']', 'falta el grupo ' + g);
+  for (const [g, ids] of Object.entries(copy.groups)) {
+    const fits = ids.some((id) => byId.get(id) && byId.get(id).design.affinity[sec] >= 1);
+    if (fits && !groups[g]) err('copy[' + sec + ']', 'falta el grupo ' + g + ' (algún bloque encaja con este sector)');
+  }
 }
 
 // 2. ScreenSpec

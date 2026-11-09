@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "note": "Copia por sector para las secciones web. Se aplica a los bloques recién propuestos si la persona no los ha editado. Las cifras, precios, nombres y opiniones son ejemplos para sustituir, no datos reales. Cada valor respeta el máximo, el número de partes y el número de elementos de su hueco en composition.json (lo comprueba composer/tools/validate-composer.cjs).",
+ "note": "Copia por sector para las secciones web y los bloques de app de Tinta que tienen huecos. Se aplica a los bloques recién propuestos si la persona no los ha editado. Las cifras, precios, nombres y opiniones son ejemplos para sustituir, no datos reales. Cada valor respeta el máximo, el número de partes y el número de elementos de su hueco en composition.json (lo comprueba composer/tools/validate-composer.cjs).",
  "groups": {
   "hero": [
    "w-hero"
@@ -39,6 +39,35 @@
   ],
   "contact": [
    "w-contact"
+  ],
+  "search-header": [
+   "h-search"
+  ],
+  "minimal-header": [
+   "h-minimal"
+  ],
+  "product": [
+   "c-coffee"
+  ],
+  "balance": [
+   "c-balance"
+  ],
+  "editorial": [
+   "c-coral"
+  ],
+  "summary": [
+   "c-summary"
+  ],
+  "action": [
+   "a-dark",
+   "a-coral"
+  ],
+  "action-soft": [
+   "a-soft"
+  ],
+  "nav": [
+   "n-soft",
+   "n-float"
   ]
  },
  "sectors": {
@@ -161,6 +190,54 @@
      "Todos los días, 7:00 a 20:00",
      "hola@marca.com"
     ]
+   },
+   "search-header": {
+    "greeting": "Buen día, Ana",
+    "tagline": "Tu café, a tu manera.",
+    "headline": "Tu café,\nlisto antes de llegar.",
+    "placeholder": "Buscar café o snack"
+   },
+   "minimal-header": {
+    "eyebrow": "CAFÉ DE BARRIO",
+    "headline": "Tu café,\nsiempre",
+    "headline_accent": "a tiempo.",
+    "subtitle": "Pide en segundos y recógelo caliente."
+   },
+   "product": {
+    "tag": "HECHO CON CALMA",
+    "title": "Flat white",
+    "subtitle": "Doble espresso y leche cremosa.",
+    "price": "$3",
+    "price_decimals": ".80",
+    "status": "● Listo en 5 min"
+   },
+   "editorial": {
+    "tag": "MENÚ DE TEMPORADA",
+    "title": "Sabores nuevos,\nsin salir de casa.",
+    "subtitle": "Probar algo distinto nunca fue tan fácil.",
+    "footer": "12 platos esta semana"
+   },
+   "summary": {
+    "kicker": "TODO EN ORDEN",
+    "title": "3 nuevos pedidos",
+    "body": "Un buen comienzo\npara tu día.",
+    "total": "$38",
+    "total_decimals": ".50",
+    "button_label": "Ver pedidos"
+   },
+   "action": {
+    "label": "Pedir ahora"
+   },
+   "action-soft": {
+    "label": "Ver menú completo"
+   },
+   "nav": {
+    "labels": [
+     "Inicio",
+     "Menú",
+     "Pedidos",
+     "Perfil"
+    ]
    }
   },
   "tienda": {
@@ -281,6 +358,62 @@
      "Av. Central 45",
      "Lunes a sábado, 10:00 a 20:00",
      "tienda@marca.com"
+    ]
+   },
+   "search-header": {
+    "greeting": "Hola, Ana",
+    "tagline": "Tu estilo, a tu manera.",
+    "headline": "Lo nuevo,\na un toque.",
+    "placeholder": "Buscar prendas o marcas"
+   },
+   "minimal-header": {
+    "eyebrow": "NUEVA COLECCIÓN",
+    "headline": "Estilo de diario,\nlisto para",
+    "headline_accent": "estrenar.",
+    "subtitle": "Lo nuevo, elegido para ti."
+   },
+   "product": {
+    "tag": "EDICIÓN LIMITADA",
+    "title": "Camiseta esencial",
+    "subtitle": "Algodón suave y corte recto.",
+    "price": "$29",
+    "price_decimals": ".90",
+    "status": "● Envío en 48 h"
+   },
+   "balance": {
+    "label": "Ventas de hoy",
+    "amount": "$2,480",
+    "amount_decimals": ".00",
+    "trend": "↗ 8.1%",
+    "trend_note": "vs. ayer",
+    "note": "Buen día de ventas, Ana."
+   },
+   "editorial": {
+    "tag": "COLECCIÓN Nº 01",
+    "title": "Tu próximo\nlook favorito.",
+    "subtitle": "Piezas pensadas para combinar entre sí.",
+    "footer": "12 prendas seleccionadas"
+   },
+   "summary": {
+    "kicker": "TU CARRITO",
+    "title": "3 artículos",
+    "body": "Envío gratis\nen este pedido.",
+    "total": "$97",
+    "total_decimals": ".70",
+    "button_label": "Ir al carrito"
+   },
+   "action": {
+    "label": "Comprar ahora"
+   },
+   "action-soft": {
+    "label": "Seguir comprando"
+   },
+   "nav": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Guardados",
+     "Perfil"
     ]
    }
   },
@@ -403,6 +536,42 @@
      "Lunes a viernes, 9:00 a 18:00",
      "ayuda@marca.com"
     ]
+   },
+   "minimal-header": {
+    "eyebrow": "TU DINERO, CLARO",
+    "headline": "Tus cuentas,\nsiempre",
+    "headline_accent": "claras.",
+    "subtitle": "Controla gastos y ahorra con metas."
+   },
+   "balance": {
+    "label": "Balance disponible",
+    "amount": "$24,380",
+    "amount_decimals": ".00",
+    "trend": "↗ 12.4%",
+    "trend_note": "este mes",
+    "note": "Un buen mes, Ana."
+   },
+   "summary": {
+    "kicker": "ESTE MES",
+    "title": "Gastos del mes",
+    "body": "Vas por buen\ncamino este mes.",
+    "total": "$1,230",
+    "total_decimals": ".00",
+    "button_label": "Ver resumen"
+   },
+   "action": {
+    "label": "Ver movimientos"
+   },
+   "action-soft": {
+    "label": "Ver todos los movimientos"
+   },
+   "nav": {
+    "labels": [
+     "Inicio",
+     "Gastos",
+     "Metas",
+     "Perfil"
+    ]
    }
   },
   "fitness": {
@@ -523,6 +692,54 @@
      "Calle del Sol 8",
      "Lunes a domingo, 6:00 a 22:00",
      "clases@marca.com"
+    ]
+   },
+   "search-header": {
+    "greeting": "Hola, Ana",
+    "tagline": "Hoy toca moverse.",
+    "headline": "Entrena hoy,\nnotarás mañana.",
+    "placeholder": "Buscar clases o rutinas"
+   },
+   "minimal-header": {
+    "eyebrow": "ENTRENA A TU RITMO",
+    "headline": "Tu mejor versión,\nempieza",
+    "headline_accent": "hoy.",
+    "subtitle": "Clases y rutinas para no parar."
+   },
+   "balance": {
+    "label": "Pasos de hoy",
+    "amount": "8,200",
+    "amount_decimals": "",
+    "trend": "↗ 18 %",
+    "trend_note": "vs. ayer",
+    "note": "Buen ritmo, Ana."
+   },
+   "editorial": {
+    "tag": "RETO DE LA SEMANA",
+    "title": "Siete días,\nuna meta.",
+    "subtitle": "Suma sesiones y desbloquea tu racha.",
+    "footer": "12 sesiones sugeridas"
+   },
+   "summary": {
+    "kicker": "ESTA SEMANA",
+    "title": "4 sesiones hechas",
+    "body": "Constancia antes\nque intensidad.",
+    "total": "240",
+    "total_decimals": " min",
+    "button_label": "Ver semana"
+   },
+   "action": {
+    "label": "Reservar clase"
+   },
+   "action-soft": {
+    "label": "Ver más clases"
+   },
+   "nav": {
+    "labels": [
+     "Hoy",
+     "Clases",
+     "Progreso",
+     "Perfil"
     ]
    }
   },
@@ -645,6 +862,54 @@
      "Lunes a sábado, 9:00 a 19:00",
      "reservas@marca.com"
     ]
+   },
+   "search-header": {
+    "greeting": "Hola, Ana",
+    "tagline": "Tu próximo destino te espera.",
+    "headline": "Tu próxima\nescapada empieza aquí.",
+    "placeholder": "¿A dónde quieres ir?"
+   },
+   "minimal-header": {
+    "eyebrow": "ESCAPADAS DE FIN DE SEMANA",
+    "headline": "Tu próximo viaje,\nmás",
+    "headline_accent": "cerca.",
+    "subtitle": "Destinos elegidos y cancelación flexible."
+   },
+   "product": {
+    "tag": "ESCAPADA",
+    "title": "Fin de semana en Lisboa",
+    "subtitle": "Vuelo y hotel incluidos.",
+    "price": "$420",
+    "price_decimals": ".00",
+    "status": "● Cancelación gratis"
+   },
+   "editorial": {
+    "tag": "ESCAPADAS",
+    "title": "Tu siguiente\ngran viaje.",
+    "subtitle": "Lugares elegidos para desconectar.",
+    "footer": "12 destinos seleccionados"
+   },
+   "summary": {
+    "kicker": "TU RESERVA",
+    "title": "Lisboa · 3 noches",
+    "body": "Vuelo y hotel\nconfirmados.",
+    "total": "$420",
+    "total_decimals": ".00",
+    "button_label": "Ver reserva"
+   },
+   "action": {
+    "label": "Reservar escapada"
+   },
+   "action-soft": {
+    "label": "Ver más destinos"
+   },
+   "nav": {
+    "labels": [
+     "Inicio",
+     "Destinos",
+     "Viajes",
+     "Perfil"
+    ]
    }
   },
   "salud": {
@@ -765,6 +1030,54 @@
      "Av. Salud 21",
      "Lunes a viernes, 8:00 a 20:00",
      "citas@marca.com"
+    ]
+   },
+   "search-header": {
+    "greeting": "Hola, Ana",
+    "tagline": "Cuidarte es lo primero.",
+    "headline": "Tu salud,\nsin esperas.",
+    "placeholder": "Buscar especialistas"
+   },
+   "minimal-header": {
+    "eyebrow": "TU SALUD, EN BUENAS MANOS",
+    "headline": "Cuidarte,\nsin",
+    "headline_accent": "esperas.",
+    "subtitle": "Reserva tu cita en minutos."
+   },
+   "balance": {
+    "label": "Sueño de anoche",
+    "amount": "7 h 40",
+    "amount_decimals": "",
+    "trend": "↗ 22 min",
+    "trend_note": "más que ayer",
+    "note": "Descansaste mejor, Ana."
+   },
+   "editorial": {
+    "tag": "HÁBITOS",
+    "title": "Pequeños pasos,\ngrandes cambios.",
+    "subtitle": "Un hábito nuevo cada semana, a tu ritmo.",
+    "footer": "12 hábitos sugeridos"
+   },
+   "summary": {
+    "kicker": "TODO EN ORDEN",
+    "title": "Próxima cita",
+    "body": "Mañana a las\n10:30.",
+    "total": "10:30",
+    "total_decimals": "",
+    "button_label": "Ver cita"
+   },
+   "action": {
+    "label": "Pedir cita"
+   },
+   "action-soft": {
+    "label": "Ver mi historial"
+   },
+   "nav": {
+    "labels": [
+     "Inicio",
+     "Citas",
+     "Salud",
+     "Perfil"
     ]
    }
   },
@@ -887,6 +1200,46 @@
      "Martes a domingo, 18:00 a 23:00",
      "info@marca.com"
     ]
+   },
+   "search-header": {
+    "greeting": "Hola, Ana",
+    "tagline": "La banda sonora de tu día.",
+    "headline": "Dale play\na tu día.",
+    "placeholder": "Buscar canciones o artistas"
+   },
+   "minimal-header": {
+    "eyebrow": "ESCUCHA, SIENTE, REPITE",
+    "headline": "Tu música,\nsiempre",
+    "headline_accent": "contigo.",
+    "subtitle": "Artistas, listas y directos en un lugar."
+   },
+   "product": {
+    "tag": "NUEVO ÁLBUM",
+    "title": "Neón de madrugada",
+    "subtitle": "Edición en vinilo, tirada corta.",
+    "price": "$24",
+    "price_decimals": ".90",
+    "status": "● Envío en 3 días"
+   },
+   "editorial": {
+    "tag": "MIX DIARIO",
+    "title": "Hecho para\nti y tu día.",
+    "subtitle": "Descubre artistas que van contigo.",
+    "footer": "12 temas para hoy"
+   },
+   "action": {
+    "label": "Reproducir"
+   },
+   "action-soft": {
+    "label": "Añadir a mi lista"
+   },
+   "nav": {
+    "labels": [
+     "Inicio",
+     "Explorar",
+     "Listas",
+     "Perfil"
+    ]
    }
   },
   "educacion": {
@@ -1007,6 +1360,54 @@
      "Campus Norte, aula 2",
      "Lunes a viernes, 9:00 a 21:00",
      "alumnos@marca.com"
+    ]
+   },
+   "search-header": {
+    "greeting": "Hola, Ana",
+    "tagline": "Aprende a tu ritmo.",
+    "headline": "Un poco cada día,\nmucho al final.",
+    "placeholder": "Buscar cursos"
+   },
+   "minimal-header": {
+    "eyebrow": "APRENDE A TU RITMO",
+    "headline": "Aprender algo nuevo,\nes más",
+    "headline_accent": "fácil.",
+    "subtitle": "Lecciones cortas y con seguimiento."
+   },
+   "balance": {
+    "label": "Tu avance",
+    "amount": "35",
+    "amount_decimals": " %",
+    "trend": "↗ 6 %",
+    "trend_note": "esta semana",
+    "note": "Sigue así, Ana."
+   },
+   "editorial": {
+    "tag": "RETO SEMANAL",
+    "title": "Cinco días,\nuna nueva habilidad.",
+    "subtitle": "Lecciones breves con premio al final.",
+    "footer": "12 lecciones seleccionadas"
+   },
+   "summary": {
+    "kicker": "TU AVANCE",
+    "title": "3 lecciones hoy",
+    "body": "Un poco cada día\nsuma mucho.",
+    "total": "35",
+    "total_decimals": " %",
+    "button_label": "Ver avance"
+   },
+   "action": {
+    "label": "Continuar lección"
+   },
+   "action-soft": {
+    "label": "Ver mis cursos"
+   },
+   "nav": {
+    "labels": [
+     "Inicio",
+     "Cursos",
+     "Avance",
+     "Perfil"
     ]
    }
   }
