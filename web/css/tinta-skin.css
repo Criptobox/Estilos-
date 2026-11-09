@@ -60,7 +60,7 @@ body[data-app=studio] .phone{border-color:#242422;box-shadow:var(--sh-3)}
 .tinta-wordmark>span{font-size:11px;vertical-align:top;margin-left:1px;font-weight:600}
 .tinta-steps{display:flex;gap:18px;align-items:center;margin-left:6px}
 .tinta-steps a{font-size:12.5px;color:var(--mut);text-decoration:none;padding:8px 0;border-bottom:2px solid transparent;white-space:nowrap}
-.tinta-steps a span{font-size:10px;margin-right:6px;opacity:.7}
+.tinta-steps a span{font-size:10px;margin-right:6px}
 .tinta-steps a:hover{color:var(--txt)}
 .tinta-steps a[aria-current=page]{color:var(--txt);border-bottom-color:var(--acc-2)}
 @media (max-width:1180px){.tinta-steps{display:none}}
@@ -102,3 +102,15 @@ body[data-app=studio] .studio-nav .active,body[data-app=studio] .studio-nav a.ac
  .studio-nav{grid-column:1;grid-row:2;padding:16px 10px}
 }
 @media (max-width:400px){.workspace-title{display:none}.tinta-wordmark{font-size:21px}}
+
+/* Accesibilidad: texto secundario del Editor con contraste AA */
+:root:not([data-theme=dark]){--mut:#5c5c55;--mut2:#5c5c55}
+.tinta-steps a{color:var(--mut)}.tinta-steps a[aria-current=page],.tinta-steps a:hover{color:var(--txt)}
+
+.proposal .hint{color:var(--mut)}
+
+.tinta-steps a>span{color:inherit}
+.screen-tabs button{color:#5c5c55}.screen-tabs button[aria-pressed=true]{color:#fff}
+
+:root:not([data-theme=dark]) .blk .iconbtn,:root:not([data-theme=dark]) .blk .acts .iconbtn{color:#5c5c55}
+:root:not([data-theme=dark]) body[data-app=studio] .blk .acts .iconbtn,:root:not([data-theme=dark]) body[data-app=studio] .blk .iconbtn{color:#5c5c55}

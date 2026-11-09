@@ -166,3 +166,24 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 #backupDialog h3{font-size:14px;margin:18px 0 6px}.backup-now{font-size:12px;color:#55554e;margin:4px 0 14px;line-height:1.6}
 .backup-restore .button{display:inline-flex;margin-top:4px;cursor:pointer}#backupList{margin:6px 0 14px;padding-left:18px;font-size:13px;line-height:1.7}
 .backup-foot{margin-top:14px;font-size:11px}#backupMessage{min-height:1.2em}
+
+/* Accesibilidad: el texto secundario cumple AA (≥ 4.5:1) sobre el papel */
+:root:not([data-theme=dark]) :is(.step,.step>span,.filters button,.filters button>span,.catalog-tools label,.catalog-classification label,.eyebrow,.templates-head p,.dialog-note,.template-card p,.motion-card p,.palette-card p,.multi-toggle small,.share-box label,.share-box p,.style-fields label,.backup-now,.chosen-toggle,.chosen-toggle>span,.repeat-choice,.gallery-meta p,.role-tag,.catalog-honesty,.group-missing,.preview-heading span,.preview-caption,.selection-label small,button[data-idea],.brief-bottom,.small-assistant p,.intro,.page-heading p,.template-card h3+p){color:#5a5a53}
+:root:not([data-theme=dark]) .step.on,:root:not([data-theme=dark]) .step.on>span{color:#242421}
+:root:not([data-theme=dark]) .chosen-toggle[aria-pressed=true],:root:not([data-theme=dark]) #favToggle[aria-pressed=true],:root:not([data-theme=dark]) #recentToggle[aria-pressed=true]{color:#b8472a}
+:root:not([data-theme=dark]) .filters button.on,:root:not([data-theme=dark]) .filters button.on>span{color:#fff}
+:root:not([data-theme=dark]) :is(dt,.sheet-tags span,.edit-choice,.media-choice,.selection-group>h3,.home-foot span,button[data-act=catalog-json],.avatar-caption small,.text-button,.sheet-heading span,.sheet-heading b){color:#5a5a53}
+:root:not([data-theme=dark]) .sheet-tags span{color:#5f5444}
+:root:not([data-theme=dark]) #homeTitle em,:root:not([data-theme=dark]) h1 em{color:#d4522b}
+:root:not([data-theme=dark]) #historyStatus,:root:not([data-theme=dark]) #catalogSummary,:root:not([data-theme=dark]) #trayHint,:root:not([data-theme=dark]) #briefRecap,:root:not([data-theme=dark]) #briefRecap>span,:root:not([data-theme=dark]) #reviewCount,:root:not([data-theme=dark]) #saveNote,:root:not([data-theme=dark]) .compose-note>p,:root:not([data-theme=dark]) .filters button>span,:root:not([data-theme=dark]) .filters button.on>span.on-count{color:#5a5a53}
+:root:not([data-theme=dark]) .filters button.on>span{color:#fff;opacity:.85}
+:root:not([data-theme=dark]) .filters button>span{opacity:1}
+:root:not([data-theme=dark]) #detailDescription,:root:not([data-theme=dark]) .screen-tabs button{color:#5a5a53}
+:root:not([data-theme=dark]) .screen-tabs button[aria-pressed=true]{color:#fff}
+/* Accesibilidad · tema oscuro: botón «Elegir» legible y texto secundario con contraste AA */
+:root[data-theme=dark] .select-button:not([aria-pressed=true]){background:#30372a;border-color:#4d5546;color:#edeee7;box-shadow:none}
+:root[data-theme=dark] :is(.templates-head p,.chosen-toggle,.chosen-toggle>span,.multi-toggle small,.repeat-choice,.screen-tabs button,.palette-card p,.motion-card p,.template-card p,.dialog-note,.share-box label,.share-box p,.style-fields label,.backup-now,.eyebrow,.catalog-tools label,.catalog-classification label,.compose-note p b,.edit-choice,.media-choice,.group-missing,.role-tag,.gallery-meta p){color:#b9bfae}
+:root[data-theme=dark] .screen-tabs button[aria-pressed=true]{color:#191c18}
+:root[data-theme=dark] .filters button>span{opacity:1;color:#b9bfae}
+:root[data-theme=dark] .filters button.on>span,:root[data-theme=dark] #allCount{color:#2c3128}
+:root[data-theme=dark] #favToggle[aria-pressed=true],:root[data-theme=dark] #recentToggle[aria-pressed=true],:root[data-theme=dark] .chosen-toggle[aria-pressed=true]{color:#ff9a78}

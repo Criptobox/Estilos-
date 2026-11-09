@@ -3,10 +3,10 @@
   "entrada": "web/index.html",
   "interfaz": "Tinta actual con estilos e historial",
   "archivos_sha256": {
-    "web/index.html": "0b73c21e6a67e5c22099ed2404a1591221616530dfb8b2759a263293465de980",
-    "web/crear.html": "0b73c21e6a67e5c22099ed2404a1591221616530dfb8b2759a263293465de980",
+    "web/index.html": "29ba30059b05878bd34c64c094a1cb343c19f4c1280c975d7524fb1968e97730",
+    "web/crear.html": "29ba30059b05878bd34c64c094a1cb343c19f4c1280c975d7524fb1968e97730",
     "web/sw.js": "e7bde5e10f9b44afccf6139d3160d852ef0aeb076d849d0f6ca5b696b6fb0703",
-    "web/js/crear.js": "300b73873a8ca7ddd335c4eaf442a3da1970afdf70b3bce377bbb2095c100b43",
+    "web/js/crear.js": "e6f9cd3bcb025b391c58e70966c9e4c52ebbf6684e7173a78ccae25201547005",
     "web/js/tinta-history.js": "0de03910f863e7e3e30e3534225a8d93ba9bef82f3c8d5f7ea718ad606954326"
   }
 }
