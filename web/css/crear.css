@@ -161,3 +161,8 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .screen-tabs button[aria-pressed=true]{background:#242422;color:#fff;border-color:#242422}
 :root[data-theme=dark] .multi-toggle,:root[data-theme=dark] .screen-tabs button{background:#252a22;border-color:#424a3a}
 :root[data-theme=dark] .screen-tabs button[aria-pressed=true]{background:#edeee7;color:#191c18}
+
+/* Copia de seguridad */
+#backupDialog h3{font-size:14px;margin:18px 0 6px}.backup-now{font-size:12px;color:#55554e;margin:4px 0 14px;line-height:1.6}
+.backup-restore .button{display:inline-flex;margin-top:4px;cursor:pointer}#backupList{margin:6px 0 14px;padding-left:18px;font-size:13px;line-height:1.7}
+.backup-foot{margin-top:14px;font-size:11px}#backupMessage{min-height:1.2em}
