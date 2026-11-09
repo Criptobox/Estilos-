@@ -23,6 +23,7 @@ const CATALOG = [
 ];
 if(typeof TINTA_CARDS!=='undefined')CATALOG.push(...TINTA_CARDS);
 if(typeof TINTA_AVATARS!=='undefined')CATALOG.push(...TINTA_AVATARS);
+if(typeof TINTA_MASCOTS!=='undefined')CATALOG.push(...TINTA_MASCOTS);
 CATALOG.forEach(b=>{b.source='new';});
 if(typeof TINTA_LIBRARY!=='undefined')CATALOG.push(...TINTA_LIBRARY);
 const CATEGORY_ORDER=['cards','actions','nav','header'];CATALOG.sort((a,b)=>(CATEGORY_ORDER.includes(a.role)?CATEGORY_ORDER.indexOf(a.role):4)-(CATEGORY_ORDER.includes(b.role)?CATEGORY_ORDER.indexOf(b.role):4));

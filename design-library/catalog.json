@@ -2507,6 +2507,451 @@
       "family_primary_id": "av-iniciales"
     },
     {
+      "id": "av-robot",
+      "legacy_id": null,
+      "name": "Robot asistente",
+      "slug": "robot-asistente",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Mascota con brillo que flota y parpadea, con su estado.",
+      "family": "custom.av-robot",
+      "variant_id": "av-robot",
+      "variants": [
+        "av-robot"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-robot",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#1b2a73",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-robot"
+    },
+    {
+      "id": "av-robot-estados",
+      "legacy_id": null,
+      "name": "Robot · 9 estados",
+      "slug": "robot-9-estados",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Normal, pensando, trabajando, creativo, investigando, programando, enfoque, feliz y enojado.",
+      "family": "custom.av-robot-estados",
+      "variant_id": "av-robot-estados",
+      "variants": [
+        "av-robot-estados"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-robot-estados",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#27357f",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-robot-estados"
+    },
+    {
+      "id": "av-orbe",
+      "legacy_id": null,
+      "name": "Orbe de energía",
+      "slug": "orbe-de-energia",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Esfera luminosa que respira, con anillos que giran.",
+      "family": "custom.av-orbe",
+      "variant_id": "av-orbe",
+      "variants": [
+        "av-orbe"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-orbe",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#3b1f78",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-orbe"
+    },
+    {
+      "id": "av-llama",
+      "legacy_id": null,
+      "name": "Mascota llama",
+      "slug": "mascota-llama",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Personaje de racha que se mueve y anima a seguir.",
+      "family": "custom.av-llama",
+      "variant_id": "av-llama",
+      "variants": [
+        "av-llama"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-llama",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ff8a1f",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-llama"
+    },
+    {
+      "id": "av-efectos",
+      "legacy_id": null,
+      "name": "Efectos luminosos",
+      "slug": "efectos-luminosos",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Seis destellos de energía para marcar logros o estados.",
+      "family": "custom.av-efectos",
+      "variant_id": "av-efectos",
+      "variants": [
+        "av-efectos"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-efectos",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#8f45d8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-efectos"
+    },
+    {
       "id": "lib-chat-1",
       "legacy_id": "chat-1",
       "name": "Burbujas claras con avatar",

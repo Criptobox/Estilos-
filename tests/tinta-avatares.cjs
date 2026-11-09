@@ -25,3 +25,12 @@ ok(!/<script|javascript:|\bon[a-z]+=|@import|url\(|<iframe|<img|<text/i.test(src
   }
   ok(!errors.length, 'sin errores de página: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de avatares correctas.`);
 })().catch(e => { console.error(e); process.exit(1); });
+/* Mascotas: robot con 9 estados, orbe, llama y efectos. */
+{
+  const m = fs.readFileSync(path.join(__dirname, '../web/js/tinta-mascots.js'), 'utf8'), mids = [...m.matchAll(/id: '(av-[a-z-]+)', role: 'avatars'/g)].map(x => x[1]);
+  assert.ok(mids.length === 5 && ['av-robot', 'av-robot-estados', 'av-orbe', 'av-llama', 'av-efectos'].every(x => mids.includes(x)), 'hay 5 mascotas');
+  assert.ok(!/<script|javascript:|\bon[a-z]+=|@import|url\((?!#)|<iframe|<img|<text/i.test(m), 'mascotas sin scripts ni recursos externos');
+  assert.ok((m.match(/n: '/g) || []).length === 9, 'el robot tiene 9 estados');
+  assert.ok(/prefers-reduced-motion:no-preference/.test(m), 'animaciones solo sin «reducir movimiento»');
+  console.log('5 comprobaciones de mascotas correctas.');
+}
