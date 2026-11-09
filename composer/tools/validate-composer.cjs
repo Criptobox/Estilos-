@@ -185,7 +185,9 @@ fs.readFileSync(briefsFile, 'utf8').split('\n').filter(Boolean).forEach((line, i
   if (!b.id || briefIds.has(b.id)) err(w, 'id vacío o duplicado');
   briefIds.add(b.id);
   if (!b.sector) err(w, 'sector requerido');
-  if (!b.brief || b.brief.length < 20) err(w, 'brief demasiado corto');
+  if (typeof b.brief !== 'string' || b.brief.length > 240) err(w, 'brief debe ser un texto de hasta 240 caracteres (puede estar vacío)');
+  if (!['dev', 'holdout'].includes(b.split)) err(w, 'split debe ser dev o holdout');
+  if (!b.expect || !['app', 'web'].includes(b.expect.kind) || !(b.expect.sector === null || SECTOR_IDS.includes(b.expect.sector))) err(w, 'expect.kind y expect.sector (id de sector o null) obligatorios');
   if (!Array.isArray(b.screens) || !b.screens.length) err(w, 'screens requerido');
   if (!Array.isArray(b.constraints)) err(w, 'constraints debe ser lista');
 });

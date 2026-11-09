@@ -1,0 +1,12 @@
+{
+  "note": "Mínimos que debe cumplir el motor en el holdout (briefs que no guiaron ningún ajuste). Si una mejora real los sube, súbelos aquí; si un cambio los baja, no se acepta sin justificarlo.",
+  "holdout": {
+    "sectorAccuracy": 0.9,
+    "kindAccuracy": 0.95,
+    "cleanRate": 1,
+    "diversityMin": 2,
+    "fitMean": 2.3,
+    "copyCoverage": 0.75
+  },
+  "maxP95ms": 500
+}

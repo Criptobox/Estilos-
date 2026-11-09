@@ -1,0 +1,27 @@
+{
+  "note": "Se actualiza con: node composer/tools/eval-engine.cjs --update-baseline. Solo debe subir; una bajada tiene que justificarse en el PR. No guarda el tiempo, que varía en cada ejecución.",
+  "report": {
+    "dev": {
+      "briefs": 12,
+      "sectorAccuracy": 1,
+      "kindAccuracy": 1,
+      "proposals": 3,
+      "cleanRate": 1,
+      "diversityMin": 2,
+      "fitMean": 2.76,
+      "copyCoverage": 0.917,
+      "blocksUsed": 18
+    },
+    "holdout": {
+      "briefs": 30,
+      "sectorAccuracy": 0.967,
+      "kindAccuracy": 1,
+      "proposals": 3,
+      "cleanRate": 1,
+      "diversityMin": 2,
+      "fitMean": 2.67,
+      "copyCoverage": 0.833,
+      "blocksUsed": 32
+    }
+  }
+}

@@ -9,7 +9,7 @@ Biblioteca UI y constructor visual (Tinta). **Tinta debe crear buenos diseños s
 3. **No tocar `web/index.html` directamente.** La fuente es `web/crear.html`. Después: `python tools/sync-tinta-entry.py`.
 4. **El HTML/CSS de un modelo se sanea siempre** y nunca ejecuta JavaScript.
 5. **Sin secretos en el repositorio.** Claves en secretos de GitHub Actions o variables locales.
-6. **El conjunto de evaluación (`composer/evals/`) nunca se usa para entrenar.**
+6. **El conjunto de evaluación (`composer/evals/`) nunca se usa para entrenar.** Si mejoras el motor por un brief del `holdout`, ese brief pasa a `dev` y se añade otro nuevo al holdout; las mejoras son generales, nunca específicas de un brief.
 7. `window.__tintaInspect` es solo para pruebas y herramientas: no lo uses desde código de la app.
 8. Cambiar un esquema de `composer/spec/` o `design-library/*.schema.json` obliga a subir su versión y a actualizar `composer/tools/validate-composer.cjs`.
 
@@ -18,6 +18,7 @@ Biblioteca UI y constructor visual (Tinta). **Tinta debe crear buenos diseños s
 ```sh
 node tools/build-composition-data.cjs --check
 node composer/tools/validate-composer.cjs          # metadatos de composición, ScreenSpec de ejemplo, briefs
+node composer/tools/eval-engine.cjs                # métricas del motor (la prueba tests/composer-evals.cjs las exige)
 python tools/sync-tinta-entry.py --check
 for f in web/js/*.js web/sw.js; do node --check "$f"; done
 cd tests && npm test                   # Playwright (necesita npm ci y chromium); incluye composer-engine.cjs y composer-spec.cjs
@@ -33,7 +34,7 @@ cd tests && npm test                   # Playwright (necesita npm ci y chromium)
 - `design-library/`: catálogo, esquemas, metadatos de composición (`composition.json`) y copia por sector (`copy.json`, validada contra los huecos).
 - `composer/spec/`: esquema de `ScreenSpec` y ejemplos.
 - `composer/tools/`: `validate-composer.cjs` (validación sin navegador) y `spec-to-tinta.cjs` (convierte una pantalla a proyecto de Tinta y la dibuja).
-- `composer/evals/briefs/`: briefs de oro (JSONL).
+- `composer/evals/`: briefs de oro (`briefs.jsonl`, con `split` dev/holdout), `thresholds.json`, `baseline.json` y la guía `README.md`. `composer/tools/eval-engine.cjs` los mide.
 - `.claude/skills/`: procedimientos repetibles (`add-block`, `compose-screen`).
 
 ## Convenciones

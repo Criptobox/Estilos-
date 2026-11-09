@@ -5,11 +5,11 @@
   'use strict';
   const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   const SECTORS = [
-    { id: 'comida', name: 'Comida y café', words: ['cafe', 'cafeteria', 'restaurante', 'comida', 'pizza', 'pedido', 'menu', 'panaderia', 'bar ', 'sushi', 'hamburguesa', 'delivery'],
+    { id: 'comida', name: 'Comida y café', words: ['cafe', 'cafeteria', 'restaurante', 'comida', 'pizza', 'pedido', 'menu', 'panaderia', 'bar ', 'sushi', 'hamburguesa', 'delivery', 'receta', 'recetas', 'cocina'],
       titles: ['Café de la casa', 'Menú de hoy', 'Tu pedido', 'Recién horneado', 'Especial del día'], actions: ['Pedir ahora', 'Ver menú', 'Añadir al pedido', 'Reservar mesa'],
       notes: ['LISTO EN 10 MIN', 'NUEVO EN EL MENÚ', 'ENVÍO GRATIS'], highlights: ['Capuchino', 'Croissant', 'Combo desayuno'], numbers: ['$4.50', '$8.90', '12 min', '4.8'],
       texts: ['Preparado al momento con ingredientes frescos.', 'Elige tu favorito y lo llevamos a tu mesa.', 'Tu próximo antojo está a un toque.'], placeholders: ['Buscar platos o bebidas'] },
-    { id: 'tienda', name: 'Tienda', words: ['tienda', 'ropa', 'comprar', 'compra', 'producto', 'catalogo', 'carrito', 'moda', 'zapatillas', 'ecommerce', 'envio'],
+    { id: 'tienda', name: 'Tienda', words: ['tienda', 'ropa', 'comprar', 'compra', 'producto', 'catalogo', 'carrito', 'moda', 'zapatillas', 'ecommerce', 'envio', 'supermercado', 'mercado', 'marketplace'],
       titles: ['Nueva colección', 'Los más vendidos', 'Tu carrito', 'Ofertas de temporada', 'Recién llegado'], actions: ['Comprar ahora', 'Añadir al carrito', 'Ver colección', 'Ver detalles'],
       notes: ['ENVÍO GRATIS', 'NUEVO', 'ÚLTIMAS UNIDADES'], highlights: ['Edición limitada', 'Más vendido', '-20 %'], numbers: ['$39.90', '$59.00', '24 uds', '4.7'],
       texts: ['Calidad que se nota desde el primer día.', 'Cambios gratis durante 30 días.', 'Descubre lo que todos están eligiendo.'], placeholders: ['Buscar productos'] },
@@ -21,7 +21,7 @@
       titles: ['Entrenamiento de hoy', 'Tu racha', 'Rutina de fuerza', 'Reto semanal', 'Tu progreso'], actions: ['Empezar', 'Ver rutina', 'Retomar', 'Registrar sesión'],
       notes: ['RACHA DE 5 DÍAS', 'META SEMANAL', '30 MIN'], highlights: ['Fuerza', 'Cardio', 'Movilidad'], numbers: ['520 kcal', '8,200 pasos', '45 min', '5 días'],
       texts: ['Un paso más cerca de tu meta.', 'Constancia antes que intensidad.', 'Hoy toca piernas: tú puedes.'], placeholders: ['Buscar ejercicios'] },
-    { id: 'viajes', name: 'Viajes', words: ['viaje', 'viajes', 'hotel', 'vuelo', 'turismo', 'destino', 'reserva', 'vacaciones', 'hospedaje'],
+    { id: 'viajes', name: 'Viajes', words: ['viaje', 'viajes', 'hotel', 'vuelo', 'turismo', 'destino', 'reserva', 'vacaciones', 'hospedaje', 'escapada', 'escapadas'],
       titles: ['Próximo destino', 'Escapadas de fin de semana', 'Tu reserva', 'Lugares favoritos', 'Ofertas de vuelo'], actions: ['Reservar', 'Explorar destinos', 'Ver itinerario', 'Guardar viaje'],
       notes: ['DESDE $89', '3 NOCHES', 'CANCELACIÓN GRATIS'], highlights: ['Lisboa', 'Oaxaca', 'Kioto'], numbers: ['$420', '3 noches', '4.9', '2 viajeros'],
       texts: ['Vive el mundo a tu ritmo.', 'Planifica en minutos, viaja con calma.', 'Los mejores lugares, elegidos para ti.'], placeholders: ['¿A dónde quieres ir?'] },
