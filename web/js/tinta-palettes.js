@@ -12,7 +12,15 @@
     { id: 'lavanda', name: 'Lavanda', mood: 'Violetas suaves', bg: '#f1eefa', surface: '#ffffff', accent: '#6d5bd0', accent2: '#b7a9f0', ink: '#231d46', line: '#dcd6f2' },
     { id: 'atardecer', name: 'Atardecer', mood: 'Naranjas vivos', bg: '#fdf1ea', surface: '#fffaf6', accent: '#e4572e', accent2: '#ffb347', ink: '#3a1d12', line: '#f1d9cb' },
     { id: 'rosa', name: 'Rosa', mood: 'Rosas con carácter', bg: '#fbeff3', surface: '#ffffff', accent: '#c2335f', accent2: '#f4a6bf', ink: '#3a1224', line: '#f1d2dd' },
-    { id: 'grafito', name: 'Grafito', mood: 'Neutros serios', bg: '#e9eaec', surface: '#ffffff', accent: '#2b2f36', accent2: '#8b93a1', ink: '#15171b', line: '#d5d8dd' }
+    { id: 'grafito', name: 'Grafito', mood: 'Neutros serios', bg: '#e9eaec', surface: '#ffffff', accent: '#2b2f36', accent2: '#8b93a1', ink: '#15171b', line: '#d5d8dd' },
+    { id: 'mostaza', name: 'Mostaza', mood: 'Dorados cálidos', bg: '#f8f0dc', surface: '#fffbee', accent: '#946200', accent2: '#f0c35a', ink: '#2b2008', line: '#ecdcae' },
+    { id: 'menta', name: 'Menta', mood: 'Verdes frescos', bg: '#e9f5ef', surface: '#fbfefc', accent: '#1f7a5a', accent2: '#8fd6b8', ink: '#0f2b20', line: '#cfe6da' },
+    { id: 'cielo', name: 'Cielo', mood: 'Azules claros', bg: '#eaf1fb', surface: '#ffffff', accent: '#1d5fb8', accent2: '#8fb8f0', ink: '#10233f', line: '#cfdcf0' },
+    { id: 'terracota', name: 'Terracota', mood: 'Arcillas y barro', bg: '#f7ebe4', surface: '#fffaf6', accent: '#b8472a', accent2: '#e8a083', ink: '#34170d', line: '#ebd2c5' },
+    { id: 'vino', name: 'Vino', mood: 'Burdeos elegante', bg: '#f5e9ec', surface: '#fffafb', accent: '#7a1f3d', accent2: '#d68aa2', ink: '#2e0d17', line: '#e8cdd5' },
+    { id: 'arena', name: 'Arena', mood: 'Beige natural', bg: '#f2eee4', surface: '#fffdf8', accent: '#6b5b3a', accent2: '#cdb98a', ink: '#25201a', line: '#e1d9c6' },
+    { id: 'pizarra', name: 'Pizarra', mood: 'Gris azulado', bg: '#e9edf1', surface: '#ffffff', accent: '#34495e', accent2: '#8da2b5', ink: '#131b23', line: '#d2dae2' },
+    { id: 'lima', name: 'Lima', mood: 'Verde vivo', bg: '#f0f4df', surface: '#fdfef6', accent: '#4b6b12', accent2: '#b6d85f', ink: '#1a2406', line: '#dbe5b8' }
   ];
   const HEX = /^#[0-9a-f]{6}$/i;
   const get = id => LIST.find(p => p.id === id) || null;

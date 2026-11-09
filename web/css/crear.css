@@ -187,3 +187,11 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 :root[data-theme=dark] .filters button>span{opacity:1;color:#b9bfae}
 :root[data-theme=dark] .filters button.on>span,:root[data-theme=dark] #allCount{color:#2c3128}
 :root[data-theme=dark] #favToggle[aria-pressed=true],:root[data-theme=dark] #recentToggle[aria-pressed=true],:root[data-theme=dark] .chosen-toggle[aria-pressed=true]{color:#ff9a78}
+
+/* Estilos listos */
+.card-presets{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.card-presets button{display:inline-flex;align-items:center;gap:8px;padding:8px 12px 8px 8px;font:inherit;font-size:11px;border:1px solid #dad8ce;border-radius:999px;background:#faf9f6;color:#3a3a35;cursor:pointer}
+.card-presets button i{width:22px;height:22px;border-radius:7px;flex:none;border:1px solid #0002}
+.card-presets button[aria-pressed=true]{border-color:#242421;box-shadow:0 0 0 1px #242421}
+:root[data-theme=dark] .card-presets button{background:#252a22;border-color:#424a3a;color:#e6e8de}
+:root[data-theme=dark] .card-presets button[aria-pressed=true]{border-color:#edeee7;box-shadow:0 0 0 1px #edeee7}
