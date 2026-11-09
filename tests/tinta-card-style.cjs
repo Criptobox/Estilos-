@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
  const color=async(id,value)=>p.locator(id).evaluate((el,v)=>{el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));},value);
  const detail=id=>p.locator('.gallery [data-act=detail][data-id="'+id+'"]').click();
  await p.goto('http://localhost:8081/crear.html#bloques');await p.locator('.gallery-item').first().waitFor();
- ok(await p.locator('.gallery-item').count()===146,'catalog unchanged');await detail('c-summary');
+ ok(await p.locator('.gallery-item').count()===152,'catalog unchanged');await detail('c-summary');
  const original=await p.locator('#detailStage .summary').evaluate(el=>el.outerHTML);
  await p.click('#detailCardStyleButton');ok(await p.locator('#cardStyleDialog').isVisible(),'detail inspector');
  ok(await p.locator('#cardStylePadding').inputValue()==='22','spacing starts from actual design');

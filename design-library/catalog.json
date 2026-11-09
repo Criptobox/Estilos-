@@ -1972,6 +1972,541 @@
       "family_primary_id": "c-txn"
     },
     {
+      "id": "av-perfil",
+      "legacy_id": null,
+      "name": "Perfil centrado",
+      "slug": "perfil-centrado",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Avatar grande, nombre, rol y tres cifras.",
+      "family": "custom.av-perfil",
+      "variant_id": "av-perfil",
+      "variants": [
+        "av-perfil"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-perfil",
+        "gradient",
+        "elevated",
+        "profile"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#efe9dd",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-perfil"
+    },
+    {
+      "id": "av-fila",
+      "legacy_id": null,
+      "name": "Persona en fila",
+      "slug": "persona-en-fila",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Avatar pequeño, nombre, rol y botón de seguir.",
+      "family": "custom.av-fila",
+      "variant_id": "av-fila",
+      "variants": [
+        "av-fila"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-fila",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e7e1f2",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-fila"
+    },
+    {
+      "id": "av-anillo",
+      "legacy_id": null,
+      "name": "Con anillo y estado",
+      "slug": "con-anillo-y-estado",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Anillo de color, punto de conexión y nombre.",
+      "family": "custom.av-anillo",
+      "variant_id": "av-anillo",
+      "variants": [
+        "av-anillo"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-anillo",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f2e1d8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-anillo"
+    },
+    {
+      "id": "av-grupo",
+      "legacy_id": null,
+      "name": "Equipo apilado",
+      "slug": "equipo-apilado",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Cuatro avatares superpuestos y el resto del grupo.",
+      "family": "custom.av-grupo",
+      "variant_id": "av-grupo",
+      "variants": [
+        "av-grupo"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-grupo",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e0eceb",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-grupo"
+    },
+    {
+      "id": "av-portada",
+      "legacy_id": null,
+      "name": "Tarjeta con portada",
+      "slug": "tarjeta-con-portada",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Portada de color con el avatar superpuesto y botón.",
+      "family": "custom.av-portada",
+      "variant_id": "av-portada",
+      "variants": [
+        "av-portada"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-portada",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#dfe8f3",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-portada"
+    },
+    {
+      "id": "av-iniciales",
+      "legacy_id": null,
+      "name": "Monograma",
+      "slug": "monograma",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Iniciales en un círculo de color: sin foto ni ilustración.",
+      "family": "custom.av-iniciales",
+      "variant_id": "av-iniciales",
+      "variants": [
+        "av-iniciales"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-iniciales",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ece9e1",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-iniciales"
+    },
+    {
       "id": "lib-chat-1",
       "legacy_id": "chat-1",
       "name": "Burbujas claras con avatar",

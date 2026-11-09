@@ -1,6 +1,6 @@
 # Inventario verificable de Estilos · esquema 1
 
-- `catalog.json`: inventario base reproducible de **146 registros**, agrupados en **137 familias preliminares**, con los 26 módulos de la especificación definidos. Los módulos sin recursos no están implementados por el hecho de figurar en el esquema.
+- `catalog.json`: inventario base reproducible de **152 registros**, agrupados en **143 familias preliminares**, con los 26 módulos de la especificación definidos. Los módulos sin recursos no están implementados por el hecho de figurar en el esquema.
 - `catalog.schema.json`: contrato JSON Schema 2020-12 de las fichas.
 - Fuente de comportamiento/metadatos: `web/js/tinta-catalog.js`.
 - Especificación: `docs/BIBLIOTECA-MAESTRA-UI-UX.md`.
@@ -51,4 +51,4 @@ Con `web` servido en el puerto 8080:
 node tests/tinta-catalog.cjs
 ```
 
-Las pruebas comprueban 146 IDs, módulos, filtros, etiquetas, familias, variantes, procedencia pendiente, consistencia entre inventario base y runtime, exportación real de componentes, portapapeles bloqueado, adaptación del entorno y conservación de selección/proyectos. No sustituyen una auditoría de accesibilidad o responsive de cada diseño.
+Las pruebas comprueban 152 IDs, módulos, filtros, etiquetas, familias, variantes, procedencia pendiente, consistencia entre inventario base y runtime, exportación real de componentes, portapapeles bloqueado, adaptación del entorno y conservación de selección/proyectos. No sustituyen una auditoría de accesibilidad o responsive de cada diseño.

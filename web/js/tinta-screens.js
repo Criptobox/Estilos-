@@ -21,7 +21,7 @@
     const used = new Set(out.filter(o => o.id).map(o => o.id)), free = IDS.filter(id => !used.has(id));
     return out.map(o => o.id === undefined ? (free.shift() || null) : o.id);
   }
-  /* Plan de las pantallas generadas. ctx: { headerId, plainHeaderId, cardId, actionId, hasList, hasAvatar }.
+  /* Plan de las pantallas generadas. ctx: { headerId, plainHeaderId, cardId, actionId, hasList, avatarId }.
      Cada elemento: { id, repeat, offset, role, screen } (offset desfasa el contenido para no repetir Inicio). */
   function plan(ctx) {
     const header = ctx.headerId ? [{ id: ctx.headerId, repeat: 1, offset: 0, role: 'header' }] : [];
@@ -31,7 +31,7 @@
     return {
       explorar: header.concat(card(4)),
       guardados: plain.concat(ctx.cardId ? [{ id: ctx.cardId, repeat: 2, offset: 7, role: 'cards' }] : []),
-      perfil: plain.concat(ctx.hasAvatar ? [{ id: 'lib-ava-3', repeat: 1, offset: 0, role: 'avatars' }] : [], ctx.hasList ? [{ id: 'lib-lis-1', repeat: 1, offset: 0, role: 'list' }] : [], ctx.actionId ? [{ id: ctx.actionId, repeat: 1, offset: 0, role: 'actions' }] : [])
+      perfil: plain.concat((ctx.avatarId || ctx.hasAvatar) ? [{ id: ctx.avatarId || 'lib-ava-3', repeat: 1, offset: 0, role: 'avatars' }] : [], ctx.hasList ? [{ id: 'lib-lis-1', repeat: 1, offset: 0, role: 'list' }] : [], ctx.actionId ? [{ id: ctx.actionId, repeat: 1, offset: 0, role: 'actions' }] : [])
     };
   }
   /* Texto de la acción principal en cada pantalla generada. */

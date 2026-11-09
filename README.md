@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 52`, `versionName 12.22`.
+- Android: `versionCode 53`, `versionName 12.23`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -285,6 +285,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 
 ## Historial
 - **12.22**: tarjetas propias de cada estilo de app (tienda, destino, pista, entrenamiento, curso, cita, plato, movimiento). Ver `docs/CHANGELOG-12.22.md`.
+- **12.23**: más animaciones (21), 12 estilos de tarjeta de un toque, 13 colores y 4 formas de botón, 16 paletas y 6 diseños de avatar con 8 personajes. Ver `docs/CHANGELOG-12.23.md`.
 - **12.21**: el nombre de tu app en la marca de las cabeceras. Ver `docs/CHANGELOG-12.21.md`.
 - **12.20**: accesibilidad WCAG 2.1 AA (contraste, nombres, tema oscuro) con prueba automática axe-core. Ver `docs/CHANGELOG-12.20.md`.
 - **12.19**: precios con formato propio por sector. Ver `docs/CHANGELOG-12.19.md`.
