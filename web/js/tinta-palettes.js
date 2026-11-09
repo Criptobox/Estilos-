@@ -1,7 +1,8 @@
 /* Paletas de Tinta: una capa de color para toda la pantalla (fondo, tarjetas y botones).
    Es una CAPA: no escribe estilos en cada bloque, así que se quita de un toque y alcanza también
    a los bloques que añadas después. Los estilos propios de un bloque (Diseño / Color) mandan sobre
-   la paleta. Solo paletas claras: cabeceras y barras conservan su diseño original. */
+   la paleta. Las claras dejan cabeceras y barras con su diseño original; las oscuras (dark: true) pasan todos los
+   bloques de la pantalla a modo noche con la capa TintaDark. */
 (function (root) {
   'use strict';
   const LIST = [
@@ -20,7 +21,16 @@
     { id: 'vino', name: 'Vino', mood: 'Burdeos elegante', bg: '#f5e9ec', surface: '#fffafb', accent: '#7a1f3d', accent2: '#d68aa2', ink: '#2e0d17', line: '#e8cdd5' },
     { id: 'arena', name: 'Arena', mood: 'Beige natural', bg: '#f2eee4', surface: '#fffdf8', accent: '#6b5b3a', accent2: '#cdb98a', ink: '#25201a', line: '#e1d9c6' },
     { id: 'pizarra', name: 'Pizarra', mood: 'Gris azulado', bg: '#e9edf1', surface: '#ffffff', accent: '#34495e', accent2: '#8da2b5', ink: '#131b23', line: '#d2dae2' },
-    { id: 'lima', name: 'Lima', mood: 'Verde vivo', bg: '#f0f4df', surface: '#fdfef6', accent: '#4b6b12', accent2: '#b6d85f', ink: '#1a2406', line: '#dbe5b8' }
+    { id: 'lima', name: 'Lima', mood: 'Verde vivo', bg: '#f0f4df', surface: '#fdfef6', accent: '#4b6b12', accent2: '#b6d85f', ink: '#1a2406', line: '#dbe5b8' },
+    /* Oscuras: el fondo, las tarjetas, cabeceras y barras pasan a modo noche (capa TintaDark). */
+    { id: 'noche', name: 'Noche', mood: 'Oscura · medianoche y coral', dark: true, bg: '#0f1220', surface: '#1a1e33', accent: '#ff7a59', accent2: '#ffb08f', ink: '#f2f3f8', line: '#2c3150' },
+    { id: 'neon', name: 'Neón', mood: 'Oscura · cian y magenta', dark: true, bg: '#0a0b1e', surface: '#15173a', accent: '#2ee6ff', accent2: '#ff4fd8', ink: '#eef1ff', line: '#2a2d5e' },
+    { id: 'galaxia', name: 'Galaxia', mood: 'Oscura · violeta profundo', dark: true, bg: '#120c24', surface: '#1f1638', accent: '#a78bfa', accent2: '#f472b6', ink: '#f3eefe', line: '#33285a' },
+    { id: 'carbon', name: 'Carbón', mood: 'Oscura · negro y lima', dark: true, bg: '#0e0f0d', surface: '#1a1c18', accent: '#c6f432', accent2: '#7fae1c', ink: '#f1f3ec', line: '#2c2f28' },
+    { id: 'abismo', name: 'Abismo', mood: 'Oscura · azul y turquesa', dark: true, bg: '#06161d', surface: '#0e2530', accent: '#2dd4bf', accent2: '#38bdf8', ink: '#e6f6f7', line: '#1d3a46' },
+    { id: 'brasa', name: 'Brasa', mood: 'Oscura · negro y fuego', dark: true, bg: '#160d0a', surface: '#241510', accent: '#ff7a1a', accent2: '#ffd23f', ink: '#fbefe7', line: '#3a241b' },
+    { id: 'musgo', name: 'Musgo', mood: 'Oscura · verde nocturno', dark: true, bg: '#0c1610', surface: '#15241a', accent: '#4ade80', accent2: '#a3e635', ink: '#ecf7ef', line: '#24392a' },
+    { id: 'lujo', name: 'Lujo', mood: 'Oscura · negro y dorado', dark: true, bg: '#111111', surface: '#1c1c1c', accent: '#e0b354', accent2: '#f5d98b', ink: '#f5f1e8', line: '#2f2f2f' }
   ];
   const HEX = /^#[0-9a-f]{6}$/i;
   const get = id => LIST.find(p => p.id === id) || null;

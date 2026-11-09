@@ -1,7 +1,7 @@
 /* Paletas de color: datos legibles, capa sobre fondo/tarjetas/botones, estilos propios primero, exportación e historial. */
 const { chromium } = require('playwright'); const assert = require('node:assert/strict'); const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
 const P = require('../web/js/tinta-palettes.js'); let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
-ok(P.LIST.length === 16 && new Set(P.LIST.map(p => p.id)).size === 16 && P.LIST.every(P.valid), 'hay 16 paletas con id único y colores hex válidos');
+ok(P.LIST.length === 24 && new Set(P.LIST.map(p => p.id)).size === 24 && P.LIST.every(P.valid), 'hay 24 paletas con id único y colores hex válidos');
 ok(P.LIST.every(p => P.contrast(p.ink, p.surface) >= 7 && P.contrast(p.ink, p.bg) >= 7), 'el texto se lee con contraste AAA sobre tarjetas y fondo');
 ok(P.LIST.every(p => P.contrast(p.accent, P.onAccent(p.accent)) >= 4.5), 'el texto de los botones cumple AA sobre el acento');
 ok(P.LIST.every(p => P.contrast(p.accent, p.bg) >= 1.5 && p.accent !== p.accent2), 'el acento se distingue del fondo');
@@ -11,7 +11,7 @@ ok(P.onAccent('#ffffff') === '#111111' && P.onAccent('#000000') === '#ffffff', '
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
   await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.palette-card');
-  ok(await pg.locator('.palette-card').count() === 16 && await pg.locator('.palette-strip i').count() === 80, 'la biblioteca muestra 16 paletas con sus 5 franjas');
+  ok(await pg.locator('.palette-card').count() === 24 && await pg.locator('.palette-strip i').count() === 120, 'la biblioteca muestra 24 paletas con sus 5 franjas');
   await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   const base = await pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.innerHTML).join('|'));
   await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.palette-card');
