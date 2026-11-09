@@ -24,6 +24,13 @@ for (const b of briefs) { const r = c.compose({ brief: b }); const web = r.kind 
 ok(c.compose({ brief: 'Una página web para mi cafetería' }).sector === 'comida', 'la página web conserva el sector');
 ok(c.compose({ brief: 'Una página web para mi cafetería' }).proposals.every(p => p.blocks.some(id => id.startsWith('w-hero')) && p.blocks.some(id => id.startsWith('w-cta')) && p.blocks.some(id => id.startsWith('w-footer'))), 'cada página tiene portada, llamada final y pie');
 ok(c.compose({ brief: 'Una app para mi cafetería', kind: 'web' }).kind === 'web', 'permite forzar el tipo');
+const rankOf = id => Data.blocks.find(x => x.id === id).rank || 0;
+const webBriefs = briefs.filter(b => c.compose({ brief: b }).kind === 'web');
+const cardsOf = p => p.blocks.filter(id => role(id) === 'cards');
+ok(webBriefs.every(b => c.compose({ brief: b }).proposals.every(p => cardsOf(p).length <= 3 && cardsOf(p).length >= 1)), 'una página lleva de una a tres secciones');
+ok(webBriefs.some(b => c.compose({ brief: b }).proposals.some(p => cardsOf(p).length >= 2)), 'hay páginas con varias secciones');
+ok(webBriefs.every(b => c.compose({ brief: b }).proposals.every(p => cardsOf(p).every((id, i, a) => !i || rankOf(a[i - 1]) <= rankOf(id)))), 'las secciones salen en orden de página (beneficios, galería, testimonio, preguntas, contacto)');
+ok(new Set(webBriefs.flatMap(b => c.compose({ brief: b }).proposals.flatMap(cardsOf))).size >= 6, 'las propuestas usan al menos seis secciones distintas');
 const webIds = Data.blocks.filter(b => b.kind === 'web').map(b => b.id), appIds = Data.blocks.filter(b => b.kind === 'app').map(b => b.id);
 for (const sec of Object.keys(Data.sectors).filter(x => x !== 'default')) {
   ok(webIds.every(id => c.copyFor(sec, id) && Object.keys(c.copyFor(sec, id)).length > 0), `copia para todas las secciones web en ${sec}`);
@@ -47,6 +54,9 @@ ok(lint(['lib-enc-3', 'lib-tar-1', 'lib-bot-2', 'lib-bar-10']).includes('mezcla-
 ok(!lint(['lib-enc-4', 'lib-tar-21', 'lib-bot-3', 'lib-bar-9']).includes('mezcla-de-colores'), 'azul y violeta forman una gama fría y no avisan');
 ok(lint(['h-search', 'c-coffee', 'lib-bot-2', 'n-soft']).includes('mezcla-de-estilos'), 'detecta mezcla de Tinta y biblioteca original');
 ok(lint(['w-hero', 'c-coffee', 'w-cta-dark', 'w-footer']).includes('mezcla-de-tipos'), 'detecta mezcla de piezas de app y de página web');
+ok(!lint(['w-hero', 'w-benefits', 'w-faq', 'w-contact', 'w-cta-dark', 'w-footer']).includes('tarjetas'), 'una página admite tres secciones');
+ok(lint(['w-hero', 'w-benefits', 'w-faq', 'w-contact', 'w-team', 'w-cta-dark', 'w-footer']).includes('tarjetas'), 'cuatro secciones alargan demasiado la página');
+ok(lint(['h-search', 'c-coffee', 'c-summary', 'c-coral', 'a-dark', 'n-soft']).includes('tarjetas'), 'una app sigue limitada a dos tarjetas');
 ok(lint(['h-minimal', 'c-balance', 'c-coral', 'a-dark', 'n-soft']).includes('peso'), 'detecta dos bloques muy pesados');
 ok(lint(['h-search', 'c-summary', 'a-soft', 'n-soft']).includes('requiere'), 'la acción suave necesita una principal');
 ok(lint(['h-search', 'c-balance', 'a-dark', 'n-soft'], 'comida').includes('no-encaja'), 'avisa de bloques que no encajan con el sector');

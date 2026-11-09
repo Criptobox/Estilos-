@@ -27,6 +27,18 @@
   "footer": [
    "w-footer",
    "w-footer-dark"
+  ],
+  "faq": [
+   "w-faq"
+  ],
+  "gallery": [
+   "w-gallery"
+  ],
+  "team": [
+   "w-team"
+  ],
+  "contact": [
+   "w-contact"
   ]
  },
  "sectors": {
@@ -101,6 +113,54 @@
      "Menú",
      "Contacto"
     ]
+   },
+   "faq": {
+    "title": "Preguntas frecuentes",
+    "questions": [
+     "¿Hacen pedidos para llevar?",
+     "¿Cuánto tarda mi pedido?",
+     "¿Hay opciones sin gluten?"
+    ],
+    "answers": [
+     "Sí, pídelo aquí y recógelo en barra.",
+     "Entre 5 y 10 minutos, según la hora.",
+     "Sí, pregunta por las del día."
+    ]
+   },
+   "gallery": {
+    "title": "Nuestro día a día",
+    "caption": "Recién hecho, cada mañana."
+   },
+   "team": {
+    "title": "Quién te atiende",
+    "initials": [
+     "A",
+     "B",
+     "C"
+    ],
+    "names": [
+     "Ana",
+     "Bruno",
+     "Clara"
+    ],
+    "roles": [
+     "Barista",
+     "Cocina",
+     "Sala"
+    ]
+   },
+   "contact": {
+    "title": "Visítanos",
+    "labels": [
+     "Dirección",
+     "Horario",
+     "Escríbenos"
+    ],
+    "values": [
+     "Calle Mayor 12",
+     "Todos los días, 7:00 a 20:00",
+     "hola@marca.com"
+    ]
    }
   },
   "tienda": {
@@ -173,6 +233,54 @@
      "Inicio",
      "Catálogo",
      "Contacto"
+    ]
+   },
+   "faq": {
+    "title": "Preguntas frecuentes",
+    "questions": [
+     "¿Cuánto tarda el envío?",
+     "¿Puedo cambiar una prenda?",
+     "¿Qué formas de pago aceptan?"
+    ],
+    "answers": [
+     "Entre 2 y 4 días hábiles.",
+     "Sí, tienes 30 días para cambiarla.",
+     "Tarjeta, transferencia y pago contra entrega."
+    ]
+   },
+   "gallery": {
+    "title": "Lookbook de temporada",
+    "caption": "Ideas para combinar tus prendas."
+   },
+   "team": {
+    "title": "Quiénes somos",
+    "initials": [
+     "A",
+     "B",
+     "C"
+    ],
+    "names": [
+     "Ana",
+     "Bruno",
+     "Clara"
+    ],
+    "roles": [
+     "Dirección",
+     "Estilismo",
+     "Atención"
+    ]
+   },
+   "contact": {
+    "title": "Contacto",
+    "labels": [
+     "Dirección",
+     "Horario",
+     "Escríbenos"
+    ],
+    "values": [
+     "Av. Central 45",
+     "Lunes a sábado, 10:00 a 20:00",
+     "tienda@marca.com"
     ]
    }
   },
@@ -247,6 +355,54 @@
      "Planes",
      "Ayuda"
     ]
+   },
+   "faq": {
+    "title": "Preguntas frecuentes",
+    "questions": [
+     "¿Mis datos están seguros?",
+     "¿Hay comisiones ocultas?",
+     "¿Puedo conectar mi banco?"
+    ],
+    "answers": [
+     "Sí, van cifrados y solo tú los ves.",
+     "No. Ves cada costo antes de aceptar.",
+     "Sí, con los bancos más habituales."
+    ]
+   },
+   "gallery": {
+    "title": "Tu panel, de un vistazo",
+    "caption": "Así se ve tu mes, con claridad."
+   },
+   "team": {
+    "title": "Tu equipo",
+    "initials": [
+     "A",
+     "B",
+     "C"
+    ],
+    "names": [
+     "Ana",
+     "Bruno",
+     "Clara"
+    ],
+    "roles": [
+     "Producto",
+     "Seguridad",
+     "Soporte"
+    ]
+   },
+   "contact": {
+    "title": "Contacto",
+    "labels": [
+     "Oficina",
+     "Horario",
+     "Escríbenos"
+    ],
+    "values": [
+     "Paseo Reforma 100",
+     "Lunes a viernes, 9:00 a 18:00",
+     "ayuda@marca.com"
+    ]
    }
   },
   "fitness": {
@@ -319,6 +475,54 @@
      "Inicio",
      "Clases",
      "Contacto"
+    ]
+   },
+   "faq": {
+    "title": "Preguntas frecuentes",
+    "questions": [
+     "¿Necesito experiencia?",
+     "¿Puedo cancelar mi plan?",
+     "¿Hay clases de prueba?"
+    ],
+    "answers": [
+     "No, hay clases para cada nivel.",
+     "Sí, cuando quieras y sin penalización.",
+     "Sí, tu primera clase es gratis."
+    ]
+   },
+   "gallery": {
+    "title": "Un vistazo a las clases",
+    "caption": "Energía real, grupos pequeños."
+   },
+   "team": {
+    "title": "Tus entrenadores",
+    "initials": [
+     "A",
+     "B",
+     "C"
+    ],
+    "names": [
+     "Ana",
+     "Bruno",
+     "Clara"
+    ],
+    "roles": [
+     "Fuerza",
+     "Yoga",
+     "Cardio"
+    ]
+   },
+   "contact": {
+    "title": "Ven a vernos",
+    "labels": [
+     "Dirección",
+     "Horario",
+     "Escríbenos"
+    ],
+    "values": [
+     "Calle del Sol 8",
+     "Lunes a domingo, 6:00 a 22:00",
+     "clases@marca.com"
     ]
    }
   },
@@ -393,6 +597,54 @@
      "Destinos",
      "Contacto"
     ]
+   },
+   "faq": {
+    "title": "Preguntas frecuentes",
+    "questions": [
+     "¿Puedo cancelar mi reserva?",
+     "¿El precio incluye todo?",
+     "¿Hay ayuda durante el viaje?"
+    ],
+    "answers": [
+     "Sí, gratis hasta 48 h antes.",
+     "Sí, ves el precio final desde el inicio.",
+     "Sí, nuestro equipo responde las 24 h."
+    ]
+   },
+   "gallery": {
+    "title": "Lugares que te esperan",
+    "caption": "Fotos de nuestros destinos favoritos."
+   },
+   "team": {
+    "title": "Tus guías",
+    "initials": [
+     "A",
+     "B",
+     "C"
+    ],
+    "names": [
+     "Ana",
+     "Bruno",
+     "Clara"
+    ],
+    "roles": [
+     "Europa",
+     "América",
+     "Escapadas"
+    ]
+   },
+   "contact": {
+    "title": "Contacto",
+    "labels": [
+     "Oficina",
+     "Horario",
+     "Escríbenos"
+    ],
+    "values": [
+     "Plaza Mayor 3",
+     "Lunes a sábado, 9:00 a 19:00",
+     "reservas@marca.com"
+    ]
    }
   },
   "salud": {
@@ -465,6 +717,54 @@
      "Inicio",
      "Servicios",
      "Citas"
+    ]
+   },
+   "faq": {
+    "title": "Preguntas frecuentes",
+    "questions": [
+     "¿Cómo pido una cita?",
+     "¿Mis datos son privados?",
+     "¿Puedo cambiar la hora?"
+    ],
+    "answers": [
+     "Elige especialista, día y hora en la web.",
+     "Sí, solo tú y tu médico los veis.",
+     "Sí, hasta 24 h antes sin costo."
+    ]
+   },
+   "gallery": {
+    "title": "Nuestro espacio",
+    "caption": "Un lugar tranquilo para cuidarte."
+   },
+   "team": {
+    "title": "Tu equipo médico",
+    "initials": [
+     "A",
+     "B",
+     "C"
+    ],
+    "names": [
+     "Ana",
+     "Bruno",
+     "Clara"
+    ],
+    "roles": [
+     "Medicina",
+     "Nutrición",
+     "Atención"
+    ]
+   },
+   "contact": {
+    "title": "Dónde estamos",
+    "labels": [
+     "Dirección",
+     "Horario",
+     "Citas"
+    ],
+    "values": [
+     "Av. Salud 21",
+     "Lunes a viernes, 8:00 a 20:00",
+     "citas@marca.com"
     ]
    }
   },
@@ -539,6 +839,54 @@
      "Música",
      "Eventos"
     ]
+   },
+   "faq": {
+    "title": "Preguntas frecuentes",
+    "questions": [
+     "¿Puedo escuchar sin conexión?",
+     "¿Hay anuncios?",
+     "¿Cómo guardo mis listas?"
+    ],
+    "answers": [
+     "Sí, descarga lo que quieras.",
+     "Solo en el plan gratuito.",
+     "Con un toque, en tu biblioteca."
+    ]
+   },
+   "gallery": {
+    "title": "Directos y backstage",
+    "caption": "Momentos de nuestros conciertos."
+   },
+   "team": {
+    "title": "El equipo",
+    "initials": [
+     "A",
+     "B",
+     "C"
+    ],
+    "names": [
+     "Ana",
+     "Bruno",
+     "Clara"
+    ],
+    "roles": [
+     "Curaduría",
+     "Eventos",
+     "Comunidad"
+    ]
+   },
+   "contact": {
+    "title": "Contacto",
+    "labels": [
+     "Sala",
+     "Horario",
+     "Escríbenos"
+    ],
+    "values": [
+     "Calle Sala 5",
+     "Martes a domingo, 18:00 a 23:00",
+     "info@marca.com"
+    ]
    }
   },
   "educacion": {
@@ -611,6 +959,54 @@
      "Inicio",
      "Cursos",
      "Ayuda"
+    ]
+   },
+   "faq": {
+    "title": "Preguntas frecuentes",
+    "questions": [
+     "¿Necesito conocimientos previos?",
+     "¿Hay certificado?",
+     "¿Cuánto tiempo necesito?"
+    ],
+    "answers": [
+     "No, empiezas desde cero.",
+     "Sí, al terminar cada curso.",
+     "Con 20 minutos al día es suficiente."
+    ]
+   },
+   "gallery": {
+    "title": "Así se aprende aquí",
+    "caption": "Clases, ejercicios y logros."
+   },
+   "team": {
+    "title": "Tu profesorado",
+    "initials": [
+     "A",
+     "B",
+     "C"
+    ],
+    "names": [
+     "Ana",
+     "Bruno",
+     "Clara"
+    ],
+    "roles": [
+     "Inglés",
+     "Diseño",
+     "Tutoría"
+    ]
+   },
+   "contact": {
+    "title": "Contacto",
+    "labels": [
+     "Aula",
+     "Horario",
+     "Escríbenos"
+    ],
+    "values": [
+     "Campus Norte, aula 2",
+     "Lunes a viernes, 9:00 a 21:00",
+     "alumnos@marca.com"
     ]
    }
   }

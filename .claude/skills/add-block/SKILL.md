@@ -16,7 +16,7 @@ Deja un bloque listo para que el motor de Tinta lo use: ficha en el catálogo, h
    - Un hueco por cada texto, color, imagen o enlace editable.
    - `selector` CSS que apunte al elemento dentro del HTML del bloque. Comprueba que existe leyendo el `html` del bloque.
    - `max` de caracteres según el espacio real del diseño. `required: true` solo para lo que el bloque no puede mostrar vacío.
-4. **Declarar las reglas**: `role`, `position` (`top`, `body`, `bottom`), `max_per_screen`, y `pairs_with` / `conflicts_with` con ids reales.
+4. **Declarar las reglas**: `role`, `position` (`top`, `body`, `bottom`), `max_per_screen`, y `pairs_with` / `conflicts_with` con ids reales. Para una tarjeta de página web añade `rank` (1 = arriba): el motor ordena las secciones por él.
 5. **Escribir `guide.when_to_use` y `guide.avoid_when`** en español, concretos, una frase cada uno. Los revisa una persona antes del PR.
 5a. **Copia por sector (secciones web):** si el bloque debe llegar con textos de su sector, añádelo a un grupo de `design-library/copy.json` y escribe sus valores en los 8 sectores. Cada valor debe caber en su hueco. Las cifras y nombres son ejemplos para sustituir.
 5b. **Regenerar los datos del motor:** `node tools/build-composition-data.cjs`.

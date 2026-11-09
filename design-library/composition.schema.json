@@ -159,6 +159,11 @@
                 "type": "string"
               },
               "description": "Debe haber al menos uno de estos bloques en la pantalla."
+            },
+            "rank": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Orden de arriba abajo entre las tarjetas de una página web."
             }
           }
         },

@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "note": "Metadatos de composición, aparte de catalog.json (que se genera con tools/build-tinta-catalog.cjs). Los usa el motor de Tinta (web/js/tinta-composer.js, sin IA) y cualquier otro proponente, humano o modelo. Por bloque: huecos editables (slots, por selector CSS dentro del HTML del bloque), reglas, atributos de diseño (tono, acento, peso visual, afinidad por sector 0-3) y guía de uso. Un hueco con parts ocupa varios textos de Tinta (por ejemplo un título con salto de línea): el valor se escribe en varias líneas separadas por \\n. Cada bloque aparece como máximo una vez por pantalla (los proyectos de Tinta guardan cada id una sola vez). when_to_use y avoid_when los escribe y revisa una persona. Cada bloque declara su familia visual (tinta o biblioteca) y su color de acento: el motor evita mezclar familias y más de un color de acento por pantalla. No se describen los bloques que son demostraciones de estados (por ejemplo lib-bot-1) porque no sirven como pieza de una pantalla real. design.kind distingue las piezas de app de las de página web: el motor compone cada tipo por separado.",
+ "note": "Metadatos de composición, aparte de catalog.json (que se genera con tools/build-tinta-catalog.cjs). Los usa el motor de Tinta (web/js/tinta-composer.js, sin IA) y cualquier otro proponente, humano o modelo. Por bloque: huecos editables (slots, por selector CSS dentro del HTML del bloque), reglas, atributos de diseño (tono, acento, peso visual, afinidad por sector 0-3) y guía de uso. Un hueco con parts ocupa varios textos de Tinta (por ejemplo un título con salto de línea): el valor se escribe en varias líneas separadas por \\n. Cada bloque aparece como máximo una vez por pantalla (los proyectos de Tinta guardan cada id una sola vez). when_to_use y avoid_when los escribe y revisa una persona. Cada bloque declara su familia visual (tinta o biblioteca) y su color de acento: el motor evita mezclar familias y más de un color de acento por pantalla. No se describen los bloques que son demostraciones de estados (por ejemplo lib-bot-1) porque no sirven como pieza de una pantalla real. design.kind distingue las piezas de app de las de página web: el motor compone cada tipo por separado. rules.rank ordena las secciones de una página web (de arriba abajo).",
  "sectors": {
   "comida": {
    "tones": [
@@ -1891,7 +1891,8 @@
    "rules": {
     "role": "cards",
     "position": "body",
-    "max_per_screen": 1
+    "max_per_screen": 1,
+    "rank": 1
    },
    "guide": {
     "when_to_use": "Tres razones para elegirte, cada una con su icono, justo debajo de la portada.",
@@ -1963,7 +1964,8 @@
    "rules": {
     "role": "cards",
     "position": "body",
-    "max_per_screen": 1
+    "max_per_screen": 1,
+    "rank": 3
    },
    "guide": {
     "when_to_use": "Un plan con precio, tres ventajas y un botón para elegirlo: servicios y suscripciones.",
@@ -2021,7 +2023,8 @@
    "rules": {
     "role": "cards",
     "position": "body",
-    "max_per_screen": 1
+    "max_per_screen": 1,
+    "rank": 5
    },
    "guide": {
     "when_to_use": "Opinión real con estrellas: prueba social que da confianza antes de pedir la acción.",
@@ -2068,7 +2071,8 @@
    "rules": {
     "role": "cards",
     "position": "body",
-    "max_per_screen": 1
+    "max_per_screen": 1,
+    "rank": 2
    },
    "guide": {
     "when_to_use": "Tres cifras que dan confianza de un vistazo: clientes, valoración, tiempo de respuesta.",
@@ -2329,6 +2333,224 @@
    "guide": {
     "when_to_use": "Pie de página oscuro y compacto para páginas sobrias.",
     "avoid_when": "Páginas cálidas y claras, donde el pie oscuro corta demasiado."
+   }
+  },
+  {
+   "id": "w-faq",
+   "design": {
+    "tones": [
+     "sobrio",
+     "calido"
+    ],
+    "accent": "neutro",
+    "weight": "ligero",
+    "family": "tinta",
+    "kind": "web",
+    "affinity": {
+     "comida": 1,
+     "tienda": 2,
+     "finanzas": 3,
+     "fitness": 2,
+     "viajes": 2,
+     "salud": 3,
+     "musica": 1,
+     "educacion": 3
+    }
+   },
+   "slots": [
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h2",
+     "max": 28
+    },
+    {
+     "name": "questions",
+     "kind": "textlist",
+     "selector": ".q b",
+     "max": 40,
+     "count": 3
+    },
+    {
+     "name": "answers",
+     "kind": "textlist",
+     "selector": ".q p",
+     "max": 70,
+     "count": 3
+    }
+   ],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1,
+    "rank": 6
+   },
+   "guide": {
+    "when_to_use": "Tres preguntas con su respuesta corta: quita dudas antes de pedir la acción.",
+    "avoid_when": "Páginas que ya son muy largas o negocios sin dudas habituales."
+   }
+  },
+  {
+   "id": "w-gallery",
+   "design": {
+    "tones": [
+     "calido",
+     "editorial"
+    ],
+    "accent": "coral",
+    "weight": "medio",
+    "family": "tinta",
+    "kind": "web",
+    "affinity": {
+     "comida": 3,
+     "tienda": 2,
+     "finanzas": 0,
+     "fitness": 2,
+     "viajes": 3,
+     "salud": 1,
+     "musica": 2,
+     "educacion": 1
+    }
+   },
+   "slots": [
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h2",
+     "max": 24
+    },
+    {
+     "name": "caption",
+     "kind": "text",
+     "selector": ".gallery p",
+     "max": 40
+    }
+   ],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1,
+    "rank": 3
+   },
+   "guide": {
+    "when_to_use": "Piezas de color que dan ambiente: comida, viajes, tiendas y sitios con imagen.",
+    "avoid_when": "Finanzas o servicios serios, donde la galería no aporta."
+   }
+  },
+  {
+   "id": "w-team",
+   "design": {
+    "tones": [
+     "calido"
+    ],
+    "accent": "neutro",
+    "weight": "ligero",
+    "family": "tinta",
+    "kind": "web",
+    "affinity": {
+     "comida": 2,
+     "tienda": 1,
+     "finanzas": 2,
+     "fitness": 3,
+     "viajes": 2,
+     "salud": 3,
+     "musica": 2,
+     "educacion": 3
+    }
+   },
+   "slots": [
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h2",
+     "max": 24
+    },
+    {
+     "name": "initials",
+     "kind": "textlist",
+     "selector": ".team .av",
+     "max": 2,
+     "count": 3
+    },
+    {
+     "name": "names",
+     "kind": "textlist",
+     "selector": ".people b",
+     "max": 14,
+     "count": 3
+    },
+    {
+     "name": "roles",
+     "kind": "textlist",
+     "selector": ".people small",
+     "max": 18,
+     "count": 3
+    }
+   ],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1,
+    "rank": 4
+   },
+   "guide": {
+    "when_to_use": "Tres personas del equipo con su inicial y su oficio: cercanía y confianza.",
+    "avoid_when": "Marcas que prefieren no mostrar a su equipo."
+   }
+  },
+  {
+   "id": "w-contact",
+   "design": {
+    "tones": [
+     "sobrio",
+     "calido"
+    ],
+    "accent": "coral",
+    "weight": "ligero",
+    "family": "tinta",
+    "kind": "web",
+    "affinity": {
+     "comida": 3,
+     "tienda": 2,
+     "finanzas": 2,
+     "fitness": 3,
+     "viajes": 2,
+     "salud": 3,
+     "musica": 1,
+     "educacion": 2
+    }
+   },
+   "slots": [
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h2",
+     "max": 24
+    },
+    {
+     "name": "labels",
+     "kind": "textlist",
+     "selector": ".contact small",
+     "max": 14,
+     "count": 3
+    },
+    {
+     "name": "values",
+     "kind": "textlist",
+     "selector": ".contact b",
+     "max": 34,
+     "count": 3
+    }
+   ],
+   "rules": {
+    "role": "cards",
+    "position": "body",
+    "max_per_screen": 1,
+    "rank": 7
+   },
+   "guide": {
+    "when_to_use": "Dirección, horario y correo en tres líneas: negocios con local o atención directa.",
+    "avoid_when": "Servicios solo digitales sin dirección ni horario."
    }
   }
  ]

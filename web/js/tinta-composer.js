@@ -52,7 +52,8 @@
       if (new Set(blocks.map(b => b.kind)).size > 1) warn('mezcla-de-tipos', 'Mezcla piezas de app y de página web: una pantalla es de uno u otro tipo.', 5);
       if (new Set(blocks.map(b => b.family)).size > 1) warn('mezcla-de-estilos', 'Mezcla bloques de Tinta y de la biblioteca original: se ven como dos apps distintas.', 3);
       const cards = blocks.filter(b => b.role === 'cards').length;
-      if (cards > 2) warn('tarjetas', 'Más de dos tarjetas alargan la pantalla sin aportar jerarquía.', 2 * (cards - 2));
+      const maxCards = blocks.some(b => b.kind === 'web') ? 3 : 2; // una página admite más secciones que una pantalla de app
+      if (cards > maxCards) warn('tarjetas', `Más de ${maxCards} tarjetas alargan la pantalla sin aportar jerarquía.`, 2 * (cards - maxCards));
       return { issues, penalty };
     }
 
@@ -66,7 +67,9 @@
       blocks.forEach(b => b.pairs_with.forEach(p => { if (present.has(p)) s += 0.5; }));
       const cards = blocks.filter(b => b.role === 'cards');
       if (cards.length === 2 && cards[0].weight !== cards[1].weight) s += 0.5;
-      s -= Math.max(0, ids.length - 4) * 0.5; // pantallas más cortas se leen mejor
+      const web = blocks.some(b => b.kind === 'web');
+      s -= Math.max(0, ids.length - (web ? 5 : 4)) * 0.5; // pantallas más cortas se leen mejor; una página lleva portada, dos secciones, llamada y pie
+      if (web) s += 0.5 * Math.min(cards.length - 1, 2); // y una página con varias secciones se siente completa
       return s - penalty;
     }
 
@@ -80,9 +83,12 @@
         const inFam = r => byRole(r).filter(b => b.family === fam && b.kind === kind).sort(byAffinity(sector));
         const heads = inFam('header'), navs = inFam('nav'), cards = inFam('cards');
         const mains = inFam('actions').filter(b => !b.requires_any.length), softs = inFam('actions').filter(b => b.requires_any.length);
-        const top = cards.slice(0, 7);
+        const top = cards.slice(0, kind === 'web' ? 6 : 7);
         const cardSets = cards.map(c => [c.id]);
-        for (let i = 0; i < top.length; i++) for (let j = i + 1; j < top.length; j++) cardSets.push([top[i].id, top[j].id]);
+        for (let i = 0; i < top.length; i++) for (let j = i + 1; j < top.length; j++) {
+          cardSets.push([top[i].id, top[j].id]);
+          if (kind === 'web') for (let k = j + 1; k < top.length; k++) cardSets.push([top[i].id, top[j].id, top[k].id]);
+        }
         const actionSets = [];
         mains.forEach(m => { actionSets.push([m.id]); softs.forEach(sf => actionSets.push([m.id, sf.id])); });
         for (const h of heads) for (const cs of cardSets) for (const as of actionSets) for (const n of navs) {
@@ -162,7 +168,7 @@
       return {
         sector, kind,
         proposals: chosen.map((c, i) => {
-          const order = ROLE_ORDER.flatMap(r => c.blocks.filter(id => BY_ID.get(id).role === r));
+          const order = ROLE_ORDER.flatMap(r => c.blocks.filter(id => BY_ID.get(id).role === r).sort((a, b) => (BY_ID.get(a).rank || 0) - (BY_ID.get(b).rank || 0)));
           return { id: 'p' + (i + 1), label: labelFor(i, order, first), tone: tone(order), blocks: order, score: Math.round(c.score * 10) / 10, why: why(order, sector), issues: c.issues };
         }),
       };

@@ -14,7 +14,7 @@ const data = {
   copy: Object.fromEntries(Object.entries(copy.sectors).map(([sec, groups]) => [sec, Object.fromEntries(Object.entries(groupOf).map(([id, g]) => [id, groups[g]]))])),
   blocks: src.blocks.map((b) => ({
     id: b.id, role: b.rules.role, position: b.rules.position, max_per_screen: b.rules.max_per_screen,
-    pairs_with: b.rules.pairs_with || [], conflicts_with: b.rules.conflicts_with || [], requires_any: b.rules.requires_any || [],
+    rank: b.rules.rank || null, pairs_with: b.rules.pairs_with || [], conflicts_with: b.rules.conflicts_with || [], requires_any: b.rules.requires_any || [],
     tones: b.design.tones, family: b.design.family, kind: b.design.kind, accent: b.design.accent, weight: b.design.weight, affinity: b.design.affinity,
     slots: b.slots,
     when_to_use: b.guide.when_to_use, avoid_when: b.guide.avoid_when,
