@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 48`, `versionName 12.18`.
+- Android: `versionCode 49`, `versionName 12.19`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -284,6 +284,7 @@ El workflow `android.yml` compila una APK debug y la publica como artifact.
 Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La compilación APK y las pruebas en un teléfono físico deben confirmarse en GitHub Actions/dispositivo.
 
 ## Historial
+- **12.19**: precios con formato propio por sector. Ver `docs/CHANGELOG-12.19.md`.
 - **12.18**: copia de seguridad completa y restauración no destructiva. Ver `docs/CHANGELOG-12.18.md`.
 - **12.17**: una ilustración distinta en cada tarjeta, según el sector y la paleta. Ver `docs/CHANGELOG-12.17.md`.
 - **12.16**: todas las pantallas de la app (Inicio, Explorar, Guardados y Perfil) con barra navegable y exportación multi-pantalla. Ver `docs/CHANGELOG-12.16.md`.

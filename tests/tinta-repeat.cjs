@@ -6,6 +6,8 @@ ok(a[0] !== b[0] && a[1] !== b[1], 'el desfase da contenido distinto en títulos
 const pairs = [0, 2, 4, 6].map(o => T.fill('comida', [{ label: 'Destacado', value: '$4' }, { label: 'Nota', value: '.50' }], { offset: o }));
 ok(pairs.every(p => /^\$\d+$/.test(p[0]) && /^\.\d{2}$/.test(p[1])) && new Set(pairs.map(p => p.join(''))).size === 4, 'un precio partido («$4» + «.50») se rellena como un solo precio, distinto en cada copia');
 ok(T.fill('comida', [{ label: 'Nota', value: '.50' }])[0] === null, 'una cola decimal suelta se conserva');
+{ const fmt = { comida: [/^\$\d+$/, /^\.\d{2}$/], tienda: [/^\$\d+$/, /^\.\d{2}$/], finanzas: [/^\$[\d,]+$/, /^\.\d{2}$/], fitness: [/^\d+$/, /^ min$/], viajes: [/^\$[\d,]+$/, /^\.\d{2}$/], salud: [/^\$?\d+$/, /^( min|\.\d{2})$/], musica: [/^\d$/, /^:\d{2}$/], educacion: [/^\d+$/, /^ lecciones$/] };
+  ok(Object.keys(fmt).every(id => [0, 2, 4, 6].map(o => T.fill(id, [{ label: 'Destacado', value: '$4' }, { label: 'Nota', value: '.50' }], { offset: o })).every(p => fmt[id][0].test(p[0]) && fmt[id][1].test(p[1])) && new Set([0, 2, 4, 6].map(o => T.fill(id, [{ label: 'Destacado', value: '$4' }, { label: 'Nota', value: '.50' }], { offset: o }).join(''))).size === 4), 'cada sector tiene su formato de precio (min, duración, lecciones…) y cuatro copias distintas'); }
 (async () => {
   const br = await chromium.launch(), ctx = await br.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   await pg.goto('http://127.0.0.1:8080/index.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('.gallery-item');
