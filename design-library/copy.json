@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "note": "Copia por sector para las secciones web y los bloques de app de Tinta que tienen huecos. Se aplica a los bloques recién propuestos si la persona no los ha editado. Las cifras, precios, nombres y opiniones son ejemplos para sustituir, no datos reales. Cada valor respeta el máximo, el número de partes y el número de elementos de su hueco en composition.json (lo comprueba composer/tools/validate-composer.cjs).",
+ "note": "Copia por sector para las secciones web y los bloques de app de Tinta con huecos y cuatro de la biblioteca original (cabeceras de saludo, ubicación y título, y reseña). Los bloques con imagen incluida (lib-tar-1, 2, 5 y 6) no tienen copia por sector para no contradecir la imagen. Se aplica a los bloques recién propuestos si la persona no los ha editado. Las cifras, precios, nombres y opiniones son ejemplos para sustituir, no datos reales. Cada valor respeta el máximo, el número de partes y el número de elementos de su hueco en composition.json (lo comprueba composer/tools/validate-composer.cjs).",
  "groups": {
   "hero": [
    "w-hero"
@@ -68,6 +68,30 @@
   "nav": [
    "n-soft",
    "n-float"
+  ],
+  "lib-greeting": [
+   "lib-enc-1"
+  ],
+  "lib-location": [
+   "lib-enc-3"
+  ],
+  "lib-section": [
+   "lib-enc-4"
+  ],
+  "lib-review": [
+   "lib-tar-19"
+  ],
+  "lib-pill": [
+   "lib-bot-2"
+  ],
+  "lib-glow": [
+   "lib-bot-3"
+  ],
+  "lib-nav-chat": [
+   "lib-bar-5"
+  ],
+  "lib-nav-video": [
+   "lib-bar-10"
   ]
  },
  "sectors": {
@@ -238,6 +262,48 @@
      "Pedidos",
      "Perfil"
     ]
+   },
+   "lib-greeting": {
+    "greeting": "Buenos días",
+    "name": "Ana"
+   },
+   "lib-location": {
+    "label": "Entregar en",
+    "place": "Calle Mayor 12",
+    "placeholder": "Busca tu comida favorita"
+   },
+   "lib-section": {
+    "title": "Menú de hoy",
+    "subtitle": "12 platos esta semana",
+    "link": "Ver todo"
+   },
+   "lib-review": {
+    "name": "Lucía M.",
+    "badge": "Cliente habitual",
+    "quote": "El café, siempre caliente y a tiempo. Mi parada de cada mañana.",
+    "date": "Hace 1 día ·\n24"
+   },
+   "lib-nav-chat": {
+    "labels": [
+     "Inicio",
+     "Menú",
+     "Ayuda",
+     "Cuenta"
+    ]
+   },
+   "lib-nav-video": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Explorar",
+     "Favoritos"
+    ]
+   },
+   "lib-glow": {
+    "label": "Pedir ahora"
+   },
+   "lib-pill": {
+    "primary": "Pedir ahora"
    }
   },
   "tienda": {
@@ -415,6 +481,48 @@
      "Guardados",
      "Perfil"
     ]
+   },
+   "lib-greeting": {
+    "greeting": "Hola de nuevo",
+    "name": "Ana"
+   },
+   "lib-location": {
+    "label": "Enviar a",
+    "place": "Madrid, España",
+    "placeholder": "Busca productos o marcas"
+   },
+   "lib-section": {
+    "title": "Colecciones",
+    "subtitle": "24 nuevas esta semana",
+    "link": "Ver todo"
+   },
+   "lib-review": {
+    "name": "María G.",
+    "badge": "Compra verificada",
+    "quote": "Calidad excelente y llegó antes de lo previsto. Lo volvería a comprar.",
+    "date": "Hace 2 días ·\n18"
+   },
+   "lib-nav-chat": {
+    "labels": [
+     "Inicio",
+     "Catálogo",
+     "Ayuda",
+     "Cuenta"
+    ]
+   },
+   "lib-nav-video": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Explorar",
+     "Favoritos"
+    ]
+   },
+   "lib-glow": {
+    "label": "Comprar"
+   },
+   "lib-pill": {
+    "primary": "Comprar ahora"
    }
   },
   "finanzas": {
@@ -572,6 +680,34 @@
      "Metas",
      "Perfil"
     ]
+   },
+   "lib-greeting": {
+    "greeting": "Tu resumen de hoy",
+    "name": "Ana"
+   },
+   "lib-section": {
+    "title": "Movimientos",
+    "subtitle": "Actualizado hoy",
+    "link": "Ver todo"
+   },
+   "lib-nav-chat": {
+    "labels": [
+     "Inicio",
+     "Gastos",
+     "Ayuda",
+     "Cuenta"
+    ]
+   },
+   "lib-nav-video": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Explorar",
+     "Metas"
+    ]
+   },
+   "lib-glow": {
+    "label": "Continuar"
    }
   },
   "fitness": {
@@ -741,6 +877,43 @@
      "Progreso",
      "Perfil"
     ]
+   },
+   "lib-greeting": {
+    "greeting": "Hoy toca moverse",
+    "name": "Ana"
+   },
+   "lib-section": {
+    "title": "Clases de hoy",
+    "subtitle": "18 disponibles",
+    "link": "Ver todas"
+   },
+   "lib-review": {
+    "name": "Carlos V.",
+    "badge": "Socio verificado",
+    "quote": "Las clases se pasan volando y siempre salgo con energía.",
+    "date": "Hace 4 días ·\n9"
+   },
+   "lib-nav-chat": {
+    "labels": [
+     "Inicio",
+     "Clases",
+     "Chat",
+     "Cuenta"
+    ]
+   },
+   "lib-nav-video": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Clases",
+     "Favoritos"
+    ]
+   },
+   "lib-glow": {
+    "label": "Empezar"
+   },
+   "lib-pill": {
+    "primary": "Reservar clase"
    }
   },
   "viajes": {
@@ -910,6 +1083,48 @@
      "Viajes",
      "Perfil"
     ]
+   },
+   "lib-greeting": {
+    "greeting": "¿Listo para viajar?",
+    "name": "Ana"
+   },
+   "lib-location": {
+    "label": "Salida desde",
+    "place": "Madrid, España",
+    "placeholder": "¿A dónde quieres ir?"
+   },
+   "lib-section": {
+    "title": "Escapadas",
+    "subtitle": "12 nuevas este mes",
+    "link": "Ver todas"
+   },
+   "lib-review": {
+    "name": "Nora y Pablo",
+    "badge": "Viaje verificado",
+    "quote": "Todo salió perfecto y la ayuda fue inmediata. Repetiremos.",
+    "date": "Hace 1 semana ·\n31"
+   },
+   "lib-nav-chat": {
+    "labels": [
+     "Inicio",
+     "Destinos",
+     "Ayuda",
+     "Cuenta"
+    ]
+   },
+   "lib-nav-video": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Explorar",
+     "Favoritos"
+    ]
+   },
+   "lib-glow": {
+    "label": "Reservar"
+   },
+   "lib-pill": {
+    "primary": "Reservar ahora"
    }
   },
   "salud": {
@@ -1079,6 +1294,48 @@
      "Salud",
      "Perfil"
     ]
+   },
+   "lib-greeting": {
+    "greeting": "¿Cómo te sientes?",
+    "name": "Ana"
+   },
+   "lib-location": {
+    "label": "Clínica cercana",
+    "place": "Madrid, España",
+    "placeholder": "Busca especialistas"
+   },
+   "lib-section": {
+    "title": "Especialistas",
+    "subtitle": "Con cita esta semana",
+    "link": "Ver todos"
+   },
+   "lib-review": {
+    "name": "Rosa I.",
+    "badge": "Paciente verificada",
+    "quote": "Me explicaron todo con calma y sin prisas. Volveré.",
+    "date": "Hace 3 días ·\n12"
+   },
+   "lib-nav-chat": {
+    "labels": [
+     "Inicio",
+     "Citas",
+     "Chat",
+     "Cuenta"
+    ]
+   },
+   "lib-nav-video": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Explorar",
+     "Favoritos"
+    ]
+   },
+   "lib-glow": {
+    "label": "Pedir cita"
+   },
+   "lib-pill": {
+    "primary": "Pedir cita"
    }
   },
   "musica": {
@@ -1240,6 +1497,43 @@
      "Listas",
      "Perfil"
     ]
+   },
+   "lib-greeting": {
+    "greeting": "Dale play",
+    "name": "Ana"
+   },
+   "lib-section": {
+    "title": "Hecho para ti",
+    "subtitle": "Mix de esta semana",
+    "link": "Ver todo"
+   },
+   "lib-review": {
+    "name": "Iván R.",
+    "badge": "Oyente verificado",
+    "quote": "Descubrí tres bandas nuevas la primera semana.",
+    "date": "Hace 5 días ·\n21"
+   },
+   "lib-nav-chat": {
+    "labels": [
+     "Inicio",
+     "Explorar",
+     "Chat",
+     "Cuenta"
+    ]
+   },
+   "lib-nav-video": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Escuchar",
+     "Favoritos"
+    ]
+   },
+   "lib-glow": {
+    "label": "Reproducir"
+   },
+   "lib-pill": {
+    "primary": "Escuchar ahora"
    }
   },
   "educacion": {
@@ -1409,6 +1703,43 @@
      "Avance",
      "Perfil"
     ]
+   },
+   "lib-greeting": {
+    "greeting": "Sigue aprendiendo",
+    "name": "Ana"
+   },
+   "lib-section": {
+    "title": "Tus cursos",
+    "subtitle": "3 en curso",
+    "link": "Ver todos"
+   },
+   "lib-review": {
+    "name": "Sara L.",
+    "badge": "Alumna verificada",
+    "quote": "Veinte minutos al día y ya me defiendo en inglés.",
+    "date": "Hace 2 días ·\n16"
+   },
+   "lib-nav-chat": {
+    "labels": [
+     "Inicio",
+     "Cursos",
+     "Tutor",
+     "Cuenta"
+    ]
+   },
+   "lib-nav-video": {
+    "labels": [
+     "Inicio",
+     "Buscar",
+     "Clases",
+     "Favoritos"
+    ]
+   },
+   "lib-glow": {
+    "label": "Continuar"
+   },
+   "lib-pill": {
+    "primary": "Empezar lección"
    }
   }
  }

@@ -36,19 +36,25 @@ for (const sec of Object.keys(Data.sectors).filter(x => x !== 'default')) {
   ok(webIds.every(id => c.copyFor(sec, id) && Object.keys(c.copyFor(sec, id)).length > 0), `copia para todas las secciones web en ${sec}`);
   ok(webIds.every(id => Object.keys(c.copyFor(sec, id)).every(k => c.slotsOf(id).some(sl => sl.name === k))), `la copia de ${sec} solo usa huecos declarados`);
 }
-const slotted = Data.blocks.filter(b => b.kind === 'app' && b.slots.length);
+const copyDoc = require('../design-library/copy.json');
+const withCopy = Object.values(copyDoc.groups).flat().filter(id => Data.blocks.some(b => b.id === id && b.kind === 'app'));
 for (const sec of Object.keys(Data.sectors).filter(x => x !== 'default')) {
-  ok(slotted.filter(b => b.affinity[sec] >= 1).every(b => c.copyFor(sec, b.id)), `copia de app para todos los bloques que encajan con ${sec}`);
-  ok(slotted.every(b => !c.copyFor(sec, b.id) || Object.keys(c.copyFor(sec, b.id)).every(k => b.slots.some(sl => sl.name === k))), `la copia de app de ${sec} solo usa huecos declarados`);
+  ok(withCopy.map(id => Data.blocks.find(b => b.id === id)).filter(b => b.affinity[sec] >= 1).every(b => c.copyFor(sec, b.id)), `copia de app para todos los bloques con copia que encajan con ${sec}`);
+  ok(withCopy.every(id => !c.copyFor(sec, id) || Object.keys(c.copyFor(sec, id)).every(k => c.slotsOf(id).some(sl => sl.name === k))), `la copia de app de ${sec} solo usa huecos declarados`);
 }
-ok(Data.blocks.filter(b => b.family === 'biblioteca').every(b => c.copyFor('comida', b.id) === null), 'los bloques de la biblioteca original no tienen copia (no declaran huecos)');
+ok(['lib-enc-1', 'lib-enc-3', 'lib-enc-4', 'lib-tar-19'].every(id => c.copyFor('comida', id) || id === 'lib-tar-19' && c.copyFor('tienda', id) || id === 'lib-enc-3' && c.copyFor('tienda', id)), 'cabeceras y reseña de la biblioteca original tienen copia');
+ok(['lib-bot-2', 'lib-bot-3', 'lib-bar-5', 'lib-bar-10'].every(id => c.copyFor('comida', id) && c.copyFor('educacion', id)), 'botones y barras con etiquetas de la biblioteca original tienen copia');
+ok(c.copyFor('educacion', 'lib-bar-10').labels.join() === 'Inicio,Buscar,Clases,Favoritos' && c.copyFor('finanzas', 'lib-bar-10').labels[3] === 'Metas', 'las etiquetas de la barra respetan el icono de cada posición');
+ok(briefs.every(b => c.compose({ brief: b }).proposals.every(p => !p.blocks.includes('lib-tar-5'))), 'el historial de diseño (lib-tar-5) no se propone: sus ejemplos son de otra herramienta');
+ok(['lib-tar-1', 'lib-tar-2', 'lib-tar-5', 'lib-tar-6'].every(id => c.slotsOf(id).length > 0 && Object.keys(Data.sectors).every(sec => c.copyFor(sec, id) === null)), 'los bloques con imagen incluida declaran huecos pero no tienen copia por sector');
+ok(Data.blocks.filter(b => b.family === 'biblioteca' && !withCopy.includes(b.id)).every(b => Object.keys(Data.sectors).every(sec => c.copyFor(sec, b.id) === null)), 'el resto de la biblioteca original conserva sus textos');
 ok(Data.blocks.every(b => c.copyFor(null, b.id) === null) && c.copyFor('comida', 'nada') === null, 'sin sector o con un bloque desconocido no hay copia');
 ok(c.slotsOf('w-hero').length > 0 && c.slotsOf('nada').length === 0, 'slotsOf devuelve los huecos del bloque');
 const first = b => c.compose({ brief: b }).proposals[0].blocks.join();
 ok(first('Una app para mi cafetería') === 'h-search,c-coffee,a-coral,n-soft', 'cafetería: búsqueda, producto, acción cálida y navegación esencial');
 ok(first('Mis finanzas personales') === 'h-minimal,c-balance,a-dark,n-dark', 'finanzas: cabecera sobria, balance y acción en grafito');
 ok(first('Una tienda de ropa') === 'h-search,c-summary,a-coral,n-float', 'tienda: búsqueda, resumen, acción cálida y barra flotante');
-for (const b of ['Una app para mi cafetería', 'Viajes de fin de semana', 'curso de inglés']) ok(c.compose({ brief: b }).proposals.some(p => /otro estilo visual/.test(p.label)), `«${b}» ofrece una variante de otro estilo visual`);
+for (const b of ['Una app para mi cafetería', 'Viajes de fin de semana', 'Una tienda de ropa']) ok(c.compose({ brief: b }).proposals.some(p => /otro estilo visual/.test(p.label)), `«${b}» ofrece una variante de otro estilo visual`);
 ok(!Data.blocks.some(b => b.id === 'lib-bot-1'), 'lib-bot-1 es una demostración de estados y no se usa para componer');
 const t0 = Date.now(); c.compose({ brief: 'Una app para mi cafetería' }); ok(Date.now() - t0 < 1500, 'compone en menos de 1,5 s');
 ok(c.compose({ brief: 'x', sector: 'finanzas' }).sector === 'finanzas', 'permite forzar el sector');

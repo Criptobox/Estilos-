@@ -782,7 +782,21 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "greeting",
+     "kind": "text",
+     "selector": ".m small",
+     "max": 24
+    },
+    {
+     "name": "name",
+     "kind": "text",
+     "selector": ".m b",
+     "max": 20,
+     "required": true
+    }
+   ],
    "rules": {
     "role": "header",
     "position": "top",
@@ -815,7 +829,28 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "label",
+     "kind": "text",
+     "selector": ".lc small",
+     "max": 20
+    },
+    {
+     "name": "place",
+     "kind": "text",
+     "selector": ".lc b",
+     "max": 24,
+     "own": true
+    },
+    {
+     "name": "placeholder",
+     "kind": "text",
+     "selector": ".se",
+     "max": 40,
+     "own": true
+    }
+   ],
    "rules": {
     "role": "header",
     "position": "top",
@@ -847,7 +882,28 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h2",
+     "max": 24,
+     "required": true
+    },
+    {
+     "name": "subtitle",
+     "kind": "text",
+     "selector": "header small",
+     "max": 34
+    },
+    {
+     "name": "link",
+     "kind": "text",
+     "selector": "a",
+     "max": 12,
+     "own": true
+    }
+   ],
    "rules": {
     "role": "header",
     "position": "top",
@@ -880,7 +936,34 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h3",
+     "max": 28,
+     "required": true
+    },
+    {
+     "name": "subtitle",
+     "kind": "text",
+     "selector": ".bd p",
+     "max": 34
+    },
+    {
+     "name": "price",
+     "kind": "text",
+     "selector": ".pr",
+     "max": 8
+    },
+    {
+     "name": "button_label",
+     "kind": "text",
+     "selector": ".add",
+     "max": 22,
+     "own": true
+    }
+   ],
    "rules": {
     "role": "cards",
     "position": "body",
@@ -888,7 +971,7 @@
    },
    "guide": {
     "when_to_use": "Producto claro con foto, precio y botón de añadir al carrito.",
-    "avoid_when": "Apps sin catálogo de productos."
+    "avoid_when": "Apps sin catálogo de productos. Trae una imagen incluida: no se cambia su texto por sector para no contradecirla."
    }
   },
   {
@@ -913,7 +996,27 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "tag",
+     "kind": "text",
+     "selector": ".tag",
+     "max": 14
+    },
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h3",
+     "max": 28,
+     "required": true
+    },
+    {
+     "name": "subtitle",
+     "kind": "text",
+     "selector": ".tx p",
+     "max": 34
+    }
+   ],
    "rules": {
     "role": "cards",
     "position": "body",
@@ -921,7 +1024,7 @@
    },
    "guide": {
     "when_to_use": "Foto grande con título encima: destinos, experiencias, contenido visual.",
-    "avoid_when": "Datos numéricos o pantallas sobrias."
+    "avoid_when": "Datos numéricos o pantallas sobrias. Trae una imagen incluida: no se cambia su texto por sector para no contradecirla."
    }
   },
   {
@@ -1000,26 +1103,48 @@
     "weight": "ligero",
     "family": "biblioteca",
     "affinity": {
-     "comida": 1,
-     "tienda": 1,
-     "finanzas": 2,
-     "fitness": 1,
+     "comida": 0,
+     "tienda": 0,
+     "finanzas": 0,
+     "fitness": 0,
      "viajes": 0,
-     "salud": 1,
-     "musica": 1,
-     "educacion": 2
+     "salud": 0,
+     "musica": 0,
+     "educacion": 0
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "titles",
+     "kind": "textlist",
+     "selector": ".m b",
+     "max": 26,
+     "count": 3
+    },
+    {
+     "name": "details",
+     "kind": "textlist",
+     "selector": ".m small",
+     "max": 30,
+     "count": 3
+    },
+    {
+     "name": "times",
+     "kind": "textlist",
+     "selector": ".tm",
+     "max": 8,
+     "count": 3
+    }
+   ],
    "rules": {
     "role": "cards",
     "position": "body",
     "max_per_screen": 1
    },
    "guide": {
-    "when_to_use": "Historial en filas con icono, título y fecha: movimientos, conversaciones, actividad.",
-    "avoid_when": "Pantallas que necesitan una pieza visual protagonista."
+    "when_to_use": "Historial en filas con icono, título y fecha. Sus ejemplos son de una herramienta de diseño (logotipos, paletas), así que el motor no lo propone: se usa a mano.",
+    "avoid_when": "Pantallas que necesitan una pieza visual protagonista. Trae una imagen incluida: no se cambia su texto por sector para no contradecirla."
    }
   },
   {
@@ -1043,7 +1168,35 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "title",
+     "kind": "text",
+     "selector": "h3",
+     "max": 28,
+     "required": true
+    },
+    {
+     "name": "rating",
+     "kind": "text",
+     "selector": ".mt span:nth-child(1)",
+     "max": 4,
+     "own": true
+    },
+    {
+     "name": "time",
+     "kind": "text",
+     "selector": ".mt span:nth-child(2)",
+     "max": 10,
+     "own": true
+    },
+    {
+     "name": "price",
+     "kind": "text",
+     "selector": ".ft b",
+     "max": 10
+    }
+   ],
    "rules": {
     "role": "cards",
     "position": "body",
@@ -1051,7 +1204,7 @@
    },
    "guide": {
     "when_to_use": "Plato con foto, valoración, tiempo y precio.",
-    "avoid_when": "Cualquier app que no venda comida."
+    "avoid_when": "Cualquier app que no venda comida. Trae una imagen incluida: no se cambia su texto por sector para no contradecirla."
    }
   },
   {
@@ -1109,7 +1262,35 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "name",
+     "kind": "text",
+     "selector": ".m b",
+     "max": 22
+    },
+    {
+     "name": "badge",
+     "kind": "text",
+     "selector": ".m small",
+     "max": 24
+    },
+    {
+     "name": "quote",
+     "kind": "text",
+     "selector": "p",
+     "max": 100,
+     "required": true
+    },
+    {
+     "name": "date",
+     "kind": "text",
+     "selector": ".dt",
+     "max": 22,
+     "own": true,
+     "parts": 2
+    }
+   ],
    "rules": {
     "role": "cards",
     "position": "body",
@@ -1207,7 +1388,23 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "primary",
+     "kind": "text",
+     "selector": ".w > .b:first-child",
+     "max": 22,
+     "own": true,
+     "required": true
+    },
+    {
+     "name": "secondary",
+     "kind": "text",
+     "selector": ".s",
+     "max": 14,
+     "own": true
+    }
+   ],
    "rules": {
     "role": "actions",
     "position": "body",
@@ -1246,7 +1443,16 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "label",
+     "kind": "text",
+     "selector": ".b",
+     "max": 22,
+     "own": true,
+     "required": true
+    }
+   ],
    "rules": {
     "role": "actions",
     "position": "body",
@@ -1285,7 +1491,21 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "cancel",
+     "kind": "text",
+     "selector": ".g:first-child",
+     "max": 14
+    },
+    {
+     "name": "save",
+     "kind": "text",
+     "selector": ".g.d",
+     "max": 14,
+     "own": true
+    }
+   ],
    "rules": {
     "role": "actions",
     "position": "body",
@@ -1466,7 +1686,15 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "labels",
+     "kind": "textlist",
+     "selector": ".nb span",
+     "max": 12,
+     "count": 4
+    }
+   ],
    "rules": {
     "role": "nav",
     "position": "bottom",
@@ -1658,7 +1886,15 @@
     },
     "kind": "app"
    },
-   "slots": [],
+   "slots": [
+    {
+     "name": "labels",
+     "kind": "textlist",
+     "selector": ".nb span",
+     "max": 12,
+     "count": 4
+    }
+   ],
    "rules": {
     "role": "nav",
     "position": "bottom",
