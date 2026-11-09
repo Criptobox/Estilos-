@@ -15,6 +15,6 @@ Antes casi todos los sectores compartían la misma tarjeta («Producto con aire�
 
 - Entran en la biblioteca (buscador, filtros, ficha, favoritos), admiten el editor de «Diseño de tarjeta» y las paletas, y cambian de ilustración por copia igual que «Producto con aire».
 - Las **8 plantillas** usan ahora la tarjeta de su sector (cafetería mezcla productos y platos; finanzas, saldo y cuatro movimientos). **Explorar** y **Guardados** usan la tarjeta «de lista» (la última elegida).
-- Arreglos de contenido: el saldo ya no sale como «$2,480.00.00» (precios con miles); «20 min» y similares varían por copia; el texto de las paletas no se pinta sobre fondos oscuros de etiquetas.
+- Arreglos de contenido: el saldo ya no sale como «$2,480.00.00» (precios con miles); «20 min» y similares varían por copia; con una paleta, el texto propio solo se aplica a tarjetas de color o de diseño oscuro (así las etiquetas oscuras y el saldo siguen legibles).
 - Inventario de la biblioteca: 138 → **146 registros** (`design-library/catalog.json`, regenerado).
 - Pruebas: `tests/tinta-tarjetas.cjs` (nueva) y contadores actualizados en las que cuentan diseños.

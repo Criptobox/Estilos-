@@ -36,6 +36,11 @@ ok(TT.LIST.every((t, i) => used[i].length >= 1 || t.id === 'tpl-x') && new Set(f
   // Exportación
   await pg.click('#composeButton'); const dl = pg.waitForEvent('download'); await pg.click('[data-act=export]'); const file = path.join(require('node:os').tmpdir(), 'tj-' + Date.now() + '.html'); await (await dl).saveAs(file); const html = fs.readFileSync(file, 'utf8'); fs.unlinkSync(file);
   ok((html.match(/class="shop[ "]/g) || []).length >= 4 && !/<script>[^<]*onerror/.test(html), 'la exportación incluye las 4 tarjetas de tienda');
+  // Una tarjeta oscura (saldo) con paleta: el texto debe leerse sobre la superficie clara
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-finanzas] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.click('.palette-card[data-id=grafito] [data-act=use-palette]'); await pg.goto('http://127.0.0.1:8080/index.html#pantalla'); await pg.waitForSelector('#phoneContent .component-host');
+  const bal = await pg.evaluate(() => { const h = [...document.querySelectorAll('#phoneContent .component-host')].find(x => x.shadowRoot.querySelector('.f,.balance,article') && /\$/.test(x.shadowRoot.textContent) && x.shadowRoot.querySelector('article:not(.txn)')); const t = [...h.shadowRoot.querySelectorAll('*')].filter(e => e.children.length === 0 && /\d/.test(e.textContent) && e.textContent.trim().length > 2).slice(0, 4); const bgc = getComputedStyle(h.shadowRoot.querySelector('article')).backgroundColor; return { fg: t.map(e => getComputedStyle(e).color), bg: bgc }; });
+  ok(bal.fg.length > 0 && bal.fg.every(c => ratio(c, bal.bg) >= 3), 'saldo con paleta: las cifras se leen sobre la superficie (contraste ≥ 3)');
   const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques'); await m.waitForSelector('.gallery-item'); ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
   ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de tarjetas nuevas correctas.`);
 })().catch(e => { console.error(e.message); process.exit(1); });
