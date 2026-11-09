@@ -25,35 +25,38 @@
     const aff = (b, sector) => sector && b.affinity[sector] !== undefined ? b.affinity[sector] : mean(Object.values(b.affinity));
 
     // Reglas de diseño. Cada una devuelve puntos (negativos = penalización) y avisos.
+    // Cada aviso lleva `ids`: los bloques implicados, para poder señalarlos en la pantalla.
+    const nm = b => '«' + (b.name || b.id) + '»';
+    const list = bs => bs.map(nm).join(', ');
     function review(ids, sector) {
       const blocks = ids.map(id => BY_ID.get(id)).filter(Boolean);
       const issues = [];
       let penalty = 0;
-      const warn = (rule, text, pts) => { issues.push({ level: 'aviso', rule, text }); penalty += pts; };
+      const warn = (rule, text, pts, ofBlocks) => { issues.push({ level: 'aviso', rule, text, ids: (ofBlocks || []).map(b => b.id) }); penalty += pts; };
       const has = r => blocks.some(b => b.role === r);
-      if (!has('header')) issues.push({ level: 'info', rule: 'falta-encabezado', text: 'Falta un encabezado: la pantalla no dice dónde estás.' });
-      if (!has('nav')) issues.push({ level: 'info', rule: 'falta-navegacion', text: 'Falta la barra de navegación.' });
-      if (!blocks.some(b => b.role === 'actions' && !b.requires_any.length)) warn('sin-accion-principal', 'No hay una acción principal clara.', 4);
+      if (!has('header')) issues.push({ level: 'info', rule: 'falta-encabezado', text: 'Falta un encabezado: la pantalla no dice dónde estás.', ids: [] });
+      if (!has('nav')) issues.push({ level: 'info', rule: 'falta-navegacion', text: 'Falta la barra de navegación.', ids: [] });
+      if (!blocks.some(b => b.role === 'actions' && !b.requires_any.length)) warn('sin-accion-principal', 'No hay una acción principal clara: añade un botón que diga qué hacer.', 4, blocks.filter(b => b.role === 'actions'));
       const present = new Set(ids);
       for (const b of blocks) {
-        for (const c of b.conflicts_with) if (present.has(c) && b.id < c) warn('conflicto', `«${b.id}» y «${c}» compiten entre sí: elige solo uno.`, 5);
-        if (b.requires_any.length && !b.requires_any.some(r => present.has(r))) warn('requiere', `«${b.id}» necesita una acción principal a su lado.`, 3);
-        if (sector && aff(b, sector) === 0) warn('no-encaja', `«${b.id}» no suele encajar con ${SECTOR_NAMES[sector]}.`, 2);
+        for (const c of b.conflicts_with) if (present.has(c) && b.id < c) warn('conflicto', `${nm(b)} y ${nm(BY_ID.get(c))} compiten entre sí: elige solo uno.`, 5, [b, BY_ID.get(c)]);
+        if (b.requires_any.length && !b.requires_any.some(r => present.has(r))) warn('requiere', `${nm(b)} necesita una acción principal a su lado.`, 3, [b]);
+        if (sector && aff(b, sector) === 0) warn('no-encaja', `${nm(b)} no suele encajar con ${SECTOR_NAMES[sector]}.`, 2, [b]);
       }
-      const strong = blocks.filter(b => b.weight === 'fuerte').length;
-      if (strong > 1) warn('peso', 'Hay dos bloques muy pesados. Deja que solo uno mande y que el resto respire.', 3 * (strong - 1));
+      const strongBlocks = blocks.filter(b => b.weight === 'fuerte');
+      if (strongBlocks.length > 1) warn('peso', `Hay ${strongBlocks.length} bloques muy pesados (${list(strongBlocks)}). Deja que solo uno mande y que el resto respire.`, 3 * (strongBlocks.length - 1), strongBlocks);
       const hues = [...new Set(blocks.map(b => b.accent).filter(a => CHROMA.includes(a)))];
-      if (new Set(hues.map(h => TEMP[h])).size > 1) warn('mezcla-de-colores', `Mezcla ${hues.join(' y ')}: acentos cálidos y fríos juntos se pelean. Usa una sola gama por pantalla.`, 4);
+      if (new Set(hues.map(h => TEMP[h])).size > 1) warn('mezcla-de-colores', `Mezcla ${hues.join(' y ')}: acentos cálidos y fríos juntos se pelean. Usa una sola gama por pantalla.`, 4, blocks.filter(b => CHROMA.includes(b.accent)));
       // Un tema de un solo color es buen diseño; lo que cansa es el color repetido en piezas pesadas.
       for (const h of hues) {
         const withHue = blocks.filter(b => b.accent === h);
-        if (withHue.length >= 3 && withHue.some(b => b.weight === 'fuerte')) warn('acento', `El ${h} aparece en ${withHue.length} bloques y uno de ellos es muy pesado: el color manda demasiado.`, 2);
+        if (withHue.length >= 3 && withHue.some(b => b.weight === 'fuerte')) warn('acento', `El ${h} aparece en ${withHue.length} bloques y uno de ellos es muy pesado: el color manda demasiado.`, 2, withHue);
       }
-      if (new Set(blocks.map(b => b.kind)).size > 1) warn('mezcla-de-tipos', 'Mezcla piezas de app y de página web: una pantalla es de uno u otro tipo.', 5);
-      if (new Set(blocks.map(b => b.family)).size > 1) warn('mezcla-de-estilos', 'Mezcla bloques de Tinta y de la biblioteca original: se ven como dos apps distintas.', 3);
-      const cards = blocks.filter(b => b.role === 'cards').length;
+      if (new Set(blocks.map(b => b.kind)).size > 1) warn('mezcla-de-tipos', 'Mezcla piezas de app y de página web: una pantalla es de uno u otro tipo.', 5, blocks);
+      if (new Set(blocks.map(b => b.family)).size > 1) warn('mezcla-de-estilos', 'Mezcla bloques de Tinta y de la biblioteca original: se ven como dos apps distintas.', 3, blocks);
+      const cardBlocks = blocks.filter(b => b.role === 'cards');
       const maxCards = blocks.some(b => b.kind === 'web') ? 3 : 2; // una página admite más secciones que una pantalla de app
-      if (cards > maxCards) warn('tarjetas', `Más de ${maxCards} tarjetas alargan la pantalla sin aportar jerarquía.`, 2 * (cards - maxCards));
+      if (cardBlocks.length > maxCards) warn('tarjetas', `Hay ${cardBlocks.length} tarjetas: más de ${maxCards} alargan la pantalla sin aportar jerarquía.`, 2 * (cardBlocks.length - maxCards), cardBlocks);
       return { issues, penalty };
     }
 
@@ -175,10 +178,12 @@
     }
 
     function lint(ids, sectorId) { return review(ids, sectorId || null).issues; }
+    // Cuántos de los bloques tienen ficha de diseño (y por tanto se pueden revisar).
+    const reviewable = ids => ids.filter(id => BY_ID.has(id)).length;
     // Copia del sector para un bloque ({hueco: valor}) y sus huecos; null si no hay copia.
     const copyFor = (sector, id) => (sector && data.copy && data.copy[sector] && data.copy[sector][id]) || null;
     const slotsOf = id => (BY_ID.get(id) ? BY_ID.get(id).slots : []);
-    return { compose, lint, sectorOf, copyFor, slotsOf, blockIds: () => data.blocks.map(b => b.id) };
+    return { compose, lint, reviewable, sectorOf, copyFor, slotsOf, blockIds: () => data.blocks.map(b => b.id) };
   }
 
   const api = { create, kindOf, ROLE_ORDER };

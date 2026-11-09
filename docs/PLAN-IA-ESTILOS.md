@@ -2,7 +2,7 @@
 
 Tinta tiene que crear buenos diseños **sin IA**. Reglas, datos y puntuación hacen el trabajo, de forma local, rápida y repetible. Una IA puede sumarse después como un proponente más, opcional, que pasa por las mismas reglas.
 
-> Estado: **versión 12.16.** El motor local compone tres propuestas por idea, para apps y para páginas web, con piezas de Tinta y de la biblioteca original, y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
+> Estado: **versión 12.17.** El motor local compone tres propuestas por idea, para apps y para páginas web, con piezas de Tinta y de la biblioteca original, y está conectado a Tinta. La IA no se ha empezado y no es requisito de nada de lo que ya funciona.
 
 ## 0. Principios
 
@@ -151,7 +151,8 @@ Se mantiene el recorrido **Idea → Bloques → Pantalla**. Ya hecho: «Ayúdame
 
 Siguiente:
 - Mostrar el «por qué» de cada bloque de la propuesta.
-- Mostrar los avisos de `lint` en la revisión, con un botón para arreglar el más importante.
+- Hecho (12.17): los avisos de `lint` se muestran en la revisión con los nombres de los bloques implicados. Falta un botón que arregle el más importante.
+- Los bloques con ficha de diseño son 51 de 152; el resto no se revisa y el panel lo indica.
 - Elegir una propuesta entre tres tarjetas con vista previa, en lugar de cambiarla en sitio.
 - Textos en español sin jerga: «pantalla» y «bloque», no «spec» ni «slot».
 
@@ -183,7 +184,7 @@ CI (`tests.yml`) verifica los datos de composición generados, valida los metada
 | 0 · Cimientos | Contratos, validador, briefs, skills, plantillas | El esquema valida bloques y pantallas de ejemplo | Hecho |
 | 1 · Motor | Metadatos de composición, `TintaComposer`, tres propuestas, «Otra propuesta» | Propuestas distintas y sin avisos para 10 ideas | **Hecho en 12.9** |
 | 2 · Más material | Secciones web (**hecho en 12.11**), copia por sector para páginas (**hecho en 12.12**), copia para apps (**hecho en 12.14**), huecos y copia de la biblioteca original (**hecho en 12.15**), varias pantallas por idea | Una app de 3 pantallas y una web completa a partir de una idea | En curso |
-| 3 · Calidad medible | 40 briefs (**hecho**), métricas y línea base (**hecho en 12.16**), capturas de regresión, `lint` visible en la revisión | Tabla de métricas en cada PR | En curso |
+| 3 · Calidad medible | 40 briefs (**hecho**), métricas y línea base (**hecho en 12.16**), `lint` visible en la revisión (**hecho en 12.17**), capturas de regresión | Tabla de métricas en cada PR | En curso |
 | 4 · Más salidas | Tailwind, Compose, Flutter desde la misma pantalla | Cada stack exportado compila en CI | |
 | 5 · IA opcional | MCP, proponente con modelo, banco con juez | Gana al motor en comparación a ciegas | |
 
