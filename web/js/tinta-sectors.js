@@ -43,7 +43,7 @@
     SECTORS.forEach(s => { const n = s.words.filter(w => t.includes(w.length > 3 || w.endsWith(' ') ? w : ' ' + w + ' ')).length; if (n > score) { score = n; best = s; } });
     return best ? { id: best.id, name: best.name } : null;
   }
-  const isNumeric = v => /^[\s$€£+\-−%.,\d]*\d[\s$€£+\-−%.,\dkKmMhHlL]*$/.test(v) || /^\d+[\d.,]*\s?[a-zA-Z%]{1,6}$/.test(v);
+  const isNumeric = v => /^[\s$€£+\-−%.,:\d]*\d[\s$€£+\-−%.,:\dkKmMhHlL]*$/.test(v) || /^\d+[\d.,]*\s?[a-zA-Z%]{1,6}$/.test(v);
   /* fields: [{label, value}] → array de textos (misma longitud). Un campo se mantiene
      igual (null → conserva el original) si es un icono/símbolo, un número de 1-2 cifras
      (insignias, pasos) o una etiqueta de navegación corta. */
@@ -60,7 +60,7 @@
       const f = fields[i], v = String(f.value || '').trim(), next = fields[i + 1] ? String(fields[i + 1].value || '').trim() : '';
       if (out.length > i) continue;                                  /* ya resuelto como cola de un precio */
       /* Precio partido en dos textos («$4» + «.50»): se rellena como un solo precio. */
-      if (/^[$€£]?\d+$/.test(v) && /^[.,]\d{1,2}$/.test(next)) {
+      if (/^[$€£]?\d[\d,]*$/.test(v) && /^[.,]\d{1,2}$/.test(next)) {
         const pr = s.pair[(Math.floor(o / 2) + (c.pc = (c.pc || 0) + 1) - 1) % s.pair.length]; out[i] = pr[0]; out[i + 1] = pr[1]; continue;   /* una copia → siguiente precio */
       }
       if (!v || v.length <= 2 || /^[^\p{L}\p{N}]+$/u.test(v)) { out[i] = null; continue; }
