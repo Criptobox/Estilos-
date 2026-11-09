@@ -195,3 +195,6 @@ select:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .card-presets button[aria-pressed=true]{border-color:#242421;box-shadow:0 0 0 1px #242421}
 :root[data-theme=dark] .card-presets button{background:#252a22;border-color:#424a3a;color:#e6e8de}
 :root[data-theme=dark] .card-presets button[aria-pressed=true]{border-color:#edeee7;box-shadow:0 0 0 1px #edeee7}
+/* Pantallas de recorrido: casillas en forma de pastilla */
+.flow-picks{margin:10px 0 0;padding:12px 14px;border:1px solid #deddd6;border-radius:18px;background:#faf9f6}.flow-picks legend{font-size:12px;font-weight:700;padding:0 6px;color:#36352f}.flow-list{display:flex;flex-wrap:wrap;gap:6px}.flow-pick{display:inline-flex;align-items:center;gap:6px;border:1px solid #d6d3c9;border-radius:999px;padding:6px 11px;font-size:12px;cursor:pointer;background:#fff;color:#36352f}.flow-pick input{accent-color:#ff704b;margin:0}.flow-pick:has(input:checked){border-color:#ff704b;background:#fff1eb}
+:root[data-theme=dark] .flow-picks{background:#23221f;border-color:#3a3934}:root[data-theme=dark] .flow-picks legend{color:#e9e6dd}:root[data-theme=dark] .flow-pick{background:#2c2b27;border-color:#45433d;color:#e9e6dd}:root[data-theme=dark] .flow-pick:has(input:checked){background:#3a2a22;border-color:#ff8a61}

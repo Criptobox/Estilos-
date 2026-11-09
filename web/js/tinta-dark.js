@@ -55,7 +55,7 @@
   const firstColor = v => { const m = /#[0-9a-f]{6}\b/i.exec(v); return m ? rgbOf(m[0]) : null; };
   const BG = /^(background|background-color|background-image)$/, LINE = /^(border|border-[a-z-]+|outline|outline-color|box-shadow|text-decoration-color|caret-color)$/, TEXT = /^(color|fill|stroke|-webkit-text-fill-color)$/;
   function rule(selector, body, P) {
-    const isButton = /button|\.btn|\bcta\b|\.add\b|\.buy\b/i.test(selector);
+    const isButton = /button|\.btn|\bcta\b|\.add\b|\.buy\b|\.go\b|\.send\b/i.test(selector);
     const decls = body.split(';'); let ruleBg = null;
     const out = decls.map(d => {
       const i = d.indexOf(':'); if (i < 0) return d;

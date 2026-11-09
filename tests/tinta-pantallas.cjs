@@ -18,7 +18,7 @@ ok(S.plan({ headerId: null, cardId: null, actionId: null }).explorar.length === 
   await pg.click('.palette-card[data-id=cafe] [data-act=use-palette]'); await pg.click('.motion-card[data-id=fade-up] [data-act=use-motion]');
   await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   ok((await draft()).multi === true && await pg.locator('#multiToggle').isChecked(), 'una plantilla activa «todas las pantallas»');
-  ok(JSON.stringify(await tabs()) === '["Inicio","Explorar","Guardados","Perfil"]', 'la vista previa ofrece las 4 pantallas de la barra');
+  ok(JSON.stringify((await tabs()).slice(0, 4)) === '["Inicio","Explorar","Guardados","Perfil"]', 'la vista previa ofrece las 4 pantallas de la barra');
   const t0 = await title(); ok(/pausa|rico|café/i.test(t0) && !/Algo bueno/.test(t0), 'Inicio: titular de la idea, no el genérico');
   const inicioCards = await pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.textContent.replace(/\s+/g, ' ')).join('|'));
   ok(!/Seleccionar producto/.test(inicioCards), 'sin el «Seleccionar producto» de demostración');
@@ -35,11 +35,12 @@ ok(S.plan({ headerId: null, cardId: null, actionId: null }).explorar.length === 
   ok(await pg.evaluate(() => { const bs = document.querySelector('#phoneNav .component-host').shadowRoot.querySelectorAll('button'); return bs[1].classList.contains('on') && !bs[0].classList.contains('on'); }), 'la barra marca la pestaña activa');
   // Exportación
   await pg.click('#composeButton'); const dl = pg.waitForEvent('download'); await pg.click('[data-act=export]'); const file = path.join(os.tmpdir(), 'app-' + Date.now() + '.html'); await (await dl).saveAs(file);
-  const html = fs.readFileSync(file, 'utf8'); ok((html.match(/data-screen="/g) || []).length === 4 && html.includes('<script>(function(){var map=["inicio","explorar","guardados","perfil"]') && html.includes('.content[hidden]'), 'la exportación trae las 4 pantallas y el script de navegación');
+  const html = fs.readFileSync(file, 'utf8'); ok(['inicio','explorar','guardados','perfil'].every(v => html.includes('data-screen="' + v + '"')) && html.includes('<script>(function(){var map=["inicio","explorar","guardados","perfil"]') && html.includes('.content[hidden]'), 'la exportación trae las 4 pantallas de la barra y el script de navegación');
   ok(html.includes('background:#f4ece1') && html.includes('data-m-entrance="fade-up"'), 'conserva la paleta y la animación en todas las pantallas');
   const ex = await b.newPage({ viewport: { width: 390, height: 844 } }); await ex.goto('file://' + file); await ex.waitForTimeout(500);
   const visible = () => ex.evaluate(() => [...document.querySelectorAll('[data-screen]')].filter(s => !s.hidden).map(s => s.dataset.screen).join());
-  ok(await visible() === 'inicio', 'la página exportada abre en Inicio');
+  ok(await visible() === 'bienvenida', 'la página exportada abre en la Bienvenida');
+  await ex.evaluate(() => document.querySelector('[data-screen=bienvenida] estilos-block').shadowRoot.querySelector('[data-go=acceso]').click()); await ex.evaluate(() => document.querySelector('[data-screen=acceso] estilos-block').shadowRoot.querySelector('.go').click()); ok(await visible() === 'inicio', 'Empezar → Entrar llega a Inicio');
   for (const [i, v] of [[2, 'guardados'], [3, 'perfil'], [1, 'explorar'], [0, 'inicio']]) { await ex.evaluate(i => document.querySelector('nav.dock estilos-block').shadowRoot.querySelectorAll('button')[i].click(), i); ok(await visible() === v, `exportada: la barra abre ${v}`); }
   ok(await ex.evaluate(() => { const b = document.querySelector('nav.dock estilos-block').shadowRoot.querySelectorAll('button'); return b[0].classList.contains('on') && !b[3].classList.contains('on'); }), 'exportada: la pestaña activa se actualiza');
   ok(await ex.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'exportada: sin desbordamiento en móvil'); fs.unlinkSync(file);
@@ -47,7 +48,7 @@ ok(S.plan({ headerId: null, cardId: null, actionId: null }).explorar.length === 
   await pg.click('#multiToggle'); ok((await draft()).multi === false && (await tabs()).length === 0, 'desactivar deja solo la pantalla de inicio (sin pestañas)');
   await pg.click('#composeButton'); const dl2 = pg.waitForEvent('download'); await pg.click('[data-act=export]'); const f2 = path.join(os.tmpdir(), 'app1-' + Date.now() + '.html'); await (await dl2).saveAs(f2); const h2 = fs.readFileSync(f2, 'utf8'); fs.unlinkSync(f2);
   ok(!h2.includes('data-screen=') && !h2.includes('var map='), 'con una sola pantalla la exportación no lleva script de navegación');
-  await pg.keyboard.press('Control+z'); ok((await draft()).multi === true && (await tabs()).length === 4, 'Ctrl+Z vuelve a activar todas las pantallas');
+  await pg.keyboard.press('Control+z'); ok((await draft()).multi === true && (await tabs()).length >= 4, 'Ctrl+Z vuelve a activar todas las pantallas');
   await pg.click('#screenTabs [data-id=perfil]'); await pg.click('[data-act=share-link]'); const link = await pg.inputValue('#shareLink'); const senderMulti = (await draft()).multi;
   const rx = await ctx.newPage(); await rx.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.clear(); } }); await rx.goto(link); await rx.waitForSelector('#projectsDialog[open]'); await rx.waitForTimeout(300);
   ok(senderMulti === true && await rx.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-projects-v1'))[0].draft.multi) === true, 'el enlace compartido conserva «todas las pantallas»');
@@ -58,7 +59,7 @@ ok(S.plan({ headerId: null, cardId: null, actionId: null }).explorar.length === 
   // Otras barras: de 5 botones con acción central, y solo iconos.
   for (const [navId, expectTabs] of [['n-float', 4], ['n-dark', 4]]) {
     const ctx2 = await b.newContext({ viewport: { width: 1280, height: 1000 } }), q = await ctx2.newPage(); await q.addInitScript(d => localStorage.setItem('estilos-tinta-prototype-v1', d), JSON.stringify({ brief: 'Una app para mi cafetería', selected: ['h-search', 'c-coffee', 'a-coral', navId], choices: { header: 'h-search', nav: navId }, content: {}, repeat: {}, motion: {}, palette: null, multi: true, assets: {}, ui: {}, buttonStyles: {}, cardStyles: {} }));
-    await q.goto('http://127.0.0.1:8080/index.html#pantalla'); await q.waitForSelector('#screenTabs button'); ok((await q.locator('#screenTabs button').count()) === expectTabs, `barra ${navId}: ${expectTabs} pantallas`);
+    await q.goto('http://127.0.0.1:8080/index.html#pantalla'); await q.waitForSelector('#screenTabs button'); ok((await q.locator('#screenTabs button:not([data-id=bienvenida]):not([data-id=acceso]):not([data-id=detalle]):not([data-id=carrito]):not([data-id=listo]):not([data-id=ajustes]):not([data-id=chat])').count()) === expectTabs, `barra ${navId}: ${expectTabs} pantallas de barra`);
     if (navId === 'n-float') { const before = await q.evaluate(() => document.querySelector('#phoneContent .component-host').shadowRoot.querySelector('h1').textContent); await q.evaluate(() => document.querySelector('#phoneNav .component-host').shadowRoot.querySelector('button.add').click()); ok(await q.evaluate(() => document.querySelector('#phoneContent .component-host').shadowRoot.querySelector('h1').textContent) === before, 'el botón central de acción no cambia de pantalla'); }
     await ctx2.close();
   }

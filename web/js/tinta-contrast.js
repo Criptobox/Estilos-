@@ -39,7 +39,7 @@
     if (cache.has(key)) return cache.get(key);
     const bgScreen = hexToRgb(/^#[0-9a-f]{6}$/i.test(screen) ? screen : '#ffffff');
     const host = document.createElement('div'); host.style.cssText = 'position:fixed;left:-10000px;top:0;width:360px;visibility:hidden;pointer-events:none';
-    const sr = host.attachShadow({ mode: 'open' }); sr.innerHTML = '<style>' + base + (block.base || '') + block.css + '</style>' + block.html; document.body.appendChild(host);
+    const sr = host.attachShadow({ mode: 'open' }); sr.innerHTML = '<style>' + base + (block.base || '') + block.css + '*,*::before,*::after{animation:none!important;transition:none!important}</style>' + block.html; document.body.appendChild(host);
     const tpl = document.createElement('template'); tpl.innerHTML = block.html;
     const live = [...sr.querySelectorAll('*')].slice(1), src = [...tpl.content.querySelectorAll('*')], rules = [], marked = new Set();
     /* En las barras, los botones cambian de «activo» al navegar: se mide cada texto en los dos estados. */

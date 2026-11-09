@@ -16,7 +16,7 @@ const CHECK = (sel) => { const L = c => { const [r, g, b] = c.slice(0, 3).map(v 
   const bgOf = e => { for (let x = e; x && x.nodeType === 1; x = up(x)) { const c = getComputedStyle(x); if (c.backgroundImage !== 'none') { const m = c.backgroundImage.match(/rgba?\([^)]*\)/g); if (m) { const v = m.map(rgb).filter(v => v.length < 4 || v[3] > .5); if (v.length) return v; } } const v = rgb(c.backgroundColor); if (v && (v.length < 4 || v[3] > .5)) return [v]; } return [[255, 255, 255]]; };
   const bad = []; document.querySelectorAll(sel || '#phoneContent .component-host, #phoneNav .component-host').forEach(h => { const w = document.createTreeWalker(h.shadowRoot, NodeFilter.SHOW_TEXT); while (w.nextNode()) { const t = w.currentNode; if (!t.textContent.trim()) continue; const e = t.parentElement; if (e.closest('svg,style') || !e.getClientRects().length) continue; const c = getComputedStyle(e); let op = 1; for (let x = e; x && x.nodeType === 1 && !(x.classList && x.classList.contains('component-host')); x = up(x)) op *= +getComputedStyle(x).opacity; const fg = rgb(c.color), a = (fg[3] ?? 1) * op, size = parseFloat(c.fontSize), need = (size >= 18.66 || (size >= 14 && +c.fontWeight >= 700)) ? 3 : 4.5; for (const bg of bgOf(e)) { const r = CR(fg.slice(0, 3).map((v, i) => v * a + bg[i] * (1 - a)), bg); if (r < need) bad.push('"' + t.textContent.trim().slice(0, 16) + '" ' + r.toFixed(2)); } } }); return bad; };
 (async () => {
-  const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 1000 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
+  const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 1000 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message)); await pg.emulateMedia({ reducedMotion: 'reduce' });
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1') || '{}'));
   async function setup(tpl, pal) {
     await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card'); await pg.click(`.template-card[data-id=${tpl}] [data-act=use-template]`); await pg.waitForSelector('#review', { state: 'visible' });
@@ -27,8 +27,8 @@ const CHECK = (sel) => { const L = c => { const [r, g, b] = c.slice(0, 3).map(v 
   }
   for (const pal of [null, 'tinta', 'noche', 'neon', 'lujo']) {
     const bad = [];
-    for (const t of TT.LIST) { await setup(t.id, pal); for (const s of ['inicio', 'explorar', 'guardados', 'perfil']) { if (!await pg.$(`#screenTabs [data-id=${s}]`)) continue; await pg.click(`#screenTabs [data-id=${s}]`); await pg.waitForTimeout(80); (await pg.evaluate(CHECK)).forEach(x => bad.push(t.id + '/' + s + ' ' + x)); } }
-    ok(bad.length === 0, `${pal || 'sin paleta'}: todos los textos de las 8 plantillas × 4 pantallas llegan a AA · ${bad.slice(0, 4).join(' | ')}`);
+    for (const t of TT.LIST) { await setup(t.id, pal); for (const s of await pg.$$eval('#screenTabs button', bs => bs.map(x => x.dataset.id))) { await pg.click(`#screenTabs [data-id=${s}]`); await pg.waitForTimeout(80); (await pg.evaluate(CHECK)).forEach(x => bad.push(t.id + '/' + s + ' ' + x)); } }
+    ok(bad.length === 0, `${pal || 'sin paleta'}: todos los textos de las 8 plantillas × todas sus pantallas llegan a AA · ${bad.slice(0, 4).join(' | ')}`);
   }
   // Con paleta oscura: pantalla oscura, biblioteca sin oscurecer, exportación oscura y con las correcciones.
   await setup('tpl-cafeteria', 'noche');
@@ -39,7 +39,7 @@ const CHECK = (sel) => { const L = c => { const [r, g, b] = c.slice(0, 3).map(v 
   await pg.goto('http://127.0.0.1:8080/index.html#pantalla'); await pg.waitForSelector('#phoneContent .component-host');
   await pg.click('#composeButton'); const dl = pg.waitForEvent('download'); await pg.click('[data-act=export]'); const file = path.join(os.tmpdir(), 'osc-' + Date.now() + '.html'); await (await dl).saveAs(file); const html = fs.readFileSync(file, 'utf8');
   ok(/color-scheme:dark/.test(html) && /#0f1220/i.test(html), 'la exportación sale en modo noche');
-  const ex = await (await b.newPage({ viewport: { width: 390, height: 900 } })); await ex.goto('file://' + file); await ex.waitForTimeout(300);
+  const ex = await (await b.newPage({ viewport: { width: 390, height: 900 } })); await ex.emulateMedia({ reducedMotion: 'reduce' }); await ex.goto('file://' + file); await ex.waitForTimeout(300);
   const exBad = await ex.evaluate(CHECK, 'estilos-block');
   ok(await ex.evaluate(() => document.querySelectorAll('estilos-block').length > 3) && exBad.length === 0, 'en la exportación todos los textos llegan a AA · ' + exBad.slice(0, 3).join(' | '));
   ok(!errors.length, 'sin errores de página: ' + errors.join(' | '));
