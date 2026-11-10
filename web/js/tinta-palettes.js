@@ -22,6 +22,29 @@
     { id: 'arena', name: 'Arena', mood: 'Beige natural', bg: '#f2eee4', surface: '#fffdf8', accent: '#6b5b3a', accent2: '#cdb98a', ink: '#25201a', line: '#e1d9c6' },
     { id: 'pizarra', name: 'Pizarra', mood: 'Gris azulado', bg: '#e9edf1', surface: '#ffffff', accent: '#34495e', accent2: '#8da2b5', ink: '#131b23', line: '#d2dae2' },
     { id: 'lima', name: 'Lima', mood: 'Verde vivo', bg: '#f0f4df', surface: '#fdfef6', accent: '#4b6b12', accent2: '#b6d85f', ink: '#1a2406', line: '#dbe5b8' },
+    /* De tus referencias: Pixel (Iris, Nostalgia, Higo, Martín pescador), Bruma, Coral y marino y la tabla CMYK. */
+    { id: 'iris', name: 'Iris', mood: 'Violeta floral', bg: '#f5f0fd', surface: '#ffffff', accent: '#5a3a96', accent2: '#a68ad9', ink: '#2f1a5c', line: '#d8c6f4' },
+    { id: 'nostalgia', name: 'Nostalgia azul', mood: 'Azul hortensia', bg: '#eef5fb', surface: '#ffffff', accent: '#4f7091', accent2: '#9ebfd9', ink: '#1f3a58', line: '#d6e6f7' },
+    { id: 'higo', name: 'Higo', mood: 'Rosa y ciruela', bg: '#fbeff4', surface: '#ffffff', accent: '#8a3f6b', accent2: '#d49ab5', ink: '#4a1a38', line: '#f3d6e4' },
+    { id: 'martin-pescador', name: 'Martín pescador', mood: 'Turquesa profundo', bg: '#eaf8fb', surface: '#ffffff', accent: '#0d5b73', accent2: '#3fb7c9', ink: '#0a3340', line: '#c8f0f6' },
+    { id: 'bruma', name: 'Bruma', mood: 'Rosa y gris azulado', bg: '#f1f7f7', surface: '#ffffff', accent: '#5d6b6b', accent2: '#f7cbca', ink: '#1d2929', line: '#d5e5e5' },
+    { id: 'coral-marino', name: 'Coral y marino', mood: 'Coral, durazno y azul', bg: '#fff6f0', surface: '#ffffff', accent: '#326280', accent2: '#ebaca2', ink: '#212e53', line: '#f3d5c8' },
+    { id: 'royal-indigo', name: 'Índigo real', mood: 'Azules intensos', bg: '#eff0f9', surface: '#fbfbfd', accent: '#1b1f8f', accent2: '#7986cb', ink: '#1b1f8f', line: '#d9ddf1' },
+    { id: 'armonia-turquesa', name: 'Armonía turquesa', mood: 'Verdes azulados', bg: '#e9f6f5', surface: '#fafdfc', accent: '#00695c', accent2: '#4db6ac', ink: '#004f45', line: '#cdeae8' },
+    { id: 'coral-calido', name: 'Coral cálido', mood: 'Naranjas suaves', bg: '#fff6e9', surface: '#fffdfa', accent: '#e65100', accent2: '#ffcc80', ink: '#8a3100', line: '#ffebcd' },
+    { id: 'esmeralda', name: 'Esmeralda', mood: 'Verdes profundos', bg: '#e6f4e6', surface: '#f9fcf9', accent: '#004d40', accent2: '#66bb6a', ink: '#004d40', line: '#c4e4c6' },
+    { id: 'llama', name: 'Llama de atardecer', mood: 'Rojos y naranjas', bg: '#fff6e9', surface: '#fffdfa', accent: '#c4380f', accent2: '#ffb74d', ink: '#82280d', line: '#ffebcd' },
+    { id: 'menta-oceano', name: 'Menta océano', mood: 'Turquesas frescos', bg: '#e9f9fb', surface: '#fafefe', accent: '#00838f', accent2: '#4dd0e1', ink: '#004f56', line: '#cdf2f7' },
+    { id: 'flor-rosa', name: 'Flor rosa', mood: 'Rosas vivos', bg: '#fdecf2', surface: '#fffafc', accent: '#d81b60', accent2: '#f48fb1', ink: '#82103a', line: '#fad3e0' },
+    { id: 'ambar-dorado', name: 'Ámbar dorado', mood: 'Dorados luminosos', bg: '#fffce4', surface: '#fffef8', accent: '#b58700', accent2: '#ffd54f', ink: '#513d00', line: '#fff8bf' },
+    { id: 'violeta-ensueno', name: 'Ensueño violeta', mood: 'Violetas profundos', bg: '#f7edf8', surface: '#fdfafd', accent: '#6a1b9a', accent2: '#ce93d8', ink: '#6a1b9a', line: '#ecd5ef' },
+    { id: 'lima-fresca', name: 'Lima fresca', mood: 'Verdes lima', bg: '#f5f8d8', surface: '#fdfdf5', accent: '#827717', accent2: '#aed581', ink: '#4e470e', line: '#e8efa5' },
+    { id: 'moras', name: 'Moras', mood: 'Burdeos y rosas', bg: '#fdecf2', surface: '#fffafc', accent: '#880e4f', accent2: '#ec407a', ink: '#880e4f', line: '#fad3e0' },
+    { id: 'cielo-claro', name: 'Cielo claro', mood: 'Azules cielo', bg: '#f7fcff', surface: '#fdfeff', accent: '#01579b', accent2: '#81d4fa', ink: '#014174', line: '#ecf8fe' },
+    { id: 'terracota-suave', name: 'Terracota suave', mood: 'Arcillas y rosados', bg: '#fcfcfc', surface: '#fefefe', accent: '#bf360c', accent2: '#d7ccc8', ink: '#8f2809', line: '#f8f8f8' },
+    { id: 'pizarra-gris', name: 'Pizarra gris', mood: 'Gris azulado frío', bg: '#f2f4f5', surface: '#fcfcfd', accent: '#263238', accent2: '#90a4ae', ink: '#263238', line: '#e0e6e8' },
+    { id: 'violeta-intenso', name: 'Violeta intenso', mood: 'Índigos y lilas', bg: '#f2eef9', surface: '#fcfbfd', accent: '#4527a0', accent2: '#b39ddb', ink: '#4527a0', line: '#e1d9f1' },
+    { id: 'menta-aqua', name: 'Menta aqua', mood: 'Verdes agua', bg: '#e9f9fb', surface: '#fafefe', accent: '#009688', accent2: '#80deea', ink: '#005a52', line: '#cdf2f7' },
     /* Oscuras: el fondo, las tarjetas, cabeceras y barras pasan a modo noche (capa TintaDark). */
     { id: 'noche', name: 'Noche', mood: 'Oscura · medianoche y coral', dark: true, bg: '#0f1220', surface: '#1a1e33', accent: '#ff7a59', accent2: '#ffb08f', ink: '#f2f3f8', line: '#2c3150' },
     { id: 'neon', name: 'Neón', mood: 'Oscura · cian y magenta', dark: true, bg: '#0a0b1e', surface: '#15173a', accent: '#2ee6ff', accent2: '#ff4fd8', ink: '#eef1ff', line: '#2a2d5e' },
@@ -30,7 +53,9 @@
     { id: 'abismo', name: 'Abismo', mood: 'Oscura · azul y turquesa', dark: true, bg: '#06161d', surface: '#0e2530', accent: '#2dd4bf', accent2: '#38bdf8', ink: '#e6f6f7', line: '#1d3a46' },
     { id: 'brasa', name: 'Brasa', mood: 'Oscura · negro y fuego', dark: true, bg: '#160d0a', surface: '#241510', accent: '#ff7a1a', accent2: '#ffd23f', ink: '#fbefe7', line: '#3a241b' },
     { id: 'musgo', name: 'Musgo', mood: 'Oscura · verde nocturno', dark: true, bg: '#0c1610', surface: '#15241a', accent: '#4ade80', accent2: '#a3e635', ink: '#ecf7ef', line: '#24392a' },
-    { id: 'lujo', name: 'Lujo', mood: 'Oscura · negro y dorado', dark: true, bg: '#111111', surface: '#1c1c1c', accent: '#e0b354', accent2: '#f5d98b', ink: '#f5f1e8', line: '#2f2f2f' }
+    { id: 'lujo', name: 'Lujo', mood: 'Oscura · negro y dorado', dark: true, bg: '#111111', surface: '#1c1c1c', accent: '#e0b354', accent2: '#f5d98b', ink: '#f5f1e8', line: '#2f2f2f' },
+    { id: 'ted', name: 'Rojo escena', mood: 'Oscura · negro y rojo', dark: true, bg: '#0a0203', surface: '#3d0009', accent: '#d6001f', accent2: '#eb0028', ink: '#ffffff', line: '#660010' },
+    { id: 'olivo', name: 'Olivo', mood: 'Oscura · verde oliva y arena', dark: true, bg: '#17251f', surface: '#344b3a', accent: '#d6c99a', accent2: '#a6a078', ink: '#f1ebdd', line: '#65745a' }
   ];
   const HEX = /^#[0-9a-f]{6}$/i;
   const get = id => LIST.find(p => p.id === id) || null;

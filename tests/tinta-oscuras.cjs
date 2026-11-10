@@ -1,10 +1,10 @@
-/* Paletas oscuras y guardián de contraste: 8 paletas oscuras, cada texto de cada pantalla de cada plantilla
+/* Paletas oscuras y guardián de contraste: 10 paletas oscuras, cada texto de cada pantalla de cada plantilla
    llega a WCAG AA (claro, oscuro y sin paleta), la biblioteca no se oscurece y la exportación lleva lo mismo. */
 const { chromium } = require('playwright'); const assert = require('node:assert/strict'); const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
 let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
 const P = require('../web/js/tinta-palettes.js'), D = require('../web/js/tinta-dark.js'), TT = require('../web/js/tinta-templates.js');
 const dark = P.LIST.filter(p => p.dark);
-ok(dark.length === 8 && dark.every(p => D.isDark(p)) && P.LIST.filter(p => !p.dark).every(p => !D.isDark(p)), 'hay 8 paletas oscuras y las 16 claras no se tratan como oscuras');
+ok(dark.length === 10 && dark.every(p => D.isDark(p)) && P.LIST.filter(p => !p.dark).every(p => !D.isDark(p)), 'hay 10 paletas oscuras y las 38 claras no se tratan como oscuras');
 ok(dark.every(p => P.contrast(p.ink, p.surface) >= 7 && P.contrast(p.ink, p.bg) >= 7), 'en cada paleta oscura el texto principal contrasta ≥ 7:1 con fondo y superficie');
 const noche = { ...P.get('noche'), muted: D.muted(P.get('noche')) };
 const css = D.css('.a{background:linear-gradient(#fff,#f6f4ed);color:#242421;border:1px solid #e7e3d8}.b button{background:#242421;color:#fff}.c{background:#ff704b;color:#fff}', noche);

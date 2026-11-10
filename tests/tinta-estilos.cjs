@@ -1,4 +1,4 @@
-/* Más estilos: estilos de tarjeta de un toque, colores y formas de botón, y 24 paletas (16 claras y 8 oscuras). */
+/* Más estilos: estilos de tarjeta de un toque, colores y formas de botón, y 48 paletas (38 claras y 10 oscuras). */
 const { chromium } = require('playwright'); const assert = require('node:assert/strict'); const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
 const PR = require('../web/js/tinta-presets.js'), PA = require('../web/js/tinta-palettes.js'); let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -7,12 +7,12 @@ ok(PR.CARD_PRESETS.every(p => ['solid', 'gradient'].includes(p.v.format) && ['or
 ok(PR.CARD_PRESETS.filter(p => p.v.textMode === 'custom').every(p => PA.contrast(p.v.foreground, p.v.format === 'gradient' ? p.v.background : p.v.background) >= 4.5 && (p.v.format !== 'gradient' || PA.contrast(p.v.foreground, p.v.secondary) >= 4.5)), 'los estilos con texto propio tienen contraste suficiente con su fondo');
 ok(PR.CARD_PRESETS.filter(p => p.v.textMode === 'original').every(p => PA.contrast('#242421', p.v.background) >= 7), 'los estilos claros conservan texto oscuro legible (≥ 7:1)');
 ok(PR.BUTTON_COLORS.length === 13 && PR.BUTTON_COLORS.every(([, c]) => HEX.test(c) && PA.contrast(c, '#ffffff') >= 4.5), '13 colores de botón, todos con texto blanco ≥ 4.5:1');
-ok(PA.LIST.length === 24 && new Set(PA.LIST.map(p => p.id)).size === 24 && PA.LIST.every(PA.valid) && PA.LIST.every(p => PA.contrast(p.ink, p.surface) >= 7 && PA.contrast(p.ink, p.bg) >= 7 && PA.contrast(p.accent, PA.onAccent(p.accent)) >= 4.5), '24 paletas legibles (AAA en texto, AA en botón)');
+ok(PA.LIST.length === 48 && new Set(PA.LIST.map(p => p.id)).size === 48 && PA.LIST.every(PA.valid) && PA.LIST.every(p => PA.contrast(p.ink, p.surface) >= 7 && PA.contrast(p.ink, p.bg) >= 7 && PA.contrast(p.accent, PA.onAccent(p.accent)) >= 4.5), '48 paletas legibles (AAA en texto, AA en botón)');
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 1000 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
   await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card');
-  ok(await pg.locator('.palette-card').count() === 24, 'la biblioteca muestra las 24 paletas');
+  ok(await pg.locator('.palette-card').count() === 48, 'la biblioteca muestra las 48 paletas');
   await pg.click('.template-card[data-id=tpl-tienda] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   const cardId = await pg.evaluate(() => document.querySelector('[data-act=card-style]').dataset.id);
   await pg.click(`[data-act=card-style][data-id=${cardId}]`); await pg.waitForSelector('#cardStyleDialog[open]');
