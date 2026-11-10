@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 60`, `versionName 12.30`.
+- Android: `versionCode 61`, `versionName 12.31`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -293,6 +293,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.28**: tira de miniaturas reales de cada pantalla y galería móvil recogida (24 diseños + «Ver todos»). Ver `docs/CHANGELOG-12.28.md`.
 - **12.29**: 24 paletas nuevas de tus referencias (48 en total, 10 oscuras). Ver `docs/CHANGELOG-12.29.md`.
 - **12.30**: nuevo modo oscuro «carbón y menta» para la interfaz de Tinta. Ver `docs/CHANGELOG-12.30.md`.
+- **12.31**: editar bloques tocándolos en la vista previa, con barra flotante (texto, diseño, botón, animación, orden). Ver `docs/CHANGELOG-12.31.md`.
 - **12.21**: el nombre de tu app en la marca de las cabeceras. Ver `docs/CHANGELOG-12.21.md`.
 - **12.20**: accesibilidad WCAG 2.1 AA (contraste, nombres, tema oscuro) con prueba automática axe-core. Ver `docs/CHANGELOG-12.20.md`.
 - **12.19**: precios con formato propio por sector. Ver `docs/CHANGELOG-12.19.md`.
