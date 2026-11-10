@@ -20,18 +20,18 @@
 }
 :root[data-theme=dark]{
  color-scheme:dark;
- --bg:#191c18;--panel:#20241e;--panel-2:#272c24;--panel-3:#30362b;
- --txt:#edeee7;--txt-2:#c3c8b8;--mut:#afb5a5;--ink:#edeee7;--ink2:#c3c8b8;--mut2:#afb5a5;
- --acc:#edeee7;--acc-2:#ff906d;--acc-ink:#191c18;--acc-soft:rgba(255,144,109,.14);
- --brand:#ff906d;--brand-d:#ffa67d;--brand-ink:#ffa67d;
- --line:#3e4439;--line-2:#4d5546;--glass:#20241e;--glass-line:#3e4439;
- --card:#20241e;--glass-card:linear-gradient(140deg,#262b23,#20241e);--bd:#3e4439;
- --soft:#272c24;--surface:#272c24;--fld-bg:#272c24;--fld-line:#4d5546;
- --pick:#3a2e28;--pick-line:#5a4034;--pick-ink:#ffa67d;--nav-bg:#20241e;
- --grad:#edeee7;--bg-grad:#191c18;--hero-grad:#edeee7;
+ --bg:#19191b;--panel:#1f1f23;--panel-2:#26262a;--panel-3:#2e2e33;
+ --txt:#e9e9ec;--txt-2:#bcbcc4;--mut:#a8a8b2;--ink:#e9e9ec;--ink2:#bcbcc4;--mut2:#a8a8b2;
+ --acc:#e9e9ec;--acc-2:#95e08c;--acc-ink:#19191b;--acc-soft:rgba(255,144,109,.14);
+ --brand:#95e08c;--brand-d:#a1e498;--brand-ink:#a1e498;
+ --line:#3c3b42;--line-2:#4a4a51;--glass:#1f1f23;--glass-line:#3c3b42;
+ --card:#1f1f23;--glass-card:linear-gradient(140deg,#252529,#1f1f23);--bd:#3c3b42;
+ --soft:#26262a;--surface:#26262a;--fld-bg:#26262a;--fld-line:#4a4a51;
+ --pick:#2f2f33;--pick-line:#44434b;--pick-ink:#a1e498;--nav-bg:#1f1f23;
+ --grad:#e9e9ec;--bg-grad:#19191b;--hero-grad:#e9e9ec;
  --glass-depth:6px 9px 20px #00000030,-3px -3px 12px #ffffff03,inset 0 1px 1px #ffffff0c;
  --glass-soft:4px 6px 14px #00000026,inset 0 1px 1px #ffffff0a;
- --shadow:var(--glass-depth);--shadow-s:var(--glass-soft);--nav-shadow:var(--glass-depth);--sh-1:0 1px 2px #0006;--sh-2:0 8px 24px #00000059;--sh-3:0 24px 60px #00000080;
+ --shadow:var(--glass-depth);--shadow-s:var(--glass-soft);--nav-shadow:var(--glass-depth);--sh-1:0 1px 2px #00000066;--sh-2:0 8px 24px #00000059;--sh-3:0 24px 60px #00000080;
  --brand-glow:transparent;--grad-glow:none;--halo:none;--bg-grid:transparent;
 }
 body[data-app]{background:var(--bg);color:var(--txt);font-family:Jakarta,'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
