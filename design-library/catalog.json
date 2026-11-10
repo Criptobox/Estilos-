@@ -2956,10 +2956,10 @@
       "legacy_id": null,
       "name": "Bienvenida",
       "slug": "bienvenida",
-      "module": "cards",
-      "module_number": "02",
-      "module_name": "Tarjetas, paneles y contenedores",
-      "subcategory": "flow",
+      "module": "app-screens",
+      "module_number": "11",
+      "module_name": "Pantallas de aplicaciones",
+      "subcategory": "Recorrido",
       "type": "component",
       "description": "Ilustración, título, puntos de avance y empezar.",
       "family": "custom.f-bienvenida",
@@ -2968,7 +2968,8 @@
         "f-bienvenida"
       ],
       "tags": [
-        "cards",
+        "app-screens",
+        "Recorrido",
         "flow",
         "custom.f-bienvenida",
         "gradient",
@@ -3044,10 +3045,10 @@
       "legacy_id": null,
       "name": "Iniciar sesión",
       "slug": "iniciar-sesion",
-      "module": "cards",
-      "module_number": "02",
-      "module_name": "Tarjetas, paneles y contenedores",
-      "subcategory": "flow",
+      "module": "app-screens",
+      "module_number": "11",
+      "module_name": "Pantallas de aplicaciones",
+      "subcategory": "Recorrido",
       "type": "component",
       "description": "Correo, contraseña, entrar y acceso con Google o Apple.",
       "family": "custom.f-acceso",
@@ -3056,7 +3057,8 @@
         "f-acceso"
       ],
       "tags": [
-        "cards",
+        "app-screens",
+        "Recorrido",
         "flow",
         "custom.f-acceso",
         "gradient",
@@ -3132,10 +3134,10 @@
       "legacy_id": null,
       "name": "Detalle",
       "slug": "detalle",
-      "module": "cards",
-      "module_number": "02",
-      "module_name": "Tarjetas, paneles y contenedores",
-      "subcategory": "flow",
+      "module": "app-screens",
+      "module_number": "11",
+      "module_name": "Pantallas de aplicaciones",
+      "subcategory": "Recorrido",
       "type": "component",
       "description": "Imagen grande, etiqueta, descripción, cantidad y precio.",
       "family": "custom.f-detalle",
@@ -3144,7 +3146,8 @@
         "f-detalle"
       ],
       "tags": [
-        "cards",
+        "app-screens",
+        "Recorrido",
         "flow",
         "custom.f-detalle",
         "gradient",
@@ -3221,10 +3224,10 @@
       "legacy_id": null,
       "name": "Carrito",
       "slug": "carrito",
-      "module": "cards",
-      "module_number": "02",
-      "module_name": "Tarjetas, paneles y contenedores",
-      "subcategory": "flow",
+      "module": "app-screens",
+      "module_number": "11",
+      "module_name": "Pantallas de aplicaciones",
+      "subcategory": "Recorrido",
       "type": "component",
       "description": "Productos, subtotal, envío, total y pagar.",
       "family": "custom.f-carrito",
@@ -3233,7 +3236,8 @@
         "f-carrito"
       ],
       "tags": [
-        "cards",
+        "app-screens",
+        "Recorrido",
         "flow",
         "custom.f-carrito",
         "gradient",
@@ -3310,10 +3314,10 @@
       "legacy_id": null,
       "name": "Confirmación",
       "slug": "confirmacion",
-      "module": "cards",
-      "module_number": "02",
-      "module_name": "Tarjetas, paneles y contenedores",
-      "subcategory": "flow",
+      "module": "app-screens",
+      "module_number": "11",
+      "module_name": "Pantallas de aplicaciones",
+      "subcategory": "Recorrido",
       "type": "component",
       "description": "Check animado, mensaje y volver al inicio.",
       "family": "custom.f-listo",
@@ -3322,7 +3326,8 @@
         "f-listo"
       ],
       "tags": [
-        "cards",
+        "app-screens",
+        "Recorrido",
         "flow",
         "custom.f-listo",
         "gradient",
@@ -3398,10 +3403,10 @@
       "legacy_id": null,
       "name": "Ajustes",
       "slug": "ajustes",
-      "module": "cards",
-      "module_number": "02",
-      "module_name": "Tarjetas, paneles y contenedores",
-      "subcategory": "flow",
+      "module": "app-screens",
+      "module_number": "11",
+      "module_name": "Pantallas de aplicaciones",
+      "subcategory": "Recorrido",
       "type": "component",
       "description": "Cuenta, interruptores, idioma, asistente y cerrar sesión.",
       "family": "custom.f-ajustes",
@@ -3410,7 +3415,8 @@
         "f-ajustes"
       ],
       "tags": [
-        "cards",
+        "app-screens",
+        "Recorrido",
         "flow",
         "custom.f-ajustes",
         "gradient",
@@ -3486,10 +3492,10 @@
       "legacy_id": null,
       "name": "Chat con asistente",
       "slug": "chat-con-asistente",
-      "module": "cards",
-      "module_number": "02",
-      "module_name": "Tarjetas, paneles y contenedores",
-      "subcategory": "flow",
+      "module": "app-screens",
+      "module_number": "11",
+      "module_name": "Pantallas de aplicaciones",
+      "subcategory": "Recorrido",
       "type": "component",
       "description": "La mascota robot responde con sugerencias rápidas.",
       "family": "custom.f-chat",
@@ -3498,7 +3504,8 @@
         "f-chat"
       ],
       "tags": [
-        "cards",
+        "app-screens",
+        "Recorrido",
         "flow",
         "custom.f-chat",
         "gradient",
@@ -3568,6 +3575,1510 @@
         "renderer": "crear.js / colección Tinta"
       },
       "family_primary_id": "f-chat"
+    },
+    {
+      "id": "w-gauge",
+      "legacy_id": null,
+      "name": "Medidor de meta",
+      "slug": "medidor-de-meta",
+      "module": "data",
+      "module_number": "17",
+      "module_name": "Visualización de datos",
+      "subcategory": "Datos",
+      "type": "component",
+      "description": "Semicírculo con el avance del objetivo.",
+      "family": "custom.w-gauge",
+      "variant_id": "w-gauge",
+      "variants": [
+        "w-gauge"
+      ],
+      "tags": [
+        "data",
+        "Datos",
+        "custom.w-gauge",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e6f3e8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-gauge"
+    },
+    {
+      "id": "w-linea",
+      "legacy_id": null,
+      "name": "Gráfico de línea",
+      "slug": "grafico-de-linea",
+      "module": "data",
+      "module_number": "17",
+      "module_name": "Visualización de datos",
+      "subcategory": "Datos",
+      "type": "component",
+      "description": "Cifra principal, variación y curva de la semana.",
+      "family": "custom.w-linea",
+      "variant_id": "w-linea",
+      "variants": [
+        "w-linea"
+      ],
+      "tags": [
+        "data",
+        "Datos",
+        "custom.w-linea",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ffe7dd",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-linea"
+    },
+    {
+      "id": "w-donut",
+      "legacy_id": null,
+      "name": "Gráfico de anillo",
+      "slug": "grafico-de-anillo",
+      "module": "data",
+      "module_number": "17",
+      "module_name": "Visualización de datos",
+      "subcategory": "Datos",
+      "type": "component",
+      "description": "Reparto en tres categorías con su leyenda.",
+      "family": "custom.w-donut",
+      "variant_id": "w-donut",
+      "variants": [
+        "w-donut"
+      ],
+      "tags": [
+        "data",
+        "Datos",
+        "custom.w-donut",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e7e1f2",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-donut"
+    },
+    {
+      "id": "w-barras-h",
+      "legacy_id": null,
+      "name": "Ranking en barras",
+      "slug": "ranking-en-barras",
+      "module": "data",
+      "module_number": "17",
+      "module_name": "Visualización de datos",
+      "subcategory": "Datos",
+      "type": "component",
+      "description": "Cuatro barras horizontales ordenadas por valor.",
+      "family": "custom.w-barras-h",
+      "variant_id": "w-barras-h",
+      "variants": [
+        "w-barras-h"
+      ],
+      "tags": [
+        "data",
+        "Datos",
+        "custom.w-barras-h",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#dff1f4",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-barras-h"
+    },
+    {
+      "id": "w-tendencia",
+      "legacy_id": null,
+      "name": "Cifra con tendencia",
+      "slug": "cifra-con-tendencia",
+      "module": "data",
+      "module_number": "17",
+      "module_name": "Visualización de datos",
+      "subcategory": "Datos",
+      "type": "component",
+      "description": "Dato corto con porcentaje y minigráfico.",
+      "family": "custom.w-tendencia",
+      "variant_id": "w-tendencia",
+      "variants": [
+        "w-tendencia"
+      ],
+      "tags": [
+        "data",
+        "Datos",
+        "custom.w-tendencia",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#1f1f23",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-tendencia"
+    },
+    {
+      "id": "w-calendario",
+      "legacy_id": null,
+      "name": "Calendario del mes",
+      "slug": "calendario-del-mes",
+      "module": "indicators",
+      "module_number": "05",
+      "module_name": "Indicadores y estado",
+      "subcategory": "Widgets",
+      "type": "component",
+      "description": "Mes completo con el día elegido y días con eventos.",
+      "family": "custom.w-calendario",
+      "variant_id": "w-calendario",
+      "variants": [
+        "w-calendario"
+      ],
+      "tags": [
+        "indicators",
+        "Widgets",
+        "widgets",
+        "custom.w-calendario",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e3f0ea",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-calendario"
+    },
+    {
+      "id": "w-semana",
+      "legacy_id": null,
+      "name": "Días de la semana",
+      "slug": "dias-de-la-semana",
+      "module": "indicators",
+      "module_number": "05",
+      "module_name": "Indicadores y estado",
+      "subcategory": "Widgets",
+      "type": "component",
+      "description": "Fichas con el día y una cifra; una destacada.",
+      "family": "custom.w-semana",
+      "variant_id": "w-semana",
+      "variants": [
+        "w-semana"
+      ],
+      "tags": [
+        "indicators",
+        "Widgets",
+        "widgets",
+        "custom.w-semana",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#d9f2c9",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-semana"
+    },
+    {
+      "id": "w-pasos",
+      "legacy_id": null,
+      "name": "Seguimiento por pasos",
+      "slug": "seguimiento-por-pasos",
+      "module": "indicators",
+      "module_number": "05",
+      "module_name": "Indicadores y estado",
+      "subcategory": "Widgets",
+      "type": "component",
+      "description": "Línea de tiempo con pasos hechos y pendientes.",
+      "family": "custom.w-pasos",
+      "variant_id": "w-pasos",
+      "variants": [
+        "w-pasos"
+      ],
+      "tags": [
+        "indicators",
+        "Widgets",
+        "widgets",
+        "custom.w-pasos",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#dff3ea",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-pasos"
+    },
+    {
+      "id": "w-tareas",
+      "legacy_id": null,
+      "name": "Tareas por estado",
+      "slug": "tareas-por-estado",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Listas",
+      "type": "component",
+      "description": "Tres estados con su recuento y un icono de color.",
+      "family": "custom.w-tareas",
+      "variant_id": "w-tareas",
+      "variants": [
+        "w-tareas"
+      ],
+      "tags": [
+        "cards",
+        "Listas",
+        "list",
+        "custom.w-tareas",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e0e6f4",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-tareas"
+    },
+    {
+      "id": "w-etiquetas",
+      "legacy_id": null,
+      "name": "Etiquetas",
+      "slug": "etiquetas",
+      "module": "forms",
+      "module_number": "03",
+      "module_name": "Formularios y entradas",
+      "subcategory": "Entradas",
+      "type": "component",
+      "description": "Pastillas de categoría con una seleccionada.",
+      "family": "custom.w-etiquetas",
+      "variant_id": "w-etiquetas",
+      "variants": [
+        "w-etiquetas"
+      ],
+      "tags": [
+        "forms",
+        "Entradas",
+        "inputs",
+        "custom.w-etiquetas",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e7e1f2",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-etiquetas"
+    },
+    {
+      "id": "w-filtros",
+      "legacy_id": null,
+      "name": "Búsqueda con filtros",
+      "slug": "busqueda-con-filtros",
+      "module": "forms",
+      "module_number": "03",
+      "module_name": "Formularios y entradas",
+      "subcategory": "Entradas",
+      "type": "component",
+      "description": "Buscador, categorías, rango de precio y aplicar.",
+      "family": "custom.w-filtros",
+      "variant_id": "w-filtros",
+      "variants": [
+        "w-filtros"
+      ],
+      "tags": [
+        "forms",
+        "Entradas",
+        "inputs",
+        "custom.w-filtros",
+        "gradient",
+        "elevated",
+        "pricing",
+        "search"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ffe7dd",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-filtros"
+    },
+    {
+      "id": "w-contacto",
+      "legacy_id": null,
+      "name": "Formulario de contacto",
+      "slug": "formulario-de-contacto",
+      "module": "forms",
+      "module_number": "03",
+      "module_name": "Formularios y entradas",
+      "subcategory": "Formularios",
+      "type": "component",
+      "description": "Nombre, correo, mensaje y botón de enviar.",
+      "family": "custom.w-contacto",
+      "variant_id": "w-contacto",
+      "variants": [
+        "w-contacto"
+      ],
+      "tags": [
+        "forms",
+        "Formularios",
+        "custom.w-contacto",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e3f0ea",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [
+          "focus"
+        ],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-contacto"
+    },
+    {
+      "id": "w-pago",
+      "legacy_id": null,
+      "name": "Pago con tarjeta",
+      "slug": "pago-con-tarjeta",
+      "module": "forms",
+      "module_number": "03",
+      "module_name": "Formularios y entradas",
+      "subcategory": "Formularios",
+      "type": "component",
+      "description": "Tarjeta de vista previa, número, vencimiento y CVV.",
+      "family": "custom.w-pago",
+      "variant_id": "w-pago",
+      "variants": [
+        "w-pago"
+      ],
+      "tags": [
+        "forms",
+        "Formularios",
+        "custom.w-pago",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#d9e7f5",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [
+          "focus"
+        ],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-pago"
+    },
+    {
+      "id": "w-valoracion",
+      "legacy_id": null,
+      "name": "Valoración con estrellas",
+      "slug": "valoracion-con-estrellas",
+      "module": "forms",
+      "module_number": "03",
+      "module_name": "Formularios y entradas",
+      "subcategory": "Formularios",
+      "type": "component",
+      "description": "Cinco estrellas, comentario y enviar.",
+      "family": "custom.w-valoracion",
+      "variant_id": "w-valoracion",
+      "variants": [
+        "w-valoracion"
+      ],
+      "tags": [
+        "forms",
+        "Formularios",
+        "custom.w-valoracion",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#fff0c9",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-valoracion"
+    },
+    {
+      "id": "w-avisos",
+      "legacy_id": null,
+      "name": "Avisos de estado",
+      "slug": "avisos-de-estado",
+      "module": "indicators",
+      "module_number": "05",
+      "module_name": "Indicadores y estado",
+      "subcategory": "Avisos",
+      "type": "component",
+      "description": "Éxito, atención y error en banners apilados.",
+      "family": "custom.w-avisos",
+      "variant_id": "w-avisos",
+      "variants": [
+        "w-avisos"
+      ],
+      "tags": [
+        "indicators",
+        "Avisos",
+        "notices",
+        "custom.w-avisos"
+      ],
+      "styles": [],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#dff3ea",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-avisos"
+    },
+    {
+      "id": "w-dialogo",
+      "legacy_id": null,
+      "name": "Diálogo de confirmación",
+      "slug": "dialogo-de-confirmacion",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Hojas",
+      "type": "component",
+      "description": "Pregunta con icono, texto y dos botones.",
+      "family": "custom.w-dialogo",
+      "variant_id": "w-dialogo",
+      "variants": [
+        "w-dialogo"
+      ],
+      "tags": [
+        "cards",
+        "Hojas",
+        "sheets",
+        "custom.w-dialogo",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#fde4e1",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-dialogo"
+    },
+    {
+      "id": "w-hoja",
+      "legacy_id": null,
+      "name": "Hoja inferior de opciones",
+      "slug": "hoja-inferior-de-opciones",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Hojas",
+      "type": "component",
+      "description": "Panel que sube desde abajo con tres acciones.",
+      "family": "custom.w-hoja",
+      "variant_id": "w-hoja",
+      "variants": [
+        "w-hoja"
+      ],
+      "tags": [
+        "cards",
+        "Hojas",
+        "sheets",
+        "custom.w-hoja",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e0e6f4",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "w-hoja"
     },
     {
       "id": "lib-chat-1",
