@@ -7,7 +7,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),vm=r
  h.record({brief:'ab',selected:[],assets:{}});ok(h.status().undoCount===1,'no-op excluded');h.breakGroup();h.record({brief:'abc',selected:[],assets:{}},{group:'brief'});ok(h.status().undoCount===2,'blur splits typing');h.undo();h.record({brief:'new',selected:[],assets:{}});ok(!h.status().canRedo,'new branch clears future');
  for(let i=0;i<5;i++)h.record({brief:String(i),selected:[],assets:{}});ok(h.status().undoCount===3&&h.status().trimmed,'bounded entries');
  const small=context.H.create({maxBytes:100});small.reset({assets:'x'.repeat(60)});small.record({assets:'y'.repeat(60)});small.record({assets:'z'.repeat(60)});ok(small.status().undoCount===1&&small.status().trimmed,'memory budget keeps latest change');ok(small.undo().draft.assets==='y'.repeat(60),'latest large change recoverable');
- const b=await chromium.launch(),p=await b.newPage({viewport:{width:390,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
+ const b=await chromium.launch(),p=await b.newPage({viewport:{width:390,height:1000}}),errors=[];await p.addInitScript(()=>addEventListener('DOMContentLoaded',()=>{const g=document.getElementById('gallery');if(g)g.classList.add('all');}));/* móvil: la galería completa, como tras pulsar «Ver todos» */p.on('pageerror',e=>errors.push(e.message));
  const draft=()=>p.evaluate(()=>JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
  const undo=()=>p.click('#undoDraft'),redo=()=>p.click('#redoDraft');
  await p.goto('http://localhost:8081/crear.html');await p.locator('#home').waitFor({state:'visible'});ok(await p.locator('#undoDraft').isDisabled(),'initial undo disabled');

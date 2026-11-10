@@ -23,9 +23,16 @@ const EXCLUDE = [['#phoneContent'], ['#phoneNav'], ['.template-frame'], ['.galle
     await pg.click('.bento [data-jump-filter=cards]', { force: true }).catch(async () => { await pg.evaluate(() => document.querySelector('.bento [data-jump-filter=cards]').click()); }); await pg.waitForTimeout(300);
     ok(await pg.evaluate(() => document.querySelector('[data-act=filter][data-filter=cards]').getAttribute('aria-pressed') === 'true'), '«Tarjetas» del mosaico aplica el filtro');
     await pg.evaluate(() => document.querySelector('.gallery-item [data-act=select]').click()); ok(await pg.evaluate(() => { const t = document.querySelector('.selection-tray'), r = t.getBoundingClientRect(), nav = document.querySelector('.site-header>nav').getBoundingClientRect(); return getComputedStyle(t).display !== 'none' && r.bottom <= nav.top + 1; }), 'con selección, la bandeja aparece encima de la barra inferior');
+    const vis = () => pg.evaluate(() => [...document.querySelectorAll('.gallery-item')].filter(x => x.getClientRects().length).length);
+    await pg.evaluate(() => document.querySelector('[data-act=filter][data-filter=all]').click()); const total = await pg.locator('.gallery-item').count();
+    ok(total > 100 && await vis() === 24 && await pg.locator('#galleryMore').isVisible(), 'la galería enseña 24 diseños y el botón «Ver todos»');
+    await pg.evaluate(() => document.getElementById('galleryMore').click()); ok(await vis() === total && await pg.getAttribute('#galleryMore', 'aria-expanded') === 'true', '«Ver todos» despliega la galería completa');
+    await pg.evaluate(() => document.getElementById('galleryMore').click()); ok(await vis() === 24, '«Ver menos» la recoge');
     await noOverflow('Los bloques'); await scan('Los bloques');
     await pg.evaluate(() => scrollTo(0, 0)); await pg.evaluate(() => document.querySelector('.template-card[data-id=tpl-cafeteria] [data-act=use-template]').click()); await pg.waitForSelector('#review', { state: 'visible' }); await pg.waitForTimeout(5000);
     ok(await pg.evaluate(() => { const c = document.querySelector('.composition-area').getBoundingClientRect(), p = document.querySelector('.review-panel').getBoundingClientRect(); return c.top < p.top && c.top + scrollY < 260; }), 'en «Tu pantalla» el lienzo con el móvil va primero');
+    ok(await pg.evaluate(() => { const bs = [...document.querySelectorAll('#screenTabs > button')]; return bs.length === 11 && bs.every(b => { const t = b.querySelector('.tab-thumb'); return t && t.getAttribute('aria-hidden') === 'true' && t.inert && t.getBoundingClientRect().width > 40 && b.textContent.trim().length > 2; }); }), 'cada pantalla tiene su miniatura (decorativa) y su nombre');
+    await pg.evaluate(() => document.querySelector('#screenTabs > [data-id=chat]').click()); await pg.waitForTimeout(200); ok(await pg.evaluate(() => { const t = document.getElementById('screenTabs'), c = t.querySelector('[aria-pressed=true]'); const r = c.getBoundingClientRect(), tr = t.getBoundingClientRect(); return c.dataset.id === 'chat' && r.left >= tr.left - 1 && r.right <= tr.right + 1; }), 'la tira se desplaza hasta la pantalla elegida');
     await noOverflow('Tu pantalla'); await scan('Tu pantalla');
     ok(!errors.length, 'sin errores: ' + errors.join(' | ')); await pg.close();
   }

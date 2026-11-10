@@ -272,3 +272,11 @@ main{padding-bottom:86px}.page{margin:0 14px!important;padding-top:6px}
 :root[data-theme=dark] .filters button:not(.on)>span{color:#c3c9b8}
 :root[data-theme=dark] .filters button:not(.on)>#allCount{color:#c3c9b8}
 :root[data-theme=dark] .selection-tray .text-button:not(:disabled){color:#dfe3d6}
+/* Tira de miniaturas de las pantallas */
+.screen-tabs button{display:grid;justify-items:center;gap:5px;padding:5px 5px 7px;border-radius:15px;font-size:10.5px;font-weight:600;min-width:68px}
+.tab-thumb{display:block;position:relative;width:58px;height:92px;border-radius:10px;overflow:hidden;border:1px solid #0000001f;background:#fff}
+
+.screen-tabs button[aria-pressed=true] .tab-thumb{border-color:#ffffff55}
+/* Galería en móvil: primero 24 diseños, el resto con «Ver todos» */
+.gallery-more{display:none}
+@media(max-width:720px){.gallery:not(.all) .gallery-item:nth-child(n+25){display:none}.gallery{padding-bottom:14px}.gallery-more{display:flex;justify-content:center;width:100%;margin:0 0 150px}.gallery:not(:has(.gallery-item:nth-child(25)))+.gallery-more{display:none}.empty-gallery{margin-bottom:150px}}
