@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 77`, `versionName 12.47`.
+- Android: `versionCode 78`, `versionName 12.48`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -306,6 +306,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.41**: comida y reparto (hamburguesería oscura, comida pastel, heladería y combos 2×1): 13 bloques y 4 plantillas. Ver `docs/CHANGELOG-12.41.md`.
 - **12.42**: ilustraciones de comida propias (hamburguesa, pizza, helado, patatas y refresco). Ver `docs/CHANGELOG-12.42.md`.
 - **12.43**: paneles de ventas y control (ventas oscuro, finanzas crema y oliva, centro de mando): 10 bloques y 3 plantillas. Ver `docs/CHANGELOG-12.43.md`.
+- **12.48**: app de mascotas en turquesa (5 bloques, 2 plantillas y 3 perros ilustrados). Ver `docs/CHANGELOG-12.48.md`.
 - **12.47**: bienestar con IA en lavanda (9 bloques y 3 plantillas: inicio, ejercicios y progreso). Ver `docs/CHANGELOG-12.47.md`.
 - **12.46**: inicio sin corte recto en el degradado y «Tu pantalla» con el móvil a todo el ancho. Ver `docs/CHANGELOG-12.46.md`.
 - **12.45**: tienda online móvil en violeta (12 bloques y 4 plantillas: inicio, producto, carrito y pago, pedido y perfil). Ver `docs/CHANGELOG-12.45.md`.

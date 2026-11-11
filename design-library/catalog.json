@@ -13582,6 +13582,443 @@
       "family_primary_id": "r-bi-boton"
     },
     {
+      "id": "n-ma-circulos",
+      "legacy_id": null,
+      "name": "Cuatro botones redondos",
+      "slug": "cuatro-botones-redondos",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Barras inferiores",
+      "type": "component",
+      "description": "Cuatro círculos flotantes: añadir en turquesa, favoritos, mascotas y perfil.",
+      "family": "custom.n-ma-circulos",
+      "variant_id": "n-ma-circulos",
+      "variants": [
+        "n-ma-circulos"
+      ],
+      "tags": [
+        "navigation",
+        "Barras inferiores",
+        "nav",
+        "custom.n-ma-circulos",
+        "elevated",
+        "profile"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#12bfa9",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "n-ma-circulos"
+    },
+    {
+      "id": "r-ma-hero",
+      "legacy_id": null,
+      "name": "Cabecera con perro",
+      "slug": "cabecera-con-perro",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Encabezados",
+      "type": "component",
+      "description": "Perro grande sobre turquesa con aviso redondo y el nombre de la mascota.",
+      "family": "custom.r-ma-hero",
+      "variant_id": "r-ma-hero",
+      "variants": [
+        "r-ma-hero"
+      ],
+      "tags": [
+        "navigation",
+        "Encabezados",
+        "header",
+        "custom.r-ma-hero",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#12bfa9",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-ma-hero"
+    },
+    {
+      "id": "r-ma-pestanas",
+      "legacy_id": null,
+      "name": "Pestañas de la mascota",
+      "slug": "pestanas-de-la-mascota",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Dos pastillas grandes: Accesorios en turquesa y Amigos en blanco.",
+      "family": "custom.r-ma-pestanas",
+      "variant_id": "r-ma-pestanas",
+      "variants": [
+        "r-ma-pestanas"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-ma-pestanas",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#d6f4ef",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-ma-pestanas"
+    },
+    {
+      "id": "r-ma-amigo",
+      "legacy_id": null,
+      "name": "Amigo con nombre",
+      "slug": "amigo-con-nombre",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Perro sobre turquesa con una etiqueta con su nombre.",
+      "family": "custom.r-ma-amigo",
+      "variant_id": "r-ma-amigo",
+      "variants": [
+        "r-ma-amigo"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-ma-amigo",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#12bfa9",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-ma-amigo"
+    },
+    {
+      "id": "r-ma-datos",
+      "legacy_id": null,
+      "name": "Datos de la mascota",
+      "slug": "datos-de-la-mascota",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Nombre, raza y tres datos: edad, peso y vacunas.",
+      "family": "custom.r-ma-datos",
+      "variant_id": "r-ma-datos",
+      "variants": [
+        "r-ma-datos"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-ma-datos",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#d6f4ef",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-ma-datos"
+    },
+    {
       "id": "lib-chat-1",
       "legacy_id": "chat-1",
       "name": "Burbujas claras con avatar",
