@@ -1,7 +1,7 @@
 /* Biblioteca única en Tinta: favoritos compartidos con la clásica, filtro, menú y redirección. */
 const { chromium } = require('playwright'); const assert = require('node:assert/strict'); let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
 (async () => {
-  const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 390, height: 800 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
+  const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 390, height: 800 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message)); await pg.addInitScript(() => addEventListener('DOMContentLoaded', () => { const g = document.getElementById('gallery'); if (g) g.classList.add('all'); }));
   await pg.addInitScript(() => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('estilos-favs-v1', JSON.stringify(['tar-1', 'otro-id-clasico', '<script>'])); } });
   await pg.goto('http://127.0.0.1:8080/index.html'); await pg.click('[data-act=menu]');
   ok(!(await pg.locator('#siteMenu a[href="biblioteca.html"]').count()), 'el menú ya no lleva a la biblioteca antigua');

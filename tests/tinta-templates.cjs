@@ -4,16 +4,17 @@ const TT = require('../web/js/tinta-templates.js'), TS = require('../web/js/tint
 const src = fs.readFileSync(path.join(__dirname, '../web/js/crear.js'), 'utf8'); const byId = {}; for (const m of src.matchAll(/\{id:'([a-z]-[a-z0-9]+)',role:'(\w+)'/g)) byId[m[1]] = { role: m[2] };
 for (const m of fs.readFileSync(path.join(__dirname, '../web/js/tinta-cards.js'), 'utf8').matchAll(/id: '([a-z]-[a-z-]+)', role: '(\w+)'/g)) byId[m[1]] = { role: m[2] };
 for (const m of fs.readFileSync(path.join(__dirname, '../web/js/tinta-widgets.js'), 'utf8').matchAll(/id: '(w-[a-z-]+)', role: '(\w+)'/g)) byId[m[1]] = { role: m[2] };
-ok(TT.LIST.length === 9 && new Set(TT.LIST.map(t => t.id)).size === 9, 'hay 9 plantillas con id único (8 de sector y el panel de control)');
+for (const m of fs.readFileSync(path.join(__dirname, '../web/js/tinta-refs.js'), 'utf8').matchAll(/id: '([a-z]-[a-z0-9-]+)', role: '(\w+)'/g)) byId[m[1]] = { role: m[2] };
+ok(TT.LIST.length === 15 && new Set(TT.LIST.map(t => t.id)).size === 15, 'hay 15 plantillas con id único');
 ok(TT.LIST.every(t => TT.problems(t, byId).length === 0), 'todas usan bloques que existen y tienen cabecera, tarjetas y barra');
 ok(TT.LIST.every(t => { const d = TS.detect(t.brief); return d && d.id === t.sector; }), 'la idea de ejemplo de cada plantilla activa su sector');
-ok(new Set(TT.LIST.map(t => t.sector)).size === 8 && TT.LIST.filter(t => t.sector === 'finanzas').length === 2, 'las 8 plantillas de sector cubren los 8 sectores (finanzas tiene además el panel)');
+ok(new Set(TT.LIST.map(t => t.sector)).size === 8, 'las plantillas cubren los 8 sectores');
 ok(TT.problems({ blocks: [{ id: 'c-coral', repeat: 9 }] }, byId).length >= 1 && TT.problems({ blocks: [{ id: 'nope' }] }, byId).length >= 1, 'detecta plantillas inválidas');
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
   await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card');
-  ok(await pg.locator('.template-card').count() === 9, 'la biblioteca muestra las 9 plantillas');
+  ok(await pg.locator('.template-card').count() === 15, 'la biblioteca muestra las 15 plantillas');
   ok(await pg.evaluate(() => [...document.querySelectorAll('.template-card')].every(c => c.querySelectorAll('.component-host').length >= 3 && [...c.querySelectorAll('.component-host')].every(h => h.shadowRoot.textContent.trim().length > 0))), 'cada vista previa dibuja bloques reales con contenido');
   await pg.waitForFunction(() => { const f = document.querySelector('.template-frame'); return Math.abs(f.querySelector('.template-screen').getBoundingClientRect().width - f.getBoundingClientRect().width) < 4; }, null, { timeout: 5000 }); ok(true, 'la vista previa se escala al ancho de la tarjeta');
   ok((await pg.locator('[data-act=use-template]').first().getAttribute('aria-label')).startsWith('Usar la plantilla'), 'botones con etiqueta accesible');

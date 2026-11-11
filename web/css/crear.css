@@ -405,3 +405,8 @@ main{padding-bottom:86px}.page{margin:0 14px!important;padding-top:6px}
 #explore[data-view=cat][data-kind=styles] .visuals .template-row{flex-wrap:wrap;overflow:visible}
 .visual-card[hidden]{display:none!important}
 :root[data-theme=dark] .visual-card{background:#28282c!important;border-color:#2f2f34!important}:root[data-theme=dark] .visual-card p{color:#b4b4bd}:root[data-theme=dark] .visual-card.on{outline-color:#ff906d}
+
+/* Selector de barra inferior y plantillas nuevas (12.37) */
+.nav-pick{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 auto 10px;font-size:12px;font-weight:700;color:#36352f}
+.nav-pick select{font:inherit;font-size:12.5px;padding:8px 10px;border-radius:12px;border:1px solid #dad7cd;background:#fff;color:#242421;max-width:190px}
+:root[data-theme=dark] .nav-pick{color:#e8e8ec}:root[data-theme=dark] .nav-pick select{background:#28282c;border-color:#3a3a40;color:#f2f2f4}

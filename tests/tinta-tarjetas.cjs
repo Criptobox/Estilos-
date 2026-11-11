@@ -6,7 +6,7 @@ const ids = [...src.matchAll(/id: '(c-[a-z-]+)', role: 'cards'/g)].map(m => m[1]
 ok(ids.length === 8 && new Set(ids).size === 8 && ['c-shop', 'c-destino', 'c-track', 'c-workout', 'c-course', 'c-cita', 'c-menu-item', 'c-txn'].every(x => ids.includes(x)), 'hay 8 tarjetas nuevas con id único');
 ok(!/<script|javascript:|\bon[a-z]+=|@import|url\(|<iframe|<img/i.test(src), 'sin scripts, manejadores, @import, url() ni imágenes externas');
 const used = TT.LIST.map(t => t.blocks.filter(b => b.id.startsWith('c-') && ids.includes(b.id)).map(b => b.id)); const flat = used.flat();
-ok(TT.LIST.every((t, i) => used[i].length >= 1 || t.id === 'tpl-x') && new Set(flat).size === 8, 'cada una de las 8 plantillas usa tarjetas nuevas y las 8 se usan, cada una en su sector');
+ok(TT.LIST.every((t, i) => used[i].length >= 1 || t.blocks.some(b => /^r-/.test(b.id))) && new Set(flat).size === 8, 'cada una de las 8 plantillas usa tarjetas nuevas y las 8 se usan, cada una en su sector');
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 1000 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item');
@@ -17,7 +17,7 @@ ok(TT.LIST.every((t, i) => used[i].length >= 1 || t.id === 'tpl-x') && new Set(f
   // Admiten estilos propios (el editor de «Diseño de tarjeta»)
   ok(await pg.evaluate(ids => ids.every(id => TintaCardStyle.supports({ id, role: 'cards', html: document.querySelector(`.gallery-item[data-id="${id}"] .component-host`).shadowRoot.innerHTML.replace(/^<style>[\s\S]*?<\/style>/, ''), variant: 'x' })), ids), 'admiten el editor de diseño de tarjeta');
   // Sector → tarjeta propia, con contenido del sector y sin el texto de ejemplo.
-  for (const t of TT.LIST) {
+  for (const t of TT.LIST.filter(t => t.blocks.some(b => b.id.startsWith('c-') && ids.includes(b.id)))) {
     await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.click(`.template-card[data-id=${t.id}] [data-act=use-template]`); await pg.waitForSelector('#review', { state: 'visible' });
     const info = await pg.evaluate(() => { const hs = [...document.querySelectorAll('#phoneContent .component-host')].filter(h => h.shadowRoot.querySelector('article')); return hs.map(h => h.shadowRoot.textContent.replace(/\s+/g, ' ').trim()); });
     ok(info.length >= 3 && new Set(info).size === info.length, `${t.id}: ${info.length} tarjetas, todas con contenido distinto`);
