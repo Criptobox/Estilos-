@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 64`, `versionName 12.34`.
+- Android: `versionCode 65`, `versionName 12.35`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -297,6 +297,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.32**: cuadro de la idea estilo chat y modo oscuro con los colores de antes (solo sin el fondo verde). Ver `docs/CHANGELOG-12.32.md`.
 - **12.33**: 17 componentes para apps (gráficos, calendario, tareas, filtros, formularios, avisos, hojas). Ver `docs/CHANGELOG-12.33.md`.
 - **12.34**: plantilla «Panel de control» con los componentes nuevos (9 plantillas). Ver `docs/CHANGELOG-12.34.md`.
+- **12.35**: biblioteca organizada por categorías y subcategorías (barras, botones, tarjetas, paletas…). Ver `docs/CHANGELOG-12.35.md`.
 - **12.21**: el nombre de tu app en la marca de las cabeceras. Ver `docs/CHANGELOG-12.21.md`.
 - **12.20**: accesibilidad WCAG 2.1 AA (contraste, nombres, tema oscuro) con prueba automática axe-core. Ver `docs/CHANGELOG-12.20.md`.
 - **12.19**: precios con formato propio por sector. Ver `docs/CHANGELOG-12.19.md`.

@@ -19,9 +19,9 @@ const CHECK = (sel) => { const L = c => { const [r, g, b] = c.slice(0, 3).map(v 
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 1000 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message)); await pg.emulateMedia({ reducedMotion: 'reduce' });
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1') || '{}'));
   async function setup(tpl, pal) {
-    await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card'); await pg.click(`.template-card[data-id=${tpl}] [data-act=use-template]`); await pg.waitForSelector('#review', { state: 'visible' });
+    await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.click(`.template-card[data-id=${tpl}] [data-act=use-template]`); await pg.waitForSelector('#review', { state: 'visible' });
     const cur = (await draft()).palette || null;
-    if (cur !== pal) { await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.click(`.palette-card[data-id=${pal || cur}] [data-act=use-palette]`); }
+    if (cur !== pal) { await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.click(`.palette-card[data-id=${pal || cur}] [data-act=use-palette]`); }
     assert.equal((await draft()).palette || null, pal || null);
     await pg.goto('http://127.0.0.1:8080/index.html#pantalla'); await pg.waitForSelector('#phoneContent .component-host');
   }
@@ -34,7 +34,7 @@ const CHECK = (sel) => { const L = c => { const [r, g, b] = c.slice(0, 3).map(v 
   await setup('tpl-cafeteria', 'noche');
   ok(await pg.evaluate(() => getComputedStyle(document.querySelector('.phone-screen')).backgroundColor === 'rgb(15, 18, 32)'), 'la pantalla toma el fondo de la paleta oscura');
   ok(await pg.evaluate(() => { const h = document.querySelector('#phoneContent .component-host').shadowRoot; return /color-scheme:dark/.test(h.querySelector('style').textContent); }), 'los bloques de la pantalla pasan a modo noche');
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.gallery-item[data-id=c-coffee] .component-host');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item[data-id=c-coffee] .component-host');
   ok(await pg.evaluate(() => !/color-scheme:dark/.test(document.querySelector('.gallery-item[data-id=c-coffee] .component-host').shadowRoot.querySelector('style').textContent)), 'la biblioteca sigue clara con una paleta oscura');
   await pg.goto('http://127.0.0.1:8080/index.html#pantalla'); await pg.waitForSelector('#phoneContent .component-host');
   await pg.click('#composeButton'); const dl = pg.waitForEvent('download'); await pg.click('[data-act=export]'); const file = path.join(os.tmpdir(), 'osc-' + Date.now() + '.html'); await (await dl).saveAs(file); const html = fs.readFileSync(file, 'utf8');

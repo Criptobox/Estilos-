@@ -16,12 +16,12 @@ const EXCLUDE = [['#phoneContent'], ['#phoneNav'], ['.template-frame'], ['.galle
     ok(await pg.evaluate(() => document.querySelector('.site-header').getBoundingClientRect().height <= 64 && document.getElementById('undoDraft').getBoundingClientRect().top < 60), 'barra superior de una línea con deshacer/rehacer dentro');
     ok(await pg.evaluate(() => document.getElementById('briefForm').getBoundingClientRect().bottom < innerHeight), 'el cuadro de la idea y su botón caben en la primera pantalla');
     await noOverflow('Tu idea'); await scan('Tu idea');
-    await pg.click('.site-header>nav [data-page=explore]'); await pg.waitForSelector('.gallery-item');
-    ok(await pg.locator('.bento .tile').count() === 5 && await pg.evaluate(() => getComputedStyle(document.querySelector('.selection-tray')).display === 'none'), 'mosaico de 5 secciones y bandeja oculta mientras no hay selección');
-    ok(await pg.evaluate(() => { const g = getComputedStyle(document.getElementById('gallery')).gridTemplateColumns.split(' ').length; return g === 2; }), 'galería en dos columnas');
-    await pg.click('.bento [data-jump=palTitle]'); await pg.waitForTimeout(700); ok(await pg.evaluate(() => { const r = document.getElementById('palTitle').getBoundingClientRect(); return r.top >= -5 && r.top < innerHeight * .6; }), 'el mosaico salta a su sección');
-    await pg.click('.bento [data-jump-filter=cards]', { force: true }).catch(async () => { await pg.evaluate(() => document.querySelector('.bento [data-jump-filter=cards]').click()); }); await pg.waitForTimeout(300);
-    ok(await pg.evaluate(() => document.querySelector('[data-act=filter][data-filter=cards]').getAttribute('aria-pressed') === 'true'), '«Tarjetas» del mosaico aplica el filtro');
+    await pg.click('.site-header>nav [data-page=explore]'); await pg.waitForSelector('.lib-card');
+    ok(await pg.locator('.lib-card').count() >= 15 && await pg.evaluate(() => getComputedStyle(document.querySelector('.selection-tray')).display === 'none'), 'la biblioteca abre con sus categorías y la bandeja oculta mientras no hay selección');
+    await pg.click('.lib-card[data-cat=paletas]'); await pg.waitForSelector('.palette-card:not([hidden])'); ok(await pg.evaluate(() => document.getElementById('explore').dataset.kind === 'palettes' && document.querySelectorAll('.palette-card:not([hidden])').length === 48), 'una categoría muestra solo lo suyo (48 paletas)');
+    await pg.click('.lib-back'); await pg.click('.lib-card[data-cat=tarjetas]'); await pg.waitForSelector('.gallery-item'); ok(await pg.evaluate(() => [...document.querySelectorAll('.gallery-item')].every(g => /Tarjetas/.test(g.querySelector('.role-tag').textContent))), 'Tarjetas solo enseña tarjetas');
+    await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item');
+    ok(await pg.evaluate(() => getComputedStyle(document.getElementById('gallery')).gridTemplateColumns.split(' ').length === 2), 'galería en dos columnas');
     await pg.evaluate(() => document.querySelector('.gallery-item [data-act=select]').click()); ok(await pg.evaluate(() => { const t = document.querySelector('.selection-tray'), r = t.getBoundingClientRect(), nav = document.querySelector('.site-header>nav').getBoundingClientRect(); return getComputedStyle(t).display !== 'none' && r.bottom <= nav.top + 1; }), 'con selección, la bandeja aparece encima de la barra inferior');
     const vis = () => pg.evaluate(() => [...document.querySelectorAll('.gallery-item')].filter(x => x.getClientRects().length).length);
     await pg.evaluate(() => document.querySelector('[data-act=filter][data-filter=all]').click()); const total = await pg.locator('.gallery-item').count();

@@ -12,13 +12,13 @@ ok(/#112233/.test(A.pick('tienda', 0, { a: '#112233', b: '#445566', i: '#778899'
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 1000 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const media = () => pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => { const s = h.shadowRoot.querySelector('.media>svg'); return s ? s.outerHTML : null; }).filter(Boolean));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card');
   await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   const cafe = await media(); ok(cafe.length === 5 && new Set(cafe).size >= 4, 'Cafetería: 2 productos y 3 platos con ilustraciones distintas (al menos 4 diferentes)');
   ok(/id="cup"/.test(cafe[0]) && !/id="cup"/.test(cafe[1]), 'la primera conserva la taza original y las demás cambian');
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-tienda] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-tienda] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   const tienda = await media(); ok(tienda.length === 4 && new Set(tienda).size === 4 && tienda.every(s => !/id="cup"/.test(s)), 'Tienda: 4 productos con etiqueta y objetos de tienda, sin ninguna taza de café');
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.palette-card'); await pg.click('.palette-card[data-id=oceano] [data-act=use-palette]');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.palette-card'); await pg.click('.palette-card[data-id=oceano] [data-act=use-palette]');
   await pg.goto('http://127.0.0.1:8080/index.html#pantalla'); await pg.waitForSelector('#phoneContent .component-host');
   ok((await media()).some(s => /#0e7490/i.test(s)), 'con la paleta Océano los objetos usan su acento');
   await pg.click('#screenTabs [data-id=explorar]'); const ex = await media(); ok(ex.length === 4 && new Set(ex).size >= 3, 'Explorar también trae objetos distintos');

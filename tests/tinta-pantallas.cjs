@@ -14,7 +14,7 @@ ok(S.plan({ headerId: null, cardId: null, actionId: null }).explorar.length === 
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
   const title = () => pg.evaluate(() => { const h = document.querySelector('#phoneContent .component-host'); return h.shadowRoot.querySelector('h1').textContent.replace(/\s+/g, ' ').trim(); });
   const tabs = () => pg.locator('#screenTabs button').allTextContents();
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card');
   await pg.click('.palette-card[data-id=cafe] [data-act=use-palette]'); await pg.click('.motion-card[data-id=fade-up] [data-act=use-motion]');
   await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   ok((await draft()).multi === true && await pg.locator('#multiToggle').isChecked(), 'una plantilla activa «todas las pantallas»');
@@ -53,7 +53,7 @@ ok(S.plan({ headerId: null, cardId: null, actionId: null }).explorar.length === 
   const rx = await ctx.newPage(); await rx.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.clear(); } }); await rx.goto(link); await rx.waitForSelector('#projectsDialog[open]'); await rx.waitForTimeout(300);
   ok(senderMulti === true && await rx.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-projects-v1'))[0].draft.multi) === true, 'el enlace compartido conserva «todas las pantallas»');
   // Sin idea de sector no se activa.
-  const p2 = await ctx.newPage(); await p2.goto('http://127.0.0.1:8080/index.html#bloques'); await p2.waitForSelector('.gallery-item'); await p2.click('.gallery-item[data-id=h-minimal] [data-act=select]'); await p2.click('.gallery-item[data-id=c-coral] [data-act=select]'); await p2.click('.gallery-item[data-id=n-soft] [data-act=select]'); await p2.click('#reviewSelection'); await p2.waitForSelector('#review', { state: 'visible' });
+  const p2 = await ctx.newPage(); await p2.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await p2.waitForSelector('.gallery-item'); await p2.click('.gallery-item[data-id=h-minimal] [data-act=select]'); await p2.click('.gallery-item[data-id=c-coral] [data-act=select]'); await p2.click('.gallery-item[data-id=n-soft] [data-act=select]'); await p2.click('#reviewSelection'); await p2.waitForSelector('#review', { state: 'visible' });
   await p2.evaluate(() => { const e = document.getElementById('idea'); e.value = 'algo diferente'; e.dispatchEvent(new Event('input', { bubbles: true })); });
   await p2.click('#multiToggle'); ok(!(await p2.locator('#multiToggle').isChecked()) && /Cuéntame tu idea/.test(await p2.locator('#toast').textContent()), 'sin sector no se activa y pide la idea');
   // Otras barras: de 5 botones con acción central, y solo iconos.

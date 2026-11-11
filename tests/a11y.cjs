@@ -9,10 +9,10 @@ async function scan(pg, name, include) { await pg.addScriptTag({ content: axe.so
   for (const theme of ['light', 'dark']) {
     const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } }), pg = await ctx.newPage(); await pg.addInitScript(t => { localStorage.setItem('estilos-tinta-ui-theme-v1', t); localStorage.setItem('estilos-studio-theme', t); }, theme);
     await pg.goto('http://127.0.0.1:8080/index.html'); await pg.waitForTimeout(400); await scan(pg, theme + ' · Tu idea');
-    await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card'); await pg.waitForTimeout(500); await scan(pg, theme + ' · Los bloques');
+    await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.waitForTimeout(500); await scan(pg, theme + ' · Los bloques');
     await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' }); await pg.waitForTimeout(500); await scan(pg, theme + ' · Tu pantalla');
     await pg.click('[data-act=menu]'); await scan(pg, theme + ' · Menú'); await pg.click('[data-act=backup-open]'); await pg.waitForSelector('#backupDialog[open]'); await scan(pg, theme + ' · Copia de seguridad', [['#backupDialog']]); await pg.keyboard.press('Escape');
-    await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.gallery-item'); await pg.click('[data-act=new-mystyle]'); await pg.waitForSelector('#styleDialog[open]'); await scan(pg, theme + ' · Crear mi estilo', [['#styleDialog']]); await pg.keyboard.press('Escape');
+    await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item'); await pg.click('[data-act=new-mystyle]'); await pg.waitForSelector('#styleDialog[open]'); await scan(pg, theme + ' · Crear mi estilo', [['#styleDialog']]); await pg.keyboard.press('Escape');
     await pg.click('.gallery-item .preview-open'); await pg.waitForSelector('#detailDialog[open]'); await scan(pg, theme + ' · Ficha de un diseño', [['#detailDialog']]);
     await pg.goto('http://127.0.0.1:8080/agente.html'); await pg.waitForTimeout(600); await scan(pg, theme + ' · Editor');
     await ctx.close();

@@ -7,7 +7,7 @@ let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
     const pg = await b.newPage({ viewport: vp }), errors = []; pg.on('pageerror', e => errors.push(e.message));
     const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1') || '{}'));
     const tag = vp.width < 500 ? 'móvil' : 'escritorio';
-    await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#screenTabs button'); await pg.waitForTimeout(400);
+    await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#screenTabs button'); await pg.waitForTimeout(400);
     ok(await pg.locator('#blockTools').isHidden() && await pg.getAttribute('[data-mode=play]', 'aria-pressed') === 'true', `${tag}: por defecto se prueba y no hay barra`);
     // En modo Probar tocar una tarjeta abre el detalle (no cambia)
     await pg.evaluate(() => document.querySelector('#phoneContent .component-host[data-role=cards]').shadowRoot.querySelector('article,div').click()); ok(await pg.$eval('#screenTabs [aria-pressed=true]', x => x.dataset.id) === 'detalle', `${tag}: en modo Probar la tarjeta sigue abriendo el detalle`);

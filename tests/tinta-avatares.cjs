@@ -7,7 +7,7 @@ ok(ids.length === 6 && new Set(ids).size === 6, 'hay 6 diseños de avatar con id
 ok(!/<script|javascript:|\bon[a-z]+=|@import|url\(|<iframe|<img|<text/i.test(src), 'sin scripts, manejadores, imágenes externas ni texto en los SVG');
 (async () => {
   const b = await chromium.launch(), pg = await (await b.newContext({ viewport: { width: 390, height: 900 } })).newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.gallery-item');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item');
   ok(await pg.evaluate(ids => ids.every(id => !!document.querySelector(`.gallery-item[data-id="${id}"]`)), ids), 'los 6 aparecen en la biblioteca');
   const r = await pg.evaluate(() => { const A = TINTA_AVATARS, sectors = Object.keys(A.BY_SECTOR), out = {};
     out.sectors = sectors.length; out.distinct = sectors.every(s => new Set([0, 1, 2, 3].map(i => A.pick(s, i))).size > 1);
@@ -17,7 +17,7 @@ ok(!/<script|javascript:|\bon[a-z]+=|@import|url\(|<iframe|<img|<text/i.test(src
   ok(r.sectors === 8 && r.chars === 8 && r.distinct && r.none, '8 personajes distintos y variantes por copia; sin sector no hay personaje');
   ok(r.palette && !r.bad, 'toma los colores de la paleta y rechaza valores no válidos');
   for (const t of TT.LIST) {
-    await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card'); await pg.click(`.template-card[data-id=${t.id}] [data-act=use-template]`); await pg.waitForSelector('#screenTabs button');
+    await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.click(`.template-card[data-id=${t.id}] [data-act=use-template]`); await pg.waitForSelector('#screenTabs button');
     await pg.click('#screenTabs [data-id=perfil]'); await pg.waitForSelector('#phoneContent .component-host');
     const i = await pg.evaluate(() => { const h = [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot).find(s => s.querySelector('.av svg')); return h ? { svg: !!h.querySelector('.av svg path'), t: h.textContent.replace(/\s+/g, ' ').trim() } : null; });
     ok(i && i.svg && i.t.length > 8, `${t.id}: el Perfil usa un avatar ilustrado con nombre y rol`);

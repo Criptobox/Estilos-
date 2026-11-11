@@ -11,11 +11,11 @@ const as = M.attrString({ 'data-m-entrance': 'a"><script>', style: '--i:1' }); o
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.motion-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.motion-card');
   ok(await pg.locator('.motion-card').count() === 21, 'la biblioteca muestra las 21 animaciones');
   ok(await pg.evaluate(() => [...document.querySelectorAll('.motion-box')].every(e => getComputedStyle(e, e.dataset.mAction === 'shine' ? '::after' : null).animationName !== 'none')), 'las 21 demos se mueven en vivo');
   await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.motion-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.motion-card');
   await pg.click('.motion-card[data-id=fade-up] [data-act=use-motion]'); await pg.click('.motion-card[data-id=lift] [data-act=use-motion]'); await pg.click('.motion-card[data-id=pulse] [data-act=use-motion]');
   ok(JSON.stringify((await draft()).motion) === '{"entrance":"fade-up","card":"lift","action":"pulse"}', 'guarda una animación de cada tipo en el borrador');
   ok(await pg.locator('.motion-card[data-id=fade-up] button').getAttribute('aria-pressed') === 'true', 'el botón indica «En uso»');
@@ -46,7 +46,7 @@ const as = M.attrString({ 'data-m-entrance': 'a"><script>', style: '--i:1' }); o
   const rm = await b.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } }), rp = await rm.newPage(); await rp.addInitScript(d => localStorage.setItem('estilos-tinta-prototype-v1', d), JSON.stringify(Object.assign(senderDraft, { motion: { entrance: 'pop', card: 'lift', action: 'pulse' } })));
   await rp.goto('http://127.0.0.1:8080/index.html#pantalla'); await rp.waitForSelector('#phoneContent .component-host');
   ok(await rp.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].every(h => getComputedStyle(h).animationName === 'none')), 'con «reducir movimiento» no hay animaciones');
-  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques'); await m.waitForSelector('.motion-card');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await m.waitForSelector('.motion-card');
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
   ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de animaciones correctas.`);
 })().catch(e => { console.error(e); process.exit(1); });

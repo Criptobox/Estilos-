@@ -11,7 +11,7 @@ ok(PA.LIST.length === 48 && new Set(PA.LIST.map(p => p.id)).size === 48 && PA.LI
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 1000 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card');
   ok(await pg.locator('.palette-card').count() === 48, 'la biblioteca muestra las 48 paletas');
   await pg.click('.template-card[data-id=tpl-tienda] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   const cardId = await pg.evaluate(() => document.querySelector('[data-act=card-style]').dataset.id);
@@ -33,9 +33,9 @@ ok(PA.LIST.length === 48 && new Set(PA.LIST.map(p => p.id)).size === 48 && PA.LI
   await pg.click('[data-act=style-format][data-format=gradient]'); ok((await pg.locator('#styleForeground').inputValue()).toLowerCase() === '#ffffff' && await pg.locator('#styleFormat').inputValue() === 'gradient', 'la forma «Degradado» vuelve al texto blanco');
   await pg.click('[data-act=apply-button-style]'); await pg.waitForSelector('#buttonStyleDialog', { state: 'hidden' }); const bs = (await draft()).buttonStyles[btnId]; ok(bs && bs.format === 'gradient' && bs.background.toLowerCase() === '#0e7490', 'aplicar guarda el estilo del botón');
   // Paletas nuevas
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.palette-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.palette-card');
   for (const id of ['mostaza', 'lima', 'pizarra']) { await pg.click(`.palette-card[data-id=${id}] [data-act=use-palette]`); ok((await draft()).palette === id, `la paleta «${id}» se aplica`); }
   const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#pantalla'); await m.waitForTimeout(300); ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
-  const mm = await b.newPage({ viewport: { width: 390, height: 800 } }); await mm.goto('http://127.0.0.1:8080/index.html#bloques'); await mm.waitForSelector('.template-card'); await mm.click('.template-card[data-id=tpl-viajes] [data-act=use-template]'); await mm.waitForSelector('#review', { state: 'visible' }); await mm.click('[data-act=card-style]'); await mm.waitForSelector('#cardStyleDialog[open]'); ok(await mm.evaluate(() => { const r = document.getElementById('cardStyleDialog').getBoundingClientRect(); return document.documentElement.scrollWidth <= innerWidth && r.left >= 0 && r.right <= innerWidth; }), 'el diálogo con estilos cabe en móvil');
+  const mm = await b.newPage({ viewport: { width: 390, height: 800 } }); await mm.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await mm.waitForSelector('.template-card'); await mm.click('.template-card[data-id=tpl-viajes] [data-act=use-template]'); await mm.waitForSelector('#review', { state: 'visible' }); await mm.click('[data-act=card-style]'); await mm.waitForSelector('#cardStyleDialog[open]'); ok(await mm.evaluate(() => { const r = document.getElementById('cardStyleDialog').getBoundingClientRect(); return document.documentElement.scrollWidth <= innerWidth && r.left >= 0 && r.right <= innerWidth; }), 'el diálogo con estilos cabe en móvil');
   ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de estilos correctas.`);
 })().catch(e => { console.error(e.message); process.exit(1); });

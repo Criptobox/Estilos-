@@ -10,11 +10,11 @@ ok(P.onAccent('#ffffff') === '#111111' && P.onAccent('#000000') === '#ffffff', '
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.palette-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.palette-card');
   ok(await pg.locator('.palette-card').count() === 48 && await pg.locator('.palette-strip i').count() === 240, 'la biblioteca muestra 48 paletas con sus 5 franjas');
   await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   const base = await pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.innerHTML).join('|'));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.palette-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.palette-card');
   await pg.click('.palette-card[data-id=oceano] [data-act=use-palette]');
   ok((await draft()).palette === 'oceano' && await pg.locator('.palette-card[data-id=oceano] button').getAttribute('aria-pressed') === 'true', 'se guarda la paleta y el botón indica «En uso»');
   await pg.goto('http://127.0.0.1:8080/index.html#pantalla'); await pg.waitForSelector('#phoneContent .component-host');
@@ -30,7 +30,7 @@ ok(P.onAccent('#ffffff') === '#111111' && P.onAccent('#000000') === '#ffffff', '
     ok(await pg.evaluate(() => /rgb\(18, 52, 86\)/.test([...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.innerHTML).join('|'))), 'el estilo propio de la tarjeta manda sobre la paleta'); }
   await pg.click('#composeButton'); const dl = pg.waitForEvent('download'); await pg.click('[data-act=export]'); const file = path.join(os.tmpdir(), 'pal-' + Date.now() + '.html'); await (await dl).saveAs(file); const html = fs.readFileSync(file, 'utf8'); fs.unlinkSync(file);
   ok(html.includes('background:#eaf3f6') && html.includes('#eaf3f6 30%'), 'la exportación usa el fondo de la paleta');
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.palette-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.palette-card');
   await pg.click('.palette-card[data-id=rosa] [data-act=use-palette]'); ok((await draft()).palette === 'rosa' && await pg.locator('.palette-card[data-id=oceano] button').getAttribute('aria-pressed') === 'false', 'elegir otra paleta sustituye a la anterior');
   await pg.keyboard.press('Control+z'); ok((await draft()).palette === 'oceano' && await pg.locator('.palette-card[data-id=oceano] button').getAttribute('aria-pressed') === 'true', 'Ctrl+Z vuelve a la paleta anterior y la biblioteca lo refleja');
   await pg.click('.palette-card[data-id=oceano] [data-act=use-palette]'); ok((await draft()).palette === null, 'volver a pulsar la quita');
@@ -40,7 +40,7 @@ ok(P.onAccent('#ffffff') === '#111111' && P.onAccent('#000000') === '#ffffff', '
   ok(await rx.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-projects-v1'))[0].draft.palette) === 'bosque' && senderDraft.palette === 'bosque', 'el enlace compartido conserva la paleta');
   const bad = await b.newContext({ viewport: { width: 1280, height: 900 } }), bp = await bad.newPage(); await bp.addInitScript(d => localStorage.setItem('estilos-tinta-prototype-v1', d), JSON.stringify({ ...senderDraft, palette: '<img src=x onerror=1>' }));
   await bp.goto('http://127.0.0.1:8080/index.html#pantalla'); await bp.waitForSelector('#phoneContent .component-host'); ok(await bp.evaluate(() => getComputedStyle(document.querySelector('.phone-screen')).backgroundColor) === 'rgb(245, 244, 239)', 'una paleta inválida en el borrador se ignora');
-  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques'); await m.waitForSelector('.palette-card');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await m.waitForSelector('.palette-card');
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
   ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de paletas correctas.`);
 })().catch(e => { console.error(e); process.exit(1); });

@@ -12,7 +12,7 @@ ok(TT.problems({ blocks: [{ id: 'c-coral', repeat: 9 }] }, byId).length >= 1 && 
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card');
   ok(await pg.locator('.template-card').count() === 9, 'la biblioteca muestra las 9 plantillas');
   ok(await pg.evaluate(() => [...document.querySelectorAll('.template-card')].every(c => c.querySelectorAll('.component-host').length >= 3 && [...c.querySelectorAll('.component-host')].every(h => h.shadowRoot.textContent.trim().length > 0))), 'cada vista previa dibuja bloques reales con contenido');
   await pg.waitForFunction(() => { const f = document.querySelector('.template-frame'); return Math.abs(f.querySelector('.template-screen').getBoundingClientRect().width - f.getBoundingClientRect().width) < 4; }, null, { timeout: 5000 }); ok(true, 'la vista previa se escala al ancho de la tarjeta');
@@ -28,11 +28,11 @@ ok(TT.problems({ blocks: [{ id: 'c-coral', repeat: 9 }] }, byId).length >= 1 && 
   ok(/aplicada/.test(await pg.locator('#toast').textContent()), 'avisa de que se aplicó y se puede deshacer');
   await pg.keyboard.press('Control+z'); ok(JSON.stringify((await draft()).selected) === JSON.stringify(prev), 'Ctrl+Z restaura la selección anterior');
   await pg.evaluate(() => { const e = document.getElementById('idea'); e.value = 'Mis finanzas personales'; e.dispatchEvent(new Event('input', { bubbles: true })); });
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card');
   await pg.click('.template-card[data-id=tpl-finanzas] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   ok((await draft()).brief === 'Mis finanzas personales', 'conserva tu idea si ya es del mismo sector');
   ok(JSON.stringify((await draft()).selected) === JSON.stringify(['h-minimal', 'c-balance', 'c-txn', 'a-soft', 'n-dark']), 'plantilla de finanzas aplicada (saldo y movimientos)');
-  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques'); await m.waitForSelector('.template-card');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await m.waitForSelector('.template-card');
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil (la fila se desplaza dentro)');
   ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de plantillas correctas.`);
 })().catch(e => { console.error(e); process.exit(1); });

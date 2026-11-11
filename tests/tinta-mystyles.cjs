@@ -23,7 +23,7 @@ store.set('estilos-user-v2', '{roto'); ok(M.read().added.length === 0 && !M.save
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const user = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-user-v2') || '{"added":[]}'));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.gallery-item');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item');
   const before = await pg.locator('.gallery-item').count();
   await pg.click('[data-act=new-mystyle]'); await pg.waitForSelector('#styleDialog[open]');
   ok(await pg.locator('#msTab option').count() >= 8 && await pg.locator('#msVariant option').count() > 1, 'el editor ofrece categorías y diseños base');
@@ -46,7 +46,7 @@ store.set('estilos-user-v2', '{roto'); ok(M.read().added.length === 0 && !M.save
   const w3 = pg.waitForNavigation({ waitUntil: 'load' }); await pg.click('#styleSave'); await w3; await pg.waitForSelector('.gallery-item'); await pg.waitForTimeout(300);
   ok(!(await pg.evaluate(() => window.__pwn)) && await pg.evaluate(() => ![...document.querySelectorAll('.gallery-item .component-host')].some(h => /<script|onclick|onerror/i.test(h.shadowRoot.innerHTML))), 'en la biblioteca tampoco se ejecuta ni se conserva código peligroso');
   // Usar como base desde un diseño de la biblioteca (sin editar/eliminar).
-  await pg.selectOption('#catalogSource', 'library'); await pg.click('.gallery-item .preview-open'); await pg.waitForSelector('#detailDialog[open]');
+  await pg.evaluate(()=>{location.hash='#bloques/todo';}); await pg.selectOption('#catalogSource', 'library'); await pg.click('.gallery-item .preview-open'); await pg.waitForSelector('#detailDialog[open]');
   ok(await pg.locator('#cloneStyle').isVisible() && !(await pg.locator('#editStyle').isVisible()) && !(await pg.locator('#deleteStyle').isVisible()), 'un diseño de la biblioteca solo ofrece usarlo como base');
   await pg.click('#cloneStyle'); await pg.waitForSelector('#styleDialog[open]'); ok(/\(mío\)$/.test(await pg.locator('#msName').inputValue()), 'usar como base rellena el formulario con «(mío)»');
   const w4 = pg.waitForNavigation({ waitUntil: 'load' }); await pg.click('#styleSave'); await w4; await pg.waitForSelector('.gallery-item');
@@ -59,7 +59,7 @@ store.set('estilos-user-v2', '{roto'); ok(M.read().added.length === 0 && !M.save
   ok((await user()).added.length === 2 && !(await user()).added.some(x => x.name === targetName), 'elimina solo ese estilo');
   ok(JSON.parse(await pg.evaluate(() => localStorage.getItem('estilos-favs-v1') || '[]')).length === 0, 'y lo quita de favoritos');
   ok((await pg.evaluate(() => TINTA_LIBRARY.some(b => b.mine))) && (await pg.evaluate(() => TINTA_LIBRARY.filter(b => b.mine).length)) === 2, 'el catálogo refleja los estilos propios restantes');
-  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques'); await m.waitForSelector('.gallery-item'); await m.evaluate(() => document.querySelector('[data-act=new-mystyle]').click()); await m.waitForSelector('#styleDialog[open]');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await m.waitForSelector('.gallery-item'); await m.evaluate(() => document.querySelector('[data-act=new-mystyle]').click()); await m.waitForSelector('#styleDialog[open]');
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth) && await m.evaluate(() => { const r = document.getElementById('styleDialog').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }), 'el editor cabe en móvil');
   ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de Mis estilos correctas.`);
 })().catch(e => { console.error(e); process.exit(1); });

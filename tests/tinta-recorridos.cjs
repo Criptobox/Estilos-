@@ -13,7 +13,7 @@ ok(!/<script|javascript:|\bon[a-z]+=|@import|url\((?!#)|<iframe|<img/i.test(src)
   const current = () => pg.$eval('#screenTabs [aria-pressed=true]', x => x.dataset.id);
   const tap = (sel, i = 0) => pg.evaluate(([sel, i]) => { const el = [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.querySelector(sel)).filter(Boolean)[i]; if (!el) throw Error('no ' + sel); el.click(); }, [sel, i]);
   const text = () => pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.textContent).join(' ').replace(/\s+/g, ' '));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.gallery-item');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item');
   ok(await pg.evaluate(fl => fl.every(f => !!document.querySelector(`.gallery-item[data-id="f-${f}"]`)), S.FLOWS), 'las 7 pantallas están en la biblioteca');
   await pg.click('.template-card[data-id=tpl-cafeteria] [data-act=use-template]'); await pg.waitForSelector('#screenTabs button');
   ok((await tabs()).join() === 'inicio,explorar,guardados,perfil,bienvenida,acceso,detalle,carrito,listo,ajustes,chat', 'cafetería: 4 pestañas + 7 pantallas de recorrido');
@@ -45,7 +45,7 @@ ok(!/<script|javascript:|\bon[a-z]+=|@import|url\((?!#)|<iframe|<img/i.test(src)
   await ex.evaluate(() => [...document.querySelectorAll('[data-screen=inicio] estilos-block[data-card]')][0].shadowRoot.querySelector('article,div').click()); ok(await vis() === 'detalle', 'exportada: una tarjeta abre el detalle');
   await tapEx('[data-go=back]'); ok(await vis() === 'inicio', 'exportada: Volver');
   // Un sector sin comercio no tiene carrito
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-salud] [data-act=use-template]'); await pg.waitForSelector('#screenTabs button');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-salud] [data-act=use-template]'); await pg.waitForSelector('#screenTabs button');
   ok(!(await tabs()).includes('carrito') && (await tabs()).includes('listo'), 'salud: sin carrito'); await pg.click('#screenTabs [data-id=listo]'); ok(/¡Cita agendada!/.test(await text()), 'salud: «¡Cita agendada!»');
   ok(!errors.length, 'sin errores de página: ' + errors.join(' | '));
   await b.close(); console.log(`${n} comprobaciones de pantallas de recorrido correctas.`);

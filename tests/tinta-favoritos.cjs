@@ -5,7 +5,7 @@ const { chromium } = require('playwright'); const assert = require('node:assert/
   await pg.addInitScript(() => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('estilos-favs-v1', JSON.stringify(['tar-1', 'otro-id-clasico', '<script>'])); } });
   await pg.goto('http://127.0.0.1:8080/index.html'); await pg.click('[data-act=menu]');
   ok(!(await pg.locator('#siteMenu a[href="biblioteca.html"]').count()), 'el menú ya no lleva a la biblioteca antigua');
-  await pg.click('#siteMenu [data-page=explore]'); await pg.waitForSelector('.gallery-item'); ok(await pg.locator('#explore').isVisible(), '«Biblioteca de diseños» abre Los bloques sin salir de Tinta');
+  await pg.click('#siteMenu [data-page=explore]'); await pg.waitForSelector('.lib-card'); await pg.click('.lib-all'); await pg.waitForSelector('.gallery-item'); ok(await pg.locator('#explore').isVisible(), '«Biblioteca de diseños» abre Los bloques sin salir de Tinta');
   ok(await pg.locator('#favCount').textContent() === '1', 'hereda los favoritos de la biblioteca clásica (tar-1 → lib-tar-1)');
   ok(await pg.locator('.gallery-item[data-id=lib-tar-1] .fav-button').getAttribute('aria-pressed') === 'true', 'tar-1 aparece marcado');
   await pg.locator('.gallery-item[data-id=lib-tar-3] .fav-button').click();

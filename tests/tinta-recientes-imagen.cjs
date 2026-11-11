@@ -11,7 +11,7 @@ ok(I.slug('Producto con aire!') === 'producto-con-aire' && I.slug('') === 'disen
   ok(await pg.evaluate(s => { const d = new DOMParser().parseFromString(s, 'image/svg+xml'); return !d.querySelector('parsererror') && !!d.querySelector('foreignObject'); }, evil), 'el SVG es XML válido con foreignObject');
   // Recientes
   await pg.evaluate(() => localStorage.setItem('estilos-recent', JSON.stringify(['tar-2', 'solo-clasica', '<x>'])));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.reload(); await pg.waitForSelector('.gallery-item');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.reload(); await pg.waitForSelector('.gallery-item');
   ok(await pg.locator('#recentCount').textContent() === '1', 'hereda los recientes de la clásica (tar-2) y descarta lo desconocido');
   await pg.click('.gallery-item[data-id=lib-tar-5] .preview-open'); await pg.waitForSelector('#detailDialog[open]');
   ok(await pg.locator('#recentCount').textContent() === '2', 'abrir un diseño lo añade a recientes');
@@ -31,7 +31,7 @@ ok(I.slug('Producto con aire!') === 'producto-con-aire' && I.slug('') === 'disen
   ok(await pg.evaluate(() => [...document.querySelectorAll('.gallery-item')].map(e => e.dataset.id).join()) === 'lib-tar-1,lib-tar-5,lib-tar-2', 'ordenados del más reciente al más antiguo');
   await pg.click('#recentToggle'); ok(await pg.locator('.gallery-item').count() > 100, 'quitar el filtro vuelve a mostrar todo');
   await pg.click('.gallery-item[data-id=lib-tar-7] [data-act=select]'); ok((await pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-recent'))))[0] === 'tar-7', 'elegir un diseño también cuenta como reciente');
-  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques'); await m.waitForSelector('.gallery-item');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await m.waitForSelector('.gallery-item');
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
   ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de recientes e imágenes correctas.`);
 })().catch(e => { console.error(e); process.exit(1); });

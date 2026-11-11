@@ -13,7 +13,7 @@ const CHECK = () => { const L = c => { const [r, g, b] = c.slice(0, 3).map(v => 
 (async () => {
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 390, height: 900 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message)); await pg.emulateMedia({ reducedMotion: 'reduce' });
   await pg.addInitScript(() => addEventListener('DOMContentLoaded', () => { const g = document.getElementById('gallery'); if (g) g.classList.add('all'); }));
-  await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.gallery-item');
+  await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item');
   ok(await pg.evaluate(ids => ids.every(id => { const h = document.querySelector(`.gallery-item[data-id="${id}"] .component-host`); return h && h.shadowRoot.textContent.trim().length > 5; }), ids), 'los 17 aparecen en la biblioteca con contenido');
   ok(await pg.evaluate(() => [...document.querySelectorAll('.gallery-item .role-tag')].every(t => !/undefined/.test(t.textContent))), 'ninguna ficha muestra «undefined» en su etiqueta de categoría');
   ok(await pg.evaluate(() => [...document.querySelectorAll('#catalogCategory option')].some(o => o.value === 'flow') && document.querySelector('.gallery-item[data-id="f-chat"] .role-tag').textContent.startsWith('Pantallas de recorrido')), 'las pantallas de recorrido tienen su categoría');

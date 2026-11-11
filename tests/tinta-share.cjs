@@ -7,7 +7,7 @@ let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
   ok(compressed && /^t1=[A-Za-z0-9_-]+$/.test(code), 'codifica comprimido (#t1=…)');
   ok(back.brief === 'café' && back.selected[0] === 'lib-tar-1' && back.content['lib-tar-1'][0] === 'Hola', 'ida y vuelta sin pérdida');
   ok(Object.keys(back.assets).length === 0 && !code.includes('AAAA'), 'las imágenes subidas no viajan en el enlace');
-  ok(T.isShareHash('#t1=abc') && !T.isShareHash('#p1=abc') && !T.isShareHash('#bloques') && !T.isShareHash('#t1=a b'), 'solo reconoce enlaces de Tinta');
+  ok(T.isShareHash('#t1=abc') && !T.isShareHash('#p1=abc') && !T.isShareHash('#bloques/todo') && !T.isShareHash('#t1=a b'), 'solo reconoce enlaces de Tinta');
   let failed = 0; for (const bad of ['#t1=!!!', '#t1=AAAA', '#t0=bm8gZXMganNvbg']) { try { if ((await T.decode(bad)) === null) failed++; } catch (e) { failed++; } } ok(failed === 3, 'enlaces corruptos se rechazan (null o error), nunca se aceptan');
   const bomb = Buffer.from('x'.repeat(10)).toString('base64url'); ok((await T.decode('#t0=' + bomb).catch(() => 'err')) === 'err', 'JSON inválido se rechaza');
 

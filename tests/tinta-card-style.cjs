@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
  const ok=(v,m)=>{assert.ok(v,m);count++;};p.on('pageerror',e=>errors.push(e.message));
  const color=async(id,value)=>p.locator(id).evaluate((el,v)=>{el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));},value);
  const detail=id=>p.locator('.gallery [data-act=detail][data-id="'+id+'"]').click();
- await p.goto('http://localhost:8081/crear.html#bloques');await p.locator('.gallery-item').first().waitFor();
+ await p.goto('http://localhost:8081/crear.html#bloques/todo');await p.locator('.gallery-item').first().waitFor();
  ok(await p.locator('.gallery-item').count()===181,'catalog unchanged');await detail('c-summary');
  const original=await p.locator('#detailStage .summary').evaluate(el=>el.outerHTML);
  await p.click('#detailCardStyleButton');ok(await p.locator('#cardStyleDialog').isVisible(),'detail inspector');
@@ -43,7 +43,7 @@ const assert=require('node:assert/strict');
  await p.click('[data-act=card-style][data-id=c-summary]');await p.click('[data-act=reset-card-style]');
  ok(await p.evaluate(()=>JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).cardStyles['c-summary'])===undefined,'reset removes style');
  ok(await p.locator('#reviewCount').textContent()==='1 seleccionados','reset preserves selection');
- await p.locator('#review .page-heading [data-page=explore]').click();await p.locator('#explore').waitFor({state:'visible'});await p.click('#themeToggle');
+ await p.evaluate(()=>{location.hash='#bloques/todo';});await p.locator('#explore').waitFor({state:'visible'});await p.click('#themeToggle');
  await detail('c-coffee');await p.click('#detailCardStyleButton');await color('#cardStyleBackground','#e5c6a0');
  for(const width of [320,390,768,1440]){await p.setViewportSize({width,height:1000});ok(await p.locator('#cardStyleDialog').evaluate(e=>e.scrollWidth<=e.clientWidth+1),width+' inspector no overflow');await p.locator('#cardStylePreview').scrollIntoViewIfNeeded();await p.screenshot({path:(process.env.SHOTS_DIR||'/home/user/shots')+'/tinta-card-style-dark-'+width+'.png'});}
  await p.click('[data-act=apply-card-style]');const fav=p.locator('#detailStage [data-ts-action=favorite]');await fav.click();ok(await fav.getAttribute('aria-pressed')==='true','favorite preserved');await p.locator('#detailStage [data-ts-select]').check();ok(await p.locator('#detailStage .ts-selected').count()===1,'selection state preserved');
