@@ -18,7 +18,7 @@ const EXCLUDE = [['#phoneContent'], ['#phoneNav'], ['.template-frame'], ['.galle
     await noOverflow('Tu idea'); await scan('Tu idea');
     await pg.click('.site-header>nav [data-page=explore]'); await pg.waitForSelector('.lib-card');
     ok(await pg.locator('.lib-card').count() >= 15 && await pg.evaluate(() => getComputedStyle(document.querySelector('.selection-tray')).display === 'none'), 'la biblioteca abre con sus categorías y la bandeja oculta mientras no hay selección');
-    await pg.click('.lib-card[data-cat=paletas]'); await pg.waitForSelector('.palette-card:not([hidden])'); ok(await pg.evaluate(() => document.getElementById('explore').dataset.kind === 'palettes' && document.querySelectorAll('.palette-card:not([hidden])').length === 48), 'una categoría muestra solo lo suyo (48 paletas)');
+    await pg.click('.lib-card[data-cat=paletas]'); await pg.waitForSelector('.palette-card:not([hidden])'); ok(await pg.evaluate(() => document.getElementById('explore').dataset.kind === 'palettes' && document.querySelectorAll('.palette-card:not([hidden])').length === 66), 'una categoría muestra solo lo suyo (66 paletas)');
     await pg.click('.lib-back'); await pg.click('.lib-card[data-cat=tarjetas]'); await pg.waitForSelector('.gallery-item'); ok(await pg.evaluate(() => [...document.querySelectorAll('.gallery-item')].every(g => /Tarjetas/.test(g.querySelector('.role-tag').textContent))), 'Tarjetas solo enseña tarjetas');
     await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.gallery-item');
     ok(await pg.evaluate(() => getComputedStyle(document.getElementById('gallery')).gridTemplateColumns.split(' ').length === 2), 'galería en dos columnas');

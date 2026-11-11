@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 68`, `versionName 12.38`.
+- Android: `versionCode 69`, `versionName 12.39`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -301,6 +301,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.36**: 8 estilos visuales para toda la pantalla (minimalismo, suizo, bento, clay, liquid glass, neofuturismo, brutalismo, neumorfismo). Ver `docs/CHANGELOG-12.36.md`.
 - **12.37**: 6 plantillas inspiradas en apps reales (19 bloques nuevos) y selector de barra inferior. Ver `docs/CHANGELOG-12.37.md`.
 - **12.38**: 4 plantillas más (fitness oscuro, viajes de cristal, comida a domicilio, transporte) y 17 bloques. Ver `docs/CHANGELOG-12.38.md`.
+- **12.39**: 18 paletas más de tus referencias (66 en total, 19 oscuras). Ver `docs/CHANGELOG-12.39.md`.
 - **12.21**: el nombre de tu app en la marca de las cabeceras. Ver `docs/CHANGELOG-12.21.md`.
 - **12.20**: accesibilidad WCAG 2.1 AA (contraste, nombres, tema oscuro) con prueba automática axe-core. Ver `docs/CHANGELOG-12.20.md`.
 - **12.19**: precios con formato propio por sector. Ver `docs/CHANGELOG-12.19.md`.
