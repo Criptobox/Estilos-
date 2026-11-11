@@ -7,7 +7,8 @@ for (const m of fs.readFileSync(path.join(__dirname, '../web/js/tinta-widgets.js
 for (const m of fs.readFileSync(path.join(__dirname, '../web/js/tinta-refs.js'), 'utf8').matchAll(/id: '([a-z]-[a-z0-9-]+)', role: '(\w+)'/g)) byId[m[1]] = { role: m[2] };
 for (const m of fs.readFileSync(path.join(__dirname, '../web/js/tinta-refs2.js'), 'utf8').matchAll(/id: '([a-z]-[a-z0-9-]+)', role: '(\w+)'/g)) byId[m[1]] = { role: m[2] };
 for (const m of fs.readFileSync(path.join(__dirname, '../web/js/tinta-refs3.js'), 'utf8').matchAll(/id: '([a-z]-[a-z0-9-]+)', role: '(\w+)'/g)) byId[m[1]] = { role: m[2] };
-ok(TT.LIST.length === 22 && new Set(TT.LIST.map(t => t.id)).size === 22, 'hay 22 plantillas con id único');
+for (const m of fs.readFileSync(path.join(__dirname, '../web/js/tinta-refs4.js'), 'utf8').matchAll(/id: '([a-z]-[a-z0-9-]+)', role: '(\w+)'/g)) byId[m[1]] = { role: m[2] };
+ok(TT.LIST.length === 26 && new Set(TT.LIST.map(t => t.id)).size === 26, 'hay 26 plantillas con id único');
 ok(TT.LIST.every(t => TT.problems(t, byId).length === 0), 'todas usan bloques que existen y tienen cabecera, tarjetas y barra');
 ok(TT.LIST.every(t => { const d = TS.detect(t.brief); return d && d.id === t.sector; }), 'la idea de ejemplo de cada plantilla activa su sector');
 ok(new Set(TT.LIST.map(t => t.sector)).size === 8, 'las plantillas cubren los 8 sectores');
@@ -16,7 +17,7 @@ ok(TT.problems({ blocks: [{ id: 'c-coral', repeat: 9 }] }, byId).length >= 1 && 
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 } }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
   const draft = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
   await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card');
-  ok(await pg.locator('.template-card').count() === 22, 'la biblioteca muestra las 22 plantillas');
+  ok(await pg.locator('.template-card').count() === 26, 'la biblioteca muestra las 26 plantillas');
   ok(await pg.evaluate(() => [...document.querySelectorAll('.template-card')].every(c => c.querySelectorAll('.component-host').length >= 3 && [...c.querySelectorAll('.component-host')].every(h => h.shadowRoot.textContent.trim().length > 0))), 'cada vista previa dibuja bloques reales con contenido');
   await pg.waitForFunction(() => { const f = document.querySelector('.template-frame'); return Math.abs(f.querySelector('.template-screen').getBoundingClientRect().width - f.getBoundingClientRect().width) < 4; }, null, { timeout: 5000 }); ok(true, 'la vista previa se escala al ancho de la tarjeta');
   ok((await pg.locator('[data-act=use-template]').first().getAttribute('aria-label')).startsWith('Usar la plantilla'), 'botones con etiqueta accesible');
