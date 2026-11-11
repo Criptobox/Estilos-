@@ -4,8 +4,10 @@
    Sin texto ni scripts: solo formas. Datos puros. */
 (function (root) {
   'use strict';
-  const sh = '<ellipse cx="122" cy="126" rx="72" ry="9" fill="#2b2118" opacity=".14"/>';
-  const wrap = body => '<svg viewBox="0 0 240 140" aria-hidden="true">' + sh + body + '</svg>';
+  /* Acabado con volumen: luz puntual que da brillo y relieve a cada forma, sombra proyectada y sombra de contacto suave. */
+  const DEFS = '<defs><radialGradient id="tg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#2b2118" stop-opacity=".34"/><stop offset="1" stop-color="#2b2118" stop-opacity="0"/></radialGradient><filter id="tv" x="-12%" y="-12%" width="124%" height="132%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="2.6" result="bl"/><feSpecularLighting in="bl" surfaceScale="4" specularConstant=".75" specularExponent="24" lighting-color="#ffffff" result="sp"><fePointLight x="46" y="-36" z="120"/></feSpecularLighting><feComposite in="sp" in2="SourceAlpha" operator="in" result="sp2"/><feComposite in="SourceGraphic" in2="sp2" operator="arithmetic" k1="0" k2="1" k3=".8" k4="0" result="lit"/><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#2b2118" flood-opacity=".3"/></filter></defs>';
+  const sh = '<ellipse cx="122" cy="127" rx="78" ry="10" fill="url(#tg)"/>';
+  const wrap = body => '<svg viewBox="0 0 240 140" aria-hidden="true">' + DEFS + sh + '<g filter="url(#tv)">' + body + '</g></svg>';
   /* c = { a: acento, b: acento 2 (claro), i: tinta, p: papel } */
   const ART = {
     cup: null, /* la taza original de la tarjeta */
