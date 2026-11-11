@@ -8,6 +8,7 @@
   const CATEGORIES = [
     { id: 'plantillas', name: 'Plantillas', desc: 'Apps completas listas para adaptar a tu idea.', special: 'templates', glyph: '▣', color: ['#c8421f', '#ca4a28'] },
     { id: 'paletas', name: 'Paletas de color', desc: 'Capas de color para toda la pantalla, claras y oscuras.', special: 'palettes', glyph: '◐', color: ['#5a48c2', '#7465cc'] },
+    { id: 'estilos', name: 'Estilos visuales', desc: 'Minimalismo, suizo, bento, clay, cristal, neón, brutalismo y neumorfismo para toda la pantalla.', special: 'styles', glyph: '❖', color: ['#8a3f6b', '#9d5e83'] },
     { id: 'animaciones', name: 'Animaciones', desc: 'Entradas, efectos al tocar y microinteracciones.', special: 'motion', glyph: '✦', color: ['#0b6278', '#377e90'] },
     { id: 'barras', name: 'Barras inferiores', desc: 'Todas las barras de navegación de la app.', roles: ['nav'], glyph: '▭', color: ['#262624', '#747473'],
       subs: [S('esenciales', 'Esenciales y limpias', ['n-soft', 'lib-bar-2', 'lib-bar-10', 'lib-bar-11', 'lib-bar-12']), S('flotantes', 'Flotantes y en isla', ['n-dark', 'lib-bar-1', 'lib-bar-4']), S('central', 'Con botón central', ['n-float', 'lib-bar-3', 'lib-bar-5', 'lib-bar-7']), S('activo', 'Indicador de activo', ['lib-bar-6', 'lib-bar-8', 'lib-bar-9'])] },
@@ -35,6 +36,7 @@
   ];
   /* Animaciones: tres tipos de la capa de movimiento + los bloques de microinteracciones. */
   const MOTION_SUBS = [{ id: 'entrance', name: 'Entrada' }, { id: 'card', name: 'Tarjetas' }, { id: 'action', name: 'Botón principal' }, { id: 'micro', name: 'Microinteracciones' }];
+  const STYLE_SUBS = [{ id: 'limpios', name: 'Limpios y ordenados' }, { id: 'suaves', name: 'Suaves y táctiles' }, { id: 'cristal', name: 'Cristal y neón' }, { id: 'atrevidos', name: 'Atrevidos' }];
   const SAVED_SUBS = [{ id: 'favoritos', name: 'Favoritos' }, { id: 'recientes', name: 'Recientes' }, { id: 'elegidos', name: 'Elegidos' }, { id: 'mios', name: 'Mis estilos' }];
   const PALETTE_SUBS = [{ id: 'claras', name: 'Claras' }, { id: 'oscuras', name: 'Oscuras' }, { id: 'rojos', name: 'Rojos, naranjas y dorados' }, { id: 'verdes', name: 'Verdes' }, { id: 'azules', name: 'Azules y turquesas' }, { id: 'violetas', name: 'Violetas y rosas' }, { id: 'neutros', name: 'Neutras' }];
   const MOTION_BLOCK_IDS = id => /^lib-anim-/.test(id);
@@ -52,6 +54,7 @@
   function subsFor(cat, blocks) {
     if (cat.id === 'animaciones') return MOTION_SUBS;
     if (cat.id === 'paletas') return PALETTE_SUBS;
+    if (cat.id === 'estilos') return STYLE_SUBS;
     if (cat.id === 'guardados') return SAVED_SUBS;
     if (!cat.subs) return [];
     const extra = []; const used = new Set((blocks || []).map(b => catOf(b) === cat ? subOf(b) : null));
@@ -77,6 +80,6 @@
     return { page: 'explore', view: 'cat', cat: c.id, sub: sub || 'all' };
   }
   const routeHash = (cat, sub) => '#bloques' + (cat ? '/' + cat + (sub && sub !== 'all' ? '/' + sub : '') : '');
-  root.TintaTaxonomy = { CATEGORIES, MOTION_SUBS, SAVED_SUBS, PALETTE_SUBS, get, catOf, subOf, subsFor, match, paletteFamily, paletteMatch, parseRoute, routeHash, MOTION_BLOCK_IDS };
+  root.TintaTaxonomy = { CATEGORIES, STYLE_SUBS, MOTION_SUBS, SAVED_SUBS, PALETTE_SUBS, get, catOf, subOf, subsFor, match, paletteFamily, paletteMatch, parseRoute, routeHash, MOTION_BLOCK_IDS };
   if (typeof module !== 'undefined') module.exports = root.TintaTaxonomy;
 })(typeof window !== 'undefined' ? window : globalThis);

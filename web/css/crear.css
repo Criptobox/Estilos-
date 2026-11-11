@@ -391,3 +391,17 @@ main{padding-bottom:86px}.page{margin:0 14px!important;padding-top:6px}
 @media(max-width:1100px){.lib-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.lib-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.lib-card{min-height:138px;padding:14px;border-radius:22px}.lib-card b{font-size:14.5px}.lib-card small{font-size:11px}.lib-cat-title h2{font-size:20px}.lib-cat-top{align-items:flex-start;flex-direction:column;gap:8px}.lib-subs{flex-wrap:nowrap;overflow-x:auto;margin:4px -14px 12px;padding:0 14px 4px;scrollbar-width:none}.lib-subs::-webkit-scrollbar{display:none}.lib-subs a{flex:none}.lib-all{grid-column:span 2;min-height:0}}
 @media(prefers-reduced-motion:reduce){.lib-card{transition:none}}
+
+/* ===== Estilos visuales (12.36) ===== */
+.visuals{margin:0 0 26px}
+.visual-card{flex:0 0 190px;scroll-snap-align:start;display:grid;gap:8px;align-content:start;background:linear-gradient(140deg,#faf9f6,#efeee8);border:1px solid #fff;box-shadow:var(--relief);border-radius:24px;padding:10px}
+.visual-card h3{font-size:14px;letter-spacing:-.3px;margin:2px 2px 0}.visual-card p{font-size:11.5px;color:#5a5a53;margin:0 2px;min-height:30px}
+.visual-card.on{outline:2px solid #ff704b;outline-offset:-2px}
+.visual-frame{position:relative;height:270px;border-radius:18px;overflow:hidden;border:1px solid #0000001a}
+.visual-inner{position:absolute;left:0;top:0;width:386px;display:grid;gap:12px;padding:14px 12px;transform:scale(.44);transform-origin:0 0;pointer-events:none}
+#explore[data-view=cat][data-kind=styles] > .visuals{display:block}
+#explore[data-view=cat] > .visuals{display:none}#explore[data-view=cat][data-kind=styles] > .visuals{display:block}
+#explore[data-view=cat][data-kind=styles] #gallery{display:none}
+#explore[data-view=cat][data-kind=styles] .visuals .template-row{flex-wrap:wrap;overflow:visible}
+.visual-card[hidden]{display:none!important}
+:root[data-theme=dark] .visual-card{background:#28282c!important;border-color:#2f2f34!important}:root[data-theme=dark] .visual-card p{color:#b4b4bd}:root[data-theme=dark] .visual-card.on{outline-color:#ff906d}
