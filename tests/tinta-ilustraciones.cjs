@@ -2,7 +2,7 @@
 const { chromium } = require('playwright'); const assert = require('node:assert/strict'); const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
 const A = require('../web/js/tinta-art.js'), TS = require('../web/js/tinta-sectors.js'); let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
 const names = Object.keys(A.ART).filter(k => A.ART[k]);
-ok(names.length === 28 && A.ART.cup === null && ['burger', 'pizza', 'icecream', 'fries', 'soda'].every(k => typeof A.ART[k] === 'function') && /<svg/.test(A.get('burger')) && A.get('nada') === null, 'hay 28 ilustraciones propias (con hamburguesa, pizza, helado, patatas y refresco) más la taza original');
+ok(names.length === 32 && A.ART.cup === null && ['burger', 'pizza', 'icecream', 'fries', 'soda'].every(k => typeof A.ART[k] === 'function') && /<svg/.test(A.get('burger')) && A.get('nada') === null, 'hay 32 ilustraciones propias (con muebles, hamburguesa, pizza, helado, patatas y refresco) más la taza original');
 ok(names.every(k => { const s = A.ART[k](A.colors({})); return /^<svg viewBox="0 0 240 140" aria-hidden="true">/.test(s) && s.endsWith('</svg>') && !/<script|<text|<image|onload|onclick|href|javascript:|<foreignObject/i.test(s); }), 'todas son SVG de 240×140, sin texto, imágenes, enlaces ni scripts');
 ok(TS.SECTORS.every(s => A.BY_SECTOR[s.id] && A.BY_SECTOR[s.id].length >= 3) && Object.values(A.BY_SECTOR).flat().every(k => k in A.ART), 'cada sector tiene 3 o 4 objetos y todos existen');
 ok(new Set(A.BY_SECTOR.comida.map((_, i) => A.pick('comida', i))).size === 4 && A.pick('comida', 0) === null && A.pick('comida', 4) === null && A.pick('tienda', 0) === A.pick('tienda', 4), 'la taza original se conserva y las copias recorren la lista en ciclo');
