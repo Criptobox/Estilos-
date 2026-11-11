@@ -410,3 +410,9 @@ main{padding-bottom:86px}.page{margin:0 14px!important;padding-top:6px}
 .nav-pick{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 auto 10px;font-size:12px;font-weight:700;color:#36352f}
 .nav-pick select{font:inherit;font-size:12.5px;padding:8px 10px;border-radius:12px;border:1px solid #dad7cd;background:#fff;color:#242421;max-width:190px}
 :root[data-theme=dark] .nav-pick{color:#e8e8ec}:root[data-theme=dark] .nav-pick select{background:#28282c;border-color:#3a3a40;color:#f2f2f4}
+
+/* 12.46 · Inicio: el brillo sube detrás de la cabecera y se desvanece arriba y abajo (sin corte recto) */
+.home-page::before{inset:-150px -14px auto -14px!important;height:560px!important;background:radial-gradient(50% 36% at 14% 33%,#ff704b52,transparent 72%),radial-gradient(46% 34% at 90% 36%,#b88cff47,transparent 72%),radial-gradient(40% 28% at 58% 70%,#ffd16638,transparent 72%)!important;-webkit-mask-image:linear-gradient(transparent 0,#000 30%,#000 55%,transparent 100%)!important;mask-image:linear-gradient(transparent 0,#000 30%,#000 55%,transparent 100%)!important}
+:root[data-theme=dark] .home-page::before{background:radial-gradient(50% 36% at 14% 33%,#ff906d33,transparent 72%),radial-gradient(46% 34% at 90% 36%,#b8a6ff2e,transparent 72%)!important}
+/* 12.46 · Tu pantalla: el móvil ocupa todo el ancho del panel y casi sin bordes vacíos */
+@media(max-width:720px){.composition-area{padding:10px 4px 4px}.phone-stand{padding:6px 0 4px;margin-left:0;margin-right:0}.screen-tabs{margin-bottom:2px}}
