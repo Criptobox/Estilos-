@@ -26,17 +26,17 @@ jobs:
       - name: Sintaxis de los JavaScript
         run: for f in web/js/*.js web/sw.js; do node --check "$f" || exit 1; done
       - name: Instalar Playwright y Chromium
+        timeout-minutes: 10
         working-directory: tests
         run: |
           npm ci --no-audit --no-fund
-          # Si el espejo de apt falla por red (DNS), se reintenta en vez de perder el despliegue.
-          for i in 1 2 3; do
-            sudo sed -i 's#http://azure.archive.ubuntu.com#http://archive.ubuntu.com#g' /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null || true
-            sudo apt-get update -o Acquire::Retries=3 || true
-            timeout 240 npx playwright install --with-deps chromium && exit 0
-            echo "Intento $i fallido; reintentando en 20 s"; sleep 20
-          done
-          exit 1
+          # Sin apt: la imagen de GitHub ya trae las librerías del navegador (incluye Chrome).
+          # Antes, --with-deps dependía del espejo de Ubuntu y fallaba o se colgaba por DNS.
+          npx playwright install chromium
+          if node -e "require('playwright').chromium.launch().then(b=>b.close())"; then exit 0; fi
+          echo "Chromium no arranca sin dependencias; se intentan con apt (máx. 5 min)"
+          timeout 300 npx playwright install-deps chromium
+          node -e "require('playwright').chromium.launch().then(b=>b.close())"
       - name: Pruebas de extremo a extremo
         working-directory: tests
         run: npm test  # run-all.cjs: las 22 pruebas con servidor propio
