@@ -6721,6 +6721,1469 @@
       "family_primary_id": "r-fechas"
     },
     {
+      "id": "n-isla-azul",
+      "legacy_id": null,
+      "name": "Isla blanca con pastilla azul",
+      "slug": "isla-blanca-con-pastilla-azul",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Barras inferiores",
+      "type": "component",
+      "description": "Barra blanca redondeada; el destino activo es una pastilla azul con nombre.",
+      "family": "custom.n-isla-azul",
+      "variant_id": "n-isla-azul",
+      "variants": [
+        "n-isla-azul"
+      ],
+      "tags": [
+        "navigation",
+        "Barras inferiores",
+        "nav",
+        "custom.n-isla-azul",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#4fa9d8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "n-isla-azul"
+    },
+    {
+      "id": "n-blanca-naranja",
+      "legacy_id": null,
+      "name": "Barra clara con pastilla naranja",
+      "slug": "barra-clara-con-pastilla-naranja",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Barras inferiores",
+      "type": "component",
+      "description": "Barra clara con destinos en columna; el activo, en pastilla naranja.",
+      "family": "custom.n-blanca-naranja",
+      "variant_id": "n-blanca-naranja",
+      "variants": [
+        "n-blanca-naranja"
+      ],
+      "tags": [
+        "navigation",
+        "Barras inferiores",
+        "nav",
+        "custom.n-blanca-naranja",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ff7a1a",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "n-blanca-naranja"
+    },
+    {
+      "id": "r-fit-hero",
+      "legacy_id": null,
+      "name": "Portada de entrenamiento",
+      "slug": "portada-de-entrenamiento",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Pantalla de bienvenida oscura con título en naranja y botón de empezar.",
+      "family": "custom.r-fit-hero",
+      "variant_id": "r-fit-hero",
+      "variants": [
+        "r-fit-hero"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-fit-hero",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#1a1410",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-fit-hero"
+    },
+    {
+      "id": "r-fit-banner",
+      "legacy_id": null,
+      "name": "Reto con degradado naranja",
+      "slug": "reto-con-degradado-naranja",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Reto destacado con cifra grande, texto y botón de unirse.",
+      "family": "custom.r-fit-banner",
+      "variant_id": "r-fit-banner",
+      "variants": [
+        "r-fit-banner"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-fit-banner",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ff7a1a",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-fit-banner"
+    },
+    {
+      "id": "r-fit-chips",
+      "legacy_id": null,
+      "name": "Categorías de entrenamiento",
+      "slug": "categorias-de-entrenamiento",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Fila de chips oscuros con el elegido en naranja.",
+      "family": "custom.r-fit-chips",
+      "variant_id": "r-fit-chips",
+      "variants": [
+        "r-fit-chips"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-fit-chips"
+      ],
+      "styles": [],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#2a2a2a",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-fit-chips"
+    },
+    {
+      "id": "r-fit-clase",
+      "legacy_id": null,
+      "name": "Clase con entrenador",
+      "slug": "clase-con-entrenador",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Imagen, valoración, nombre, entrenador y botón de empezar.",
+      "family": "custom.r-fit-clase",
+      "variant_id": "r-fit-clase",
+      "variants": [
+        "r-fit-clase"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-fit-clase",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#171717",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-fit-clase"
+    },
+    {
+      "id": "r-viaje-hero",
+      "legacy_id": null,
+      "name": "Destino con panel de cristal",
+      "slug": "destino-con-panel-de-cristal",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Imagen grande del destino con un panel translúcido de datos.",
+      "family": "custom.r-viaje-hero",
+      "variant_id": "r-viaje-hero",
+      "variants": [
+        "r-viaje-hero"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-viaje-hero",
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "styles": [
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#7cc7d8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-viaje-hero"
+    },
+    {
+      "id": "r-viaje-paquete",
+      "legacy_id": null,
+      "name": "Paquete de viaje con título",
+      "slug": "paquete-de-viaje-con-titulo",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Imagen ancha con degradado inferior, título y descripción.",
+      "family": "custom.r-viaje-paquete",
+      "variant_id": "r-viaje-paquete",
+      "variants": [
+        "r-viaje-paquete"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-viaje-paquete",
+        "gradient",
+        "elevated",
+        "travel"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#bfe6ef",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-viaje-paquete"
+    },
+    {
+      "id": "r-viaje-detalle",
+      "legacy_id": null,
+      "name": "Hotel con restaurantes cercanos",
+      "slug": "hotel-con-restaurantes-cercanos",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Panel con nombre, ubicación, valoración y dos restaurantes.",
+      "family": "custom.r-viaje-detalle",
+      "variant_id": "r-viaje-detalle",
+      "variants": [
+        "r-viaje-detalle"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-viaje-detalle",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#d9f1f5",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-viaje-detalle"
+    },
+    {
+      "id": "r-comida-hero",
+      "legacy_id": null,
+      "name": "Portada de reparto de comida",
+      "slug": "portada-de-reparto-de-comida",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Título grande, ilustración y deslizador para empezar.",
+      "family": "custom.r-comida-hero",
+      "variant_id": "r-comida-hero",
+      "variants": [
+        "r-comida-hero"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-comida-hero",
+        "elevated",
+        "food"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#fff0e4",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-comida-hero"
+    },
+    {
+      "id": "r-comida-categorias",
+      "legacy_id": null,
+      "name": "Tipos de comida",
+      "slug": "tipos-de-comida",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Cinco cuadros con icono; el primero está elegido.",
+      "family": "custom.r-comida-categorias",
+      "variant_id": "r-comida-categorias",
+      "variants": [
+        "r-comida-categorias"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-comida-categorias",
+        "food"
+      ],
+      "styles": [],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ffe9d6",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-comida-categorias"
+    },
+    {
+      "id": "r-comida-plato",
+      "legacy_id": null,
+      "name": "Plato con valoración y precio",
+      "slug": "plato-con-valoracion-y-precio",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Imagen con etiquetas, restaurante, nombre, tiempo y precio.",
+      "family": "custom.r-comida-plato",
+      "variant_id": "r-comida-plato",
+      "variants": [
+        "r-comida-plato"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-comida-plato",
+        "elevated",
+        "pricing"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ffe3cc",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-comida-plato"
+    },
+    {
+      "id": "r-combo",
+      "legacy_id": null,
+      "name": "Promoción «hazlo combo»",
+      "slug": "promocion-hazlo-combo",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Franja de oferta con ilustración, texto y botón.",
+      "family": "custom.r-combo",
+      "variant_id": "r-combo",
+      "variants": [
+        "r-combo"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-combo"
+      ],
+      "styles": [],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ffe3cc",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-combo"
+    },
+    {
+      "id": "r-tamanos",
+      "legacy_id": null,
+      "name": "Tamaño, cantidad y pedir",
+      "slug": "tamano-cantidad-y-pedir",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Tres tamaños, selector de cantidad y botón de pedir.",
+      "family": "custom.r-tamanos",
+      "variant_id": "r-tamanos",
+      "variants": [
+        "r-tamanos"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-tamanos"
+      ],
+      "styles": [],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#fff0e4",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-tamanos"
+    },
+    {
+      "id": "r-mosaico-servicios",
+      "legacy_id": null,
+      "name": "Mosaico de servicios oscuro",
+      "slug": "mosaico-de-servicios-oscuro",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Cuatro cuadros negros con icono y etiqueta sobre un panel durazno.",
+      "family": "custom.r-mosaico-servicios",
+      "variant_id": "r-mosaico-servicios",
+      "variants": [
+        "r-mosaico-servicios"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-mosaico-servicios"
+      ],
+      "styles": [],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f1b98d",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-mosaico-servicios"
+    },
+    {
+      "id": "r-actividad",
+      "legacy_id": null,
+      "name": "Actividad reciente",
+      "slug": "actividad-reciente",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Fila oscura con icono, dirección, fecha, importe y flecha.",
+      "family": "custom.r-actividad",
+      "variant_id": "r-actividad",
+      "variants": [
+        "r-actividad"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-actividad",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#171717",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-actividad"
+    },
+    {
+      "id": "r-perfil-atajos",
+      "legacy_id": null,
+      "name": "Perfil con atajos",
+      "slug": "perfil-con-atajos",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Panel durazno con saludo y tres atajos oscuros.",
+      "family": "custom.r-perfil-atajos",
+      "variant_id": "r-perfil-atajos",
+      "variants": [
+        "r-perfil-atajos"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-perfil-atajos",
+        "profile"
+      ],
+      "styles": [],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f1b98d",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-perfil-atajos"
+    },
+    {
       "id": "lib-chat-1",
       "legacy_id": "chat-1",
       "name": "Burbujas claras con avatar",
