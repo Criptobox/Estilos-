@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 72`, `versionName 12.42`.
+- Android: `versionCode 73`, `versionName 12.43`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -305,6 +305,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.40**: asistentes de IA (voz, ayuda y salud): 11 bloques y 3 plantillas. Ver `docs/CHANGELOG-12.40.md`.
 - **12.41**: comida y reparto (hamburguesería oscura, comida pastel, heladería y combos 2×1): 13 bloques y 4 plantillas. Ver `docs/CHANGELOG-12.41.md`.
 - **12.42**: ilustraciones de comida propias (hamburguesa, pizza, helado, patatas y refresco). Ver `docs/CHANGELOG-12.42.md`.
+- **12.43**: paneles de ventas y control (ventas oscuro, finanzas crema y oliva, centro de mando): 10 bloques y 3 plantillas. Ver `docs/CHANGELOG-12.43.md`.
 - **12.21**: el nombre de tu app en la marca de las cabeceras. Ver `docs/CHANGELOG-12.21.md`.
 - **12.20**: accesibilidad WCAG 2.1 AA (contraste, nombres, tema oscuro) con prueba automática axe-core. Ver `docs/CHANGELOG-12.20.md`.
 - **12.19**: precios con formato propio por sector. Ver `docs/CHANGELOG-12.19.md`.

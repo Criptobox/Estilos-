@@ -26,7 +26,7 @@ ok(TT.LIST.every((t, i) => used[i].length >= 1 || t.blocks.some(b => /^r-/.test(
   // Explorar usa la tarjeta «de lista» (la última elegida)
   await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-finanzas] [data-act=use-template]'); await pg.waitForSelector('#screenTabs button');
   await pg.click('#screenTabs [data-id=explorar]'); const ex = await pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.querySelector('article') && h.shadowRoot.querySelector('article').className));
-  ok(ex.filter(c => c === 'txn').length === 4, 'Explorar de finanzas muestra los 4 movimientos (la tarjeta de lista), no el saldo');
+  ok(ex.filter(c => c && c.split(' ')[0] === 'txn').length === 4, 'Explorar de finanzas muestra los 4 movimientos (la tarjeta de lista), no el saldo');
   // Paleta: la etiqueta de la tienda sigue legible
   await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.waitForSelector('.template-card'); await pg.click('.template-card[data-id=tpl-tienda] [data-act=use-template]'); await pg.waitForSelector('#review', { state: 'visible' });
   await pg.goto('http://127.0.0.1:8080/index.html#bloques/todo'); await pg.click('.palette-card[data-id=atardecer] [data-act=use-palette]'); await pg.goto('http://127.0.0.1:8080/index.html#pantalla'); await pg.waitForSelector('#phoneContent .component-host');

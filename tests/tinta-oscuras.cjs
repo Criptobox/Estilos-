@@ -4,6 +4,8 @@ const { chromium } = require('playwright'); const assert = require('node:assert/
 let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
 const P = require('../web/js/tinta-palettes.js'), D = require('../web/js/tinta-dark.js'), TT = require('../web/js/tinta-templates.js');
 const dark = P.LIST.filter(p => p.dark);
+/* Las plantillas de referencias (colores propios) se revisan en tinta-referencias.cjs; aquí, las 8 de sector con cada paleta. */
+const ORIGINALES = ['tpl-cafeteria', 'tpl-tienda', 'tpl-finanzas', 'tpl-fitness', 'tpl-viajes', 'tpl-salud', 'tpl-musica', 'tpl-educacion'];
 ok(dark.length === 19 && dark.every(p => D.isDark(p)) && P.LIST.filter(p => !p.dark).every(p => !D.isDark(p)), 'hay 19 paletas oscuras y las 47 claras no se tratan como oscuras');
 ok(dark.every(p => P.contrast(p.ink, p.surface) >= 7 && P.contrast(p.ink, p.bg) >= 7), 'en cada paleta oscura el texto principal contrasta ≥ 7:1 con fondo y superficie');
 const noche = { ...P.get('noche'), muted: D.muted(P.get('noche')) };
@@ -27,7 +29,7 @@ const CHECK = (sel) => { const L = c => { const [r, g, b] = c.slice(0, 3).map(v 
   }
   for (const pal of [null, 'tinta', 'noche', 'neon', 'lujo']) {
     const bad = [];
-    for (const t of TT.LIST) { await setup(t.id, pal); for (const s of await pg.$$eval('#screenTabs button', bs => bs.map(x => x.dataset.id))) { await pg.click(`#screenTabs [data-id=${s}]`); await pg.waitForTimeout(80); (await pg.evaluate(CHECK)).forEach(x => bad.push(t.id + '/' + s + ' ' + x)); } }
+    for (const t of TT.LIST.filter(x => ORIGINALES.includes(x.id))) { await setup(t.id, pal); for (const s of await pg.$$eval('#screenTabs button', bs => bs.map(x => x.dataset.id))) { await pg.click(`#screenTabs [data-id=${s}]`); await pg.waitForTimeout(80); (await pg.evaluate(CHECK)).forEach(x => bad.push(t.id + '/' + s + ' ' + x)); } }
     ok(bad.length === 0, `${pal || 'sin paleta'}: todos los textos de las 8 plantillas × todas sus pantallas llegan a AA · ${bad.slice(0, 4).join(' | ')}`);
   }
   // Con paleta oscura: pantalla oscura, biblioteca sin oscurecer, exportación oscura y con las correcciones.

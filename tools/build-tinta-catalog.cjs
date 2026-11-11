@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..'),web=path.join(root,'web');
 const read=name=>fs.readFileSync(path.join(web,'js',name+'.js'),'utf8');
 const context=vm.createContext({});
-for(const name of ['util','icons','designs-core','designs-a','designs-b','designs-c','designs-d','data','designs-extra','tinta-states','tinta-catalog','tinta-art','tinta-cards','tinta-avatars','tinta-mascots','tinta-flows','tinta-widgets','tinta-refs','tinta-refs2','tinta-refs3','tinta-refs4'])vm.runInContext(read(name),context,{filename:name+'.js'});
+for(const name of ['util','icons','designs-core','designs-a','designs-b','designs-c','designs-d','data','designs-extra','tinta-states','tinta-catalog','tinta-art','tinta-cards','tinta-avatars','tinta-mascots','tinta-flows','tinta-widgets','tinta-refs','tinta-refs2','tinta-refs3','tinta-refs4','tinta-refs5'])vm.runInContext(read(name),context,{filename:name+'.js'});
 const crear=read('crear'),start=crear.indexOf('function icon('),end=crear.indexOf('\nCATALOG.forEach');
 if(start<0||end<0)throw Error('No se encontró la colección base de Tinta.');
 vm.runInContext(crear.slice(start,end)+'\nCATALOG.forEach(b=>b.source="new");\nthis.curated=CATALOG;',context);
