@@ -32,6 +32,7 @@ if(typeof TINTA_REFS3!=='undefined')CATALOG.push(...TINTA_REFS3);
 if(typeof TINTA_REFS4!=='undefined')CATALOG.push(...TINTA_REFS4);
 if(typeof TINTA_REFS5!=='undefined')CATALOG.push(...TINTA_REFS5);
 if(typeof TINTA_REFS6!=='undefined')CATALOG.push(...TINTA_REFS6);
+if(typeof TINTA_REFS7!=='undefined')CATALOG.push(...TINTA_REFS7);
 CATALOG.forEach(b=>{b.source='new';});
 if(typeof TINTA_LIBRARY!=='undefined')CATALOG.push(...TINTA_LIBRARY);
 const CATEGORY_ORDER=['cards','actions','nav','header'];CATALOG.sort((a,b)=>(CATEGORY_ORDER.includes(a.role)?CATEGORY_ORDER.indexOf(a.role):4)-(CATEGORY_ORDER.includes(b.role)?CATEGORY_ORDER.indexOf(b.role):4));
