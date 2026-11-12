@@ -9,7 +9,7 @@ import re
 root = Path(__file__).resolve().parents[1]
 web = root / 'web'
 parser = argparse.ArgumentParser()
-parser.add_argument('--output', default='/home/user/entrega/Estilos-Tinta.html')
+parser.add_argument('--output', default='dist/Estilos-Tinta.html')
 output = Path(parser.parse_args().output)
 def uri(path, mime):
     return 'data:' + mime + ';base64,' + base64.b64encode(path.read_bytes()).decode('ascii')

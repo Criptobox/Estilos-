@@ -29,7 +29,8 @@ jobs:
         run: |
           V="tinta-${{ github.run_id }}-${{ github.run_attempt }}"
           sed -i "s/const BUILD = \"[^\"]*\"/const BUILD = \"$V\"/" web/sw.js
-          sed -i "s/const APP_VERSION = \"[^\"]*\"/const APP_VERSION = \"14.1.${{ github.run_number }}\"/" web/js/util.js
+          WEB=$(node -p "require('./version.json').web")
+          sed -i "s/const APP_VERSION = \"[^\"]*\"/const APP_VERSION = \"$WEB.${{ github.run_number }}\"/" web/js/util.js
           grep -n "$V" web/sw.js
       - uses: actions/upload-pages-artifact@v3
         with: { path: web }

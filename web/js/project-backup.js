@@ -61,8 +61,10 @@
       validateBackup(data); // no generar un archivo que esta versión no pueda restaurar
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       if (blob.size > MAX_BYTES) fail("El respaldo supera 8 MB. Exporta los proyectos individualmente.");
+      const fileName = "estilos-proyectos-" + new Date().toISOString().slice(0,10) + ".json";
+      if (nativeSave(blob, fileName)) { projectMessage("Elige dónde guardar el respaldo de " + items.length + " proyecto(s)."); return; }
       const url = URL.createObjectURL(blob), link = document.createElement("a");
-      link.href = url; link.download = "estilos-proyectos-" + new Date().toISOString().slice(0,10) + ".json";
+      link.href = url; link.download = fileName;
       document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
       projectMessage("Respaldo preparado: " + items.length + " proyecto(s). Incluye las copias guardadas, no los cambios del borrador sin actualizar.");
     } catch (e) { projectMessage("No se pudo exportar: " + e.message); }

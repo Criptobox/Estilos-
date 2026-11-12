@@ -1,4 +1,13 @@
 /* Utilidades compartidas: escape, color, contraste. Sin dependencias. */
+/* Dentro de la app de Android no existen las descargas del navegador: el APK expone EstilosAndroid.saveFile y el sistema deja elegir dónde guardar. Devuelve true si el archivo se entregó a la app. */
+function nativeSave(blob, name) {
+  const bridge = window.EstilosAndroid;
+  if (!bridge || typeof bridge.saveFile !== "function" || !blob) return false;
+  const reader = new FileReader();
+  reader.onload = () => { const s = String(reader.result); bridge.saveFile(String(name), blob.type || "application/octet-stream", s.slice(s.indexOf(",") + 1)); };
+  reader.readAsDataURL(blob);
+  return true;
+}
 const APP_VERSION = "14.1.0"; /* CI lo reemplaza por 14.1.<n.º de build> en cada despliegue */
 
 function esc(s) {

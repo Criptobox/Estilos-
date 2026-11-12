@@ -17,3 +17,9 @@ keystore.properties
 node_modules/
 
 .DS_Store
+
+# Salidas locales (capturas, entregas y archivos generados)
+dist/
+*.tar.gz
+tests/undefined/
+shots/

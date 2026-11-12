@@ -1067,9 +1067,11 @@ $("btnCopy").addEventListener("click", async () => {
 $("btnDownload").addEventListener("click", () => {
   const isHtml = codeTab === "html";
   const blob = new Blob([codeFor(codeTab)], { type: isHtml ? "text/html" : "text/plain" });
+  const fileName = isHtml ? "estilos-pantalla.html" : codeTab === "tokens" ? "estilos-tokens.json" : "estilos-prompt.txt";
+  if (nativeSave(blob, fileName)) { toast("Elige dónde guardar"); return; }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = isHtml ? "estilos-pantalla.html" : codeTab === "tokens" ? "estilos-tokens.json" : "estilos-prompt.txt";
+  a.download = fileName;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   toast("Descargado");

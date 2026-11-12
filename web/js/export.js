@@ -52,6 +52,7 @@ function dataUrlBytes(u) {
   return { mime: u.slice(5, i), bytes: a };
 }
 function downloadBlob(blob, name, delay) {
+  if (typeof nativeSave === "function" && nativeSave(blob, name)) return;
   const url = URL.createObjectURL(blob), a = document.createElement("a");
   a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), delay || 4000);
