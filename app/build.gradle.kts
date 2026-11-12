@@ -9,12 +9,12 @@ fun versionField(name: String) = Regex("\"$name\"\\s*:\\s*\"?([^\",}\\s]+)").fin
 
 android {
     namespace = "com.estilos.app"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.estilos.app"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 36
         versionCode = versionField("versionCode").toInt()
         versionName = versionField("versionName")
     }

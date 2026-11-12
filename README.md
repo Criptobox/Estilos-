@@ -250,8 +250,8 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 83`, `versionName 12.53`.
-- Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
+- Android: `versionCode 84`, `versionName 12.54`.
+- Application ID: `com.estilos.app`; minSdk 26; targetSdk 36 (Android 16).
 
 ## Ejecutar
 ```bash
@@ -306,6 +306,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.41**: comida y reparto (hamburguesería oscura, comida pastel, heladería y combos 2×1): 13 bloques y 4 plantillas. Ver `docs/CHANGELOG-12.41.md`.
 - **12.42**: ilustraciones de comida propias (hamburguesa, pizza, helado, patatas y refresco). Ver `docs/CHANGELOG-12.42.md`.
 - **12.43**: paneles de ventas y control (ventas oscuro, finanzas crema y oliva, centro de mando): 10 bloques y 3 plantillas. Ver `docs/CHANGELOG-12.43.md`.
+- **12.54**: Android con targetSdk 36 (requisito de Google Play): bordes de pantalla, Atrás predictivo y Gradle/AGP actualizados. Ver `docs/CHANGELOG-12.54.md`.
 - **12.53**: revisión de higiene y Android: exportar y subir archivos funciona dentro de la app, WebView sin acceso a archivos, versión web en `version.json` y repo sin capturas sueltas. Ver `docs/CHANGELOG-12.53.md`.
 - **12.52**: modo claro/oscuro de la pantalla, herramientas para cambiar la barra inferior y darle colores, botones editables en tarjetas y cabeceras, y Estilos visuales sin hueco a los lados. Ver `docs/CHANGELOG-12.52.md`.
 - **12.51**: estilos de fondo (20 fondos en 4 grupos) y la idea ahora arma una pantalla completa con la flecha de enviar. Ver `docs/CHANGELOG-12.51.md`.

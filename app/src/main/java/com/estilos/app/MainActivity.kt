@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import android.webkit.JavascriptInterface
@@ -12,7 +13,10 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.view.WindowInsets
+import android.widget.FrameLayout
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
 
 /**
  * Shell activity: a full-screen WebView that loads the web app from assets.
@@ -97,7 +101,24 @@ class MainActivity : Activity() {
                 }
             }
         }
-        setContentView(web)
+        // Con targetSdk 35+ la app se dibuja bajo las barras del sistema: se reserva su espacio (y el del teclado).
+        val root = FrameLayout(this)
+        root.addView(web, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        root.setOnApplyWindowInsetsListener { view, insets ->
+            if (Build.VERSION.SDK_INT >= 30) {
+                val bars = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.ime())
+                view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            } else {
+                @Suppress("DEPRECATION")
+                view.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
+            }
+            insets
+        }
+        setContentView(root)
+        // Atrás predictivo (API 33+): onBackPressed deja de llamarse, así que se registra el callback del sistema.
+        if (Build.VERSION.SDK_INT >= 33) {
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) { goBack() }
+        }
         web.loadUrl("file:///android_asset/index.html")
     }
 
@@ -129,11 +150,16 @@ class MainActivity : Activity() {
     }
 
     /** Back goes through the web app's own history hook; leaves the app only at the root. */
-    @Deprecated("Activity.onBackPressed is fine for this single-screen shell.")
-    override fun onBackPressed() {
+    private fun goBack() {
         web.evaluateJavascript("(function(){return !!(window.estilosBack&&window.estilosBack())})()") { handled ->
-            if (handled != "true") super.onBackPressed()
+            if (handled != "true") finish()
         }
+    }
+
+    // Android 12 a 32: el sistema sigue llamando a onBackPressed.
+    @Deprecated("Solo para API < 33; en 33+ se usa OnBackInvokedCallback.")
+    override fun onBackPressed() {
+        goBack()
     }
 
     private companion object {
