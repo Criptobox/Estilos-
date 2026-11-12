@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`. Pruebas unitarias (sin navegador):
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 87`, `versionName 12.57`.
+- Android: `versionCode 88`, `versionName 12.58`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 36 (Android 16).
 
 ## Ejecutar
@@ -306,6 +306,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.41**: comida y reparto (hamburguesería oscura, comida pastel, heladería y combos 2×1): 13 bloques y 4 plantillas. Ver `docs/CHANGELOG-12.41.md`.
 - **12.42**: ilustraciones de comida propias (hamburguesa, pizza, helado, patatas y refresco). Ver `docs/CHANGELOG-12.42.md`.
 - **12.43**: paneles de ventas y control (ventas oscuro, finanzas crema y oliva, centro de mando): 10 bloques y 3 plantillas. Ver `docs/CHANGELOG-12.43.md`.
+- **12.58**: tipografías para toda la pantalla (12 letras, selector rápido y categoría nueva). Ver `docs/CHANGELOG-12.58.md`.
 - **12.57**: las fotos de Tinta pasan de localStorage a IndexedDB (ya no se llena la cuota del navegador). Ver `docs/CHANGELOG-12.57.md`.
 - **12.56**: figuras 3D (14 personajes tipo juguete de vinilo y robots cubo) en 5 bloques de avatares. Ver `docs/CHANGELOG-12.56.md`.
 - **12.55**: pruebas unitarias con `node:test` (26 comprobaciones sin navegador) que se ejecutan antes de las de extremo a extremo. Ver `docs/CHANGELOG-12.55.md`.
