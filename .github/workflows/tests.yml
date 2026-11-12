@@ -25,6 +25,9 @@ jobs:
         with: { python-version: "3.12" }
       - name: Sintaxis de los JavaScript
         run: for f in web/js/*.js web/sw.js; do node --check "$f" || exit 1; done
+      - name: Pruebas unitarias
+        working-directory: tests
+        run: node --test unit/*.test.cjs
       - name: Instalar Playwright y Chromium
         timeout-minutes: 10
         working-directory: tests

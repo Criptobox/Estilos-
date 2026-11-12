@@ -1,9 +1,10 @@
 {
   "name": "estilos-tests",
   "private": true,
-  "description": "Pruebas de extremo a extremo de la PWA (Playwright + Chromium)",
+  "description": "Pruebas de extremo a extremo de la PWA (Playwright + Chromium) y pruebas unitarias (node:test)",
   "scripts": {
-    "test": "node run-all.cjs"
+    "test": "node run-all.cjs",
+    "test:unit": "node --test unit/*.test.cjs"
   },
   "devDependencies": {
     "axe-core": "4.10.2",
