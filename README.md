@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`.
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 80`, `versionName 12.50`.
+- Android: `versionCode 81`, `versionName 12.51`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 34.
 
 ## Ejecutar
@@ -306,6 +306,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.41**: comida y reparto (hamburguesería oscura, comida pastel, heladería y combos 2×1): 13 bloques y 4 plantillas. Ver `docs/CHANGELOG-12.41.md`.
 - **12.42**: ilustraciones de comida propias (hamburguesa, pizza, helado, patatas y refresco). Ver `docs/CHANGELOG-12.42.md`.
 - **12.43**: paneles de ventas y control (ventas oscuro, finanzas crema y oliva, centro de mando): 10 bloques y 3 plantillas. Ver `docs/CHANGELOG-12.43.md`.
+- **12.51**: estilos de fondo (20 fondos en 4 grupos) y la idea ahora arma una pantalla completa con la flecha de enviar. Ver `docs/CHANGELOG-12.51.md`.
 - **12.50**: cuatro estilos pro de las referencias (belleza, nutrición con IA, cursos en cristal y seguros): 22 bloques, 8 plantillas y 6 dibujos nuevos; la idea ahora propone una pantalla completa distinta cada vez. Ver `docs/CHANGELOG-12.50.md`.
 - **12.49**: acabado Pro: dibujos con volumen (luz, brillo y sombra) y tres estilos de pantalla (cristal esmerilado, relieve 3D y degradado vivo). Ver `docs/CHANGELOG-12.49.md`.
 - **12.48**: app de mascotas en turquesa (5 bloques, 2 plantillas y 3 perros ilustrados). Ver `docs/CHANGELOG-12.48.md`.

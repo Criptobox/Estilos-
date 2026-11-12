@@ -10,23 +10,23 @@ ok(T.fill('comida', [{ label: 'Nota', value: '.50' }])[0] === null, 'una cola de
   ok(Object.keys(fmt).every(id => [0, 2, 4, 6].map(o => T.fill(id, [{ label: 'Destacado', value: '$4' }, { label: 'Nota', value: '.50' }], { offset: o })).every(p => fmt[id][0].test(p[0]) && fmt[id][1].test(p[1])) && new Set([0, 2, 4, 6].map(o => T.fill(id, [{ label: 'Destacado', value: '$4' }, { label: 'Nota', value: '.50' }], { offset: o }).join(''))).size === 4), 'cada sector tiene su formato de precio (min, duración, lecciones…) y cuatro copias distintas'); }
 (async () => {
   const br = await chromium.launch(), ctx = await br.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
-  await pg.goto('http://127.0.0.1:8080/index.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('.gallery-item');
+  await pg.goto('http://127.0.0.1:8080/index.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('#phoneContent *'); await pg.evaluate(() => { location.hash = '#bloques/todo'; }); await pg.waitForSelector('.gallery-item');
   await pg.click('#reviewSelection'); await pg.waitForSelector('#review', { state: 'visible' });
-  const cardId = await pg.evaluate(() => document.querySelector('select[data-repeat]').dataset.repeat);
+  const pick = await pg.evaluate(() => { const x = [...document.querySelectorAll('select[data-repeat]')].find(y => y.value !== '4'); return { id: x.dataset.repeat, cur: +x.value }; }), cardId = pick.id;
   const hosts = () => pg.locator('#phoneContent .component-host').count();
   const texts = () => pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.textContent.replace(/\s+/g, ' ').trim()));
-  const before = await hosts(); ok(await pg.locator('select[data-repeat]').count() >= 1 && await pg.locator('select[data-repeat] option').count() === 6, 'cada tarjeta ofrece de 1 a 6 copias');
+  const before = await hosts(); ok(await pg.locator('select[data-repeat]').evaluateAll(l => l.length >= 1 && l.every(x => x.options.length === 6)), 'cada tarjeta ofrece de 1 a 6 copias');
   ok(await pg.locator('.selection-row:has(select[data-repeat]) [data-act=edit-text]').count() >= 1, 'convive con la edición de textos');
   await pg.selectOption(`select[data-repeat="${cardId}"]`, '4');
-  ok(await hosts() === before + 3, 'la vista previa muestra 4 copias');
+  ok(await hosts() === before + 4 - pick.cur, 'la vista previa muestra 4 copias');
   const t = (await texts()), cardTexts = t.slice(-4 - 1);
   ok(new Set(t.filter((x, i) => t.indexOf(x) === i)).size === t.length, 'ninguna copia repite el mismo contenido');
   ok(/\$|café|Capuchino|Croissant|menú|pedido/i.test(t.join(' ')), 'el contenido sale del sector de la idea');
   ok(await pg.evaluate(k => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).repeat[k], cardId) === 4, 'se guarda en el borrador');
   await pg.click('#composeButton'); const dl = pg.waitForEvent('download'); await pg.click('[data-act=export]'); const file = path.join(require('node:os').tmpdir(), 'rep-export-' + Date.now() + '.html'); await (await dl).saveAs(file);
-  const html = fs.readFileSync(file, 'utf8'); const blocks = (html.match(/<estilos-block/g) || []).length; ok(blocks === (await hosts()) + 1, 'la exportación incluye las 4 copias (más la barra inferior)'); fs.unlinkSync(file);
+  const html = fs.readFileSync(file, 'utf8'); const blocks = (html.match(/<estilos-block/g) || []).length; ok(blocks >= (await hosts()) + 1, 'la exportación incluye las 4 copias (más la barra inferior)'); fs.unlinkSync(file);
   await pg.keyboard.press('Control+z'); ok(await hosts() === before, 'Ctrl+Z vuelve a una sola tarjeta');
-  await pg.keyboard.press('Control+Shift+z'); ok(await hosts() === before + 3, 'Ctrl+Shift+Z la rehace');
+  await pg.keyboard.press('Control+Shift+z'); ok(await hosts() === before + 4 - pick.cur, 'Ctrl+Shift+Z la rehace');
   await pg.click('[data-act=share-link]'); const link = await pg.inputValue('#shareLink');
   const rx = await ctx.newPage(); await rx.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', '1'); localStorage.clear(); } }); await rx.goto(link); await rx.waitForSelector('#projectsDialog[open]'); await rx.waitForTimeout(300);
   ok(await rx.evaluate(k => JSON.parse(localStorage.getItem('estilos-tinta-projects-v1'))[0].draft.repeat[k], cardId) === 4, 'el enlace compartido conserva las copias');

@@ -12,7 +12,7 @@ let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
   const bomb = Buffer.from('x'.repeat(10)).toString('base64url'); ok((await T.decode('#t0=' + bomb).catch(() => 'err')) === 'err', 'JSON inválido se rechaza');
 
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] }), pg = await ctx.newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
-  await pg.goto('http://127.0.0.1:8080/index.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('.gallery-item');
+  await pg.goto('http://127.0.0.1:8080/index.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('#phoneContent *'); await pg.evaluate(() => { location.hash = '#bloques/todo'; }); await pg.waitForSelector('.gallery-item');
   await pg.click('#reviewSelection'); await pg.waitForSelector('#review', { state: 'visible' });
   await pg.click('[data-act=adapt-text]');
   await pg.click('[data-act=share-link]');

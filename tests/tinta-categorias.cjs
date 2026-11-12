@@ -2,7 +2,7 @@
 const { chromium } = require('playwright'); const axe = require('axe-core'); const assert = require('node:assert/strict');
 let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
 const T = require('../web/js/tinta-taxonomy.js'), P = require('../web/js/tinta-palettes.js');
-ok(T.CATEGORIES.length === 16 && new Set(T.CATEGORIES.map(c => c.id)).size === 16, 'hay 16 categorías con id único');
+ok(T.CATEGORIES.length === 17 && new Set(T.CATEGORIES.map(c => c.id)).size === 17, 'hay 17 categorías con id único');
 ok(T.CATEGORIES.filter(c => c.roles).every(c => c.subs.length >= 2 && c.subs.every(s => s.ids.length >= 1)) && T.CATEGORIES.filter(c => c.roles).every(c => new Set(c.subs.flatMap(s => s.ids)).size === c.subs.flatMap(s => s.ids).length), 'las categorías de bloques tienen subcategorías con bloques y ningún bloque en dos');
 ok(T.parseRoute('#bloques').view === 'hub' && T.parseRoute('#bloques/todo').view === 'todo' && T.parseRoute('#bloques/tarjetas/viajes').sub === 'viajes' && T.parseRoute('#bloques/nada').view === 'hub' && T.parseRoute('#pantalla').page === 'review', 'las rutas se interpretan bien (y las inválidas vuelven al inicio)');
 ok(T.PALETTE_SUBS.every(s => P.LIST.some(p => T.paletteMatch(p, s.id))) && P.LIST.every(p => ['neutros', 'rojos', 'verdes', 'azules', 'violetas'].includes(T.paletteFamily(p))), 'todas las familias de paletas tienen paletas y cada paleta tiene familia');
@@ -14,12 +14,12 @@ const EXCLUDE = [['.gallery-item .component-host'], ['.template-frame'], ['.comp
     const scan = async name => { await pg.addScriptTag({ content: axe.source }); const r = await pg.evaluate(async e => await axe.run({ exclude: e }, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa'] } }), EXCLUDE); const bad = r.violations.filter(v => ['critical', 'serious'].includes(v.impact)); ok(bad.length === 0, `${theme} · ${name}: accesible · ` + bad.map(v => v.id + ' ' + v.nodes.slice(0, 2).map(x => x.target.join(' ').slice(0, 50)).join('|')).join('; ')); };
     const view = () => pg.evaluate(() => document.getElementById('explore').dataset.view + '/' + document.getElementById('explore').dataset.kind);
     await pg.goto('http://127.0.0.1:8080/index.html#bloques'); await pg.waitForSelector('.lib-card');
-    ok(await pg.locator('.lib-card').count() === 17 && await view() === 'hub/' && await pg.locator('.gallery-item').count() === 0, `${theme}: el inicio muestra 16 categorías y «Todo el catálogo», sin la lista de bloques`);
+    ok(await pg.locator('.lib-card').count() === 18 && await view() === 'hub/' && await pg.locator('.gallery-item').count() === 0, `${theme}: el inicio muestra 16 categorías y «Todo el catálogo», sin la lista de bloques`);
     ok(await pg.evaluate(() => [...document.querySelectorAll('.lib-card:not(.lib-all) .lc-count')].every(c => /\d+ (diseños|favoritos)/.test(c.textContent))), `${theme}: cada categoría dice cuántos diseños tiene`);
     ok(await pg.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${theme}: el inicio no desborda`); await scan('inicio');
     // Cada bloque está en una categoría; los conteos del inicio cuadran con lo que muestra cada una
     let total = 0; const cats = await pg.$$eval('.lib-card:not(.lib-all)', cs => cs.map(c => c.dataset.cat));
-    for (const c of cats.filter(c => !['plantillas', 'paletas', 'guardados', 'animaciones', 'estilos'].includes(c))) { await pg.goto('http://127.0.0.1:8080/index.html#bloques/' + c); await pg.waitForSelector('.lib-subs a'); const shown = await pg.locator('.gallery-item').count(); const chip = +(await pg.textContent('.lib-subs a[aria-current=page] span')); ok(shown === chip && shown > 0, `${theme} · ${c}: «Todo» (${chip}) coincide con lo que se ve (${shown})`); total += shown; }
+    for (const c of cats.filter(c => !['plantillas', 'paletas', 'guardados', 'animaciones', 'estilos', 'fondos'].includes(c))) { await pg.goto('http://127.0.0.1:8080/index.html#bloques/' + c); await pg.waitForSelector('.lib-subs a'); const shown = await pg.locator('.gallery-item').count(); const chip = +(await pg.textContent('.lib-subs a[aria-current=page] span')); ok(shown === chip && shown > 0, `${theme} · ${c}: «Todo» (${chip}) coincide con lo que se ve (${shown})`); total += shown; }
     ok(total + 6 === 306, `${theme}: las categorías de bloques (+6 microinteracciones) suman los 306 diseños, ninguno sin clasificar (${total + 6})`);
     // Subcategorías: filtran y el número del chip coincide
     await pg.goto('http://127.0.0.1:8080/index.html#bloques/barras'); await pg.waitForSelector('.lib-subs a'); const subs = await pg.$$eval('.lib-subs a:not([aria-current])', a => a.map(x => [x.getAttribute('href'), +x.querySelector('span').textContent]));

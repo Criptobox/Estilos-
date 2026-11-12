@@ -10,7 +10,7 @@ ok(T.fill('nada', []) === null, 'sector desconocido → null');
 ok(T.SECTORS.every(s => T.fill(s.id, [{ label: 'Título', value: 'Un título medio' }, { label: 'Texto', value: 'Texto largo de ejemplo para el bloque' }]).every(v => typeof v === 'string' && v.length < 60)), 'los textos caben (sin desbordar)');
 (async () => {
   const b = await chromium.launch(), pg = await b.newPage({ viewport: { width: 1280, height: 900 } }), errors = []; pg.on('pageerror', e => errors.push(e.message));
-  await pg.goto('http://127.0.0.1:8080/crear.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('.gallery-item');
+  await pg.goto('http://127.0.0.1:8080/crear.html'); await pg.click('[data-idea=comida]'); await pg.locator('#briefForm [type=submit]').click(); await pg.waitForSelector('#phoneContent *'); await pg.evaluate(() => { location.hash = '#bloques/todo'; }); await pg.waitForSelector('.gallery-item');
   await pg.click('#reviewSelection'); await pg.waitForSelector('#review', { state: 'visible' });
   const st = () => pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).content || {});
   const preview = () => pg.evaluate(() => [...document.querySelectorAll('#phoneContent .component-host')].map(h => h.shadowRoot.textContent.replace(/\\s+/g, ' ')).join('|'));
@@ -31,7 +31,7 @@ ok(T.SECTORS.every(s => T.fill(s.id, [{ label: 'Título', value: 'Un título med
   ok(/No reconoc/.test(await pg.locator('#toast').textContent()) && Object.keys(await st()).length === 0, 'sin sector no cambia nada y lo explica');
   await setIdea('Mi cafetería'); await pg.click('[data-act=adapt-text]'); ok(Object.keys(await st()).length > 0, 'vuelve a adaptar');
   await pg.keyboard.press('Control+z'); ok(Object.keys(await st()).length === 0, 'se puede deshacer con Ctrl+Z');
-  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/crear.html'); await m.click('[data-idea=tienda]'); await m.locator('#briefForm [type=submit]').click(); await m.waitForSelector('.gallery-item'); await m.click('#reviewSelection');
+  const m = await b.newPage({ viewport: { width: 390, height: 800 } }); await m.goto('http://127.0.0.1:8080/crear.html'); await m.click('[data-idea=tienda]'); await m.locator('#briefForm [type=submit]').click(); await m.waitForSelector('#phoneContent *'); await m.evaluate(() => { location.hash = '#bloques/todo'; }); await m.waitForSelector('.gallery-item'); await m.click('#reviewSelection');
   ok(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'sin desbordamiento en móvil');
   ok(errors.length === 0, 'sin excepciones: ' + errors.join('|')); await b.close(); console.log(`${n} comprobaciones de adaptación de textos correctas.`);
 })().catch(e => { console.error(e); process.exit(1); });
