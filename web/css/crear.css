@@ -437,3 +437,14 @@ main{padding-bottom:86px}.page{margin:0 14px!important;padding-top:6px}
 .bg-card h3{font-size:14px;letter-spacing:-.3px;margin:2px 2px 0}.bg-card p{font-size:11.5px;color:#5a5a53;margin:0 2px;min-height:30px}.bg-card.on{outline:2px solid #ff704b;outline-offset:-2px}.bg-card[hidden]{display:none!important}
 :root[data-theme=dark] .bg-card{background:#28282c!important;border-color:#2f2f34!important}:root[data-theme=dark] .bg-card p{color:#b4b4bd}:root[data-theme=dark] .bg-card.on{outline-color:#ff906d}
 @media(max-width:720px){#explore[data-view=cat][data-kind=backgrounds] .backgrounds .template-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:4px 0 14px}#explore[data-view=cat][data-kind=backgrounds] .bg-card{flex:none;min-width:0}}
+
+/* 12.52 · Modo claro/oscuro de la pantalla, herramientas de barra y tarjetas sin hueco en Estilos visuales y Animaciones */
+.theme-pick{display:flex;align-items:center;justify-content:center;gap:6px;margin:6px 0 2px;flex-wrap:wrap}.theme-pick span{font-size:12px;font-weight:700;color:var(--muted)}
+.theme-pick button{border-radius:99px;padding:8px 14px;font-size:12.5px;font-weight:700;background:#fff;border:1px solid #0000001a;color:var(--ink)}
+.theme-pick button[aria-pressed=true]{background:#14141a;color:#fff;border-color:#14141a}
+:root[data-theme=dark] .theme-pick button{background:#2a2a2e;color:#f1f1f1;border-color:#3a3a40}:root[data-theme=dark] .theme-pick button[aria-pressed=true]{background:#ff704b;color:#1a0f0a;border-color:#ff704b}
+.bt-swap{display:grid;gap:4px;max-height:190px;overflow:auto;padding:6px}.bt-swap button{text-align:left;border-radius:12px;padding:9px 12px;font-size:12.5px;background:#f3f2ee;color:#1d1d1b}.bt-swap button[aria-pressed=true]{background:#14141a;color:#fff}
+.bt-ns{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px}.bt-ns label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}.bt-ns input[type=color]{width:34px;height:34px;border:0;padding:0;border-radius:10px;background:none}.bt-ns select{padding:8px;border-radius:10px;font-size:12px}.bt-ns button{padding:8px 12px;border-radius:99px;font-size:12px;font-weight:700;background:#f3f2ee;color:#1d1d1b}
+#explore[data-view=cat][data-kind=styles] .visuals .template-row,#explore[data-view=cat][data-kind=motion] .motions .template-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:0;padding:4px 0 14px}
+#explore[data-view=cat][data-kind=styles] .visual-card,#explore[data-view=cat][data-kind=motion] .motion-card{flex:none;width:auto;min-width:0}
+@media(max-width:720px){#explore[data-view=cat][data-kind=styles] .visuals .template-row,#explore[data-view=cat][data-kind=motion] .motions .template-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
