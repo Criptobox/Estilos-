@@ -24,6 +24,7 @@ const CATALOG = [
 if(typeof TINTA_CARDS!=='undefined')CATALOG.push(...TINTA_CARDS);
 if(typeof TINTA_AVATARS!=='undefined')CATALOG.push(...TINTA_AVATARS);
 if(typeof TINTA_MASCOTS!=='undefined')CATALOG.push(...TINTA_MASCOTS);
+if(typeof TINTA_FIGURAS!=='undefined')CATALOG.push(...TINTA_FIGURAS);
 if(typeof TINTA_FLOWS!=='undefined')CATALOG.push(...TINTA_FLOWS);
 if(typeof TINTA_WIDGETS!=='undefined')CATALOG.push(...TINTA_WIDGETS);
 if(typeof TINTA_REFS!=='undefined')CATALOG.push(...TINTA_REFS);

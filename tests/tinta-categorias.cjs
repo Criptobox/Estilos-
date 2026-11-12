@@ -20,7 +20,7 @@ const EXCLUDE = [['.gallery-item .component-host'], ['.template-frame'], ['.comp
     // Cada bloque está en una categoría; los conteos del inicio cuadran con lo que muestra cada una
     let total = 0; const cats = await pg.$$eval('.lib-card:not(.lib-all)', cs => cs.map(c => c.dataset.cat));
     for (const c of cats.filter(c => !['plantillas', 'paletas', 'guardados', 'animaciones', 'estilos', 'fondos'].includes(c))) { await pg.goto('http://127.0.0.1:8080/index.html#bloques/' + c); await pg.waitForSelector('.lib-subs a'); const shown = await pg.locator('.gallery-item').count(); const chip = +(await pg.textContent('.lib-subs a[aria-current=page] span')); ok(shown === chip && shown > 0, `${theme} · ${c}: «Todo» (${chip}) coincide con lo que se ve (${shown})`); total += shown; }
-    ok(total + 6 === 306, `${theme}: las categorías de bloques (+6 microinteracciones) suman los 306 diseños, ninguno sin clasificar (${total + 6})`);
+    ok(total + 6 === 311, `${theme}: las categorías de bloques (+6 microinteracciones) suman los 311 diseños, ninguno sin clasificar (${total + 6})`);
     // Subcategorías: filtran y el número del chip coincide
     await pg.goto('http://127.0.0.1:8080/index.html#bloques/barras'); await pg.waitForSelector('.lib-subs a'); const subs = await pg.$$eval('.lib-subs a:not([aria-current])', a => a.map(x => [x.getAttribute('href'), +x.querySelector('span').textContent]));
     for (const [href, cnt] of subs) { await pg.goto('http://127.0.0.1:8080/index.html' + href); await pg.waitForSelector('.gallery-item'); ok(await pg.locator('.gallery-item').count() === cnt, `${theme}: ${href} muestra ${cnt}`); }

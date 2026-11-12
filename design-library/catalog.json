@@ -2952,6 +2952,446 @@
       "family_primary_id": "av-efectos"
     },
     {
+      "id": "av-fig-halloween",
+      "legacy_id": null,
+      "name": "Figuras 3D · Halloween",
+      "slug": "figuras-3d-halloween",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Nueve figuras con volumen sobre violeta: calabaza, fantasma, murciélago, monstruo, sombrero, caramelo, araña, calavera y lápida.",
+      "family": "custom.av-fig-halloween",
+      "variant_id": "av-fig-halloween",
+      "variants": [
+        "av-fig-halloween"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-fig-halloween",
+        "gradient"
+      ],
+      "styles": [
+        "gradient"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#6d4bc4",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-fig-halloween"
+    },
+    {
+      "id": "av-fig-chibis",
+      "legacy_id": null,
+      "name": "Figuras 3D · chibis",
+      "slug": "figuras-3d-chibis",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Cinco personajes chibi con nombre: parca, esqueleto, niño cactus, niña panda y pollito.",
+      "family": "custom.av-fig-chibis",
+      "variant_id": "av-fig-chibis",
+      "variants": [
+        "av-fig-chibis"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-fig-chibis",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f2eef8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-fig-chibis"
+    },
+    {
+      "id": "av-fig-perfil",
+      "legacy_id": null,
+      "name": "Perfil con figura 3D",
+      "slug": "perfil-con-figura-3d",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Figura grande sobre degradado, nombre, nivel y tres datos, con botón para cambiar de avatar.",
+      "family": "custom.av-fig-perfil",
+      "variant_id": "av-fig-perfil",
+      "variants": [
+        "av-fig-perfil"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-fig-perfil",
+        "gradient",
+        "elevated",
+        "profile"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#2f9e9a",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-fig-perfil"
+    },
+    {
+      "id": "av-fig-cubos",
+      "legacy_id": null,
+      "name": "Robots cubo 3D",
+      "slug": "robots-cubo-3d",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Cuatro robots cubo de colores con gestos distintos sobre fondo oscuro; uno con sombrero.",
+      "family": "custom.av-fig-cubos",
+      "variant_id": "av-fig-cubos",
+      "variants": [
+        "av-fig-cubos"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-fig-cubos",
+        "gradient"
+      ],
+      "styles": [
+        "gradient"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#1d1d22",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-fig-cubos"
+    },
+    {
+      "id": "av-fig-elige",
+      "legacy_id": null,
+      "name": "Elige tu avatar 3D",
+      "slug": "elige-tu-avatar-3d",
+      "module": "identity",
+      "module_number": "06",
+      "module_name": "Avatares e identidad gráfica",
+      "subcategory": "Avatares",
+      "type": "component",
+      "description": "Selector de seis figuras con la elegida marcada y botón para continuar.",
+      "family": "custom.av-fig-elige",
+      "variant_id": "av-fig-elige",
+      "variants": [
+        "av-fig-elige"
+      ],
+      "tags": [
+        "identity",
+        "Avatares",
+        "avatars",
+        "custom.av-fig-elige",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f6f3fb",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": true,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "av-fig-elige"
+    },
+    {
       "id": "f-bienvenida",
       "legacy_id": null,
       "name": "Bienvenida",

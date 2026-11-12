@@ -20,3 +20,11 @@ test('17 categorías de la biblioteca con id único y subcategorías sin repetir
   assert.equal(Tax.CATEGORIES.length, 17); assert.equal(new Set(Tax.CATEGORIES.map(c => c.id)).size, 17);
   for (const c of Tax.CATEGORIES) { const subs = Tax.subsFor(c, []); assert.equal(new Set(subs.map(s => s.id)).size, subs.length, c.id); }
 });
+test('figuras 3D: 14 personajes y robots cubo, SVG seguros y con ids que no se repiten entre figuras', () => {
+  const F = require('../../web/js/tinta-figuras.js'), claves = Object.keys(F.FIG); assert.equal(claves.length, 14);
+  const a = F.draw('calabaza'), b = F.draw('calabaza'), ids = s => [...s.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
+  assert.ok(ids(a).length > 0 && ids(a).every(i => !ids(b).includes(i)), 'cada dibujo usa ids propios');
+  for (const k of claves) { const s = F.draw(k); assert.ok(/^<svg viewBox="0 0 200 220" role="img" aria-label="[^"]+">/.test(s) && s.endsWith('</svg>'), k); assert.ok(!/<script|<text|<image|onload|onclick|href|javascript:|<foreignObject/i.test(s), k); }
+  for (const m of ['feliz', 'triste', 'calma', 'picaro']) assert.match(F.cubo('#ff6a1a', m, true), /^<svg/);
+  assert.equal(F.length, 5); assert.ok(F.every(b => b.role === 'avatars' && b.noDark && /^av-fig-/.test(b.id)));
+});
