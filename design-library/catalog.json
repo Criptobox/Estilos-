@@ -14019,6 +14019,1961 @@
       "family_primary_id": "r-ma-datos"
     },
     {
+      "id": "n-be-negra",
+      "legacy_id": null,
+      "name": "Flotante clara con activo negro",
+      "slug": "flotante-clara-con-activo-negro",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Barras inferiores",
+      "type": "component",
+      "description": "Barra blanca flotante de cuatro destinos; el activo en círculo negro.",
+      "family": "custom.n-be-negra",
+      "variant_id": "n-be-negra",
+      "variants": [
+        "n-be-negra"
+      ],
+      "tags": [
+        "navigation",
+        "Barras inferiores",
+        "nav",
+        "custom.n-be-negra",
+        "elevated",
+        "glass"
+      ],
+      "styles": [
+        "elevated",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#1b1a18",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "n-be-negra"
+    },
+    {
+      "id": "r-be-detalle",
+      "legacy_id": null,
+      "name": "Detalle de producto de lujo",
+      "slug": "detalle-de-producto-de-lujo",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Encabezados",
+      "type": "component",
+      "description": "Volver y favorito, producto enorme con salpicadura, etiquetas, valoración, texto y precio con botón negro.",
+      "family": "custom.r-be-detalle",
+      "variant_id": "r-be-detalle",
+      "variants": [
+        "r-be-detalle"
+      ],
+      "tags": [
+        "navigation",
+        "Encabezados",
+        "header",
+        "custom.r-be-detalle",
+        "gradient",
+        "elevated",
+        "product",
+        "pricing"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f3efe9",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-be-detalle"
+    },
+    {
+      "id": "r-be-inmersivo",
+      "legacy_id": null,
+      "name": "Historia inmersiva",
+      "slug": "historia-inmersiva",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Pantalla completa taupe con autora, titular, acciones laterales, progreso y producto con precio.",
+      "family": "custom.r-be-inmersivo",
+      "variant_id": "r-be-inmersivo",
+      "variants": [
+        "r-be-inmersivo"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-be-inmersivo",
+        "gradient",
+        "elevated",
+        "glass",
+        "product",
+        "pricing",
+        "progress"
+      ],
+      "styles": [
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#c8b6a6",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-be-inmersivo"
+    },
+    {
+      "id": "r-be-buscar",
+      "legacy_id": null,
+      "name": "Buscador con categorías y marcas",
+      "slug": "buscador-con-categorias-y-marcas",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Encabezados",
+      "type": "component",
+      "description": "Título con volver y lupa, pestañas con subrayado dorado, categorías redondas y marcas en píldoras.",
+      "family": "custom.r-be-buscar",
+      "variant_id": "r-be-buscar",
+      "variants": [
+        "r-be-buscar"
+      ],
+      "tags": [
+        "navigation",
+        "Encabezados",
+        "header",
+        "custom.r-be-buscar",
+        "elevated",
+        "search"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f5f2ed",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-be-buscar"
+    },
+    {
+      "id": "r-be-producto",
+      "legacy_id": null,
+      "name": "Producto de belleza",
+      "slug": "producto-de-belleza",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Ficha clara con frasco con volumen, precio, nombre y contenido.",
+      "family": "custom.r-be-producto",
+      "variant_id": "r-be-producto",
+      "variants": [
+        "r-be-producto"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-be-producto",
+        "elevated",
+        "product",
+        "pricing"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f3efe9",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-be-producto"
+    },
+    {
+      "id": "n-nu-negra",
+      "legacy_id": null,
+      "name": "Negra con escáner naranja",
+      "slug": "negra-con-escaner-naranja",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Barras inferiores",
+      "type": "component",
+      "description": "Barra negra de cinco destinos con el botón central del escáner en naranja.",
+      "family": "custom.n-nu-negra",
+      "variant_id": "n-nu-negra",
+      "variants": [
+        "n-nu-negra"
+      ],
+      "tags": [
+        "navigation",
+        "Barras inferiores",
+        "nav",
+        "custom.n-nu-negra",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#26262a",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "n-nu-negra"
+    },
+    {
+      "id": "r-nu-arco",
+      "legacy_id": null,
+      "name": "Panel con arco de calorías",
+      "slug": "panel-con-arco-de-calorias",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Encabezados",
+      "type": "component",
+      "description": "Calendario y avisos, arco de diez piezas naranja con las calorías del día y botón de añadir.",
+      "family": "custom.r-nu-arco",
+      "variant_id": "r-nu-arco",
+      "variants": [
+        "r-nu-arco"
+      ],
+      "tags": [
+        "navigation",
+        "Encabezados",
+        "header",
+        "custom.r-nu-arco",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f4ede6",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-nu-arco"
+    },
+    {
+      "id": "r-nu-comida",
+      "legacy_id": null,
+      "name": "Comida registrada",
+      "slug": "comida-registrada",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Plato, nombre y hora, calorías con porcentaje de la meta y macros.",
+      "family": "custom.r-nu-comida",
+      "variant_id": "r-nu-comida",
+      "variants": [
+        "r-nu-comida"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-nu-comida",
+        "elevated",
+        "food"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f6efe8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-nu-comida"
+    },
+    {
+      "id": "r-nu-categorias",
+      "legacy_id": null,
+      "name": "Categorías de comida",
+      "slug": "categorias-de-comida",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Buscador con aviso y cuatro categorías con un dibujo de comida.",
+      "family": "custom.r-nu-categorias",
+      "variant_id": "r-nu-categorias",
+      "variants": [
+        "r-nu-categorias"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-nu-categorias",
+        "elevated",
+        "food",
+        "search"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f6efe8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-nu-categorias"
+    },
+    {
+      "id": "r-nu-receta",
+      "legacy_id": null,
+      "name": "Receta del momento",
+      "slug": "receta-del-momento",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Título con insignia, receta con estrella, tiempo, plato grande, dificultad y calorías.",
+      "family": "custom.r-nu-receta",
+      "variant_id": "r-nu-receta",
+      "variants": [
+        "r-nu-receta"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-nu-receta",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f6efe8",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-nu-receta"
+    },
+    {
+      "id": "r-nu-bienvenida",
+      "legacy_id": null,
+      "name": "Bienvenida con calorías flotantes",
+      "slug": "bienvenida-con-calorias-flotantes",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Encabezados",
+      "type": "component",
+      "description": "Cítricos con etiquetas de calorías, titular «decodificada por IA», puntos y botón negro.",
+      "family": "custom.r-nu-bienvenida",
+      "variant_id": "r-nu-bienvenida",
+      "variants": [
+        "r-nu-bienvenida"
+      ],
+      "tags": [
+        "navigation",
+        "Encabezados",
+        "header",
+        "custom.r-nu-bienvenida",
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "styles": [
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#f1e3d3",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-nu-bienvenida"
+    },
+    {
+      "id": "n-cu-cristal",
+      "legacy_id": null,
+      "name": "Píldora de cristal con lupa",
+      "slug": "pildora-de-cristal-con-lupa",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Barras inferiores",
+      "type": "component",
+      "description": "Cuatro destinos en una píldora de cristal oscuro y una lupa en círculo aparte.",
+      "family": "custom.n-cu-cristal",
+      "variant_id": "n-cu-cristal",
+      "variants": [
+        "n-cu-cristal"
+      ],
+      "tags": [
+        "navigation",
+        "Barras inferiores",
+        "nav",
+        "custom.n-cu-cristal",
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "styles": [
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#3a2a52",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "n-cu-cristal"
+    },
+    {
+      "id": "r-cu-semana",
+      "legacy_id": null,
+      "name": "Semana con anillos de progreso",
+      "slug": "semana-con-anillos-de-progreso",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Encabezados",
+      "type": "component",
+      "description": "Volver y avisos de cristal, mes con flechas, siete días con anillo de avance y agenda de hoy.",
+      "family": "custom.r-cu-semana",
+      "variant_id": "r-cu-semana",
+      "variants": [
+        "r-cu-semana"
+      ],
+      "tags": [
+        "navigation",
+        "Encabezados",
+        "header",
+        "custom.r-cu-semana",
+        "gradient",
+        "glass",
+        "progress"
+      ],
+      "styles": [
+        "gradient",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#1b1526",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-cu-semana"
+    },
+    {
+      "id": "r-cu-agenda",
+      "legacy_id": null,
+      "name": "Clase de la agenda",
+      "slug": "clase-de-la-agenda",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Tarjeta de cristal con degradado, icono, minutos, avance, hora y lecciones.",
+      "family": "custom.r-cu-agenda",
+      "variant_id": "r-cu-agenda",
+      "variants": [
+        "r-cu-agenda"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-cu-agenda",
+        "gradient",
+        "glass"
+      ],
+      "styles": [
+        "gradient",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#2a1d3d",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-cu-agenda"
+    },
+    {
+      "id": "r-cu-curso",
+      "legacy_id": null,
+      "name": "Curso activo",
+      "slug": "curso-activo",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Pestañas Mis cursos y Progreso y una tarjeta de curso con degradado, avatares, datos y continuar.",
+      "family": "custom.r-cu-curso",
+      "variant_id": "r-cu-curso",
+      "variants": [
+        "r-cu-curso"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-cu-curso",
+        "gradient",
+        "elevated",
+        "progress"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#b97bb0",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-cu-curso"
+    },
+    {
+      "id": "r-cu-detalle",
+      "legacy_id": null,
+      "name": "Curso con reproductor y lecciones",
+      "slug": "curso-con-reproductor-y-lecciones",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Encabezados",
+      "type": "component",
+      "description": "Imagen con volver y guardar, reproductor de cristal, título, autor con valoración y lecciones.",
+      "family": "custom.r-cu-detalle",
+      "variant_id": "r-cu-detalle",
+      "variants": [
+        "r-cu-detalle"
+      ],
+      "tags": [
+        "navigation",
+        "Encabezados",
+        "header",
+        "custom.r-cu-detalle",
+        "gradient",
+        "glass",
+        "product"
+      ],
+      "styles": [
+        "gradient",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#4a2a5a",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-cu-detalle"
+    },
+    {
+      "id": "n-se-claro",
+      "legacy_id": null,
+      "name": "Clara con activo oscuro",
+      "slug": "clara-con-activo-oscuro",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Barras inferiores",
+      "type": "component",
+      "description": "Barra blanca de cuatro destinos con icono y nombre; el activo en negro.",
+      "family": "custom.n-se-claro",
+      "variant_id": "n-se-claro",
+      "variants": [
+        "n-se-claro"
+      ],
+      "tags": [
+        "navigation",
+        "Barras inferiores",
+        "nav",
+        "custom.n-se-claro",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ffffff",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "n-se-claro"
+    },
+    {
+      "id": "r-se-bienvenida",
+      "legacy_id": null,
+      "name": "Bienvenida con degradado y cristal",
+      "slug": "bienvenida-con-degradado-y-cristal",
+      "module": "navigation",
+      "module_number": "04",
+      "module_name": "Navegación",
+      "subcategory": "Encabezados",
+      "type": "component",
+      "description": "Cabecera difuminada naranja y gris, aviso de reclamos y tarjeta blanca con primas y botón oscuro.",
+      "family": "custom.r-se-bienvenida",
+      "variant_id": "r-se-bienvenida",
+      "variants": [
+        "r-se-bienvenida"
+      ],
+      "tags": [
+        "navigation",
+        "Encabezados",
+        "header",
+        "custom.r-se-bienvenida",
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "styles": [
+        "gradient",
+        "elevated",
+        "glass"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e8742f",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-se-bienvenida"
+    },
+    {
+      "id": "r-se-servicios",
+      "legacy_id": null,
+      "name": "Servicios en píldoras",
+      "slug": "servicios-en-pildoras",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Título y seis servicios en píldoras blancas con icono.",
+      "family": "custom.r-se-servicios",
+      "variant_id": "r-se-servicios",
+      "variants": [
+        "r-se-servicios"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-se-servicios",
+        "elevated"
+      ],
+      "styles": [
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#ececee",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-se-servicios"
+    },
+    {
+      "id": "r-se-hospital",
+      "legacy_id": null,
+      "name": "Hospital cercano",
+      "slug": "hospital-cercano",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Edificio, categoría, nombre, dirección, horario y botones de dirección, llamada y más.",
+      "family": "custom.r-se-hospital",
+      "variant_id": "r-se-hospital",
+      "variants": [
+        "r-se-hospital"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-se-hospital",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e9e9ec",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-se-hospital"
+    },
+    {
+      "id": "r-se-ecard",
+      "legacy_id": null,
+      "name": "Tarjeta digital de asegurado",
+      "slug": "tarjeta-digital-de-asegurado",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Tarjeta con degradado naranja y rojo, número de póliza, foto, nombre y plan.",
+      "family": "custom.r-se-ecard",
+      "variant_id": "r-se-ecard",
+      "variants": [
+        "r-se-ecard"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-se-ecard",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e8542a",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-se-ecard"
+    },
+    {
+      "id": "r-se-teleconsulta",
+      "legacy_id": null,
+      "name": "Última teleconsulta",
+      "slug": "ultima-teleconsulta",
+      "module": "cards",
+      "module_number": "02",
+      "module_name": "Tarjetas, paneles y contenedores",
+      "subcategory": "Tarjetas",
+      "type": "component",
+      "description": "Doctora con foto, etiquetas de video y fecha, y dos avisos con visto.",
+      "family": "custom.r-se-teleconsulta",
+      "variant_id": "r-se-teleconsulta",
+      "variants": [
+        "r-se-teleconsulta"
+      ],
+      "tags": [
+        "cards",
+        "Tarjetas",
+        "custom.r-se-teleconsulta",
+        "gradient",
+        "elevated"
+      ],
+      "styles": [
+        "gradient",
+        "elevated"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "frameworks": [
+        "html-css"
+      ],
+      "dependencies": [],
+      "version": "1.0.0",
+      "version_scope": "metadata",
+      "created_at": null,
+      "updated_at": null,
+      "properties": {
+        "accent": "#e9e9ec",
+        "configuration": "CSS del recurso"
+      },
+      "schema_version": 1,
+      "origin": {
+        "collection": "Tinta",
+        "reference": "Colección Tinta · fuente local",
+        "author": null,
+        "license": null,
+        "status": "unverified"
+      },
+      "preview": {
+        "kind": "live-html-css",
+        "verified": false,
+        "note": "Vista real renderizada con el mismo HTML/CSS; validación por recurso pendiente. La selección y los enlaces se gestionan desde el creador."
+      },
+      "states": {
+        "documented": [
+          "default"
+        ],
+        "selectors_detected": [],
+        "verified": [],
+        "controller": null,
+        "controller_tests": null,
+        "variants": []
+      },
+      "responsive": {
+        "status": "pending",
+        "breakpoints_detected": false,
+        "note": "El entorno se adapta a varios anchos; este recurso no tiene una auditoría responsive individual aprobada."
+      },
+      "accessibility": {
+        "status": "pending",
+        "keyboard": null,
+        "contrast": null,
+        "screen_reader": null
+      },
+      "quality": {
+        "status": "inventory",
+        "duplicates": "review-pending",
+        "behavior": "visual-demo",
+        "notes": "Inventariado, no certificado. No se atribuyen estados interactivos, licencias ni exportaciones React/Tailwind que no estén comprobadas."
+      },
+      "source": {
+        "format": "html-css",
+        "renderer": "crear.js / colección Tinta"
+      },
+      "family_primary_id": "r-se-teleconsulta"
+    },
+    {
       "id": "lib-chat-1",
       "legacy_id": "chat-1",
       "name": "Burbujas claras con avatar",
