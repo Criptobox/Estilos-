@@ -35,7 +35,7 @@
   }
   /* «limitado» cuenta como válido: el modelo existe, solo se agotó la cuota (los gratuitos son los que más se limitan). */
   const usable = v => v === 'ok' || v === 'limitado';
-  const MESSAGES = { ok: 'Responde', limitado: 'Existe, pero se agotó la cuota', 'no-existe': 'El proveedor no reconoce este modelo', 'sin-permiso': 'Tu clave no tiene acceso a este modelo', 'sin-clave': 'Clave no válida o caducada', caido: 'El proveedor devolvió un error', 'sin-red': 'Sin respuesta: sin conexión o el proveedor bloquea las conexiones desde el navegador (CORS)' };
+  const MESSAGES = { ok: 'Responde', limitado: 'Existe, pero se agotó la cuota', 'no-existe': 'El proveedor no reconoce este modelo', 'sin-permiso': 'Tu clave no tiene acceso a este modelo', 'sin-clave': 'Clave no válida o caducada', caido: 'El proveedor devolvió un error', 'sin-red': 'Sin respuesta: sin conexión o el proveedor bloquea las conexiones desde el navegador (CORS). Prueba con otro proveedor; Groq y Gemini suelen funcionar.' };
   /* Pistas con frases literales del proveedor; si no encaja ninguna, null y se enseña el texto tal cual. */
   function hint(status, body) {
     const t = String(body || '').toLowerCase();

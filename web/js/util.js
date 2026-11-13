@@ -9,6 +9,28 @@ function nativeSave(blob, name) {
   return true;
 }
 /* Portapapeles nativo (app Android): el WebView no siempre deja usar navigator.clipboard, así que el puente lo hace por la app. */
+/* Peticiones https por la app Android (sin CORS). Devuelve una promesa con algo parecido a Response, o null si no hay puente (entonces se usa fetch). */
+let nativeHttpSeq = 0;
+const nativeHttpPending = {};
+window.__nativeHttpDone = function (id, status, b64, err) {
+  const p = nativeHttpPending[id]; if (!p) return; delete nativeHttpPending[id];
+  if (err) { p.reject(new TypeError(err)); return; }
+  let text = "";
+  try { const bin = atob(b64), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); text = new TextDecoder().decode(bytes); } catch (e) { /* cuerpo vacío */ }
+  p.resolve({ ok: status >= 200 && status < 300, status, text: async () => text, json: async () => JSON.parse(text), headers: { get: () => null } });
+};
+function nativeFetch(url, init) {
+  const bridge = window.EstilosAndroid;
+  if (!bridge || typeof bridge.httpRequest !== "function" || !/^https:\/\//i.test(String(url))) return null;
+  init = init || {};
+  return new Promise((resolve, reject) => {
+    if (init.signal && init.signal.aborted) { reject(new DOMException("Aborted", "AbortError")); return; }
+    const id = ++nativeHttpSeq; nativeHttpPending[id] = { resolve, reject };
+    if (init.signal) init.signal.addEventListener("abort", () => { if (nativeHttpPending[id]) { delete nativeHttpPending[id]; try { bridge.httpCancel(id); } catch (e) { /* ya terminó */ } reject(new DOMException("Aborted", "AbortError")); } });
+    try { bridge.httpRequest(id, String(init.method || "GET").toUpperCase(), String(url), JSON.stringify(init.headers || {}), init.body == null ? "" : String(init.body), 120000); }
+    catch (e) { delete nativeHttpPending[id]; reject(new TypeError("No se pudo enviar la petición.")); }
+  });
+}
 function nativeCopy(text) {
   const bridge = window.EstilosAndroid;
   if (!bridge || typeof bridge.copyText !== "function") return false;

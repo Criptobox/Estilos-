@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`. Pruebas unitarias (sin navegador):
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 95`, `versionName 12.65`.
+- Android: `versionCode 96`, `versionName 12.66`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 36 (Android 16).
 
 ## Ejecutar
@@ -314,6 +314,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.63**: subir el proyecto a GitHub con un token propio (un solo commit con la app, el README y el proyecto; GitHub Pages opcional). Ver `docs/CHANGELOG-12.63.md`.
 - **12.64**: lanzadores a chats web (ChatGPT, Claude, Gemini, GLM, DeepSeek, Kimi) con «Pegar la respuesta copiada y crear» y botones principales visibles en los diálogos. Ver `docs/CHANGELOG-12.64.md`.
 - **12.65**: portapapeles nativo en Android (copiar y pegar por el puente de la app) y enlace público al compartir desde la app. Ver `docs/CHANGELOG-12.65.md`.
+- **12.66**: Android con permiso de Internet y peticiones nativas (sin CORS) para IA y GitHub; diálogos rediseñados con los colores del tema. Ver `docs/CHANGELOG-12.66.md`.
 - **12.57**: las fotos de Tinta pasan de localStorage a IndexedDB (ya no se llena la cuota del navegador). Ver `docs/CHANGELOG-12.57.md`.
 - **12.56**: figuras 3D (14 personajes tipo juguete de vinilo y robots cubo) en 5 bloques de avatares. Ver `docs/CHANGELOG-12.56.md`.
 - **12.55**: pruebas unitarias con `node:test` (26 comprobaciones sin navegador) que se ejecutan antes de las de extremo a extremo. Ver `docs/CHANGELOG-12.55.md`.

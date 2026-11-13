@@ -16,4 +16,6 @@ ok(read('web/index.html') === read('web/crear.html'), 'index.html y crear.html i
 const sw = read('web/sw.js'), files = JSON.parse(sw.match(/FILES = (\[.*?\]);/)[1]);
 ok(files.every(f => f === './' || fs.existsSync(path.join(root, 'web', f))), 'todo el precache existe');
 for (const d of ['js', 'css']) for (const f of fs.readdirSync(path.join(root, 'web', d))) ok(files.includes(`${d}/${f}`), `${d}/${f} está en el precache`);
+ok(read('app/src/main/AndroidManifest.xml').includes('android.permission.INTERNET'), 'la app Android declara el permiso de Internet (IA y GitHub lo necesitan)');
+ok(/okhttp/.test(read('app/build.gradle.kts')) && /httpRequest/.test(read('app/src/main/java/com/estilos/app/MainActivity.kt')), 'el puente nativo de peticiones está en la app Android');
 console.log(`${n} comprobaciones de versión y precache correctas.`);

@@ -49,3 +49,8 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
 }
+
+dependencies {
+    // Peticiones nativas (sin la restricción CORS del navegador) para las IA y GitHub; también admite PATCH.
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+}

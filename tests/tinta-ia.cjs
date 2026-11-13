@@ -20,7 +20,7 @@ let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
   await pg.click('#openReceta'); await pg.fill('#recIdea', 'Una cafetería con pedidos');
   ok(/Aún no hay una IA/.test(await pg.innerText('#recAiNote')), 'sin IA conectada se avisa');
   await pg.click('#recAi'); await pg.waitForSelector('#iaDialog[open]'); ok(true, 'sin IA, «Generar» abre la conexión');
-  await pg.selectOption('#iaProvider', 'custom'); await pg.fill('#iaBase', 'http://mock.test/v1'); await pg.fill('#iaKey', 'sk-secreta'); await pg.click('#iaConnect');
+  await pg.click('[data-act=ia-provider][data-id=custom]'); await pg.fill('#iaBase', 'http://mock.test/v1'); await pg.fill('#iaKey', 'sk-secreta'); await pg.click('#iaConnect');
   ok(/https/.test(await pg.innerText('#iaStatus')), 'una dirección sin https se rechaza');
   await pg.fill('#iaBase', 'https://mock.test/v1'); await pg.click('#iaConnect');
   await pg.waitForFunction(() => /responden/.test(document.getElementById('iaStatus').textContent), null, { timeout: 15000 });

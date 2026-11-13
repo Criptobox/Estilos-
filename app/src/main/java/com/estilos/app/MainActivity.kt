@@ -19,6 +19,20 @@ import android.webkit.WebViewClient
 import android.view.WindowInsets
 import android.widget.FrameLayout
 import android.widget.Toast
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 import android.window.OnBackInvokedDispatcher
 
 /**
@@ -31,6 +45,23 @@ class MainActivity : Activity() {
     private lateinit var web: WebView
     private var pendingBytes: ByteArray? = null
     private var fileCallback: ValueCallback<Array<Uri>>? = null
+
+    private val httpClient by lazy { OkHttpClient.Builder().followRedirects(true).followSslRedirects(true).build() }
+    private val httpCalls = ConcurrentHashMap<Int, Call>()
+
+    private fun readCapped(stream: InputStream, max: Int = 5_000_000): ByteArray {
+        val out = ByteArrayOutputStream()
+        val buf = ByteArray(16384)
+        var total = 0
+        while (true) {
+            val n = stream.read(buf)
+            if (n < 0) break
+            total += n
+            if (total > max) break
+            out.write(buf, 0, n)
+        }
+        return out.toByteArray()
+    }
 
     /** Puente para las exportaciones: el navegador del WebView no descarga blobs, así que la web entrega aquí el archivo. */
     inner class Bridge {
@@ -75,6 +106,44 @@ class MainActivity : Activity() {
         } catch (e: Exception) {
             ""
         }
+
+        /**
+         * Peticiones https por la app (sin CORS). La web las pide con httpRequest y recibe la respuesta en
+         * window.__nativeHttpDone(id, estado, cuerpoEnBase64, error). Solo https; respuesta limitada a 5 MB.
+         */
+        @JavascriptInterface
+        fun httpRequest(id: Int, method: String, url: String, headersJson: String, body: String, timeoutMs: Int) {
+            fun reply(status: Int, bytes: ByteArray, err: String) {
+                val b64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+                runOnUiThread { web.evaluateJavascript("window.__nativeHttpDone($id,$status,'$b64',${JSONObject.quote(err)})", null) }
+            }
+            val parsed = url.toHttpUrlOrNull()
+            if (parsed == null || !parsed.isHttps) { reply(0, ByteArray(0), "Solo se permiten direcciones https."); return }
+            try {
+                val rb = Request.Builder().url(parsed)
+                val h = JSONObject(headersJson)
+                h.keys().forEach { k -> rb.header(k, h.getString(k)) }
+                val m = method.uppercase()
+                val needsBody = m == "POST" || m == "PUT" || m == "PATCH"
+                val type = (if (h.has("Content-Type")) h.getString("Content-Type") else "application/json").toMediaTypeOrNull()
+                rb.method(m, if (needsBody) body.toRequestBody(type) else null)
+                val client = httpClient.newBuilder().callTimeout(timeoutMs.coerceIn(1000, 120000).toLong(), TimeUnit.MILLISECONDS).build()
+                val call = client.newCall(rb.build())
+                httpCalls[id] = call
+                call.enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) { httpCalls.remove(id); reply(0, ByteArray(0), e.message ?: "Sin conexión") }
+                    override fun onResponse(call: Call, response: Response) {
+                        httpCalls.remove(id)
+                        response.use { r -> reply(r.code, r.body?.byteStream()?.let { readCapped(it) } ?: ByteArray(0), "") }
+                    }
+                })
+            } catch (e: Exception) {
+                reply(0, ByteArray(0), e.message ?: "Petición no válida")
+            }
+        }
+
+        @JavascriptInterface
+        fun httpCancel(id: Int) { httpCalls.remove(id)?.cancel() }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
