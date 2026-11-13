@@ -23,6 +23,7 @@ js = b'\n;\n'.join((web / path).read_bytes() for path in script_paths)
 encoded = base64.b64encode(js).decode('ascii')
 bootstrap = "(()=>{const s=document.createElement('script');s.textContent=new TextDecoder().decode(Uint8Array.from(atob('" + encoded + "'),c=>c.charCodeAt(0)));document.body.appendChild(s);})();"
 html = html.replace('<link rel="stylesheet" href="css/crear.css">', '<style>' + css + '</style>')
+html = html.replace('<link rel="stylesheet" href="css/equipo.css">', '<style>' + (web / 'css/equipo.css').read_text() + '</style>')
 html = re.sub(r'<script src="[^"]+"></script>', '', html)
 html = html.replace('</body>', '<script>' + bootstrap + '</script></body>')
 html = html.replace('images/tinta-avatar.webp', uri(web / 'images/tinta-avatar.webp', 'image/webp'))
