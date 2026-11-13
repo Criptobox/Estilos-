@@ -12,7 +12,7 @@ function nativeSave(blob, name) {
 /* Peticiones https por la app Android (sin CORS). Devuelve una promesa con algo parecido a Response, o null si no hay puente (entonces se usa fetch). */
 let nativeHttpSeq = 0;
 const nativeHttpPending = {};
-window.__nativeHttpDone = function (id, status, b64, err) {
+if (typeof window !== "undefined") window.__nativeHttpDone = function (id, status, b64, err) {
   const p = nativeHttpPending[id]; if (!p) return; delete nativeHttpPending[id];
   if (err) { p.reject(new TypeError(err)); return; }
   let text = "";
