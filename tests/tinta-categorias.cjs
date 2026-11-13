@@ -5,7 +5,7 @@ const T = require('../web/js/tinta-taxonomy.js'), P = require('../web/js/tinta-p
 ok(T.CATEGORIES.length === 18 && new Set(T.CATEGORIES.map(c => c.id)).size === 18, 'hay 18 categorías con id único');
 ok(T.CATEGORIES.filter(c => c.roles).every(c => c.subs.length >= 2 && c.subs.every(s => s.ids.length >= 1)) && T.CATEGORIES.filter(c => c.roles).every(c => new Set(c.subs.flatMap(s => s.ids)).size === c.subs.flatMap(s => s.ids).length), 'las categorías de bloques tienen subcategorías con bloques y ningún bloque en dos');
 ok(T.parseRoute('#bloques').view === 'hub' && T.parseRoute('#bloques/todo').view === 'todo' && T.parseRoute('#bloques/tarjetas/viajes').sub === 'viajes' && T.parseRoute('#bloques/nada').view === 'hub' && T.parseRoute('#pantalla').page === 'review', 'las rutas se interpretan bien (y las inválidas vuelven al inicio)');
-ok(T.PALETTE_SUBS.every(s => P.LIST.some(p => T.paletteMatch(p, s.id))) && P.LIST.every(p => ['neutros', 'rojos', 'verdes', 'azules', 'violetas'].includes(T.paletteFamily(p))), 'todas las familias de paletas tienen paletas y cada paleta tiene familia');
+ok(T.PALETTE_SUBS.filter(s => s.id !== 'mias').every(s => P.LIST.some(p => T.paletteMatch(p, s.id))) && P.LIST.every(p => ['neutros', 'rojos', 'verdes', 'azules', 'violetas'].includes(T.paletteFamily(p))), 'todas las familias de paletas tienen paletas y cada paleta tiene familia');
 const EXCLUDE = [['.gallery-item .component-host'], ['.template-frame'], ['.component-host']];
 (async () => {
   const b = await chromium.launch();

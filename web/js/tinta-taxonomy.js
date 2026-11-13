@@ -42,7 +42,7 @@
   const FONT_SUBS = [{ id: 'modernas', name: 'Modernas' }, { id: 'clasicas', name: 'Clásicas con serifa' }, { id: 'caracter', name: 'De carácter' }];
   const STYLE_SUBS = [{ id: 'limpios', name: 'Limpios y ordenados' }, { id: 'suaves', name: 'Suaves y táctiles' }, { id: 'cristal', name: 'Cristal y neón' }, { id: 'atrevidos', name: 'Atrevidos' }, { id: 'pro', name: 'Pro: cristal, 3D y degradados' }];
   const SAVED_SUBS = [{ id: 'favoritos', name: 'Favoritos' }, { id: 'recientes', name: 'Recientes' }, { id: 'elegidos', name: 'Elegidos' }, { id: 'mios', name: 'Mis estilos' }];
-  const PALETTE_SUBS = [{ id: 'claras', name: 'Claras' }, { id: 'oscuras', name: 'Oscuras' }, { id: 'rojos', name: 'Rojos, naranjas y dorados' }, { id: 'verdes', name: 'Verdes' }, { id: 'azules', name: 'Azules y turquesas' }, { id: 'violetas', name: 'Violetas y rosas' }, { id: 'neutros', name: 'Neutras' }];
+  const PALETTE_SUBS = [{ id: 'mias', name: 'Mis paletas' }, { id: 'claras', name: 'Claras' }, { id: 'oscuras', name: 'Oscuras' }, { id: 'rojos', name: 'Rojos, naranjas y dorados' }, { id: 'verdes', name: 'Verdes' }, { id: 'azules', name: 'Azules y turquesas' }, { id: 'violetas', name: 'Violetas y rosas' }, { id: 'neutros', name: 'Neutras' }];
   const MOTION_BLOCK_IDS = id => /^lib-anim-/.test(id);
   const get = id => CATEGORIES.find(c => c.id === id) || null;
   const blockCats = () => CATEGORIES.filter(c => c.roles);
@@ -75,7 +75,7 @@
     let hue = d === 0 ? 0 : mx === r ? ((g - b) / d + (g < b ? 6 : 0)) * 60 : mx === g ? ((b - r) / d + 2) * 60 : ((r - g) / d + 4) * 60;
     if (hue < 50 || hue >= 335) return 'rojos'; if (hue < 170) return 'verdes'; if (hue < 245) return 'azules'; return 'violetas';
   }
-  function paletteMatch(p, subId) { if (!subId || subId === 'all') return true; if (subId === 'claras') return !p.dark; if (subId === 'oscuras') return !!p.dark; return paletteFamily(p) === subId; }
+  function paletteMatch(p, subId) { if (!subId || subId === 'all') return true; if (subId === 'mias') return !!p.mine; if (subId === 'claras') return !p.dark; if (subId === 'oscuras') return !!p.dark; return paletteFamily(p) === subId; }
   /* Rutas: «bloques», «bloques/todo», «bloques/<categoría>» y «bloques/<categoría>/<sub>». */
   function parseRoute(hash) {
     const [page, cat, sub] = String(hash || '').replace(/^#/, '').split('/');

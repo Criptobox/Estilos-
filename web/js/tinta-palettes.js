@@ -84,6 +84,29 @@
   const onAccent = c => contrast(c, '#ffffff') >= contrast(c, '#111111') ? '#ffffff' : '#111111';
   const normalize = id => (typeof id === 'string' && get(id)) ? id : null;
   const valid = p => ['bg', 'surface', 'accent', 'accent2', 'ink', 'line'].every(k => HEX.test(p[k]));
-  root.TintaPalettes = { LIST, get, contrast, onAccent, normalize, valid };
+  /* Paletas propias (sacadas de una foto o un logo): se guardan en el dispositivo y se suman a la lista al arrancar. */
+  const MINE_KEY = 'estilos-tinta-paletas-v1', MAX_MINE = 12;
+  const clean = p => {
+    if (!p || typeof p !== 'object' || !/^mia-[a-z0-9]{3,12}$/.test(p.id) || !valid(p)) return null;
+    const o = { id: p.id, name: String(p.name || 'Mi paleta').replace(/[<>]/g, '').trim().slice(0, 40) || 'Mi paleta', mood: p.dark ? 'De tu imagen · oscura' : 'De tu imagen · clara', mine: true };
+    ['bg', 'surface', 'accent', 'accent2', 'ink', 'line'].forEach(k => { o[k] = p[k].toLowerCase(); });
+    if (p.dark) o.dark = true;
+    return o;
+  };
+  const mine = () => LIST.filter(p => p.mine);
+  function saveMine() { try { localStorage.setItem(MINE_KEY, JSON.stringify(mine())); return true; } catch (e) { return false; } }
+  function loadMine() {
+    let raw; try { raw = JSON.parse(localStorage.getItem(MINE_KEY) || '[]'); } catch (e) { raw = []; }
+    if (!Array.isArray(raw)) return 0; let n = 0;
+    raw.slice(0, MAX_MINE).forEach(r => { const c = clean(r); if (c && !get(c.id)) { LIST.push(c); n++; } });
+    return n;
+  }
+  function addMine(p) {
+    const c = clean(p); if (!c) return null;
+    if (mine().length >= MAX_MINE) { const old = mine()[0]; LIST.splice(LIST.indexOf(old), 1); }
+    LIST.push(c); saveMine(); return c;
+  }
+  function removeMine(id) { const p = get(id); if (!p || !p.mine) return false; LIST.splice(LIST.indexOf(p), 1); saveMine(); return true; }
+  root.TintaPalettes = { LIST, get, contrast, onAccent, normalize, valid, mine, loadMine, addMine, removeMine, MAX_MINE };
   if (typeof module !== 'undefined') module.exports = root.TintaPalettes;
 })(typeof window !== 'undefined' ? window : globalThis);
