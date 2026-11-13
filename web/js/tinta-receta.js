@@ -135,7 +135,26 @@
     function toTemplate(r) {
       return { id: 'receta-ia', sector: r.sector || null, name: 'Pantalla con IA', brief: r.brief, blocks: r.blocks.map(b => b.repeat ? { id: b.id, repeat: b.repeat } : { id: b.id }), palette: r.palette, font: r.font, background: r.background, mode: r.mode, texts: r.texts };
     }
-    return { prompt, parse, fixPrompt, catalogText, toTemplate };
+    /* Instrucciones fijas del chat de diseño: conversar y, cuando piden crear o cambiar una pantalla, devolver la receta. */
+    function chatSystem(idea, current) {
+      return [
+        'Eres el asistente de diseño de Estilos Tinta, una herramienta que arma apps móviles con piezas de un catálogo. Hablas en español, claro y breve (máximo 4 frases).',
+        'Si la persona pide crear o cambiar una app o pantalla, responde con una frase corta y UN bloque ```json con la receta (formato abajo). Si solo conversa o pregunta, responde sin JSON. No escribas HTML ni CSS.',
+        '',
+        'CATÁLOGO (id=nombre). Usa SOLO estos ids:',
+        catalogText(String(idea || '')),
+        '',
+        'REGLAS DE LA RECETA',
+        '- "bloques": de arriba abajo, entre 4 y ' + MAX_BLOCKS + '. Exactamente 1 cabecera primero, al menos 1 tarjeta, 1 barra al final.',
+        '- Una tarjeta puede llevar "copias" de 2 a 6.',
+        '- "paleta", "tipografia" y "fondo" del catálogo (o null). "modo": "claro" u "oscuro".',
+        '- "textos" es opcional: por id de bloque, hasta ' + MAX_TEXTS + ' frases cortas en español.',
+        '- Al cambiar una pantalla, devuelve la receta COMPLETA con el cambio aplicado.',
+        'Formato: {"idea":"…","bloques":[{"id":"…"},{"id":"…","copias":3}],"paleta":"…","tipografia":"…","fondo":null,"modo":"claro","textos":{"id-del-bloque":["Título"]}}',
+        current ? '\nPANTALLA ACTUAL DE LA PERSONA: ' + String(current).slice(0, 400) : ''
+      ].join('\n').trim();
+    }
+    return { prompt, parse, fixPrompt, catalogText, toTemplate, chatSystem };
   }
   const api = { create, extractJSON };
   root.TintaReceta = api;

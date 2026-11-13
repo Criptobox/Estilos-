@@ -1,0 +1,42 @@
+/* Chat de diseño: elegir modelo, conversar, y al pedir una app se abre solo la pantalla del equipo construyéndola. */
+const { chromium } = require('playwright'); const assert = require('node:assert/strict');
+let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
+const RECIPE = { idea: 'Cafetería', bloques: [{ id: 'h-search' }, { id: 'c-coffee', copias: 2 }, { id: 'a-coral' }, { id: 'n-soft' }], paleta: 'mandarina' };
+(async () => {
+  const b = await chromium.launch(), pg = await (await b.newContext({ viewport: { width: 412, height: 900 } })).newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
+  await pg.addInitScript(() => { if (!localStorage.getItem('estilos-tinta-ia-v1')) localStorage.setItem('estilos-tinta-ia-v1', JSON.stringify({ v: 1, providers: { custom: { apiKey: 'sk-secreta', baseUrl: 'https://mock.test/v1', models: ['modelo-bueno', 'otro-ok'], checked: {} } }, active: { provider: 'custom', model: 'modelo-bueno' } })); });
+  const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' }; const bodies = []; let fallos = 0;
+  await pg.route('https://mock.test/**', async route => {
+    const q = route.request(); if (q.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
+    const body = JSON.parse(q.postData() || '{}'); bodies.push(body); const last = body.messages[body.messages.length - 1].content;
+    const J = (status, o) => route.fulfill({ status, headers: CORS, contentType: 'application/json', body: JSON.stringify(o) });
+    if (/falla/.test(last) && fallos++ === 0) return J(429, { error: 'rate limit' });
+    if (/cafeter/i.test(last)) return J(200, { choices: [{ message: { content: 'Claro, te preparo una cafetería con pedidos.\n```json\n' + JSON.stringify(RECIPE) + '\n```' } }] });
+    return J(200, { choices: [{ message: { content: 'Con gusto. ¿Qué colores prefieres?' } }] });
+  });
+  await pg.goto('http://127.0.0.1:8080/crear.html'); await pg.waitForSelector('#openChat'); await pg.click('#openChat'); await pg.waitForSelector('#chatDialog[open]');
+  ok(/Cuéntame qué app/.test(await pg.innerText('#chatLog')) && await pg.locator('.chat-ideas button').count() === 3, 'saluda y ofrece ideas');
+  ok(await pg.locator('#chatModel option').count() === 2 && /modelo-bueno/.test(await pg.inputValue('#chatModel') + ''), 'el selector lista los modelos que responden');
+  await pg.selectOption('#chatModel', 'custom|otro-ok'); ok(await pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-ia-v1')).active.model) === 'otro-ok', 'cambiar de modelo lo deja activo');
+  await pg.click('.chat-ideas button');
+  await pg.waitForSelector('#equipoDialog[open] .ag', { timeout: 15000 });
+  ok(!(await pg.evaluate(() => document.getElementById('chatDialog').open)), 'el chat cede la pantalla al equipo');
+  ok(bodies[0].model === 'otro-ok' && bodies[0].messages[0].role === 'system' && /h-search/.test(bodies[0].messages[0].content), 'el modelo recibe el catálogo en las instrucciones');
+  await pg.click('[data-eq=speed]'); await pg.waitForFunction(() => document.getElementById('eqM2').textContent.startsWith('8'), null, { timeout: 25000 });
+  ok(/Propuesta de tu IA|Propuesta del chat/.test(await pg.innerText('#eqTeam')) || /\d+ pantallas/.test(await pg.innerText('#eqTeam')), 'los agentes trabajan sobre la propuesta del chat');
+  await pg.click('#eqSeg [data-idx="0"]'); await pg.click('#eqGo'); await pg.waitForFunction(() => !document.getElementById('equipoDialog').open, null, { timeout: 5000 }); await pg.waitForSelector('#phoneContent .component-host');
+  const st = await pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1'))); ok(st.selected.join() === 'h-search,c-coffee,a-coral,n-soft' && st.repeat['c-coffee'] === 2 && st.palette === 'mandarina', 'se construyó lo que pidió el chat');
+  await pg.evaluate(() => { location.hash = '#idea'; }); await pg.waitForSelector('#openChat', { state: 'visible' }); await pg.click('#openChat');
+  ok(/te preparo una cafetería/.test(await pg.innerText('#chatLog')) && !/```|"bloques"/.test(await pg.innerText('#chatLog')), 'el historial se conserva y no enseña el JSON');
+  ok(await pg.locator('.recipe-card').count() === 1, 'la propuesta queda como tarjeta');
+  await pg.fill('#chatInput', 'Prefiero algo cálido'); await pg.click('#chatSend'); await pg.waitForFunction(() => /qué colores|No se pudo|límite|Conecta/i.test(document.getElementById('chatLog').textContent), null, { timeout: 8000 }); ok(/qué colores/i.test(await pg.innerText('#chatLog')), 'responde la IA');
+  ok(await pg.evaluate(() => document.getElementById('chatDialog').open) && !(await pg.evaluate(() => document.getElementById('equipoDialog').open)), 'una charla sin receta no abre al equipo');
+  ok(/PANTALLA ACTUAL.*c-coffee/.test(bodies[bodies.length - 1].messages[0].content), 'el modelo sabe cómo es la pantalla actual para poder cambiarla');
+  await pg.fill('#chatInput', 'falla por favor'); await pg.click('#chatSend'); await pg.waitForSelector('.msg.err');
+  ok(/límite|cuota/i.test(await pg.innerText('.msg.err')), 'un error se explica'); await pg.click('[data-act=chat-retry]'); await pg.waitForFunction(() => !document.querySelector('.msg.err') && /Con gusto/.test(document.getElementById('chatLog').textContent)); ok(true, 'reintentar funciona');
+  await pg.click('[data-act=chat-team]'); await pg.waitForSelector('#equipoDialog[open] .ag'); await pg.click('[data-eq=close]');
+  await pg.waitForSelector('#chatDialog[open]'); ok(true, 'cerrar al equipo devuelve al chat');
+  const alm = await pg.evaluate(() => localStorage.getItem('estilos-tinta-chat-v1')); ok(!/sk-secreta/.test(alm) && alm.length > 50, 'el historial no guarda la clave');
+  ok(errors.length === 0, 'sin errores de página: ' + errors.join('|'));
+  await b.close(); console.log(n + ' comprobaciones del chat de diseño correctas.');
+})().catch(e => { console.error(e); process.exit(1); });
