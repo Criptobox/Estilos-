@@ -2,6 +2,9 @@ package com.estilos.app
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -52,6 +55,25 @@ class MainActivity : Activity() {
                     Toast.makeText(this@MainActivity, "No hay una app para guardar archivos.", Toast.LENGTH_LONG).show()
                 }
             }
+        }
+
+        /** Portapapeles por la app: navigator.clipboard no siempre funciona en el WebView. Solo lo llama la web local, al tocar un botón. */
+        @JavascriptInterface
+        fun copyText(text: String): Boolean = try {
+            val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            cm.setPrimaryClip(ClipData.newPlainText("Estilos", text.take(200_000)))
+            true
+        } catch (e: Exception) {
+            false
+        }
+
+        @JavascriptInterface
+        fun readText(): String = try {
+            val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = cm.primaryClip
+            if (clip != null && clip.itemCount > 0) (clip.getItemAt(0).coerceToText(this@MainActivity)?.toString() ?: "").take(200_000) else ""
+        } catch (e: Exception) {
+            ""
         }
     }
 

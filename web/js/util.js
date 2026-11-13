@@ -8,6 +8,17 @@ function nativeSave(blob, name) {
   reader.readAsDataURL(blob);
   return true;
 }
+/* Portapapeles nativo (app Android): el WebView no siempre deja usar navigator.clipboard, así que el puente lo hace por la app. */
+function nativeCopy(text) {
+  const bridge = window.EstilosAndroid;
+  if (!bridge || typeof bridge.copyText !== "function") return false;
+  try { return bridge.copyText(String(text)) === true; } catch (e) { return false; }
+}
+function nativeRead() {
+  const bridge = window.EstilosAndroid;
+  if (!bridge || typeof bridge.readText !== "function") return null;
+  try { return String(bridge.readText()); } catch (e) { return null; }
+}
 const APP_VERSION = "14.1.0"; /* CI lo reemplaza por 14.1.<n.º de build> en cada despliegue */
 
 function esc(s) {
