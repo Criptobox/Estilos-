@@ -1,0 +1,31 @@
+/* Equipo de diseño: ocho agentes con trabajo real, animación por pasos, versión del Crítico y aplicación de la elegida. */
+const { chromium } = require('playwright'); const assert = require('node:assert/strict');
+let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
+(async () => {
+  const b = await chromium.launch(), pg = await (await b.newContext({ viewport: { width: 412, height: 900 } })).newPage(), errors = []; pg.on('pageerror', e => errors.push(e.message));
+  await pg.goto('http://127.0.0.1:8080/crear.html'); await pg.waitForSelector('#openTeam');
+  await pg.click('#openTeam'); await pg.waitForSelector('#toast.show, #toast', { state: 'attached' });
+  ok(!(await pg.evaluate(() => document.getElementById('equipoDialog').open)), 'sin idea no abre el equipo');
+  await pg.fill('#idea', 'Una app para mi cafetería con pedidos y barra inferior'); await pg.click('#openTeam'); await pg.waitForSelector('#equipoDialog[open] .ag');
+  ok(await pg.locator('#equipoDialog .ag').count() === 8, 'hay ocho agentes');
+  ok(await pg.locator('#equipoDialog .ag svg').count() >= 8, 'cada uno con su figura');
+  await pg.click('[data-eq=speed]'); ok(/2x/.test(await pg.innerText('[data-eq=speed]')), 'cambia la velocidad');
+  await pg.waitForSelector('#equipoDialog .ag.work'); ok(/Trabajando/.test(await pg.locator('#equipoDialog .ag.work .chip').first().innerText()), 'el agente activo muestra «Trabajando»');
+  await pg.click('[data-eq=pause]'); const paso = await pg.innerText('#eqM2'); await pg.waitForTimeout(1500); ok(await pg.innerText('#eqM2') === paso, 'en pausa no avanza'); await pg.click('[data-eq=pause]');
+  await pg.waitForFunction(() => document.getElementById('eqM2').textContent.startsWith('8'), null, { timeout: 20000 });
+  const t = await pg.innerText('#eqTeam');
+  ok(/Sector: Comida/.test(t) && /\d pantallas: Inicio/.test(t), 'investigador y arquitecto dan datos reales: ' + t.slice(0, 160).replace(/\n/g, ' '));
+  ok(/textos adaptados/.test(t) && /KB de HTML/.test(t) && /Paleta .+ · letra/.test(t), 'writer, UI y dev también');
+  ok(/No estoy de acuerdo/.test(await pg.innerText('#equipoDialog .ag.disagree .say')), 'el Crítico discrepa');
+  ok(await pg.locator('#eqChoose.on').count() === 1 && /\d pantallas/.test(await pg.innerText('#eqTxtB')), 'aparece el selector con las dos versiones');
+  const antes = await pg.evaluate(() => localStorage.getItem('estilos-tinta-prototype-v1'));
+  ok(await pg.evaluate(() => document.getElementById('idea').value).then(v => /cafetería/.test(v)), 'medir las versiones no cambió tu idea');
+  await pg.click('#eqSeg [data-idx="2"]'); ok(/Crítico/.test(await pg.innerText('#eqGo')), 'el botón sigue la elección');
+  await pg.click('#eqGo'); await pg.waitForFunction(() => !document.getElementById('equipoDialog').open, null, { timeout: 5000 }); await pg.waitForSelector('#phoneContent .component-host');
+  const st = await pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')));
+  const dark = await pg.evaluate(id => TintaPalettes.get(id).dark, st.palette); ok(st.palette && dark === true && st.mode === 'dark', 'se aplicó la versión oscura del Crítico (' + st.palette + ')');
+  ok(st.selected.length >= 4 && /cafetería/.test(st.brief), 'pantalla armada con tu idea');
+  await pg.keyboard.press('Control+z'); await pg.waitForTimeout(400); ok((await pg.evaluate(() => JSON.parse(localStorage.getItem('estilos-tinta-prototype-v1')).palette)) !== st.palette, 'se puede deshacer');
+  ok(errors.length === 0, 'sin errores de página: ' + errors.join('|'));
+  await b.close(); console.log(n + ' comprobaciones del equipo de diseño correctas.');
+})().catch(e => { console.error(e); process.exit(1); });
