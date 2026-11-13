@@ -250,7 +250,7 @@ Pruebas del editor: `node tests/content.cjs`. Pruebas unitarias (sin navegador):
 
 ## Versiones
 - Web/PWA: `14.1.0` (GitHub Actions añade el número de compilación).
-- Android: `versionCode 92`, `versionName 12.62`.
+- Android: `versionCode 93`, `versionName 12.63`.
 - Application ID: `com.estilos.app`; minSdk 26; targetSdk 36 (Android 16).
 
 ## Ejecutar
@@ -311,6 +311,7 @@ Se comprueba la sintaxis de todos los JavaScript y la integridad del ZIP. La com
 - **12.60**: crear la pantalla con un chat de IA (prompt compacto + respuesta JSON validada y reparada). Ver `docs/CHANGELOG-12.60.md`.
 - **12.61**: conectar una IA con clave propia (lista real de modelos, prueba de cada uno y solo se usan los que responden) y «Generar con mi IA». Ver `docs/CHANGELOG-12.61.md`.
 - **12.62**: equipo de diseño de 8 agentes animados con trabajo real, versión del Crítico y selector Equipo / Mezclar / Crítico. Ver `docs/CHANGELOG-12.62.md`.
+- **12.63**: subir el proyecto a GitHub con un token propio (un solo commit con la app, el README y el proyecto; GitHub Pages opcional). Ver `docs/CHANGELOG-12.63.md`.
 - **12.57**: las fotos de Tinta pasan de localStorage a IndexedDB (ya no se llena la cuota del navegador). Ver `docs/CHANGELOG-12.57.md`.
 - **12.56**: figuras 3D (14 personajes tipo juguete de vinilo y robots cubo) en 5 bloques de avatares. Ver `docs/CHANGELOG-12.56.md`.
 - **12.55**: pruebas unitarias con `node:test` (26 comprobaciones sin navegador) que se ejecutan antes de las de extremo a extremo. Ver `docs/CHANGELOG-12.55.md`.
